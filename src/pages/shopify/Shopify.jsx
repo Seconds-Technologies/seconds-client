@@ -77,6 +77,7 @@ export default function Shopify() {
 										Admin API Key
 									</label>
 									<input
+										autoComplete={"new-password"}
 										type='password'
 										className='form-control'
 										id='apiKey'
@@ -99,6 +100,7 @@ export default function Shopify() {
 										Admin API Password
 									</label>
 									<input
+										autoComplete={"new-password"}
 										type='password'
 										className='form-control'
 										name='password'
