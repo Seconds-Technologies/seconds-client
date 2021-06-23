@@ -1,7 +1,7 @@
 {
   "short_name": "Seconds",
   "name": "Seconds Business",
-  "description": "Seconds client application",
+  "description": "Automated one hour and same day deliveries",
   "icons": [
     {
       "src": "favicon.ico",
