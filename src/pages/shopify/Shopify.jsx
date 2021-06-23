@@ -77,7 +77,7 @@ export default function Shopify() {
 										Admin API Key
 									</label>
 									<input
-										type='text'
+										type='password'
 										className='form-control'
 										id='apiKey'
 										name='apiKey'
