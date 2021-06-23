@@ -26,7 +26,7 @@ export default function Login() {
                 <h3 className="welcome">Welcome back!</h3>
                 <h5 className="moreMessage">Nice to see you again.</h5>
             </div>
-            <div className="d-flex loginContainer px-4 py-4">
+            <div className="d-flex loginContainer px-4 py-5">
                 <div className="d-flex flex-grow-1 flex-column justify-content-center">
                     <h4 className="getStarted pb-2">Log in</h4>
                     {errors.message && (
