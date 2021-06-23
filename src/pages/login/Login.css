@@ -1,0 +1,100 @@
+.loginPage {
+  background-color: #9400d3;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+}
+
+.loginLogo {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 15%;
+}
+.greeting {
+  margin-top: 60px;
+  text-align: center;
+  color: white;
+}
+
+.welcome {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.moreMessage {
+  margin-top: 20px;
+  font-weight: normal;
+}
+
+.loginContainer {
+  margin: auto;
+  margin-top: 30px;
+  width: 50%;
+  height: 50%;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 11px -1px #000000;
+  box-shadow: 0px 0px 11px -1px #000000;
+}
+
+.getStarted {
+  text-align: center;
+  font-weight: normal;
+  font-family: sans-serif;
+}
+
+.loginItem {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 60px;
+  margin-left: 50px;
+  margin-top: 20px;
+}
+
+.loginItem1 {
+  margin-top: 20px;
+}
+
+.loginInput {
+  border-radius: 10px;
+  border-color: #777777;
+  border-width: 1px;
+}
+
+
+.logIn {
+  margin-top: 20px;
+  background-color: #9400d3;
+  height: 70px;
+  border-radius: 50px;
+  color: white;
+  border-color: #9400d3;
+  font-size: 20px;
+  font-family: sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.motto {
+  color: white;
+  font-family: sans-serif;
+  font-weight: normal;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.test1 {
+  border: red solid 1px;
+}
+
+.test2 {
+  border: blue solid 2px;
+}
+
+.test3 {
+  border: green solid 3px;
+}

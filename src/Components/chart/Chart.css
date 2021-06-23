@@ -1,0 +1,35 @@
+.chart {
+  margin: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 7px -1px #000000;
+  box-shadow: 0px 0px 7px -1px #000000;
+}
+
+.chartTitle {
+  color: #777777;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.coming-soon {
+  background-color: #DDFFCF;
+  border: 1px solid #DDFFCF;
+  height: 30px;
+  width: 150px;
+  border-radius: 10px;
+}
+
+.coming-soon span {
+  color: #6BFF2C;
+  font-weight: bold;
+}
+
+.test1 {
+  border: red solid 2px;
+}
+
+.test2 {
+  border: blue solid 1px;
+}
