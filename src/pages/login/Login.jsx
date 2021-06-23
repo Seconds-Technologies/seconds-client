@@ -3,19 +3,19 @@ import logo from "../../img/secondslogin.svg";
 import { Formik } from "formik";
 import { authUser } from "../../store/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
 import { removeError } from "../../store/actions/errors";
 
 export default function Login() {
-    const errors = useSelector(state => state["errors"])
+    const errors = useSelector(state => state["errors"]);
     const history = useHistory();
     const location = useLocation();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(removeError())
-    }, [location])
+        dispatch(removeError());
+    }, [location]);
 
     return (
         <div className="loginPage">
@@ -26,65 +26,67 @@ export default function Login() {
                 <h3 className="welcome">Welcome back!</h3>
                 <h5 className="moreMessage">Nice to see you again.</h5>
             </div>
-            <div className="loginContainer px-4 py-4">
-                <h4 className="getStarted pb-2">Log in</h4>
-                {errors.message && (
-                    <div className='alert alert-danger alert-dismissible' role="alert">
-                        <span>{errors.message}</span>
-                        <button onClick={() => dispatch(removeError())} type="button" className="btn btn-close"/>
-                    </div>
-                )}
-                <Formik
-                    initialValues={{
-                        email: "",
-                        password: ""
-                    }}
-                    onSubmit={(values, actions) => {
-                        dispatch(authUser("login", values))
-                            .then(() => history.push("/"))
-                            .catch(err => console.log(err));
-                    }}
-                >
-                    {({
-                          values,
-                          errors,
-                          touched,
-                          handleChange,
-                          handleBlur,
-                          handleSubmit,
-                          isSubmitting
-                          /* and other goodies */
-                      }) => (
-                        <form onSubmit={handleSubmit}>
-                            <div className="loginItem1">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="Business Email"
-                                    className="form-control form-control-lg"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                            </div>
-                            <div className="loginItem1">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    className="form-control form-control-lg"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                />
-                            </div>
-                            <div>
-                                <button type="submit" className="logIn w-100">Log In</button>
-                            </div>
-                        </form>
+            <div className="d-flex loginContainer px-4 py-4">
+                <div className="d-flex flex-grow-1 flex-column justify-content-center">
+                    <h4 className="getStarted pb-2">Log in</h4>
+                    {errors.message && (
+                        <div className="alert alert-danger alert-dismissible" role="alert">
+                            <span>{errors.message}</span>
+                            <button onClick={() => dispatch(removeError())} type="button" className="btn btn-close" />
+                        </div>
                     )}
-                </Formik>
-                {/*<div className="text-center pt-4">
+                    <Formik
+                        initialValues={{
+                            email: "",
+                            password: ""
+                        }}
+                        onSubmit={(values, actions) => {
+                            dispatch(authUser("login", values))
+                                .then(() => history.push("/"))
+                                .catch(err => console.log(err));
+                        }}
+                    >
+                        {({
+                              values,
+                              errors,
+                              touched,
+                              handleChange,
+                              handleBlur,
+                              handleSubmit,
+                              isSubmitting
+                              /* and other goodies */
+                          }) => (
+                            <form onSubmit={handleSubmit}>
+                                <div className="loginItem1">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        placeholder="Business Email"
+                                        className="form-control form-control-lg"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    />
+                                </div>
+                                <div className="loginItem1">
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        placeholder="Password"
+                                        className="form-control form-control-lg"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    />
+                                </div>
+                                <div>
+                                    <button type="submit" className="logIn w-100">Log In</button>
+                                </div>
+                            </form>
+                        )}
+                    </Formik>
+                    {/*<div className="text-center pt-4">
                     <span className="text-center text-muted text-light">Need an account?&nbsp;<Link to="/signup">Sign up here!</Link></span>
                 </div>*/}
+                </div>
             </div>
             <h6 className="motto">Automated one hour and same day deliveries for your customers</h6>
         </div>
