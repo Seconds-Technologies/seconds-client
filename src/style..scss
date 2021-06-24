@@ -1,5 +1,25 @@
 @import '../node_modules/bootstrap/scss/bootstrap';
 
+.w-sm {
+  width: 50%
+}
+
+.pb-xs-4 {
+  padding-bottom: 0;
+}
+
+@include media-breakpoint-down(sm) {
+  .w-sm {
+    width: 75%
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .pb-xs-4 {
+    padding-bottom: 1.4rem !important;
+  }
+}
+
 .form-control {
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;

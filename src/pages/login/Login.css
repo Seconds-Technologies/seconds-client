@@ -2,17 +2,12 @@
   background-color: #9400d3;
   height: 100vh;
   width: 100vw;
-  position: absolute;
 }
 
 .loginLogo {
-  display: flex;
-  justify-content: center;
-  margin-top: 60px;
-  margin-left: auto;
-  margin-right: auto;
   width: 15%;
 }
+
 .greeting {
   margin-top: 60px;
   text-align: center;
@@ -30,9 +25,7 @@
 }
 
 .loginContainer {
-  margin: auto;
   margin-top: 30px;
-  width: 50%;
   padding: 10px;
   border-radius: 20px;
   background-color: white;

@@ -18,11 +18,11 @@ export default function Signup() {
 	}, [location]);
 
 	return (
-		<div className='signupPage'>
-			<div className='pt-5'>
-				<img className='signupLogo' src={logo} alt='' />
+		<div className='signupPage container-fluid pt-3 pb-5'>
+			<div className='d-flex pt-5'>
+				<img className='mx-auto img-fluid' src={logo} alt='' />
 			</div>
-			<div className='signupContainer mt-5 py-5 px-4'>
+			<div className='signupContainer w-sm mt-5 mx-auto py-5 px-4'>
 				<div className='d-flex flex-grow-1 flex-column justify-content-center'>
 					<h4 className='getStarted pb-4'>Get Started</h4>
 					{errors.message && (
@@ -60,7 +60,7 @@ export default function Signup() {
 						}) => (
 							<form onSubmit={handleSubmit} className='signupForm'>
 								<div className='row'>
-									<div className='col'>
+									<div className='col-md-6 col-lg-6 pb-xs-4'>
 										<input
 											type='text'
 											name='firstname'
@@ -70,7 +70,7 @@ export default function Signup() {
 											onChange={handleChange}
 										/>
 									</div>
-									<div className='col'>
+									<div className='col-md-6 col-lg-6'>
 										<input
 											type='text'
 											name='lastname'
@@ -119,7 +119,7 @@ export default function Signup() {
 							</form>
 						)}
 					</Formik>
-					<div className='text-center mt-4'>
+					<div className='text-center pt-4'>
 						<span className='text-center text-muted text-light'>
 							Already have an account?&nbsp;<Link to='/login'>Login here!</Link>
 						</span>

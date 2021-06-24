@@ -18,15 +18,15 @@ export default function Login() {
     }, [location]);
 
     return (
-        <div className="loginPage">
-            <div className="loginLogoDiv">
-                <img className="loginLogo" src={logo} alt="" />
+        <div className="loginPage container-fluid py-5">
+            <div className="d-flex">
+                <img className="img-fluid mx-auto" src={logo} alt="" />
             </div>
             <div className="greeting">
                 <h3 className="welcome">Welcome back!</h3>
                 <h5 className="moreMessage">Nice to see you again.</h5>
             </div>
-            <div className="d-flex loginContainer px-4 py-5">
+            <div className="d-flex w-sm loginContainer mx-auto px-4 py-5">
                 <div className="d-flex flex-grow-1 flex-column justify-content-center">
                     <h4 className="getStarted pb-2">Log in</h4>
                     {errors.message && (
