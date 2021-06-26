@@ -6,6 +6,7 @@ import {
 	SET_ALL_ORDERS,
 	SET_PRODUCTS,
 	SET_SHOPIFY,
+	SET_COMPLETED_ORDERS,
 	UPDATE_COMPLETED_ORDERS,
 	REMOVE_COMPLETED_ORDER
 } from "../actionTypes";
@@ -31,6 +32,11 @@ export const clearAllProducts = () => ({
 export const setAllProducts = products => ({
 	type: SET_PRODUCTS,
 	products,
+});
+
+export const setCompletedOrders = orders => ({
+	type: SET_COMPLETED_ORDERS,
+	orders,
 });
 
 export const updateCompletedOrders = id => ({
@@ -70,6 +76,7 @@ export function getAllOrders(token, baseURL, email, createdAt) {
 			return apiCall("POST", `/api/shopify/all-orders`, { token, baseURL, email, createdAt })
 				.then(({ orders }) => {
 					dispatch(setAllOrders(orders));
+					dispatch(setCompletedOrders(orders.map(({id, status}) => ({id, status}))))
 					dispatch(removeError());
 					resolve(orders);
 				})

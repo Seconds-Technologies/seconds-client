@@ -16,7 +16,8 @@ export default (state = DEFAULT_STATE, action) => {
 		case SET_ALL_ORDERS:
 			return {...state, allOrders: action.orders}
 		case SET_COMPLETED_ORDERS:
-			return {...state, completedOrders: action.ids }
+			let newCompletedOrders = action.orders.filter(item => item.status === "Completed").map(item => item.id)
+			return {...state, completedOrders: newCompletedOrders }
 		case UPDATE_COMPLETED_ORDERS:
 			return {...state, completedOrders: [...state.completedOrders, action.id]}
 		case REMOVE_COMPLETED_ORDER:
