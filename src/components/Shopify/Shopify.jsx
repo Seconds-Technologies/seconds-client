@@ -1,24 +1,25 @@
-import "./Shopify.css";
-import shopify from "../../img/shopify.svg";
-import { Formik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllOrders, getAllProducts, validateShopify } from "../../store/actions/shopify";
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Formik } from 'formik';
+import { getAllOrders, getAllProducts, validateShopify } from '../../store/actions/shopify';
+import { useDispatch, useSelector } from 'react-redux';
+import shopifyLogo from '../../img/shopify.svg';
+import './shopify.css';
 
-export default function Shopify() {
+const Shopify = ({goBack}) => {
 	const dispatch = useDispatch();
-	const { email, createdAt } = useSelector(state => state["currentUser"].user);
+	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated, credentials } = useSelector(state => state["shopifyUser"]);
+	const { isIntegrated, credentials } = useSelector(state => state['shopifyUser']);
 	return (
-		<div className='shopifyLogIn pb-4'>
+		<div className="pb-3 container-fluid">
 			{!isIntegrated ? (
 				<h2 className='shopifyConnect'>Connect your Shopify Account</h2>
 			) : (
 				<h2 className='shopifyConnect'>Your shopify account is now connected!</h2>
 			)}
-			<img className='shopifyImg' src={shopify} alt='' />
-			<div className='d-flex justify-content-center pt-3'>
+			<img className='img-fluid shopifyLogo' src={shopifyLogo} alt='' />
+			<div className='d-flex justify-content-center pt-2'>
 				{error && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
 						<span className='text-center'>{error}</span>
@@ -30,9 +31,9 @@ export default function Shopify() {
 				{!isIntegrated ? (
 					<Formik
 						initialValues={{
-							shopName: "",
-							apiKey: "",
-							password: "",
+							shopName: '',
+							apiKey: '',
+							password: '',
 						}}
 						onSubmit={values => {
 							//alert("SUBMITTED SUCCESFULLY! \n" +  JSON.stringify(values))
@@ -77,7 +78,7 @@ export default function Shopify() {
 										Admin API Key
 									</label>
 									<input
-										autoComplete={"new-password"}
+										autoComplete={'new-password'}
 										type='password'
 										className='form-control'
 										id='apiKey'
@@ -100,7 +101,7 @@ export default function Shopify() {
 										Admin API Password
 									</label>
 									<input
-										autoComplete={"new-password"}
+										autoComplete={'new-password'}
 										type='password'
 										className='form-control'
 										name='password'
@@ -109,9 +110,12 @@ export default function Shopify() {
 										onBlur={handleBlur}
 									/>
 								</div>
-								<div className='text-center pt-3'>
+								<div className='text-center d-flex justify-content-around pt-3'>
 									<button type='submit' className='shopifyButton'>
 										Connect
+									</button>
+									<button className='shopifyButton' onClick={() => goBack()}>
+										Cancel
 									</button>
 								</div>
 							</form>
@@ -127,4 +131,10 @@ export default function Shopify() {
 			</div>
 		</div>
 	);
-}
+};
+
+Shopify.propTypes = {
+	goBack: PropTypes.func.isRequired
+};
+
+export default Shopify;

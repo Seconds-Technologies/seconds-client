@@ -1,0 +1,23 @@
+.shopifyConnect {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.shopifyLogo {
+    margin-top: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+}
+
+.shopifyButton {
+    background-color: #565656;
+    border-color: #565656;
+    cursor: pointer;
+    color: white;
+    height: 50px;
+    width: 200px;
+    border-radius: 5px;
+    font-size: 20px;
+}

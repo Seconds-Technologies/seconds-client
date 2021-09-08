@@ -36,7 +36,7 @@ export default function FeaturedInfo() {
                 <span className="featuredSub">Total number of orders delivered</span>
             </div>
             <div className="featuredItem featuredItem d-flex flex-column align-items-center">
-                <span className="featuredTitle fw-bold">Delivery Charge</span>
+                <span className="featuredTitle fw-bold">Delivery Payouts</span>
                 <div className="featuredAllOrdersContainer">
                     <span className="featuredAllOrders">{`£${7 * completedOrders.length}`}</span>
                 </div>

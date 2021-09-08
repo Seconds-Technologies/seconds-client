@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import moment from "moment";
 import { fetchOrders } from "../../store/actions/shopify";
+import { PATHS } from '../../constants';
 import "./Orders.css";
 
 export default function Orders() {
@@ -42,7 +43,7 @@ export default function Orders() {
             renderCell: (params) => {
                 return (
                     <Link to={{
-                        pathname: `/viewOrders/${params.row.id}`
+                        pathname: `${PATHS.VIEW_ORDER}/${params.row.id}`
                     }}>
                         <button className="d-flex justify-content-center align-items-center OrdersListEdit">
                             <span className="text-decoration-none">View</span>

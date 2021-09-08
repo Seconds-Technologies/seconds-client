@@ -1,5 +1,5 @@
-import Chart from "../../Components/chart/Chart";
-import FeaturedInfo from "../../Components/featuredInfo/FeaturedInfo";
+import Chart from "../../components/chart/Chart";
+import FeaturedInfo from "../../components/featuredInfo/FeaturedInfo";
 import "./Dashboard.css";
 import { userData } from "../../dummyData";
 import { useState } from "react";
@@ -33,7 +33,7 @@ export default function Dashboard() {
 				</div>
 			</div>
 			<FeaturedInfo />
-			<Chart data={userData} title='Graph View' grid dataKey='Orders per day' />
+			<Chart data={userData} title='Live View' grid dataKey='Orders per day' />
 		</div>
 	);
 }

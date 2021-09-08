@@ -6,3 +6,40 @@
   text-decoration: none;
   color: inherit;
 }
+
+.test1 {
+  border: red solid 1px;
+}
+
+.test2 {
+  border: blue solid 2px;
+}
+
+.test3 {
+  border: green solid 3px;
+}
+
+.test4 {
+  border: pink solid 4px;
+}
+
+.help {
+  flex: 7;
+  background-color: #f2f2f2;
+  border-radius: 0px;
+  margin-right: 0px;
+}
+
+.help-text {
+  color: #777777;
+}
+
+.counter-wrapper {
+  background-color: #C4C4C4;
+  width: 80px;
+  height: 80px
+}
+
+.tile-wrapper {
+  background-color: #ffffff;
+}

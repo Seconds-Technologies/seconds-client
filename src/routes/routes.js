@@ -1,28 +1,28 @@
-import React from "react";
-import { Route, Switch } from "react-router-dom";
-import Dashboard from "../pages/dashboard/Dashboard";
-import Orders from "../pages/orders/Orders";
-import ViewOrder from "../pages/viewOrder/ViewOrder";
-import Shopify from "../pages/shopify/Shopify";
-import Products from "../pages/products/Products";
-import PrivateRoute from "../Components/PrivateRoute";
-import Signup from "../pages/signup/Signup";
-import Login from "../pages/login/Login";
-import EditProduct from "../pages/viewProduct/EditProduct";
-import Help from "../pages/help/Help"
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Dashboard from '../pages/dashboard/Dashboard';
+import Orders from '../pages/orders/Orders';
+import Track from '../pages/track/Track';
+import NewOrder from '../pages/newOrder/NewOrder';
+import ViewOrder from '../pages/viewOrder/ViewOrder';
+import Integrations from '../pages/integration/Integrations';
+import PrivateRoute from '../components/PrivateRoute';
+import Signup from '../pages/signup/Signup';
+import Login from '../pages/login/Login';
+import Help from '../pages/Help';
+import { PATHS } from '../constants';
 
 const routes = (
 	<Switch>
-		<Route exact path="/signup" component={Signup}/>
-		<Route exact path="/login" component={Login}/>
-		<PrivateRoute exact path={["/", "/home"]} component={Dashboard}/>
-		<PrivateRoute path="/orders" component={Orders}/>
-		<PrivateRoute path="/products" component={Products}/>
-		<PrivateRoute path="/viewOrders/:orderId" component={ViewOrder}/>
-		<PrivateRoute path="/editProducts/:productId" component={EditProduct}/>
-		<PrivateRoute path="/shopifyLogIn" component={Shopify}/>
-		<PrivateRoute path="/newproduct" component={Products}/>
-		<PrivateRoute path="/help" component={Help}/>
+		<Route exact path='/signup' component={Signup} />
+		<Route exact path='/login' component={Login} />
+		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
+		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
+		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
+		<PrivateRoute path={PATHS.CREATE} component={NewOrder} />
+		<PrivateRoute path={PATHS.TRACK} component={Track} />
+		<PrivateRoute path={PATHS.INTEGRATE} component={Integrations} />
+		<PrivateRoute path={PATHS.HELP} component={Help} />
 	</Switch>
 );
 

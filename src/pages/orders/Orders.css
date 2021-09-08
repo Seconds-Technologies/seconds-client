@@ -1,9 +1,9 @@
 .ordersList {
   flex: 7;
   background-color: #f2f2f2;
-  border-radius: 0px;
   padding: 5px;
   min-height: 100vh;
+  font-family: sans-serif;
 }
 
 .totalOrders {
@@ -16,10 +16,6 @@
 .grid {
   margin-top: 20px;
   margin-left: 20px;
-}
-
-.ordersList {
-  font-family: sans-serif;
 }
 
 .OrdersListEdit {

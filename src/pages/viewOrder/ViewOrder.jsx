@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { apiCall } from "../../api";
 import { Formik } from "formik";
-import ProductItem from "../../Components/ProductItem";
+import ProductItem from "../../components/ProductItem";
 import classnames from "classnames";
 import { updateOrderStatus } from "../../store/actions/shopify";
 

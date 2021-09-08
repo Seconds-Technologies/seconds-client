@@ -1,0 +1,38 @@
+.integrations {
+  flex: 7;
+  background-color: #f2f2f2;
+  border-radius: 0px;
+  margin-right: 0px;
+  min-height: 100vh;
+}
+
+.button-wrapper {
+  display: flex;
+  flex: 3.5;
+  justify-content: center;
+  align-items: center;
+}
+
+.api-wrapper {
+  height: 400px;
+  border: 1px white solid;
+  border-radius: 50px;
+}
+
+.api-wrapper:hover {
+  box-shadow: 0 0 30px rgba(156,156,156, 0.3);
+  cursor: pointer;
+}
+
+.api-text {
+  font-size: 136px;
+}
+
+.shopifyImg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+
+
