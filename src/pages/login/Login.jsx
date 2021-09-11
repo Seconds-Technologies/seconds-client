@@ -59,6 +59,7 @@ export default function Login() {
                             <form onSubmit={handleSubmit}>
                                 <div className="loginItem1">
                                     <input
+                                        autoComplete="email"
                                         type="email"
                                         name="email"
                                         placeholder="Business Email"
@@ -69,6 +70,7 @@ export default function Login() {
                                 </div>
                                 <div className="loginItem1">
                                     <input
+                                        autoComplete="current-password"
                                         type="password"
                                         name="password"
                                         placeholder="Password"

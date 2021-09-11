@@ -11,18 +11,24 @@ import Signup from '../pages/signup/Signup';
 import Login from '../pages/login/Login';
 import Help from '../pages/Help';
 import { PATHS } from '../constants';
+import Shopify from '../pages/shopify/Shopify';
+import ApiKey from '../pages/apiKey/ApiKey';
+import Profile from '../pages/profile/Profile';
 
 const routes = (
 	<Switch>
 		<Route exact path='/signup' component={Signup} />
 		<Route exact path='/login' component={Login} />
 		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
+		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
+		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
+		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute path={PATHS.CREATE} component={NewOrder} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
-		<PrivateRoute path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute path={PATHS.HELP} component={Help} />
+		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 	</Switch>
 );
 

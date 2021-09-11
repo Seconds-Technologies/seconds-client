@@ -8,15 +8,16 @@ export function setTokenHeader(token) {
 	}
 }
 /**
- * A wrapper around axios APIt that formats errors, etc
+ * A wrapper around axios APIs that formats errors, etc
  * @param method the HTTP verb being used
  * @param path the route path / endpoint
  * @param data (optional) payload in JSON form for POST requests
+ * @param config (optional) extra configurations for the request e.g. headers, query params, etc.
  * @returns {Promise<JSON>}
  */
-export function apiCall(method, path, data) {
+export function apiCall(method, path, data, config={}) {
 	return new Promise((resolve, reject) => {
-		return axios[method.toLowerCase()](path, data)
+		return axios[method.toLowerCase()](path, data, config)
 			.then(res => {
 				console.log(res.data)
 				resolve(res.data)

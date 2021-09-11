@@ -53,7 +53,7 @@ export function validateShopify(data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log("Credentials:", data);
-			return apiCall("POST", `/api/shopify/validate`, data)
+			return apiCall("POST", `/server/shopify/validate`, data)
 				.then(shop => {
 					dispatch(setShopify(shop));
 					dispatch(removeError());
@@ -73,7 +73,7 @@ export function getAllOrders(token, baseURL, email, createdAt) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			//setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/api/shopify/all-orders`, { token, baseURL, email, createdAt })
+			return apiCall("POST", `/server/shopify/all-orders`, { token, baseURL, email, createdAt })
 				.then(({ orders }) => {
 					dispatch(setAllOrders(orders));
 					dispatch(setCompletedOrders(orders.map(({id, status}) => ({id, status}))))
@@ -93,7 +93,7 @@ export function getAllProducts(token, baseURL, email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/api/shopify/all-products`, { token, baseURL, email })
+			return apiCall("POST", `/server/shopify/all-products`, { token, baseURL, email })
 				.then(({ products }) => {
 					dispatch(setAllProducts(products));
 					dispatch(removeError());
@@ -112,7 +112,7 @@ export function fetchOrders(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/api/shopify/fetch-orders`, { email })
+			return apiCall("POST", `/server/shopify/fetch-orders`, { email })
 				.then(({ orders }) => {
 					dispatch(setAllOrders(orders));
 					dispatch(removeError());
@@ -131,7 +131,7 @@ export function fetchProducts(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/api/shopify/fetch-products`, { email })
+			return apiCall("POST", `/server/shopify/fetch-products`, { email })
 				.then(({ products }) => {
 					dispatch(setAllProducts(products));
 					dispatch(removeError());
@@ -150,7 +150,7 @@ export function updateOrderStatus(id, email, status, prevStatus) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("PUT", "/api/shopify/update-order", {
+			return apiCall("PUT", "/server/shopify/update-order", {
 				id,
 				email,
 				status,

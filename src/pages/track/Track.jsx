@@ -1,11 +1,11 @@
 import React from 'react';
-import './Track.css';
 import Counter from '../../components/counter/Counter';
 import { useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
 import { COLOURS, STATUS } from '../../constants';
+import './Track.css';
 
-const Track = () => {
+const Track = props => {
 	const orders = useSelector(state => {
 		const allOrders = state['shopifyOrders'].allOrders;
 		return allOrders.map(({ order_number, status, shipping_address, phone, created_at, customer }) => {
@@ -26,7 +26,7 @@ const Track = () => {
 					{orders.map(
 						({ id, customerName, address, status }) =>
 							status === STATUS.NEW && (
-								<div className="my-4 px-3">
+								<div className="my-4 px-3" role="button" onClick={() => props.history.push(`/view-orders/${id}`)}>
 									<div style={{height: 4, backgroundColor: COLOURS.NEW}}/>
 									<Tile id={id} address={address} name={customerName} />
 								</div>
@@ -41,7 +41,7 @@ const Track = () => {
 					{orders.map(
 						({ id, customerName, address, status }) =>
 							status === STATUS.DISPATCHING && (
-								<div className="my-4 px-3">
+								<div className="my-4 px-3" role="button" onClick={() => props.history.push(`/view-orders/${id}`)}>
 									<div style={{height: 4, backgroundColor: COLOURS.DISPATCHING}}/>
 									<Tile id={id} address={address} name={customerName} />
 								</div>
@@ -56,7 +56,7 @@ const Track = () => {
 					{orders.map(
 						({ id, customerName, address, status }) =>
 							status === STATUS.EN_ROUTE && (
-								<div className="my-4 px-3">
+								<div className="my-4 px-3" role="button" onClick={() => props.history.push(`/view-orders/${id}`)}>
 									<div style={{height: 4, backgroundColor: COLOURS.EN_ROUTE}}/>
 									<Tile id={id} address={address} name={customerName} />
 								</div>
@@ -71,7 +71,7 @@ const Track = () => {
 					{orders.map(
 						({ id, customerName, address, status }) =>
 							status === 'Completed' && (
-								<div className="my-4 px-3">
+								<div className="my-4 px-3" role="button" onClick={() => props.history.push(`/view-orders/${id}`)}>
 									<div style={{height: 4, backgroundColor: COLOURS.COMPLETED}}/>
 									<Tile id={id} address={address} name={customerName} />
 								</div>

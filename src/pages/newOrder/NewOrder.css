@@ -5,3 +5,7 @@
     margin-right: 0px;
     min-height: 100vh;
 }
+
+.form-border {
+    border-radius: 10px;
+}

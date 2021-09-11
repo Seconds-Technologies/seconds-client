@@ -39,6 +39,7 @@ export default function Signup() {
 							company: "",
 							password: "",
 							profileImageURL: "",
+							apiKey: ""
 						}}
 						onSubmit={(values, actions) => {
 							console.log(values);
@@ -62,6 +63,7 @@ export default function Signup() {
 								<div className='row'>
 									<div className='col-md-6 col-lg-6 pb-xs-4'>
 										<input
+											autoComplete="given-name"
 											type='text'
 											name='firstname'
 											placeholder='First Name'
@@ -72,6 +74,7 @@ export default function Signup() {
 									</div>
 									<div className='col-md-6 col-lg-6'>
 										<input
+											autoComplete="family-name"
 											type='text'
 											name='lastname'
 											placeholder='Last Name'
@@ -83,6 +86,7 @@ export default function Signup() {
 								</div>
 								<div className='signupItem1'>
 									<input
+										autoComplete="organization"
 										type='text'
 										name='company'
 										placeholder='Company Name'
@@ -93,6 +97,7 @@ export default function Signup() {
 								</div>
 								<div className='signupItem1'>
 									<input
+										autoComplete="email"
 										type='email'
 										name='email'
 										placeholder='Business Email'
@@ -103,6 +108,7 @@ export default function Signup() {
 								</div>
 								<div className='signupItem1'>
 									<input
+										autoComplete="new-password”"
 										type='password'
 										name='password'
 										placeholder='Password'

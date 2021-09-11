@@ -1,8 +1,7 @@
-import Chart from "../../components/chart/Chart";
 import FeaturedInfo from "../../components/featuredInfo/FeaturedInfo";
-import "./Dashboard.css";
-import { userData } from "../../dummyData";
 import { useState } from "react";
+import Map from '../../components/Map/Map';
+import "./Dashboard.css";
 
 export default function Dashboard() {
 	const [options, setOptions] = useState(["Last 24 hrs", "Last Month", "Last Year"]);
@@ -33,7 +32,7 @@ export default function Dashboard() {
 				</div>
 			</div>
 			<FeaturedInfo />
-			<Chart data={userData} title='Live View' grid dataKey='Orders per day' />
+			<Map/>
 		</div>
 	);
 }

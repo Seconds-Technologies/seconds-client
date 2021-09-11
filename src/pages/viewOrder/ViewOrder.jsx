@@ -56,7 +56,7 @@ export default function ViewOrder() {
 			let products = await Promise.all(
 				currentOrder.items.map(async ({ product_id: id, title, quantity }) => {
 					setQuantity(prevState => prevState + quantity);
-					let image = await apiCall("POST", "/api/shopify/product-image", { baseURL, accessToken, id });
+					let image = await apiCall("POST", "/server/shopify/product-image", { baseURL, accessToken, id });
 					return { title, quantity, img: image["src"] };
 				})
 			);

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import { getAllOrders, getAllProducts, validateShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../img/shopify.svg';
 import './shopify.css';
 
-const Shopify = ({goBack}) => {
+const Shopify = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
 	const { isIntegrated, credentials } = useSelector(state => state['shopifyUser']);
 	return (
-		<div className="pb-3 container-fluid">
+		<div className='shopifyContainer container pb-3'>
 			{!isIntegrated ? (
 				<h2 className='shopifyConnect'>Connect your Shopify Account</h2>
 			) : (
@@ -36,7 +35,6 @@ const Shopify = ({goBack}) => {
 							password: '',
 						}}
 						onSubmit={values => {
-							//alert("SUBMITTED SUCCESFULLY! \n" +  JSON.stringify(values))
 							dispatch(validateShopify({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
@@ -114,8 +112,8 @@ const Shopify = ({goBack}) => {
 									<button type='submit' className='shopifyButton'>
 										Connect
 									</button>
-									<button className='shopifyButton' onClick={() => goBack()}>
-										Cancel
+									<button className='shopifyButton' onClick={props.history.goBack}>
+										Go Back
 									</button>
 								</div>
 							</form>
@@ -126,15 +124,14 @@ const Shopify = ({goBack}) => {
 						<p className='lead'>Shop Owner: {credentials.shopOwner}</p>
 						<p className='lead'>Domain: {credentials.domain}</p>
 						<p className='lead'>Country: {credentials.country}</p>
+						<button className='mt-5 shopifyButton' onClick={props.history.goBack}>
+							Go Back
+						</button>
 					</div>
 				)}
 			</div>
 		</div>
 	);
-};
-
-Shopify.propTypes = {
-	goBack: PropTypes.func.isRequired
 };
 
 export default Shopify;

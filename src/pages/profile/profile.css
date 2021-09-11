@@ -1,0 +1,18 @@
+.profile {
+    flex: 7;
+    background-color: #f2f2f2;
+    border-radius: 0px;
+    margin-right: 0px;
+    min-height: 100vh;
+}
+
+.profile-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 90%;
+    height: 70%;
+    border-radius: 20px;
+}

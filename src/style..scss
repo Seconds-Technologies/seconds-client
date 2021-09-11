@@ -20,10 +20,16 @@
   }
 }
 
+.form-control-rounded-2 {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
 .form-control {
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
 }
 
 .form-control-lg {

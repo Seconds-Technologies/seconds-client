@@ -1,8 +1,8 @@
-import "./FeaturedInfo.css";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllOrders } from "../../store/actions/shopify";
+import "./FeaturedInfo.css";
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export default function FeaturedInfo() {
         <div className="featured">
             <div className="featuredItem">
                 <Link to="/orders" className="ordersLink d-flex flex-column align-items-center text-center">
-                    <span className="featuredTitle fw-bold">All Orders</span>
+                    <span className="featuredTitle">All Orders</span>
                     <div className="featuredAllOrdersContainer">
                         <span className="featuredAllOrders">{allOrders.length}</span>
                     </div>
@@ -29,18 +29,18 @@ export default function FeaturedInfo() {
                 </Link>
             </div>
             <div className="featuredItem d-flex flex-column align-items-center">
-                <span className="featuredTitle fw-bold">Completed Orders</span>
+                <span className="featuredTitle">Completed Orders</span>
                 <div className="featuredAllOrdersContainer">
                     <span className="featuredAllOrders">{completedOrders.length}</span>
                 </div>
                 <span className="featuredSub">Total number of orders delivered</span>
             </div>
             <div className="featuredItem featuredItem d-flex flex-column align-items-center">
-                <span className="featuredTitle fw-bold">Delivery Payouts</span>
+                <span className="featuredTitle">Delivery Payouts</span>
                 <div className="featuredAllOrdersContainer">
                     <span className="featuredAllOrders">{`£${7 * completedOrders.length}`}</span>
                 </div>
-                <span className="featuredSub">Total delivery fee</span>
+                <span className="featuredSub">Total delivery payouts</span>
             </div>
         </div>
     );

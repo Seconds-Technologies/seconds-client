@@ -5,6 +5,9 @@ export const PATHS = {
 	CREATE: "/new-order",
 	TRACK: "/track-order",
 	INTEGRATE: "/integrate",
+	SHOPIFY: "/integrate/shopify",
+	API_KEY: "/integrate/api",
+	PROFILE: "/profile",
 	HELP: "/help"
 }
 
