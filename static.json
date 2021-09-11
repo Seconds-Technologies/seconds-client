@@ -5,7 +5,10 @@
 	},
 	"proxies": {
 		"/api": {
-			"origin": "https://seconds-app-server.herokuapp.com/api"
+			"origin": "https://seconds-api-dev.herokuapp.com/api"
+		},
+		"/server": {
+			"origin": "https://seconds-app-server-dev.herokuapp.com/server"
 		}
 	}
 }
