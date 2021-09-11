@@ -26,7 +26,7 @@ const Map = props => {
 			<h3 className='map-title ps-3 pt-3'>Live View</h3>
 			{showMap && <ReactMapGL
 				{...viewport}
-				mapboxApiAccessToken={process.env.REACT_APP_DEFAULT_MAPBOX_TOKEN}
+				mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
 				onViewportChange={viewport => setViewport(viewport)}
 				mapStyle="mapbox://styles/chipzstar/cktenny8g0ez218nx2wue8i08"
 			>
