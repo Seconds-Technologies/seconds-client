@@ -1,42 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
 import marker from '../../img/marker.svg';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 
 const Map = props => {
 	const [showMap, setShowMap] = useState(false);
 	const [viewport, setViewport] = useState({})
 
+	const Mapbox = ReactMapboxGl({
+		accessToken: process.env.REACT_APP_DEFAULT_MAPBOX_TOKEN
+
+	});
+
 	useEffect(() => {
-		navigator.geolocation.getCurrentPosition(({ coords }) => {
+		navigator.geolocation.getCurrentPosition(({ coords },) => {
 			setViewport({
 				latitude: coords.latitude,
 				longitude: coords.longitude,
 				width: 1350,
 				height: 500,
-				zoom: 12
+				zoom: 13
 			})
 			setShowMap(true)
-		}, err => console.error(err))
+		}, err => console.error(err), {
+			enableHighAccuracy: true
+		})
 	}, []);
 
 	return (
 		<div className="mt-2 map-container">
 			<h3 className='map-title ps-3 pt-3'>Live View</h3>
-			{showMap && <ReactMapGL
-				{...viewport}
-				mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"}
+			{showMap && <Mapbox
+				zoom={[viewport.zoom]}
+				containerStyle={{
+					height: viewport.height,
+					width: viewport.width
+				}}
+				center={[viewport.longitude, viewport.latitude]}
 				onViewportChange={viewport => setViewport(viewport)}
-				mapStyle="mapbox://styles/chipzstar/cktenny8g0ez218nx2wue8i08"
+				style="mapbox://styles/chipzstar/cktenny8g0ez218nx2wue8i08"
 			>
 				<Marker
-					latitude={viewport.latitude}
-					longitude={viewport.longitude}
+				    coordinates={[viewport.longitude, viewport.latitude]}
 				>
-					<img src={marker} alt='' width={20} height={20}/>
+					<img src={marker} alt='' width={30} height={30}/>
 				</Marker>
-			</ReactMapGL>}
+			</Mapbox>}
 		</div>
 	);
 };
