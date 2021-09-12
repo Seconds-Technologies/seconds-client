@@ -16,3 +16,8 @@
     height: 70%;
     border-radius: 20px;
 }
+
+.img-placeholder {
+    display: inline;
+    z-index: 1000;
+}

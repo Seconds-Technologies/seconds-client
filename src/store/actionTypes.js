@@ -1,6 +1,7 @@
 export const ADD_ERROR = "ADD_ERROR";
 export const REMOVE_ERROR = "REMOVE_ERROR";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
+export const UPDATE_CURRENT_USER = "UPDATE_CURRENT_USER"
 export const SET_SHOPIFY = "SET_SHOPIFY";
 export const SET_ALL_ORDERS = "SET_ALL_ORDERS";
 export const SET_API_KEY = "SET_API_KEY";

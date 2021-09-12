@@ -1,25 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import ReactCrop from 'react-image-crop';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/actions/auth';
-import 'react-image-crop/dist/ReactCrop.css'
 import './profile.css';
+import camera from '../../img/camera.svg';
 
 const Profile = props => {
 	const dispatch = useDispatch();
 	const { id, email, firstname, lastname, company, apiKey } = useSelector(state => state['currentUser'].user);
-	const [crop, setCrop] = useState({
-		unit: "%",
-		width: 30,
-		aspect: 1
-	})
-	const [modal, showModal] = useState(false);
-	const handleClose = () => showModal(false);
-	const handleOpen = () => showModal(true);
-	const uploadedImage = useRef();
+	const [preview, setPreview] = useState(null);
+	const [src, setSrc] = useState(null);
+	const [apiModal, showAPIModal] = useState(false);
+	const [successModal, showSuccessModal] = useState(false);
+	const handleClose = type => (type === 'api' ? showAPIModal(false) : showSuccessModal(false));
+	const handleOpen = type => (type === 'api' ? showAPIModal(true) : showSuccessModal(true));
+	const uploadedImage = useRef(null);
 	const imageUploader = useRef(null);
 
 	const handleImageUpload = e => {
@@ -30,31 +26,52 @@ const Profile = props => {
 			current.file = file;
 			reader.onload = e => {
 				current.src = e.target.result;
+				setSrc(e.target.result);
 			};
 			reader.readAsDataURL(file);
 		}
 	};
 
+	const modal1 = (
+		<Modal show={apiModal} onHide={() => handleClose('api')} centered size='sm' style={{ marginLeft: 100 }}>
+			<Modal.Header closeButton>
+				<Modal.Title>Your API Key</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<div className='text-center'>
+					<span className='fs-5'>{apiKey}</span>
+				</div>
+			</Modal.Body>
+		</Modal>
+	);
+
+	const modal2 = (
+		<Modal show={successModal} onHide={() => handleClose('profile')} centered style={{ marginLeft: 100 }}>
+			<Modal.Header closeButton />
+			<Modal.Body>
+				<div className='alert alert-success text-center'>
+					<span className='fs-4'>Profile updated successfully!</span>
+				</div>
+			</Modal.Body>
+		</Modal>
+	);
+
 	return (
 		<div className='profile container d-flex justify-content-center align-items-center px-5'>
-			<Modal show={modal} onHide={handleClose} centered>
-				<Modal.Header closeButton>
-					<Modal.Title>API Key</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>{apiKey}</Modal.Body>
-			</Modal>
+			{modal1}
+			{modal2}
 			<div className='profile-wrapper bg-white border-light'>
 				<Formik
 					initialValues={{
 						firstname,
 						lastname,
 						company,
-						email
+						email,
 					}}
 					onSubmit={values => {
-						dispatch(updateProfile({id, values}))
-							.then(({ message }) => alert(message))
-							.catch(err => alert(err))
+						dispatch(updateProfile({ id, ...values }))
+							.then(message => handleOpen('profile'))
+							.catch(err => alert(err));
 					}}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit }) => (
@@ -67,11 +84,15 @@ const Profile = props => {
 										accept='image/*'
 										onChange={handleImageUpload}
 										style={{
-											display: "none"
+											display: 'none',
 										}}
 									/>
 									<div
+										className='border-1 rounded-circle text-center'
 										style={{
+											display: 'inline-flex',
+											justifyContent: 'center',
+											alignItems: 'center',
 											height: '100px',
 											width: '100px',
 											border: '1px dashed black',
@@ -79,21 +100,30 @@ const Profile = props => {
 										onClick={() => imageUploader.current.click()}
 									>
 										<img
+											src={camera}
+											className={src && 'border-1 rounded-circle'}
 											ref={uploadedImage}
-											style={{
-												width: 100,
-												height: 100,
-											}}
+											style={
+												src
+													? {
+															width: '100px',
+															height: '100px',
+													  }
+													: {
+															width: '30px',
+															height: '30px',
+													  }
+											}
 										/>
 									</div>
 								</div>
 							</div>
 							<div className='row my-4'>
 								<div className='col'>
-									<label htmlFor="floatingInput">First Name</label>
+									<label htmlFor='floatingInput'>First Name</label>
 									<input
 										defaultValue={values.firstname}
-										name="firstname"
+										name='firstname'
 										className='form-control border rounded-3'
 										type='text'
 										placeholder='First Name'
@@ -103,10 +133,10 @@ const Profile = props => {
 									/>
 								</div>
 								<div className='col'>
-									<label htmlFor="floatingInput">Last Name</label>
+									<label htmlFor='floatingInput'>Last Name</label>
 									<input
 										defaultValue={values.lastname}
-										name="lastname"
+										name='lastname'
 										className=' form-control border rounded-3'
 										type='text'
 										placeholder='Last Name'
@@ -118,10 +148,10 @@ const Profile = props => {
 							</div>
 							<div className='row my-4'>
 								<div className='col'>
-									<label htmlFor="floatingInput">Company</label>
+									<label htmlFor='floatingInput'>Company</label>
 									<input
 										defaultValue={values.company}
-										name="company"
+										name='company'
 										className=' form-control border rounded-3'
 										type='text'
 										placeholder='Company'
@@ -131,10 +161,10 @@ const Profile = props => {
 									/>
 								</div>
 								<div className='col'>
-									<label htmlFor="floatingInput">Email Address</label>
+									<label htmlFor='floatingInput'>Email Address</label>
 									<input
 										defaultValue={values.email}
-										name="email"
+										name='email'
 										className=' form-control border rounded-3'
 										type='email'
 										placeholder='Email'
@@ -144,20 +174,6 @@ const Profile = props => {
 									/>
 								</div>
 							</div>
-							{/*<div className='row my-4'>
-								<div className='col'>
-									<input
-										name="password"
-										autoComplete="current-password"
-										className=' form-control border rounded-3'
-										type='password'
-										placeholder='Password'
-										required
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-							</div>*/}
 							<div className='row my-4'>
 								<div className='col-12'>
 									<span>For developers</span>
@@ -173,7 +189,12 @@ const Profile = props => {
 									}
 								`}
 									</style>
-									<Button variant='dark' size='lg' className='w-100' onClick={handleOpen}>
+									<Button
+										variant='dark'
+										size='lg'
+										className='w-100'
+										onClick={() => handleOpen('api')}
+									>
 										Get API Key
 									</Button>
 								</div>

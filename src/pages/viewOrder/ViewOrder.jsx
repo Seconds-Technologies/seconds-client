@@ -69,6 +69,30 @@ export default function ViewOrder() {
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
+			{/*<table className="table">
+				<tbody>
+				<tr>
+					<th scope="row">Order ID</th>
+					<td>Mark</td>
+				</tr>
+				<tr>
+					<th scope="row">Email</th>
+					<td>Jacob</td>
+				</tr>
+				<tr>
+					<th scope="row">Phone Number</th>
+					<td colSpan="2">Larry the Bird</td>
+				</tr>
+				<tr>
+					<th scope="row">Address</th>
+					<td colSpan="2">Larry the Bird</td>
+				</tr>
+				<tr>
+					<th scope="row">Items</th>
+					<td colSpan="2">Larry the Bird</td>
+				</tr>
+				</tbody>
+			</table>*/}
 			<div className='orderContainer'>
 				<div className='orderShow'>
 					<div className='orderShowTop'>

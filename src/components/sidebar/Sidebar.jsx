@@ -2,7 +2,7 @@ import './Sidebar.css';
 import orderIcon from '../../img/orders.svg';
 import plugIcon from '../../img/plug.svg';
 import helpIcon from '../../img/help.svg';
-import homeIcon from '../../img/home.svg';
+import homeIcon from '../../img/home1.svg';
 import createIcon from '../../img/create.svg';
 import trackIcon from '../../img/track.svg';
 import logoutIcon from '../../img/logout.svg';

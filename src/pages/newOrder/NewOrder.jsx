@@ -13,7 +13,7 @@ const NewOrder = props => {
 	const [modal, showModal] = useState(false);
 	const handleClose = () => showModal(false);
 	const handleOpen = () => showModal(true);
-	const { apiKey } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 
 	const columns = [
@@ -106,24 +106,27 @@ const NewOrder = props => {
 								<div className='border border-2 rounded-3 p-4'>
 									<div className='row'>
 										<div className='col-6'>
+											<label htmlFor='pickup-first-name' className="mb-1">First Name</label>
 											<input
 												autoComplete='given-name'
 												name='pickupFirstName'
 												type='text'
-												className='form-control form-border my-2'
-												placeholder='First Name'
+												className='form-control form-border mb-2'
+												defaultValue={firstname}
 												aria-label='pickup-first-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 										<div className='col-6'>
+											<label htmlFor='pickup-last-name'className="mb-1">Last Name</label>
 											<input
 												autoComplete='family-name'
+												id="pickup-last-name"
 												name='pickupLastName'
 												type='text'
-												className='form-control form-border my-2'
-												placeholder='Last Name'
+												className='form-control form-border mb-2'
+												defaultValue={lastname}
 												aria-label='pickup-last-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -132,23 +135,26 @@ const NewOrder = props => {
 									</div>
 									<div className='row'>
 										<div className='col-6'>
+											<label htmlFor='pickup-email-address' className="mb-1">Email Address</label>
 											<input
 												autoComplete='email'
+												id="pickup-email-address"
 												name='pickupEmailAddress'
 												type='email'
-												className='form-control form-border my-2'
-												placeholder='Email Address'
+												className='form-control form-border mb-2'
+												defaultValue={email}
 												aria-label='pickup-email-address'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 										<div className='col-6'>
+											<label htmlFor='pickup-phone-number' className="mb-1">Phone Number</label>
 											<input
 												autoComplete='tel'
 												name='businessPhoneNumber'
 												type='text'
-												className='form-control form-border my-2'
+												className='form-control form-border mb-2'
 												placeholder='Phone Number'
 												aria-label='pickup-phone-number'
 												onChange={handleChange}
@@ -156,39 +162,44 @@ const NewOrder = props => {
 											/>
 										</div>
 									</div>
+									<label htmlFor='pickup-business-name' className="mb-1">Business Name</label>
 									<input
 										autoComplete='organization'
+										id='pickup-business-name'
 										name='pickupBusinessName'
 										type='text'
-										className='form-control form-border my-3'
-										placeholder='Business Name'
+										className='form-control form-border mb-3'
+										defaultValue={company}
 										aria-label='pickup-business-name'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='pickup-address' className="mb-1">Pickup Address</label>
 									<input
 										autoComplete='street-address'
+										id="pickup-address"
 										name='pickupAddress'
 										type='text'
-										className='form-control form-border my-3'
-										placeholder='Pickup Address'
+										className='form-control form-border mb-3'
 										aria-label='pickup-address'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='pickup-datetime' className="mb-1">Pickup At</label>
 									<input
+										id='pickup-datetime'
 										name='packagePickupStartTime'
 										type='datetime-local'
-										className='form-control form-border my-3'
-										placeholder='Pickup At'
+										className='form-control form-border mb-3'
 										aria-label='pickup-datetime'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='pickup-instructions' className="mb-1">Pickup Instructions</label>
 									<textarea
+										id="pickup-instructions"
 										name='pickupInstructions'
-										className='form-control form-border my-3'
-										placeholder='Pickup Instructions'
+										className='form-control form-border mb-3'
 										aria-label='pickup-instructions'
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -200,24 +211,26 @@ const NewOrder = props => {
 								<div className='border border-2 rounded-3 p-4'>
 									<div className='row'>
 										<div className='col-6'>
+											<label htmlFor='dropoff-first-name' className="mb-1">First Name</label>
 											<input
 												autoComplete='given-name'
+												id="dropoff-first-name"
 												name='dropoffFirstName'
 												type='text'
-												className='form-control form-border my-2'
-												placeholder='First Name'
+												className='form-control form-border mb-2'
 												aria-label='dropoff-first-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 										<div className='col-6'>
+											<label htmlFor='dropoff-last-name' className="mb-1">Last Name</label>
 											<input
 												autoComplete='family-name'
+												id="dropoff-last-name"
 												name='dropoffLastName'
 												type='text'
-												className='form-control form-border my-2'
-												placeholder='Last Name'
+												className='form-control form-border mb-2'
 												aria-label='dropoff-last-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -226,63 +239,67 @@ const NewOrder = props => {
 									</div>
 									<div className='row'>
 										<div className='col-6'>
+											<label htmlFor='dropoff-email-address' className="mb-1">Email Address</label>
 											<input
 												autoComplete='email'
+												id="dropoff-email-address"
 												name='dropoffEmailAddress'
 												type='email'
-												className='form-control form-border my-2'
-												placeholder='Email Address'
+												className='form-control form-border mb-2'
 												aria-label='dropoff-email-address'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 										<div className='col-6'>
+											<label htmlFor='dropoff-phone-number' className="mb-1">Phone Number</label>
 											<input
 												autoComplete='tel'
 												name='dropoffPhoneNumber'
 												type='text'
-												className='form-control form-border my-2'
-												placeholder='Phone Number'
+												className='form-control form-border mb-2'
 												aria-label='dropoff-phone-number'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 									</div>
+									<label htmlFor='dropoff-business-name' className="mb-1">Business Name</label>
 									<input
 										autoComplete='organization'
+										id="dropoff-business-name"
 										name='dropoffBusinessName'
 										type='text'
-										className='form-control form-border my-3'
-										placeholder='Business Name'
+										className='form-control form-border mb-3'
 										aria-label='dropoff-business-name'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='dropoff-street-address' className="mb-1">Dropoff Address</label>
 									<input
 										autoComplete='street-address'
 										name='dropoffAddress'
 										type='text'
-										className='form-control form-border my-3'
-										placeholder='Dropoff Address'
+										className='form-control form-border mb-3'
 										aria-label='dropoff-address'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='dropoff-datetime' className="mb-1">Dropoff At</label>
 									<input
+										id="dropoff-datetime"
 										name='packageDropoffStartTime'
 										type='datetime-local'
-										className='form-control form-border my-3'
+										className='form-control form-border mb-3'
 										placeholder='Dropoff At'
 										aria-label='dropoff-datetime'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
+									<label htmlFor='dropoff-instructions' className="mb-1">Dropoff Instructions</label>
 									<textarea
 										name='dropoffInstructions'
-										className='form-control form-border my-3'
-										placeholder='Dropoff Instructions'
+										className='form-control form-border mb-3'
 										aria-label='dropoff-instructions'
 										onChange={handleChange}
 										onBlur={handleBlur}

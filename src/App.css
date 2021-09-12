@@ -47,3 +47,15 @@
 .counter-text {
   font-size: 24px;
 }
+
+.unpacked {
+  background-color: #F44336
+}
+
+.inProgress {
+  background-color: #FFC107
+}
+
+.completed {
+  background-color: #00ff66
+}

@@ -1,4 +1,4 @@
-import { SET_API_KEY, SET_CURRENT_USER } from '../actionTypes';
+import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
 
 const DEFAULT_STATE = {
     isAuthenticated: false, //be true when user logged in
@@ -19,6 +19,11 @@ export default (state = DEFAULT_STATE, action) => {
                 isAuthenticated: Object.keys(action.user).length > 0,
                 user: action.user,
             };
+        case UPDATE_CURRENT_USER:
+            return {
+                ...state,
+                user: { ...state.user, ...action.data }
+            }
         case SET_API_KEY:
             return {
                 ...state,

@@ -1,5 +1,5 @@
 import { apiCall, setTokenHeader } from '../../api';
-import { SET_API_KEY, SET_CURRENT_USER } from '../actionTypes';
+import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
 
@@ -9,6 +9,13 @@ export const setCurrentUser = user => {
 		user,
 	};
 };
+
+export const updateCurrentUser = data => {
+	return {
+		type: UPDATE_CURRENT_USER,
+		data,
+	}
+}
 
 export const setApiKey = apiKey => {
 	return {
@@ -81,11 +88,11 @@ export function authorizeAPI(userData) {
 export function updateProfile(data){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(data)
+			console.log(data);
 			return apiCall("POST", '/server/auth/update', data)
-				.then(res => {
-					console.log(res)
-					resolve(res)
+				.then(({ message, ...data }) => {
+					dispatch(updateCurrentUser(data))
+					resolve(message)
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

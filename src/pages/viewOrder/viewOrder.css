@@ -121,20 +121,4 @@
     font-family: sans-serif;
 }
 
-.test1 {
-    border: red solid 2px;
-}
-
-.unpacked {
-    background-color: #F44336
-}
-
-.inProgress {
-    background-color: #FFC107
-}
-
-.completed {
-    background-color: #00ff66
-}
-
 
