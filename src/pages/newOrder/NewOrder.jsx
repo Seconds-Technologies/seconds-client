@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { Formik } from 'formik';
-import './NewOrder.css';
-import '../../App.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob } from '../../store/actions/delivery';
 import CurrencyInput from 'react-currency-input-field';
 import moment from 'moment';
+import './NewOrder.css';
+import '../../App.css';
 
 const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});

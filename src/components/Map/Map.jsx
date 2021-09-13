@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import marker from '../../img/marker.svg';
+import useGeolocation from '../../hooks/useGeolocation';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
-import useGeolocation from '../../hooks/useGeolocation';
 
 const Map = props => {
 	const { latitude, longitude} = useGeolocation();
 	const [showMap, setShowMap] = useState(false);
 	const Mapbox = ReactMapboxGl({
-		accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
+		accessToken: "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"|| process.env.REACT_APP_MAPBOX_TOKEN,
 	});
 
 	return (

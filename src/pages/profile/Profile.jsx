@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/actions/auth';
 import './profile.css';
 import camera from '../../img/camera.svg';
+import axios from 'axios';
+import shorthash from 'shorthash';
 
 const Profile = props => {
 	const dispatch = useDispatch();
@@ -67,22 +69,43 @@ const Profile = props => {
 						lastname,
 						company,
 						email,
+						profileImageURL: null,
 					}}
-					onSubmit={values => {
+					onSubmit={({ profileImageURL, ...values }) => {
 						dispatch(updateProfile({ id, ...values }))
-							.then(message => handleOpen('profile'))
+							.then(message => {
+								const formData = new FormData();
+								console.log(profileImageURL)
+								if(profileImageURL) {
+									formData.append('profileImageURL', profileImageURL);
+									const config = {
+										headers: {
+											'content-type': 'multipart/form-data',
+										},
+									};
+									axios
+										.post('/server/auth/upload', { profileImageURL: `${shorthash.unique(profileImageURL.name)}.jpg` }, config)
+										.then(() => console.log('File has been uploaded successfully!'))
+										.catch(err => console.error(err));
+								}
+								handleOpen('profile')
+							})
 							.catch(err => alert(err));
 					}}
 				>
-					{({ values, handleBlur, handleChange, handleSubmit }) => (
+					{({ values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
 						<form action='' onSubmit={handleSubmit} className='w-50'>
 							<div className='row text-center'>
 								<div className='col-12 d-flex flex-column justify-content-center align-items-center py-3'>
 									<input
+										name='profileImageURL'
 										type='file'
 										ref={imageUploader}
 										accept='image/*'
-										onChange={handleImageUpload}
+										onChange={e => {
+											handleImageUpload(e);
+											setFieldValue('profileImageURL', e.target.files[0]);
+										}}
 										style={{
 											display: 'none',
 										}}

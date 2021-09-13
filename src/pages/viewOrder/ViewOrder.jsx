@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import ProductItem from "../../components/ProductItem";
 import classnames from "classnames";
 import { updateOrderStatus } from "../../store/actions/shopify";
+import moment from 'moment';
 
 export default function ViewOrder() {
 	const dispatch = useDispatch();
@@ -14,6 +15,7 @@ export default function ViewOrder() {
 	const allOrders = useSelector(state => state["shopifyOrders"].allOrders);
 	const { baseURL, accessToken } = useSelector(state => state["shopifyUser"].credentials);
 	const { email } = useSelector(state => state["currentUser"].user);
+	const [fleets] = useState(["Gophr", "Stuart"])
 	const [order, setOrder] = useState({});
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
@@ -115,6 +117,20 @@ export default function ViewOrder() {
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Address:</h4>
 							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : "N/A"}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<h4 className='orderShowLabel'>Fleet Provider:</h4>
+							<span className='orderShowInfoTitle'>{fleets[Math.floor(Math.random() * 2)]}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<h4 className='orderShowLabel'>Pickup At:</h4>
+							<span className='orderShowInfoTitle'>{moment().add(20, "minutes").format("DD-MM-YYYY" +
+								" HH:MM:ss")}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<h4 className='orderShowLabel'>Dropoff At:</h4>
+							<span className='orderShowInfoTitle'>{moment().add(53, "minutes").format("DD-MM-YYYY" +
+								" HH:MM:ss")}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Items:</h4>

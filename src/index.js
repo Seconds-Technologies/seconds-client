@@ -1,4 +1,5 @@
-// import "bootstrap";
+// import mapboxgl from 'mapbox-gl';
+// mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
