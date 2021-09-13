@@ -84,7 +84,7 @@ const Profile = props => {
 										},
 									};
 									axios
-										.post('/server/auth/upload', { profileImageURL: `${shorthash.unique(profileImageURL.name)}.jpg` }, config)
+										.post('/server/auth/upload', formData, config)
 										.then(() => console.log('File has been uploaded successfully!'))
 										.catch(err => console.error(err));
 								}

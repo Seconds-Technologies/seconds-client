@@ -16,7 +16,7 @@ export default function Topbar({name, company}) {
                 </div>
                 <div className="topRight" onClick={() => history.push(PATHS.PROFILE)}>
                     <div className="topbarIconContainer">
-                        {name} - {company}
+                        {name}
                     </div>
                 </div>
             </div>
