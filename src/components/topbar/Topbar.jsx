@@ -28,8 +28,8 @@ export default function Topbar() {
 							width={50}
 							height={50}
 						/>
-						<span className="profile-text fs-4 text-dark">{firstname}&nbsp;</span>
-						<span className="profile-text fs-4 text-dark">{lastname}</span>
+						<span className="profile-text fs-6 text-dark">{firstname}&nbsp;</span>
+						<span className="profile-text fs-6 text-dark">{lastname}</span>
 					</div>
 				</div>
 			</div>
