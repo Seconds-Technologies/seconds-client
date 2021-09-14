@@ -10,7 +10,6 @@
 .topbarWrapper {
   height: 100%;
   padding: 0px 20px;
-  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,8 +27,6 @@
   align-items: center;
 }
 
-.topbarIconContainer {
-  position: relative;
-  cursor: pointer;
-  margin-right: 10px;
+.profile-text {
+  font-family: sans-serif;
 }

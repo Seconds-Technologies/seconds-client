@@ -3,14 +3,14 @@ import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/actions/auth';
-import './profile.css';
 import camera from '../../img/camera.svg';
-import axios from 'axios';
-import shorthash from 'shorthash';
+import './profile.css';
 
 const Profile = props => {
 	const dispatch = useDispatch();
-	const { id, email, firstname, lastname, company, apiKey } = useSelector(state => state['currentUser'].user);
+	const { id, email, firstname, lastname, company, apiKey, profileImageData } = useSelector(
+		state => state['currentUser'].user
+	);
 	const [preview, setPreview] = useState(null);
 	const [src, setSrc] = useState(null);
 	const [apiModal, showAPIModal] = useState(false);
@@ -72,24 +72,8 @@ const Profile = props => {
 						profileImageURL: null,
 					}}
 					onSubmit={({ profileImageURL, ...values }) => {
-						dispatch(updateProfile({ id, ...values }))
-							.then(message => {
-								const formData = new FormData();
-								console.log(profileImageURL)
-								if(profileImageURL) {
-									formData.append('profileImageURL', profileImageURL);
-									const config = {
-										headers: {
-											'content-type': 'multipart/form-data',
-										},
-									};
-									axios
-										.post('/server/auth/upload', formData, config)
-										.then(() => console.log('File has been uploaded successfully!'))
-										.catch(err => console.error(err));
-								}
-								handleOpen('profile')
-							})
+						dispatch(updateProfile({ img: profileImageURL, id, ...values }))
+							.then(message => handleOpen('profile'))
 							.catch(err => alert(err));
 					}}
 				>
@@ -122,22 +106,34 @@ const Profile = props => {
 										}}
 										onClick={() => imageUploader.current.click()}
 									>
-										<img
-											src={camera}
-											className={src && 'border-1 rounded-circle'}
-											ref={uploadedImage}
-											style={
-												src
-													? {
-															width: '100px',
-															height: '100px',
-													  }
-													: {
-															width: '30px',
-															height: '30px',
-													  }
-											}
-										/>
+										{profileImageData ? (
+											<img
+												src={`data:image/jpeg;base64,${profileImageData}`}
+												className={'border-1 rounded-circle'}
+												ref={uploadedImage}
+												style={{
+													width: '100px',
+													height: '100px',
+												}}
+											/>
+										) : (
+											<img
+												src={camera}
+												className={src && 'border-1 rounded-circle'}
+												ref={uploadedImage}
+												style={
+													src
+														? {
+																width: '100px',
+																height: '100px',
+														  }
+														: {
+																width: '30px',
+																height: '30px',
+														  }
+												}
+											/>
+										)}
 									</div>
 								</div>
 							</div>

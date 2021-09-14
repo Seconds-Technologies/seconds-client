@@ -1,7 +1,14 @@
 import { apiCall, setTokenHeader } from '../../api';
-import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
+import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER, REMOVE_CURRENT_USER } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
+import axios from 'axios';
+
+export const removeUser = () => {
+	return {
+		type: REMOVE_CURRENT_USER,
+	}
+}
 
 export const setCurrentUser = user => {
 	return {
@@ -14,15 +21,15 @@ export const updateCurrentUser = data => {
 	return {
 		type: UPDATE_CURRENT_USER,
 		data,
-	}
-}
+	};
+};
 
 export const setApiKey = apiKey => {
 	return {
 		type: SET_API_KEY,
-		apiKey
-	}
-}
+		apiKey,
+	};
+};
 
 export const setAuthorizationToken = token => {
 	setTokenHeader(token);
@@ -32,7 +39,7 @@ export function logout() {
 	return dispatch => {
 		localStorage.removeItem('jwt_token');
 		setAuthorizationToken(false);
-		dispatch(setCurrentUser({}));
+		dispatch(removeUser());
 		dispatch(setShopify({}));
 		dispatch(clearAllOrders());
 		dispatch(clearAllProducts());
@@ -45,7 +52,7 @@ export function authUser(type, userData) {
 			console.log('User data:', userData);
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, ...user }) => {
-					console.log(message, token)
+					console.log(message, token);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					dispatch(setCurrentUser(user));
@@ -67,14 +74,14 @@ export function authUser(type, userData) {
 	};
 }
 
-export function authorizeAPI(userData) {
+export function authorizeAPI(userData, strategy) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('User data:', userData);
-			return apiCall('POST', `/server/auth/token`, userData)
+			return apiCall('POST', `/server/auth/token`, { ...userData, strategy })
 				.then(({ apiKey }) => {
-					dispatch(setApiKey(apiKey))
-					resolve(apiKey)
+					dispatch(setApiKey(apiKey));
+					resolve(apiKey);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
@@ -85,20 +92,43 @@ export function authorizeAPI(userData) {
 	};
 }
 
-export function updateProfile(data){
+export function updateProfile({ img, id, ...data }) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(data);
-			return apiCall("POST", '/server/auth/update', data)
+			console.log("Image:", img);
+			console.log("Data:", data);
+			return apiCall('POST', '/server/auth/update', { img, id, data })
 				.then(({ message, ...data }) => {
-					dispatch(updateCurrentUser(data))
-					resolve(message)
+					if (img) {
+						const formData = new FormData();
+						console.log(img);
+						formData.append('img', img);
+						formData.append('id', id);
+						const config = {
+							headers: {
+								'content-type': 'multipart/form-data',
+							},
+						};
+						apiCall('POST', '/server/auth/upload', formData, config).then(({ imageFile }) => {
+							console.log(imageFile);
+							apiCall('POST','/server/auth/download', { imageFile })
+								.then(profileImageData => {
+									dispatch(updateCurrentUser({ profileImageURL: imageFile, profileImageData }));
+								})
+								.catch(err => {
+									console.error(err);
+									reject(err);
+								});
+						});
+					}
+					dispatch(updateCurrentUser({ ...data }));
+					resolve(message);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
-				})
-		})
-	}
+				});
+		});
+	};
 }

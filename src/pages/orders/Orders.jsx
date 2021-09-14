@@ -41,6 +41,11 @@ export default function Orders() {
 					inProgress: params.value === 'In Progress',
 					unpacked: params.value === 'Unpacked',
 				}),
+			renderCell: params => (
+				<div className='d-flex justify-content-center align-items-center'>
+					<span className='text-decoration-none'>{params.value}</span>
+				</div>
+			),
 		},
 		{ field: 'customerName', headerName: 'Customer', width: 150 },
 		{ field: 'phoneNumber', headerName: 'Number', type: 'number', width: 150 },
