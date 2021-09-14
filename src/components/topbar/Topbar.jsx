@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Topbar.css';
 import logo from '../../img/secondsapp.svg';
 import { Link, useHistory } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { PATHS } from '../../constants';
 import { useSelector } from 'react-redux';
 
 export default function Topbar() {
-	const { firstname, lastname, profileImageData } = useSelector(state => state["currentUser"].user)
+	const { firstname, lastname, profileImageData } = useSelector(state => state['currentUser'].user);
 	const history = useHistory();
 
 	return (
@@ -18,9 +18,9 @@ export default function Topbar() {
 					</span>
 				</Link>
 			</div>
-			<div className="collapse navbar-collapse" id="profile">
+			<div className='collapse navbar-collapse' id='profile'>
 				<div className='navbar-text me-5' onClick={() => history.push(PATHS.PROFILE)}>
-					<div className='d-flex align-items-center' role="button">
+					<div className='d-flex align-items-center' role='button'>
 						<img
 							className='border rounded-circle me-3'
 							src={`data:image/jpeg;base64,${profileImageData}`}
@@ -28,8 +28,8 @@ export default function Topbar() {
 							width={50}
 							height={50}
 						/>
-						<span className="profile-text fs-6 text-dark">{firstname}&nbsp;</span>
-						<span className="profile-text fs-6 text-dark">{lastname}</span>
+						<span className='profile-text fs-6 text-dark'>{firstname}&nbsp;</span>
+						<span className='profile-text fs-6 text-dark'>{lastname}</span>
 					</div>
 				</div>
 			</div>

@@ -27,4 +27,4 @@ export function createDeliveryJob(deliveryParams, apiKey) {
 				});
 		});
 	};
-};
+}

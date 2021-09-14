@@ -2,7 +2,6 @@ import { apiCall, setTokenHeader } from '../../api';
 import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER, REMOVE_CURRENT_USER } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
-import axios from 'axios';
 
 export const removeUser = () => {
 	return {

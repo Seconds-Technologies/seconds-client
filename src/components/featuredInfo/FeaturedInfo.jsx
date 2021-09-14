@@ -6,7 +6,7 @@ import "./FeaturedInfo.css";
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();
-    const { isIntegrated, credentials } = useSelector(state => state["shopifyUser"]);
+    const { isIntegrated, credentials } = useSelector(state => state["shopifyStore"]);
     const { allOrders, completedOrders } = useSelector(state => state["shopifyOrders"]);
     const { email, createdAt } = useSelector(state => state["currentUser"].user)
 

@@ -13,7 +13,7 @@ export default function ViewOrder() {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const allOrders = useSelector(state => state["shopifyOrders"].allOrders);
-	const { baseURL, accessToken } = useSelector(state => state["shopifyUser"].credentials);
+	const { baseURL, accessToken } = useSelector(state => state["shopifyStore"].credentials);
 	const { email } = useSelector(state => state["currentUser"].user);
 	const [fleets] = useState(["Gophr", "Stuart"])
 	const [order, setOrder] = useState({});

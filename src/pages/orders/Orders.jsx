@@ -6,7 +6,6 @@ import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { PATHS } from '../../constants';
 import './Orders.css';
-import clsx from 'clsx';
 
 export default function Orders() {
 	const dispatch = useDispatch();
@@ -22,7 +21,7 @@ export default function Orders() {
 			return { id: order_number, status, customerName, phoneNumber: phone, address, date, time };
 		});
 	});
-	const { isIntegrated } = useSelector(state => state['shopifyUser']);
+	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
 
 	useEffect(() => {
@@ -35,15 +34,26 @@ export default function Orders() {
 			field: 'status',
 			headerName: 'Status',
 			width: 150,
-			cellClassName: params =>
-				clsx({
-					completed: params.value === 'Completed',
-					inProgress: params.value === 'In Progress',
-					unpacked: params.value === 'Unpacked',
-				}),
 			renderCell: params => (
-				<div className='d-flex justify-content-center align-items-center'>
-					<span className='text-decoration-none'>{params.value}</span>
+				<div className='h-75'>
+					<div
+						className="h-75 d-flex justify-content-center align-items-center"
+						style={{
+							paddingLeft: 20,
+							paddingRight: 20,
+							borderRadius: 50,
+							backgroundColor:
+								params.value === 'Unpacked'
+									? '#F44336'
+									: params.value === 'In Progress'
+									? '#FFC107'
+									: params.value === 'Completed'
+									? '#00ff66'
+									: '#9400d3',
+						}}
+					>
+						<span className='text-light'>{params.value}</span>
+					</div>
 				</div>
 			),
 		},

@@ -9,7 +9,7 @@ const Shopify = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated, credentials } = useSelector(state => state['shopifyUser']);
+	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
 	return (
 		<div className='shopifyContainer container pb-3'>
 			{!isIntegrated ? (
