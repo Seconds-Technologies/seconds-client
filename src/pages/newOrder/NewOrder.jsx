@@ -20,8 +20,8 @@ const NewOrder = props => {
 		{ field: 'id', headerName: 'Job ID', width: 100 },
 		{ field: 'pickupAddress', headerName: 'pickup address', width: 150 },
 		{ field: 'dropoffAddress', headerName: 'dropoff Address', width: 150 },
-		{ field: 'pickupStartTime', type: "dateTime", headerName: 'pickup time', width: 150 },
-		{ field: 'dropoffStartTime', type: "dateTime", headerName: 'dropoff time', width: 150 },
+		{ field: 'pickupStartTime', type: 'dateTime', headerName: 'pickup time', width: 150 },
+		{ field: 'dropoffStartTime', type: 'dateTime', headerName: 'dropoff time', width: 150 },
 		{ field: 'description', headerName: 'Description', width: 150 },
 		{ field: 'quoteID', headerName: 'Quote ID', width: 150 },
 	];
@@ -34,23 +34,23 @@ const NewOrder = props => {
 				</Modal.Header>
 				<Modal.Body>
 					<div>
-						{Object.entries(deliveryJob).map(([key, value]) => (
-							<div className="row p-3">
-								<div className="col">{key}</div>
-								<div className="col">{value}</div>
+						{Object.entries(deliveryJob).map(([key, value], index) => (
+							<div key={index} className='row p-3'>
+								<div className='col text-capitalize'>{key}</div>
+								<div className='col'>{value}</div>
 							</div>
 						))}
 					</div>
 				</Modal.Body>
 			</Modal>
 			<Formik
+				enableReinitialize
 				initialValues={{
-					orderId: '',
-					pickupFirstName: '',
-					pickupLastName: '',
-					pickupBusinessName: '',
+					pickupFirstName: firstname,
+					pickupLastName: lastname,
+					pickupBusinessName: company,
 					pickupAddress: '',
-					pickupEmailAddress: 'N/A',
+					pickupEmailAddress: email,
 					pickupPhoneNumber: '',
 					packagePickupStartTime: '',
 					pickupInstructions: '',
@@ -67,10 +67,16 @@ const NewOrder = props => {
 					itemsCount: null,
 				}}
 				onSubmit={(values, actions) => {
-					console.log(values)
+					console.log(values);
 					apiKey
 						? dispatch(createDeliveryJob(values, apiKey)).then(
-								({ createdAt, id, packages, status, winnerQuote }) => {
+								({
+									createdAt,
+									jobId,
+									jobSpecification: { packages },
+									status,
+									selectedConfiguration: { providerId, winnerQuote },
+								}) => {
 									let {
 										description,
 										pickupLocation: { address: pickupAddress },
@@ -79,14 +85,14 @@ const NewOrder = props => {
 										dropoffStartTime,
 									} = packages[0];
 									let newJob = {
-										id,
+										jobId,
 										description,
 										pickupAddress,
 										dropoffAddress,
-										pickupStartTime: moment(pickupStartTime).format("DD-MM-YYYY HH:MM:ss"),
-										dropoffStartTime: moment(dropoffStartTime).format("DD-MM-YYYY HH:MM:ss"),
+										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 										status,
-										quoteId: winnerQuote,
+										fleetProvider: providerId,
 									};
 									setJob(newJob);
 									handleOpen();
@@ -106,7 +112,9 @@ const NewOrder = props => {
 								<div className='border border-2 rounded-3 p-4'>
 									<div className='row'>
 										<div className='col-6'>
-											<label htmlFor='pickup-first-name' className="mb-1">First Name</label>
+											<label htmlFor='pickup-first-name' className='mb-1'>
+												First Name
+											</label>
 											<input
 												autoComplete='given-name'
 												name='pickupFirstName'
@@ -119,10 +127,12 @@ const NewOrder = props => {
 											/>
 										</div>
 										<div className='col-6'>
-											<label htmlFor='pickup-last-name'className="mb-1">Last Name</label>
+											<label htmlFor='pickup-last-name' className='mb-1'>
+												Last Name
+											</label>
 											<input
 												autoComplete='family-name'
-												id="pickup-last-name"
+												id='pickup-last-name'
 												name='pickupLastName'
 												type='text'
 												className='form-control form-border mb-2'
@@ -135,10 +145,12 @@ const NewOrder = props => {
 									</div>
 									<div className='row'>
 										<div className='col-6'>
-											<label htmlFor='pickup-email-address' className="mb-1">Email Address</label>
+											<label htmlFor='pickup-email-address' className='mb-1'>
+												Email Address
+											</label>
 											<input
 												autoComplete='email'
-												id="pickup-email-address"
+												id='pickup-email-address'
 												name='pickupEmailAddress'
 												type='email'
 												className='form-control form-border mb-2'
@@ -149,7 +161,9 @@ const NewOrder = props => {
 											/>
 										</div>
 										<div className='col-6'>
-											<label htmlFor='pickup-phone-number' className="mb-1">Phone Number</label>
+											<label htmlFor='pickup-phone-number' className='mb-1'>
+												Phone Number
+											</label>
 											<input
 												autoComplete='tel'
 												name='businessPhoneNumber'
@@ -162,7 +176,9 @@ const NewOrder = props => {
 											/>
 										</div>
 									</div>
-									<label htmlFor='pickup-business-name' className="mb-1">Business Name</label>
+									<label htmlFor='pickup-business-name' className='mb-1'>
+										Business Name
+									</label>
 									<input
 										autoComplete='organization'
 										id='pickup-business-name'
@@ -174,10 +190,12 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='pickup-address' className="mb-1">Pickup Address</label>
+									<label htmlFor='pickup-address' className='mb-1'>
+										Pickup Address
+									</label>
 									<input
 										autoComplete='street-address'
-										id="pickup-address"
+										id='pickup-address'
 										name='pickupAddress'
 										type='text'
 										className='form-control form-border mb-3'
@@ -185,7 +203,9 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='pickup-datetime' className="mb-1">Pickup At</label>
+									<label htmlFor='pickup-datetime' className='mb-1'>
+										Pickup At
+									</label>
 									<input
 										id='pickup-datetime'
 										name='packagePickupStartTime'
@@ -195,9 +215,11 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='pickup-instructions' className="mb-1">Pickup Instructions</label>
+									<label htmlFor='pickup-instructions' className='mb-1'>
+										Pickup Instructions
+									</label>
 									<textarea
-										id="pickup-instructions"
+										id='pickup-instructions'
 										name='pickupInstructions'
 										className='form-control form-border mb-3'
 										aria-label='pickup-instructions'
@@ -211,10 +233,12 @@ const NewOrder = props => {
 								<div className='border border-2 rounded-3 p-4'>
 									<div className='row'>
 										<div className='col-6'>
-											<label htmlFor='dropoff-first-name' className="mb-1">First Name</label>
+											<label htmlFor='dropoff-first-name' className='mb-1'>
+												First Name
+											</label>
 											<input
 												autoComplete='given-name'
-												id="dropoff-first-name"
+												id='dropoff-first-name'
 												name='dropoffFirstName'
 												type='text'
 												className='form-control form-border mb-2'
@@ -224,10 +248,12 @@ const NewOrder = props => {
 											/>
 										</div>
 										<div className='col-6'>
-											<label htmlFor='dropoff-last-name' className="mb-1">Last Name</label>
+											<label htmlFor='dropoff-last-name' className='mb-1'>
+												Last Name
+											</label>
 											<input
 												autoComplete='family-name'
-												id="dropoff-last-name"
+												id='dropoff-last-name'
 												name='dropoffLastName'
 												type='text'
 												className='form-control form-border mb-2'
@@ -239,10 +265,12 @@ const NewOrder = props => {
 									</div>
 									<div className='row'>
 										<div className='col-6'>
-											<label htmlFor='dropoff-email-address' className="mb-1">Email Address</label>
+											<label htmlFor='dropoff-email-address' className='mb-1'>
+												Email Address
+											</label>
 											<input
 												autoComplete='email'
-												id="dropoff-email-address"
+												id='dropoff-email-address'
 												name='dropoffEmailAddress'
 												type='email'
 												className='form-control form-border mb-2'
@@ -252,7 +280,9 @@ const NewOrder = props => {
 											/>
 										</div>
 										<div className='col-6'>
-											<label htmlFor='dropoff-phone-number' className="mb-1">Phone Number</label>
+											<label htmlFor='dropoff-phone-number' className='mb-1'>
+												Phone Number
+											</label>
 											<input
 												autoComplete='tel'
 												name='dropoffPhoneNumber'
@@ -264,10 +294,12 @@ const NewOrder = props => {
 											/>
 										</div>
 									</div>
-									<label htmlFor='dropoff-business-name' className="mb-1">Business Name</label>
+									<label htmlFor='dropoff-business-name' className='mb-1'>
+										Business Name
+									</label>
 									<input
 										autoComplete='organization'
-										id="dropoff-business-name"
+										id='dropoff-business-name'
 										name='dropoffBusinessName'
 										type='text'
 										className='form-control form-border mb-3'
@@ -275,7 +307,9 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='dropoff-street-address' className="mb-1">Dropoff Address</label>
+									<label htmlFor='dropoff-street-address' className='mb-1'>
+										Dropoff Address
+									</label>
 									<input
 										autoComplete='street-address'
 										name='dropoffAddress'
@@ -285,9 +319,11 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='dropoff-datetime' className="mb-1">Dropoff At</label>
+									<label htmlFor='dropoff-datetime' className='mb-1'>
+										Dropoff At
+									</label>
 									<input
-										id="dropoff-datetime"
+										id='dropoff-datetime'
 										name='packageDropoffStartTime'
 										type='datetime-local'
 										className='form-control form-border mb-3'
@@ -296,7 +332,9 @@ const NewOrder = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<label htmlFor='dropoff-instructions' className="mb-1">Dropoff Instructions</label>
+									<label htmlFor='dropoff-instructions' className='mb-1'>
+										Dropoff Instructions
+									</label>
 									<textarea
 										name='dropoffInstructions'
 										className='form-control form-border mb-3'
@@ -309,15 +347,6 @@ const NewOrder = props => {
 							<div className='row my-3 align-items-center'>
 								<div className='col-12 d-flex flex-column'>
 									<h4>Order Details</h4>
-									<input
-										name='orderId'
-										type='text'
-										className='form-control form-border my-3'
-										placeholder='Order ID'
-										aria-label='order-id'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
 									<div className='row'>
 										<div className='col-6'>
 											<input

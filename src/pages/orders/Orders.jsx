@@ -20,7 +20,7 @@ export default function Orders() {
 			let address = `${address1} ${city} ${zip}`;
 			phone = phone === null || undefined ? 'N/A' : phone;
 			let date = moment(created_at).format('DD/MM/YYYY');
-			let time = moment(created_at).format('HH:MM:SS');
+			let time = moment(created_at).format('HH:mm:ss');
 			return { id: order_number, status, customerName, phoneNumber: phone, address, date, time };
 		}) : []
 	});
@@ -31,7 +31,7 @@ export default function Orders() {
 			let customerName = `${firstName} ${lastName}`;
 			phone = phone === null || undefined ? 'N/A' : phone;
 			let date = moment(createdAt).format('DD/MM/YYYY');
-			let time = moment(createdAt).format('HH:MM:SS');
+			let time = moment(createdAt).format('HH:mm:ss');
 			return { id: orderNumber, status, customerName, phoneNumber: phone, address, date, time };
 		}) : []
 	})

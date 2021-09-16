@@ -1,5 +1,5 @@
 import {
-	CLEAR_JOBS,
+	CLEAR_JOBS, NEW_DELIVERY_JOB,
 	REMOVE_COMPLETED_JOB,
 	SET_ALL_JOBS,
 	SET_COMPLETED_JOBS,
@@ -15,6 +15,8 @@ export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case SET_ALL_JOBS:
 			return { ...state, allJobs: action.jobs }
+		case NEW_DELIVERY_JOB:
+			return { ...state, allJobs: [...state.allJobs, action.job] }
 		case SET_COMPLETED_JOBS:
 			let newCompletedJobs = action.jobs.filter(item => item.status === "Completed").map(item => item.id)
 			return { ...state, completedJobs: newCompletedJobs }

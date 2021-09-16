@@ -46,7 +46,7 @@ const ViewOrder = props => {
 							let phone = order['customer']['phone'];
 							let { address1, city, zip } = order['shipping_address'];
 							let address = `${address1} ${city} ${zip}`;
-							let createdAt = moment(order['created_at']).format('DD/MM/YYYY HH:MM:ss');
+							let createdAt = moment(order['created_at']).format('DD/MM/YYYY HH:mm:ss');
 							return {
 								id: order['id'],
 								orderNumber: order['order_number'],
@@ -86,7 +86,7 @@ const ViewOrder = props => {
 							pickupStartTime,
 						} = packages[0];
 						let customerName = `${firstName} ${lastName}`;
-						createdAt = moment(createdAt).format('DD/MM/YYYY HH:MM:ss');
+						createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
 						return {
 							id: _id,
 							orderNumber,
