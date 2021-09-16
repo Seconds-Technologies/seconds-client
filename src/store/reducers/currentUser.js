@@ -1,6 +1,6 @@
 import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
 
-const DEFAULT_STATE = {
+export const DEFAULT_STATE = {
 	isAuthenticated: false, //be true when user logged in
 	user: {
 		firstname: '',
@@ -8,7 +8,6 @@ const DEFAULT_STATE = {
 		company: '',
 		email: '',
 		apiKey: '',
-		profileImageURL: '',
 		profileImageData: '',
 	}, //all user info when logged in
 };

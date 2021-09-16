@@ -6,12 +6,15 @@ import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { PATHS } from '../../constants';
 import './Orders.css';
+import { getAllJobs } from '../../store/actions/delivery';
 
 export default function Orders() {
 	const dispatch = useDispatch();
+	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const orders = useSelector(state => {
 		const allOrders = state['shopifyOrders'].allOrders;
-		return allOrders.map(({ order_number, status, shipping_address, phone, created_at, customer }) => {
+		return isIntegrated ? allOrders.map(({ order_number, status, shipping_address, phone, created_at, customer }) => {
 			let { address1, city, zip } = shipping_address;
 			let customerName = `${customer['first_name']} ${customer['last_name']}`;
 			let address = `${address1} ${city} ${zip}`;
@@ -19,13 +22,22 @@ export default function Orders() {
 			let date = moment(created_at).format('DD/MM/YYYY');
 			let time = moment(created_at).format('HH:MM:SS');
 			return { id: order_number, status, customerName, phoneNumber: phone, address, date, time };
-		});
+		}) : []
 	});
-	const { isIntegrated } = useSelector(state => state['shopifyStore']);
-	const { email } = useSelector(state => state['currentUser'].user);
+	const jobs = useSelector(state => {
+		const { allJobs } = state["deliveryJobs"];
+		return apiKey ? allJobs.map(({ status, jobSpecification: { orderNumber, packages }, createdAt }) => {
+			let { dropoffLocation: { address, phoneNumber:phone, firstName, lastName } } = packages[0];
+			let customerName = `${firstName} ${lastName}`;
+			phone = phone === null || undefined ? 'N/A' : phone;
+			let date = moment(createdAt).format('DD/MM/YYYY');
+			let time = moment(createdAt).format('HH:MM:SS');
+			return { id: orderNumber, status, customerName, phoneNumber: phone, address, date, time };
+		}) : []
+	})
 
 	useEffect(() => {
-		dispatch(fetchOrders(email));
+		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email))
 	}, []);
 
 	const columns = [
@@ -35,7 +47,7 @@ export default function Orders() {
 			headerName: 'Status',
 			width: 150,
 			renderCell: params => (
-				<div className='h-75'>
+				<div className='h-75 d-flex align-items-center'>
 					<div
 						className="h-75 d-flex justify-content-center align-items-center"
 						style={{
@@ -95,7 +107,7 @@ export default function Orders() {
 				]}
 				autoHeight
 				className='grid'
-				rows={orders}
+				rows={isIntegrated ? orders : jobs}
 				disableSelectionOnClick
 				columns={columns}
 				pageSize={10}

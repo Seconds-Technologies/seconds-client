@@ -10,10 +10,10 @@ import PrivateRoute from '../components/PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Login from '../pages/login/Login';
 import Help from '../pages/Help';
-import { PATHS } from '../constants';
 import Shopify from '../pages/shopify/Shopify';
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
+import { PATHS } from '../constants';
 
 const routes = (
 	<Switch>

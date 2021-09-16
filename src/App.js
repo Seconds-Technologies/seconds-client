@@ -5,6 +5,7 @@ import Sidebar from './components/sidebar/Sidebar';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { setAuthorizationToken } from './store/actions/auth';
+import GeolocationContextProvider from './context/GeolocationContext';
 import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -13,18 +14,18 @@ if (localStorage.getItem('jwt_token')) {
 }
 
 function App() {
-	const [img, setImage] = useState();
-	const { isAuthenticated, user } = useSelector(state => state['currentUser']);
-	console.log(isAuthenticated);
-
+	const { isAuthenticated } = useSelector(state => state['currentUser']);
+	console.log("isAuthenticated:", isAuthenticated);
 	return (
-		<Router>
-			{isAuthenticated && <Topbar name={`${user.firstname} ${user.lastname}`} profileImage={img} />}
-			<div className='app-container'>
-				{isAuthenticated && <Sidebar />}
-				{routes}
-			</div>
-		</Router>
+		<GeolocationContextProvider>
+			<Router>
+				{isAuthenticated && <Topbar/>}
+				<div className='app-container'>
+					{isAuthenticated && <Sidebar />}
+					{routes}
+				</div>
+			</Router>
+		</GeolocationContextProvider>
 	);
 }
 

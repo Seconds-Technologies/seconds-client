@@ -23,8 +23,8 @@ export default function Login() {
                 <img className="img-fluid mx-auto" src={logo} alt="" />
             </div>
             <div className="greeting">
-                <h3 className="welcome">Welcome back!</h3>
-                <h5 className="moreMessage">Nice to see you again.</h5>
+                <h3 className="text-white welcome">Welcome back!</h3>
+                <h5 className="text-white moreMessage">Nice to see you again.</h5>
             </div>
             <div className="d-flex w-sm loginContainer mx-auto px-4 py-5">
                 <div className="d-flex flex-grow-1 flex-column justify-content-center">

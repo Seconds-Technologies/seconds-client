@@ -61,7 +61,7 @@ const Shopify = props => {
 									</label>
 									<input
 										type='text'
-										className='form-control'
+										className='form-control rounded-3'
 										id='shopName'
 										name='shopName'
 										onChange={handleChange}
@@ -78,7 +78,7 @@ const Shopify = props => {
 									<input
 										autoComplete={'new-password'}
 										type='password'
-										className='form-control'
+										className='form-control rounded-3'
 										id='apiKey'
 										name='apiKey'
 										onChange={handleChange}
@@ -101,7 +101,7 @@ const Shopify = props => {
 									<input
 										autoComplete={'new-password'}
 										type='password'
-										className='form-control'
+										className='form-control rounded-3'
 										name='password'
 										id='apiPassword'
 										onChange={handleChange}

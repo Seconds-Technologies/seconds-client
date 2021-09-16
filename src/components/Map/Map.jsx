@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import marker from '../../img/marker.svg';
-import useGeolocation from '../../hooks/useGeolocation';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 
 const Map = props => {
-	const { latitude, longitude} = useGeolocation();
+	const latitude = Number(localStorage.getItem("latitude"))
+	const longitude = Number(localStorage.getItem("longitude"))
 	const [showMap, setShowMap] = useState(false);
 	const Mapbox = ReactMapboxGl({
-		accessToken: "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"|| process.env.REACT_APP_MAPBOX_TOKEN,
+		accessToken: process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"
 	});
 
 	return (
@@ -21,6 +21,8 @@ const Map = props => {
 					height: 500,
 					width: '',
 				}}
+				maxZoom={15}
+				minZoom={10}
 				center={[longitude, latitude]}
 				style='mapbox://styles/chipzstar/cktenny8g0ez218nx2wue8i08'
 			>

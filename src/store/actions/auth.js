@@ -1,13 +1,14 @@
 import { apiCall, setTokenHeader } from '../../api';
-import { SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER, REMOVE_CURRENT_USER } from '../actionTypes';
+import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
+import { clearAllJobs } from './delivery';
 
 export const removeUser = () => {
 	return {
 		type: REMOVE_CURRENT_USER,
-	}
-}
+	};
+};
 
 export const setCurrentUser = user => {
 	return {
@@ -42,6 +43,7 @@ export function logout() {
 		dispatch(setShopify({}));
 		dispatch(clearAllOrders());
 		dispatch(clearAllProducts());
+		dispatch(clearAllJobs());
 	};
 }
 
@@ -50,12 +52,12 @@ export function authUser(type, userData) {
 		return new Promise((resolve, reject) => {
 			console.log('User data:', userData);
 			return apiCall('POST', `/server/auth/${type}`, userData)
-				.then(({ token, message, ...user }) => {
-					console.log(message, token);
+				.then(({ token, message, shopify, ...user }) => {
+					console.log(message, token, shopify);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					dispatch(setCurrentUser(user));
-					apiCall('POST', `/server/shopify`, { email: user.email })
+					shopify && apiCall('POST', `/server/shopify`, { email: user.email })
 						.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
 							dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));
 							resolve({ baseURL, accessToken, shopId, domain, country, shopOwner });
@@ -94,8 +96,8 @@ export function authorizeAPI(userData, strategy) {
 export function updateProfile({ img, id, ...data }) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log("Image:", img);
-			console.log("Data:", data);
+			console.log('Image:', img);
+			console.log('Data:', data);
 			return apiCall('POST', '/server/auth/update', { img, id, data })
 				.then(({ message, ...data }) => {
 					if (img) {
@@ -108,17 +110,15 @@ export function updateProfile({ img, id, ...data }) {
 								'content-type': 'multipart/form-data',
 							},
 						};
-						apiCall('POST', '/server/auth/upload', formData, config).then(({ imageFile }) => {
-							console.log(imageFile);
-							apiCall('POST','/server/auth/download', { imageFile })
-								.then(profileImageData => {
-									dispatch(updateCurrentUser({ profileImageURL: imageFile, profileImageData }));
-								})
-								.catch(err => {
-									console.error(err);
-									reject(err);
-								});
-						});
+						apiCall('POST', '/server/auth/upload', formData, config)
+							.then(({ base64Image, message }) => {
+								console.log(base64Image);
+								dispatch(updateCurrentUser({ profileImageData: base64Image }));
+							})
+							.catch(err => {
+								console.error(err);
+								reject(err);
+							});
 					}
 					dispatch(updateCurrentUser({ ...data }));
 					resolve(message);

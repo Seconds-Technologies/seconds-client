@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Overlay, Tooltip } from 'react-bootstrap';
 import copy from '../../img/copy.svg';
 import { authorizeAPI } from '../../store/actions/auth';
 import './apikey.css';
+import secondsLogo from '../../img/logo.svg';
 
 const ApiKey = props => {
 	const dispatch = useDispatch();
@@ -15,11 +16,6 @@ const ApiKey = props => {
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 	const apiKeyRef = useRef(null);
-	let timeout;
-
-	useEffect(() => {
-		return () => clearTimeout(timeout);
-	}, []);
 
 	return (
 		<div className='api-key-container p-4'>
@@ -31,10 +27,11 @@ const ApiKey = props => {
 					<div className='row d-flex align-items-end'>
 						<div className='col-9 d-flex flex-column'>
 							<label htmlFor=''>API key</label>
-							<input readOnly className='form-control w-100' type='text' value={key} />
+							<input readOnly className='form-control rounded-3 w-100' type='text' value={key} />
 						</div>
 						<div className='col-3 d-flex flex-column'>
 							<Button
+								className="rounded-3"
 								variant='light'
 								ref={apiKeyRef}
 								onClick={() => {
@@ -83,12 +80,14 @@ const ApiKey = props => {
 				</Modal.Footer>
 			</Modal>
 			{!user.apiKey ? (
-				<div className='container'>
-					<div className='pb-5'>
-						<h1>New Api Key</h1>
+				<div className='container d-flex flex-column align-items-center justify-content-center h-100'>
+					<div>
+						<h2>Connect to Seconds API</h2>
 					</div>
-					<div className='d-flex flex-grow-1 flex-column justify-content-center'>
+					<img className='img-fluid seconds-logo my-4' src={secondsLogo} alt='' />
+					<div>
 						<Formik
+							enableReinitialize
 							initialValues={{
 								strategy: 'eta',
 							}}
@@ -103,14 +102,17 @@ const ApiKey = props => {
 							}
 						>
 							{({ values, errors, handleChange, handleBlur, handleSubmit }) => (
-								<form className='' onSubmit={handleSubmit}>
+								<form
+									className='d-flex flex-grow-1 flex-column justify-content-center align-items-center'
+									onSubmit={handleSubmit}
+								>
 									<label htmlFor='strategy'>
-										<h2>Delivery strategy</h2>
+										<h4>Delivery strategy</h4>
 									</label>
 									<select
 										required
 										placeholder='Optional'
-										className='form-select form-select-lg w-50 my-4'
+										className='form-select form-select-lg w-50 my-3'
 										name='strategy'
 										id='strategy'
 										onChange={handleChange}
@@ -120,12 +122,22 @@ const ApiKey = props => {
 										<option value='price'>Lowest Price</option>
 										<option value='rating'>Best Rating</option>
 									</select>
-									<button type='submit' className='me-5 api-key-button'>
-										Generate API Key
-									</button>
-									<button className='mt-2 text-center shopifyButton' onClick={props.history.goBack}>
-										Go Back
-									</button>
+									<div id='strategy-help' className='form-text fs-6 mb-4'>
+										Your delivery strategy reflects which fleet providers we choose for your
+										customers
+									</div>
+									<div>
+										<button type='submit' className='me-5 api-key-button'>
+											Generate API Key
+										</button>
+										<button
+											type="button"
+											className='mt-2 text-center shopifyButton'
+											onClick={props.history.goBack}
+										>
+											Go Back
+										</button>
+									</div>
 								</form>
 							)}
 						</Formik>

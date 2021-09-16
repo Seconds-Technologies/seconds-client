@@ -4,6 +4,8 @@ import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/actions/auth';
 import camera from '../../img/camera.svg';
+import { PATHS } from '../../constants';
+import classnames from 'classnames';
 import './profile.css';
 
 const Profile = props => {
@@ -11,7 +13,7 @@ const Profile = props => {
 	const { id, email, firstname, lastname, company, apiKey, profileImageData } = useSelector(
 		state => state['currentUser'].user
 	);
-	const [preview, setPreview] = useState(null);
+	const { isIntegrated } = useSelector(state => state["shopifyStore"])
 	const [src, setSrc] = useState(null);
 	const [apiModal, showAPIModal] = useState(false);
 	const [successModal, showSuccessModal] = useState(false);
@@ -58,6 +60,14 @@ const Profile = props => {
 		</Modal>
 	);
 
+	const btnContainer = classnames({
+		"row": true,
+		"d-flex": true,
+		"justify-content-center": true,
+		"my-4": !isIntegrated,
+		"my-5": isIntegrated
+	})
+
 	return (
 		<div className='profile container d-flex justify-content-center align-items-center px-5'>
 			{modal1}
@@ -69,10 +79,10 @@ const Profile = props => {
 						lastname,
 						company,
 						email,
-						profileImageURL: null,
+						profileImage: null,
 					}}
-					onSubmit={({ profileImageURL, ...values }) => {
-						dispatch(updateProfile({ img: profileImageURL, id, ...values }))
+					onSubmit={({ profileImage, ...values }) => {
+						dispatch(updateProfile({ img: profileImage, id, ...values }))
 							.then(message => handleOpen('profile'))
 							.catch(err => alert(err));
 					}}
@@ -82,19 +92,20 @@ const Profile = props => {
 							<div className='row text-center'>
 								<div className='col-12 d-flex flex-column justify-content-center align-items-center py-3'>
 									<input
-										name='profileImageURL'
+										name='profileImage'
 										type='file'
 										ref={imageUploader}
 										accept='image/*'
 										onChange={e => {
 											handleImageUpload(e);
-											setFieldValue('profileImageURL', e.target.files[0]);
+											setFieldValue('profileImage', e.target.files[0]);
 										}}
 										style={{
 											display: 'none',
 										}}
 									/>
 									<div
+										role="button"
 										className='border-1 rounded-circle text-center'
 										style={{
 											display: 'inline-flex',
@@ -193,11 +204,21 @@ const Profile = props => {
 									/>
 								</div>
 							</div>
-							<div className='row my-4'>
-								<div className='col-12'>
+							<div className={btnContainer}>
+								{!isIntegrated && <div className='col-12'>
 									<span>For developers</span>
-								</div>
-								<div className='col-6'>
+								</div>}
+								{!isIntegrated && <div className='col-6'>
+									<Button
+										variant='dark'
+										size='lg'
+										className='w-100'
+										onClick={() => apiKey ? handleOpen('api') : isIntegrated ? props.history.push(PATHS.API_KEY) : null}
+									>
+										Get API Key
+									</Button>
+								</div>}
+								<div className='col-6 d-flex'>
 									<style type='text/css'>
 										{`
 									.btn-submit {
@@ -208,16 +229,6 @@ const Profile = props => {
 									}
 								`}
 									</style>
-									<Button
-										variant='dark'
-										size='lg'
-										className='w-100'
-										onClick={() => handleOpen('api')}
-									>
-										Get API Key
-									</Button>
-								</div>
-								<div className='col-6 d-flex'>
 									<Button className='text-light w-100' variant='submit' type='submit' size='lg'>
 										Save Changes
 									</Button>

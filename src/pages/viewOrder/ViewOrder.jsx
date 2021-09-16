@@ -1,21 +1,24 @@
-import "./viewOrder.css";
-import { useLocation } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { apiCall } from "../../api";
-import { Formik } from "formik";
-import ProductItem from "../../components/ProductItem";
-import classnames from "classnames";
-import { updateOrderStatus } from "../../store/actions/shopify";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { apiCall } from '../../api';
+import { Formik } from 'formik';
+import ProductItem from '../../components/ProductItem';
+import classnames from 'classnames';
+import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
+import './viewOrder.css';
 
-export default function ViewOrder() {
+const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const location = useLocation();
-	const allOrders = useSelector(state => state["shopifyOrders"].allOrders);
-	const { baseURL, accessToken } = useSelector(state => state["shopifyStore"].credentials);
-	const { email } = useSelector(state => state["currentUser"].user);
-	const [fleets] = useState(["Gophr", "Stuart"])
+	const {
+		isIntegrated,
+		credentials: { baseURL, accessToken },
+	} = useSelector(state => state['shopifyStore']);
+	const { email } = useSelector(state => state['currentUser'].user);
+	const { allOrders } = useSelector(state => state['shopifyOrders']);
+	const { allJobs } = useSelector(state => state['deliveryJobs']);
+
+	const [fleets] = useState(['Gophr', 'Stuart']);
 	const [order, setOrder] = useState({});
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
@@ -23,46 +26,82 @@ export default function ViewOrder() {
 
 	const statusBtn = classnames({
 		orderAddButton: true,
-		"me-3": true,
-		unpacked: order.status === "Unpacked",
-		inProgress: order.status === "In Progress",
-		completed: order.status === "Completed",
+		'me-3': true,
+		unpacked: order.status === 'Unpacked',
+		inProgress: order.status === 'In Progress',
+		completed: order.status === 'Completed',
 	});
 
 	useEffect(() => {
 		(async () => {
-			const orderID = Number(location["pathname"].split('/').reverse()[0]);
-			let currentOrder = allOrders
-				.filter(order => order["order_number"] === orderID)
-				.map(order => {
-					if (order["order_number"] === orderID) {
-						let fullName = `${order["customer"]["first_name"]} ${order["customer"]["last_name"]}`;
-						let email = order["customer"]["email"];
-						let phone = order["customer"]["phone"];
-						let { address1, city, zip } = order["shipping_address"];
-						let address = `${address1} ${city} ${zip}`;
+			const orderID = props.location['pathname'].split('/').reverse()[0];
+			if (isIntegrated) {
+				let currentOrder = allOrders
+					.filter(order => order['order_number'].toString() === orderID)
+					.map(order => {
+						if (order['order_number'] === orderID) {
+							let fullName = `${order['customer']['first_name']} ${order['customer']['last_name']}`;
+							let email = order['customer']['email'];
+							let phone = order['customer']['phone'];
+							let { address1, city, zip } = order['shipping_address'];
+							let address = `${address1} ${city} ${zip}`;
+							let createdAt = moment(order['created_at']).format('DD/MM/YYYY HH:MM:ss');
+							return {
+								id: order['id'],
+								orderNumber: order['order_number'],
+								fullName,
+								email,
+								phone,
+								address,
+								status: order['status'],
+								items: order['line_items'],
+								createdAt,
+								pickupDate: null,
+								dropoffDate: null,
+							};
+						}
+					})[0];
+				console.log(currentOrder);
+				setOrder(currentOrder);
+				let products = await Promise.all(
+					currentOrder.items.map(async ({ product_id: id, title, quantity }) => {
+						setQuantity(prevState => prevState + quantity);
+						let image = await apiCall('POST', '/server/shopify/product-image', {
+							baseURL,
+							accessToken,
+							id,
+						});
+						return { title, quantity, img: image['src'] };
+					})
+				);
+				setProducts(products);
+			} else {
+				let currentOrder = allJobs
+					.filter(job => job['jobSpecification']['orderNumber'] === orderID)
+					.map(({ _id, status, jobSpecification: { orderNumber, packages }, createdAt }) => {
+						let {
+							dropoffLocation: { address, phoneNumber: phone, firstName, lastName, email },
+							dropoffStartTime,
+							pickupStartTime,
+						} = packages[0];
+						let customerName = `${firstName} ${lastName}`;
+						createdAt = moment(createdAt).format('DD/MM/YYYY HH:MM:ss');
 						return {
-							id: order["id"],
-							orderNumber: order["order_number"],
-							fullName,
+							id: _id,
+							orderNumber,
+							createdAt,
+							status,
+							customerName,
 							email,
 							phone,
 							address,
-							status: order["status"],
-							items: order["line_items"],
+							pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
+							dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss')
 						};
-					}
-				})[0];
-			console.log(currentOrder);
-			setOrder(currentOrder);
-			let products = await Promise.all(
-				currentOrder.items.map(async ({ product_id: id, title, quantity }) => {
-					setQuantity(prevState => prevState + quantity);
-					let image = await apiCall("POST", "/server/shopify/product-image", { baseURL, accessToken, id });
-					return { title, quantity, img: image["src"] };
-				})
-			);
-			setProducts(products);
+					})[0];
+				console.log(currentOrder)
+				setOrder(currentOrder);
+			}
 		})();
 	}, []);
 
@@ -107,16 +146,20 @@ export default function ViewOrder() {
 							<span className='orderShowInfoTitle'>{order.orderNumber}</span>
 						</div>
 						<div className='orderShowInfo'>
+							<h4 className='orderShowLabel'>Created At:</h4>
+							<span className='orderShowInfoTitle'>{order.createdAt}</span>
+						</div>
+						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Email:</h4>
-							<span className='orderShowInfoTitle'>{Boolean(order.email) ? order.email : "N/A"}</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.email) ? order.email : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Phone Number:</h4>
-							<span className='orderShowInfoTitle'>{Boolean(order.phone) ? order.phone : "N/A"}</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.phone) ? order.phone : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Address:</h4>
-							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : "N/A"}</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Fleet Provider:</h4>
@@ -124,13 +167,15 @@ export default function ViewOrder() {
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Pickup At:</h4>
-							<span className='orderShowInfoTitle'>{moment().add(20, "minutes").format("DD-MM-YYYY" +
-								" HH:MM:ss")}</span>
+							<span className='orderShowInfoTitle'>
+								{order.pickupDate ? order.pickupDate : "N/A"}
+							</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Dropoff At:</h4>
-							<span className='orderShowInfoTitle'>{moment().add(53, "minutes").format("DD-MM-YYYY" +
-								" HH:MM:ss")}</span>
+							<span className='orderShowInfoTitle'>
+								{order.dropoffDate ? order.dropoffDate : "N/A"}
+							</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Items:</h4>
@@ -149,7 +194,9 @@ export default function ViewOrder() {
 									onSubmit={async values => {
 										if (order.status !== values.status) {
 											try {
-												dispatch(updateOrderStatus(order.id, email, values.status, order.status))
+												dispatch(
+													updateOrderStatus(order.id, email, values.status, order.status)
+												);
 												setShow(true);
 											} catch (err) {
 												alert(err);
@@ -180,11 +227,18 @@ export default function ViewOrder() {
 								</Formik>
 							</div>
 						</div>
-						<div className="d-block flex-grow-1 justify-content-center pt-3">
-							{show && <div className="alert alert-success alert-dismissible fade show" role="alert">
-								<h2 className="text-center">Order updated</h2>
-								<button type="button" className="btn btn-close" data-bs-dismiss="alert" aria-label="Close"/>
-							</div>}
+						<div className='d-block flex-grow-1 justify-content-center pt-3'>
+							{show && (
+								<div className='alert alert-success alert-dismissible fade show' role='alert'>
+									<h2 className='text-center'>Order updated</h2>
+									<button
+										type='button'
+										className='btn btn-close'
+										data-bs-dismiss='alert'
+										aria-label='Close'
+									/>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -197,4 +251,6 @@ export default function ViewOrder() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default ViewOrder;

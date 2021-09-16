@@ -6,6 +6,7 @@ import shopifyOrders from "./shopifyOrders";
 import shopifyStore from "./shopifyStore";
 import currentUser from "./currentUser";
 import errors from "./errors";
+import deliveryJobs from './deliveryJobs';
 
 const persistConfig = {
     key: "root",
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     shopifyOrders,
     currentUser,
     shopifyStore,
+    deliveryJobs,
     errors
 });
 

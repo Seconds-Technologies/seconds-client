@@ -37,4 +37,8 @@
   width: 40%;
 }
 
+.link-disabled {
+  pointer-events: none;
+}
+
 

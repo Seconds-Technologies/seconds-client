@@ -1,21 +1,19 @@
 import "./Signup.css";
 import logo from "../../img/secondslogin.svg";
 import { Formik } from "formik";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authUser } from "../../store/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { removeError } from "../../store/actions/errors";
 import React, { useEffect } from "react";
 
-export default function Signup() {
+export default function Signup(props) {
 	const errors = useSelector(state => state["errors"]);
-	const history = useHistory();
-	const location = useLocation();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		dispatch(removeError());
-	}, [location]);
+	}, [props.location]);
 
 	return (
 		<div className='signupPage container-fluid pt-3 pb-5'>
@@ -38,14 +36,17 @@ export default function Signup() {
 							email: "",
 							company: "",
 							password: "",
-							profileImageURL: "",
+							profileImage: {
+								file: "",
+								data: ""
+							},
 							apiKey: ""
 						}}
 						onSubmit={(values, actions) => {
 							console.log(values);
 							// const formData = this.mapStateToFormData();
 							dispatch(authUser("register", values))
-								.then(() => history.push("/home"))
+								.then(() => props.history.push("/home"))
 								.catch(err => console.log(err));
 						}}
 					>
@@ -67,7 +68,7 @@ export default function Signup() {
 											type='text'
 											name='firstname'
 											placeholder='First Name'
-											className='form-control'
+											className='form-control rounded-3'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
@@ -78,7 +79,7 @@ export default function Signup() {
 											type='text'
 											name='lastname'
 											placeholder='Last Name'
-											className='form-control'
+											className='form-control rounded-3'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
@@ -90,7 +91,7 @@ export default function Signup() {
 										type='text'
 										name='company'
 										placeholder='Company Name'
-										className='form-control'
+										className='form-control rounded-3'
 										onBlur={handleBlur}
 										onChange={handleChange}
 									/>
@@ -101,7 +102,7 @@ export default function Signup() {
 										type='email'
 										name='email'
 										placeholder='Business Email'
-										className='form-control'
+										className='form-control rounded-3'
 										onBlur={handleBlur}
 										onChange={handleChange}
 									/>
@@ -112,7 +113,7 @@ export default function Signup() {
 										type='password'
 										name='password'
 										placeholder='Password'
-										className='form-control'
+										className='form-control rounded-3'
 										onBlur={handleBlur}
 										onChange={handleChange}
 									/>

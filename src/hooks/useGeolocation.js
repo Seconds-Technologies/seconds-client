@@ -1,3 +1,4 @@
+/*
 import React, { useState } from 'react';
 
 function useGeolocation() {
@@ -18,3 +19,4 @@ function useGeolocation() {
 }
 
 export default useGeolocation;
+*/
