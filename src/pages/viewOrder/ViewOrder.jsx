@@ -19,7 +19,7 @@ const ViewOrder = props => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 
 	const [fleets] = useState(['Gophr', 'Stuart']);
-	const [order, setOrder] = useState({});
+	const [order, setOrder] = useState({ status: null});
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
 	const [total, setQuantity] = useState(0);
@@ -37,9 +37,10 @@ const ViewOrder = props => {
 			const orderID = props.location['pathname'].split('/').reverse()[0];
 			if (isIntegrated) {
 				let currentOrder = allOrders
-					.filter(order => order['order_number'].toString() === orderID)
+					.filter(order => order['order_number'] === Number(orderID))
 					.map(order => {
-						if (order['order_number'] === orderID) {
+						console.log(order)
+						if (order['order_number'] === Number(orderID)) {
 							let fullName = `${order['customer']['first_name']} ${order['customer']['last_name']}`;
 							let email = order['customer']['email'];
 							let phone = order['customer']['phone'];
