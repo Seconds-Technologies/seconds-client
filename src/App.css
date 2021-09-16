@@ -48,14 +48,26 @@
   font-size: 24px;
 }
 
-.unpacked {
+.new {
   background-color: #F44336
 }
 
-.inProgress {
+.dispatching {
   background-color: #FFC107
+}
+
+.en-route {
+  background-color: #EBFF00
 }
 
 .completed {
   background-color: #00ff66
+}
+
+.cancelled {
+  background-color: #4285F4;
+}
+
+.expired {
+  background-color: #9933CC;
 }

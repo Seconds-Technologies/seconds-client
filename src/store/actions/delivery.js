@@ -1,6 +1,7 @@
 import { addError, removeError } from './errors';
 import { apiCall, setTokenHeader } from '../../api';
 import { CLEAR_JOBS, NEW_DELIVERY_JOB, SET_ALL_JOBS, SET_COMPLETED_JOBS } from '../actionTypes';
+import { updateCompletedOrders } from './shopify';
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,
@@ -59,4 +60,27 @@ export function getAllJobs(apiKey, email) {
 				});
 		});
 	};
+}
+
+export function updateJobsStatus(apiKey, jobId, status, email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			setTokenHeader(localStorage.getItem('jwt_token'));
+			return apiCall('POST', `/api/v1/jobs/${jobId}`, {
+				email,
+				status
+			}, { headers: { 'X-Seconds-Api-Key': apiKey } })
+				.then(({updatedJobs, message}) => {
+					console.log(message)
+					dispatch(setAllJobs(updatedJobs))
+					status === "Completed" && dispatch(updateCompletedOrders(jobId))
+					resolve(updatedJobs)
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				})
+		})
+	}
 }

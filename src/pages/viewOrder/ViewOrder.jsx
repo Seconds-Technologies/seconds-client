@@ -7,6 +7,8 @@ import classnames from 'classnames';
 import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import './viewOrder.css';
+import { STATUS } from '../../constants';
+import { updateJobsStatus } from '../../store/actions/delivery';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -14,12 +16,12 @@ const ViewOrder = props => {
 		isIntegrated,
 		credentials: { baseURL, accessToken },
 	} = useSelector(state => state['shopifyStore']);
-	const { email } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const { allOrders } = useSelector(state => state['shopifyOrders']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 
 	const [fleets] = useState(['Gophr', 'Stuart']);
-	const [order, setOrder] = useState({ status: null});
+	const [order, setOrder] = useState({ status: ""});
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
 	const [total, setQuantity] = useState(0);
@@ -27,9 +29,12 @@ const ViewOrder = props => {
 	const statusBtn = classnames({
 		orderAddButton: true,
 		'me-3': true,
-		unpacked: order.status === 'Unpacked',
-		inProgress: order.status === 'In Progress',
-		completed: order.status === 'Completed',
+		"new": order.status.toLowerCase() === STATUS.NEW.toLowerCase(),
+		dispatching: order.status.toLowerCase() === STATUS.DISPATCHING.toLowerCase(),
+		"en-route": order.status.toLowerCase() === STATUS.EN_ROUTE.toLowerCase(),
+		completed: order.status.toLowerCase() === STATUS.COMPLETED.toLowerCase(),
+		cancelled: order.status.toLowerCase() === STATUS.CANCELLED.toLowerCase(),
+		expired: order.status.toLowerCase() === STATUS.EXPIRED.toLowerCase()
 	});
 
 	useEffect(() => {
@@ -41,7 +46,7 @@ const ViewOrder = props => {
 					.map(order => {
 						console.log(order)
 						if (order['order_number'] === Number(orderID)) {
-							let fullName = `${order['customer']['first_name']} ${order['customer']['last_name']}`;
+							let customerName = `${order['customer']['first_name']} ${order['customer']['last_name']}`;
 							let email = order['customer']['email'];
 							let phone = order['customer']['phone'];
 							let { address1, city, zip } = order['shipping_address'];
@@ -50,7 +55,7 @@ const ViewOrder = props => {
 							return {
 								id: order['id'],
 								orderNumber: order['order_number'],
-								fullName,
+								customerName,
 								email,
 								phone,
 								address,
@@ -91,7 +96,7 @@ const ViewOrder = props => {
 							id: _id,
 							orderNumber,
 							createdAt,
-							status,
+							status: status[0].toUpperCase() + status.toLowerCase().slice(1),
 							customerName,
 							email,
 							phone,
@@ -138,7 +143,7 @@ const ViewOrder = props => {
 			<div className='orderContainer'>
 				<div className='orderShow'>
 					<div className='orderShowTop'>
-						<span className='orderShowCustomerName'>{order.fullName}</span>
+						<span className='orderShowCustomerName'>{order.customerName}</span>
 					</div>
 					<div className='orderShowBottom'>
 						<span className='orderShowTitle'>Order Details</span>
@@ -168,15 +173,11 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Pickup At:</h4>
-							<span className='orderShowInfoTitle'>
-								{order.pickupDate ? order.pickupDate : "N/A"}
-							</span>
+							<span className='orderShowInfoTitle'>{order.pickupDate ? order.pickupDate : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Dropoff At:</h4>
-							<span className='orderShowInfoTitle'>
-								{order.dropoffDate ? order.dropoffDate : "N/A"}
-							</span>
+							<span className='orderShowInfoTitle'>{order.dropoffDate ? order.dropoffDate : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Items:</h4>
@@ -193,11 +194,13 @@ const ViewOrder = props => {
 										status: order.status,
 									}}
 									onSubmit={async values => {
+										//if the order status has not changed
+										console.log("CHOSEN STATUS", values)
 										if (order.status !== values.status) {
 											try {
-												dispatch(
-													updateOrderStatus(order.id, email, values.status, order.status)
-												);
+												isIntegrated ?
+													dispatch(updateOrderStatus(order.id, email, values.status, order.status)) :
+													dispatch(updateJobsStatus(apiKey, order.id, values.status, email))
 												setShow(true);
 											} catch (err) {
 												alert(err);
@@ -218,9 +221,11 @@ const ViewOrder = props => {
 														handleSubmit(event);
 													}}
 												>
-													<option value='Unpacked'>Unpacked</option>
-													<option value='In Progress'>In Progress</option>
-													<option value='Completed'>Completed</option>
+													<option value={STATUS.NEW}>New</option>
+													<option value={STATUS.DISPATCHING}>Dispatching</option>
+													<option value={STATUS.EN_ROUTE}>En-route</option>
+													<option value={STATUS.COMPLETED}>Completed</option>
+													<option value={STATUS.CANCELLED}>Cancelled</option>
 												</select>
 											</div>
 										</form>

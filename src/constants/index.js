@@ -12,7 +12,7 @@ export const PATHS = {
 }
 
 export const COLOURS = {
-	NEW: "#FF0000",
+	NEW: "#F44336",
 	DISPATCHING: "#FF7A00",
 	EN_ROUTE: "#EBFF00",
 	COMPLETED: "#00FF19",
@@ -21,10 +21,10 @@ export const COLOURS = {
 }
 
 export const STATUS = {
-	NEW: "Unpacked",
-	DISPATCHING: "Dispatching",
-	EN_ROUTE: "In Progress",
-	COMPLETED: "Completed",
-	CANCELLED: "Cancelled",
-	EXPIRED: "Expired"
+	NEW: "NEW",
+	DISPATCHING: "DISPATCHING",
+	EN_ROUTE: "EN-ROUTE",
+	COMPLETED: "COMPLETED",
+	CANCELLED: "CANCELLED",
+	EXPIRED: "EXPIRED"
 }
