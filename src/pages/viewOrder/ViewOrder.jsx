@@ -21,7 +21,7 @@ const ViewOrder = props => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 
 	const [fleets] = useState(['Gophr', 'Stuart']);
-	const [order, setOrder] = useState({ status: ""});
+	const [order, setOrder] = useState({ status: '' });
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
 	const [total, setQuantity] = useState(0);
@@ -29,12 +29,12 @@ const ViewOrder = props => {
 	const statusBtn = classnames({
 		orderAddButton: true,
 		'me-3': true,
-		"new": order.status.toLowerCase() === STATUS.NEW.toLowerCase(),
+		new: order.status.toLowerCase() === STATUS.NEW.toLowerCase(),
 		dispatching: order.status.toLowerCase() === STATUS.DISPATCHING.toLowerCase(),
-		"en-route": order.status.toLowerCase() === STATUS.EN_ROUTE.toLowerCase(),
+		'en-route': order.status.toLowerCase() === STATUS.EN_ROUTE.toLowerCase(),
 		completed: order.status.toLowerCase() === STATUS.COMPLETED.toLowerCase(),
 		cancelled: order.status.toLowerCase() === STATUS.CANCELLED.toLowerCase(),
-		expired: order.status.toLowerCase() === STATUS.EXPIRED.toLowerCase()
+		expired: order.status.toLowerCase() === STATUS.EXPIRED.toLowerCase(),
 	});
 
 	useEffect(() => {
@@ -44,7 +44,7 @@ const ViewOrder = props => {
 				let currentOrder = allOrders
 					.filter(order => order['order_number'] === Number(orderID))
 					.map(order => {
-						console.log(order)
+						console.log(order);
 						if (order['order_number'] === Number(orderID)) {
 							let customerName = `${order['customer']['first_name']} ${order['customer']['last_name']}`;
 							let email = order['customer']['email'];
@@ -62,6 +62,7 @@ const ViewOrder = props => {
 								status: order['status'],
 								items: order['line_items'],
 								createdAt,
+								providerId: "N/A",
 								pickupDate: null,
 								dropoffDate: null,
 							};
@@ -84,31 +85,40 @@ const ViewOrder = props => {
 			} else {
 				let currentOrder = allJobs
 					.filter(job => job['jobSpecification']['orderNumber'] === orderID)
-					.map(({ _id, status, jobSpecification: { orderNumber, packages }, createdAt }) => {
-						let {
-							dropoffLocation: { address, phoneNumber: phone, firstName, lastName, email },
-							dropoffStartTime,
-							pickupStartTime,
-						} = packages[0];
-						let customerName = `${firstName} ${lastName}`;
-						createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
-						return {
-							id: _id,
-							orderNumber,
+					.map(
+						({
+							_id,
+							status,
+							jobSpecification: { orderNumber, packages },
+							selectedConfiguration: { providerId },
 							createdAt,
-							status: status[0].toUpperCase() + status.toLowerCase().slice(1),
-							customerName,
-							email,
-							phone,
-							address,
-							pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
-							dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss')
-						};
-					})[0];
-				console.log(currentOrder)
+						}) => {
+							let {
+								dropoffLocation: { address, phoneNumber: phone, firstName, lastName, email },
+								dropoffStartTime,
+								pickupStartTime,
+							} = packages[0];
+							let customerName = `${firstName} ${lastName}`;
+							createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
+							return {
+								id: _id,
+								orderNumber,
+								createdAt,
+								status: status[0].toUpperCase() + status.toLowerCase().slice(1),
+								customerName,
+								email,
+								phone,
+								providerId,
+								address,
+								pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
+								dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'),
+							};
+						}
+					)[0];
+				console.log(currentOrder);
 				setOrder(currentOrder);
 			}
-			console.log(order.status)
+			console.log(order.status);
 		})();
 	}, []);
 
@@ -117,30 +127,6 @@ const ViewOrder = props => {
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
-			{/*<table className="table">
-				<tbody>
-				<tr>
-					<th scope="row">Order ID</th>
-					<td>Mark</td>
-				</tr>
-				<tr>
-					<th scope="row">Email</th>
-					<td>Jacob</td>
-				</tr>
-				<tr>
-					<th scope="row">Phone Number</th>
-					<td colSpan="2">Larry the Bird</td>
-				</tr>
-				<tr>
-					<th scope="row">Address</th>
-					<td colSpan="2">Larry the Bird</td>
-				</tr>
-				<tr>
-					<th scope="row">Items</th>
-					<td colSpan="2">Larry the Bird</td>
-				</tr>
-				</tbody>
-			</table>*/}
 			<div className='orderContainer'>
 				<div className='orderShow'>
 					<div className='orderShowTop'>
@@ -170,7 +156,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Fleet Provider:</h4>
-							<span className='orderShowInfoTitle'>{fleets[Math.floor(Math.random() * 2)]}</span>
+							<span className='orderShowInfoTitle'>{order.providerId}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Pickup At:</h4>
@@ -196,12 +182,21 @@ const ViewOrder = props => {
 									}}
 									onSubmit={async values => {
 										//if the order status has not changed
-										console.log("CHOSEN STATUS", values)
+										console.log('CHOSEN STATUS', values);
 										if (order.status !== values.status) {
 											try {
-												isIntegrated ?
-													dispatch(updateOrderStatus(order.id, email, values.status, order.status)) :
-													dispatch(updateJobsStatus(apiKey, order.id, values.status, email))
+												isIntegrated
+													? dispatch(
+															updateOrderStatus(
+																order.id,
+																email,
+																values.status,
+																order.status
+															)
+													  )
+													: dispatch(
+															updateJobsStatus(apiKey, order.id, values.status, email)
+													  );
 												setShow(true);
 											} catch (err) {
 												alert(err);

@@ -54,7 +54,7 @@ export function getAllJobs(apiKey, email) {
 				.then(({ jobs }) => {
 					console.log(jobs);
 					dispatch(setAllJobs(jobs));
-					dispatch(setCompletedJobs(jobs.map(({ jobId, status }) => ({ jobId, status }))));
+					dispatch(setCompletedJobs(jobs.map(({jobId, status}) => ({jobId, status}))))
 					dispatch(removeError());
 					resolve(jobs);
 				})

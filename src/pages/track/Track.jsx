@@ -16,14 +16,14 @@ const Track = props => {
 					let { address1, city, zip } = shipping_address;
 					let customerName = `${customer['first_name']} ${customer['last_name']}`;
 					let address = `${address1} ${city} ${zip}`;
-					return { id: order_number, status, customerName, address };
+					return { id: order_number, status, customerName, address, provider: "N/A" };
 			  })
-			: allJobs.map(({ status, jobSpecification: { orderNumber, packages } }) => {
+			: allJobs.map(({ status, jobSpecification: { orderNumber, packages }, selectedConfiguration: { providerId } }) => {
 					let {
 						dropoffLocation: { address, firstName, lastName },
 					} = packages[0];
 					let customerName = `${firstName} ${lastName}`;
-					return { id: orderNumber, status, customerName, address };
+					return { id: orderNumber, status, customerName, address, provider: providerId };
 			  });
 	});
 	console.log(orders)
@@ -36,7 +36,7 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }, index) =>
+						({ id, customerName, address, status, provider }, index) =>
 							status === STATUS.NEW && (
 								<div
 									key={index}
@@ -45,7 +45,7 @@ const Track = props => {
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.NEW }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}
@@ -56,7 +56,7 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.DISPATCHING).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }, index) =>
+						({ id, customerName, address, status, provider }, index) =>
 							status === STATUS.DISPATCHING && (
 								<div
 									key={index}
@@ -65,7 +65,7 @@ const Track = props => {
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.DISPATCHING }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}
@@ -76,15 +76,16 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.EN_ROUTE).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }) =>
+						({ id, customerName, address, status, provider }, index) =>
 							status === STATUS.EN_ROUTE && (
 								<div
+									key={index}
 									className='my-4 px-3'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.EN_ROUTE }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}
@@ -95,7 +96,7 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.COMPLETED).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }, index) =>
+						({ id, customerName, address, status, provider }, index) =>
 							status === STATUS.COMPLETED && (
 								<div
 									key={index}
@@ -104,7 +105,7 @@ const Track = props => {
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.COMPLETED }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}
@@ -115,11 +116,11 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.CANCELLED).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }) =>
+						({ id, customerName, address, status, provider }) =>
 							status === STATUS.CANCELLED && (
 								<div className='my-4 px-3'>
 									<div style={{ height: 4, backgroundColor: COLOURS.CANCELLED }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}
@@ -130,11 +131,11 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.EXPIRED).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }) =>
+						({ id, customerName, address, status, provider }) =>
 							status === STATUS.EXPIRED && (
 								<div className='my-4 px-3'>
 									<div style={{ height: 4, backgroundColor: COLOURS.EXPIRED }} />
-									<Tile id={id} address={address} name={customerName} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
 					)}

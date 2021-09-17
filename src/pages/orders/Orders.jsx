@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { COLOURS, PATHS, STATUS } from '../../constants';
-import './Orders.css';
 import { getAllJobs } from '../../store/actions/delivery';
+import './Orders.css';
 
 export default function Orders() {
 	const dispatch = useDispatch();
@@ -57,8 +57,7 @@ export default function Orders() {
 					<div
 						className='h-75 d-flex justify-content-center align-items-center'
 						style={{
-							paddingLeft: 20,
-							paddingRight: 20,
+							width: 110,
 							borderRadius: 50,
 							backgroundColor:
 								params.value === STATUS.NEW

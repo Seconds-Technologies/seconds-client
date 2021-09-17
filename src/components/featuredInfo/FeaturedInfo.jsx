@@ -3,25 +3,29 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllOrders } from '../../store/actions/shopify';
 import './FeaturedInfo.css';
+import { getAllJobs } from '../../store/actions/delivery';
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();
     const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
+    const { email, createdAt, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
         if (isIntegrated) {
             const { allOrders: total, completedOrders: completed } = state['shopifyOrders'];
             return { total, completed }
         } else {
             const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
+            console.log(completed)
             return { total, completed }
         }
     });
-    const { email, createdAt } = useSelector(state => state['currentUser'].user);
 
     useEffect(() => {
         if (isIntegrated) {
             const { accessToken, baseURL } = credentials;
-            dispatch(getAllOrders(accessToken, baseURL, email, createdAt));
+                dispatch(getAllOrders(accessToken, baseURL, email, createdAt))
+        } else {
+            dispatch(getAllJobs(apiKey, email));
         }
     }, [isIntegrated]);
 
