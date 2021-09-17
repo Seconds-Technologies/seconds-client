@@ -1,7 +1,7 @@
 import { addError, removeError } from './errors';
 import { apiCall, setTokenHeader } from '../../api';
-import { CLEAR_JOBS, NEW_DELIVERY_JOB, SET_ALL_JOBS, SET_COMPLETED_JOBS } from '../actionTypes';
-import { updateCompletedOrders } from './shopify';
+import { CLEAR_JOBS, NEW_DELIVERY_JOB, SET_ALL_JOBS, SET_COMPLETED_JOBS, UPDATE_COMPLETED_JOBS } from '../actionTypes';
+import { STATUS } from '../../constants';
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,
@@ -12,6 +12,11 @@ export const setCompletedJobs = jobs => ({
 	type: SET_COMPLETED_JOBS,
 	jobs,
 });
+
+export const updateCompletedJobs = id => ({
+	type: UPDATE_COMPLETED_JOBS,
+	id
+})
 
 export const newDeliveryJob = job => ({
 	type: NEW_DELIVERY_JOB,
@@ -73,7 +78,7 @@ export function updateJobsStatus(apiKey, jobId, status, email){
 				.then(({updatedJobs, message}) => {
 					console.log(message)
 					dispatch(setAllJobs(updatedJobs))
-					status === "Completed" && dispatch(updateCompletedOrders(jobId))
+					status === STATUS.COMPLETED && dispatch(updateCompletedJobs(jobId))
 					resolve(updatedJobs)
 				})
 				.catch(err => {
