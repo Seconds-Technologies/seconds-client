@@ -111,8 +111,8 @@ export default function Orders() {
 				sortingOrder={['desc', 'asc']}
 				sortModel={[
 					{
-						field: 'date',
-						sort: 'desc',
+						field: 'id',
+						sort: 'asc',
 					},
 				]}
 				autoHeight
