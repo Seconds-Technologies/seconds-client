@@ -84,3 +84,21 @@ export function updateJobsStatus(apiKey, jobId, status, email){
 		})
 	}
 }
+
+export function getAllQuotes(apiKey, data){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			setTokenHeader(localStorage.getItem('jwt_token'));
+			return apiCall('POST', `/api/v1/jobs/quotes`, {...data}, { headers: { 'X-Seconds-Api-Key': apiKey } })
+				.then(({ quotes, bestQuote }) => {
+					console.log(quotes)
+					resolve({ quotes, bestQuote })
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				})
+		})
+	}
+}

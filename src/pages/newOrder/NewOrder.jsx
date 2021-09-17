@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { createDeliveryJob } from '../../store/actions/delivery';
+import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import CurrencyInput from 'react-currency-input-field';
 import moment from 'moment';
 import './NewOrder.css';
@@ -10,9 +10,11 @@ import '../../App.css';
 
 const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});
-	const [modal, showModal] = useState(false);
-	const handleClose = () => showModal(false);
-	const handleOpen = () => showModal(true);
+	const [jobModal, showJobModal] = useState(false);
+	const [quoteModal, showQuoteModal] = useState(false);
+	const [quotes, setQuotes] = useState([]);
+	const handleClose = () => showJobModal(false);
+	const handleOpen = () => showJobModal(true);
 	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 
@@ -26,23 +28,85 @@ const NewOrder = props => {
 		{ field: 'quoteID', headerName: 'Quote ID', width: 150 },
 	];
 
+	const newJobModal = (
+		<Modal show={jobModal} onHide={handleClose}>
+			<Modal.Header closeButton>
+				<Modal.Title>Your delivery Job!</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<div>
+					{Object.entries(deliveryJob).map(([key, value], index) => (
+						<div key={index} className='row p-3'>
+							<div className='col text-capitalize'>{key}</div>
+							<div className='col'>{value}</div>
+						</div>
+					))}
+				</div>
+			</Modal.Body>
+		</Modal>
+	);
+
+	const quotesModal = (
+		<Modal show={quoteModal} onHide={() => showQuoteModal(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Fleet Provider Quotes 🛴</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<div>
+					{/*<div className='row p-3'>
+						<div className='col text-capitalize fw-bold'>Fleet Provider</div>
+						<div className='col fw-bold'>Price (£)</div>
+						<div className='col fw-bold'>ETA</div>
+						<div className='col fw-bold'/>
+					</div>
+					{quotes.map(({ providerId, price, dropoffEta, createdAt }, index) => (
+						<div key={index} className='row p-3'>
+							<div className='col text-capitalize'>{providerId}</div>
+							<div className='col'>{`£${price}`}</div>
+							<div className='col'>{`${moment(dropoffEta).diff(moment(createdAt), "minutes")} minutes`}</div>
+							<div className='col'>
+								<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
+									<span className='text-decoration-none'>Select</span>
+								</button>
+							</div>
+						</div>
+					))}*/}
+					<table className="table">
+						<thead>
+							<tr>
+								<th scope='col'>Fleet Provider</th>
+								<th scope='col'>Price</th>
+								<th scope='col'>ETA</th>
+								<th scope='col'/>
+							</tr>
+						</thead>
+						<tbody>
+							{quotes.map(({ providerId, price, dropoffEta, createdAt }, index) => (
+								<tr key={index}>
+									<td className='col text-capitalize'>{providerId}</td>
+									<td className='col'>{`£${price}`}</td>
+									<td className='col'>{`${moment(dropoffEta).diff(
+										moment(createdAt),
+										'minutes'
+									)} minutes`}</td>
+									<td className='col'>
+										<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
+											<span className='text-decoration-none'>Select</span>
+										</button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</Modal.Body>
+		</Modal>
+	);
+
 	return (
 		<div className='newOrder container py-4'>
-			<Modal show={modal} onHide={handleClose}>
-				<Modal.Header closeButton>
-					<Modal.Title>Your delivery Job!</Modal.Title>
-				</Modal.Header>
-				<Modal.Body>
-					<div>
-						{Object.entries(deliveryJob).map(([key, value], index) => (
-							<div key={index} className='row p-3'>
-								<div className='col text-capitalize'>{key}</div>
-								<div className='col'>{value}</div>
-							</div>
-						))}
-					</div>
-				</Modal.Body>
-			</Modal>
+			{newJobModal}
+			{quotesModal}
 			<Formik
 				enableReinitialize
 				initialValues={{
@@ -397,10 +461,22 @@ const NewOrder = props => {
 									}
 								`}
 								</style>
-								<Button variant='dark' size='lg' className='mx-3'>
+								<Button
+									variant='dark'
+									size='lg'
+									className='mx-3'
+									onClick={() => {
+										dispatch(getAllQuotes(apiKey, values))
+											.then(({ quotes, bestQuote }) => {
+												setQuotes(quotes);
+												showQuoteModal(true);
+											})
+											.catch(err => console.error(err));
+									}}
+								>
 									Get Quote
 								</Button>
-								<Button className='text-light' variant='submit' type='submit' size='lg'>
+								<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
 									Confirm
 								</Button>
 							</div>
