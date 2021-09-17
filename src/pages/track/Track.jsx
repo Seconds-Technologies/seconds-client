@@ -95,9 +95,10 @@ const Track = props => {
 						<Counter value={orders.filter(({ status }) => status === STATUS.COMPLETED).length} />
 					</div>
 					{orders.map(
-						({ id, customerName, address, status }) =>
-							status === 'Completed' && (
+						({ id, customerName, address, status }, index) =>
+							status === STATUS.COMPLETED && (
 								<div
+									key={index}
 									className='my-4 px-3'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}

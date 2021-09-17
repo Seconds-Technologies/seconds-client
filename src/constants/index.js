@@ -14,7 +14,7 @@ export const PATHS = {
 export const COLOURS = {
 	NEW: "#F44336",
 	DISPATCHING: "#FF7A00",
-	EN_ROUTE: "#EBFF00",
+	EN_ROUTE: "#D7D223",
 	COMPLETED: "#00FF19",
 	CANCELLED: "#4285F4",
 	EXPIRED: "#9933CC"

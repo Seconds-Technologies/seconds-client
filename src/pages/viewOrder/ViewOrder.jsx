@@ -108,6 +108,7 @@ const ViewOrder = props => {
 				console.log(currentOrder)
 				setOrder(currentOrder);
 			}
+			console.log(order.status)
 		})();
 	}, []);
 
@@ -191,7 +192,7 @@ const ViewOrder = props => {
 								<Formik
 									enableReinitialize
 									initialValues={{
-										status: order.status,
+										status: order.status.toUpperCase(),
 									}}
 									onSubmit={async values => {
 										//if the order status has not changed
