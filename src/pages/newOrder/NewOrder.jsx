@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import CurrencyInput from 'react-currency-input-field';
+import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
 import moment from 'moment';
 import './NewOrder.css';
 import '../../App.css';
@@ -257,6 +258,9 @@ const NewOrder = props => {
 									<label htmlFor='pickup-address' className='mb-1'>
 										Pickup Address
 									</label>
+									<GooglePlaceAutocomplete
+										apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+									/>
 									<input
 										autoComplete='street-address'
 										id='pickup-address'

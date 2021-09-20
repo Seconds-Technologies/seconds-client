@@ -20,7 +20,7 @@ export default function Sidebar() {
 		<div className='sidebar'>
 			<div className='sidebarWrapper'>
 				<div className='sidebarMenu'>
-					<ul className='sidebarList'>
+					<ul className='nav nav-pills flex-column mb-auto sidebarList'>
 						<Link to={PATHS.HOME} className='link'>
 							<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
 								<img className={`sidebarIcon`} src={homeIcon} alt={''} />
