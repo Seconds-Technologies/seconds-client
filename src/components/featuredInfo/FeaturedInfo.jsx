@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getAllOrders } from '../../store/actions/shopify';
-import './FeaturedInfo.css';
 import { getAllJobs } from '../../store/actions/delivery';
+import './FeaturedInfo.css';
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();

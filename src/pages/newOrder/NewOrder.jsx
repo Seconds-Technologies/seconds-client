@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
+import { addError, removeError } from '../../store/actions/errors';
 import CurrencyInput from 'react-currency-input-field';
 import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
 import moment from 'moment';
@@ -17,6 +18,7 @@ const NewOrder = props => {
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
 	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
+	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
 
 	const columns = [
@@ -72,13 +74,13 @@ const NewOrder = props => {
 							</div>
 						</div>
 					))}*/}
-					<table className="table">
+					<table className='table'>
 						<thead>
 							<tr>
 								<th scope='col'>Fleet Provider</th>
 								<th scope='col'>Price</th>
 								<th scope='col'>ETA</th>
-								<th scope='col'/>
+								<th scope='col' />
 							</tr>
 						</thead>
 						<tbody>
@@ -103,6 +105,11 @@ const NewOrder = props => {
 			</Modal.Body>
 		</Modal>
 	);
+
+	useEffect(() => {
+		window.addEventListener('beforeunload', () => removeError())
+		return window.removeEventListener('beforeunload', () => console.log("listener removed!"))
+	}, [])
 
 	return (
 		<div className='newOrder container py-4'>
@@ -134,35 +141,42 @@ const NewOrder = props => {
 				onSubmit={(values, actions) => {
 					console.log(values);
 					apiKey
-						? dispatch(createDeliveryJob(values, apiKey)).then(
-								({
-									createdAt,
-									jobId,
-									jobSpecification: { packages },
-									status,
-									selectedConfiguration: { providerId, winnerQuote },
-								}) => {
-									let {
-										description,
-										pickupLocation: { address: pickupAddress },
-										dropoffLocation: { address: dropoffAddress },
-										pickupStartTime,
-										dropoffStartTime,
-									} = packages[0];
-									let newJob = {
+						? dispatch(createDeliveryJob(values, apiKey))
+								.then(
+									({
+										createdAt,
 										jobId,
-										description,
-										pickupAddress,
-										dropoffAddress,
-										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										jobSpecification: { packages },
 										status,
-										fleetProvider: providerId,
-									};
-									setJob(newJob);
-									handleOpen();
-								}
-						  )
+										selectedConfiguration: { providerId, winnerQuote },
+									}) => {
+										let {
+											description,
+											pickupLocation: { address: pickupAddress },
+											dropoffLocation: { address: dropoffAddress },
+											pickupStartTime,
+											dropoffStartTime,
+										} = packages[0];
+										let newJob = {
+											jobId,
+											description,
+											pickupAddress,
+											dropoffAddress,
+											pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+											dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+											status,
+											fleetProvider: providerId,
+										};
+										setJob(newJob);
+										handleOpen();
+									}
+								)
+								.catch(err => {
+									console.log(err);
+									err
+										? addError(err)
+										: addError('Api endpoint could not be' + ' accessed!');
+								})
 						: alert(
 								'Your account does not have an API' +
 									' key associated with it. Please generate one from the integrations page'
@@ -258,25 +272,33 @@ const NewOrder = props => {
 									<label htmlFor='pickup-address' className='mb-1'>
 										Pickup Address
 									</label>
-									<GooglePlaceAutocomplete
-										apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
-									/>
-									<input
-										autoComplete='street-address'
-										id='pickup-address'
-										name='pickupAddress'
-										type='text'
-										className='form-control form-border mb-3'
-										aria-label='pickup-address'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
+									<div className='mb-3'>
+										<input type='text' name='pickupAddress' style={{ display: 'none' }} />
+										<GooglePlaceAutocomplete
+											autocompletionRequest={{
+												componentRestrictions: {
+													country: ['GB'],
+												},
+											}}
+											apiOptions={{
+												language: 'GB',
+												region: 'GB',
+											}}
+											selectProps={{
+												onChange: ({ label }) => {
+													setFieldValue('pickupAddress', label);
+													console.log(label, values);
+												},
+											}}
+											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+										/>
+									</div>
 									<label htmlFor='pickup-datetime' className='mb-1'>
 										Pickup At
 									</label>
 									<input
-										id='pickup-datetime'
 										name='packagePickupStartTime'
+										id='pickup-datetime'
 										type='datetime-local'
 										className='form-control form-border mb-3'
 										aria-label='pickup-datetime'
@@ -378,15 +400,27 @@ const NewOrder = props => {
 									<label htmlFor='dropoff-street-address' className='mb-1'>
 										Dropoff Address
 									</label>
-									<input
-										autoComplete='street-address'
-										name='dropoffAddress'
-										type='text'
-										className='form-control form-border mb-3'
-										aria-label='dropoff-address'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
+									<div className='mb-3'>
+										<input type='text' name='dropoffAddress' style={{ display: 'none' }} />
+										<GooglePlaceAutocomplete
+											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+											autocompletionRequest={{
+												componentRestrictions: {
+													country: ['GB'],
+												},
+											}}
+											apiOptions={{
+												language: 'GB',
+												region: 'GB',
+											}}
+											selectProps={{
+												onChange: ({ label }) => {
+													setFieldValue('dropoffAddress', label);
+													console.log(label, values);
+												},
+											}}
+										/>
+									</div>
 									<label htmlFor='dropoff-datetime' className='mb-1'>
 										Dropoff At
 									</label>
@@ -454,6 +488,7 @@ const NewOrder = props => {
 									/>
 								</div>
 							</div>
+							{error.message && <div className='alert alert-danger text-center'>{error.message}</div>}
 							<div className='d-flex pt-5 justify-content-end'>
 								<style type='text/css'>
 									{`
