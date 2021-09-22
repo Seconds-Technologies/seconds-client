@@ -60,7 +60,8 @@ const ViewOrder = props => {
 								status: order['status'],
 								items: order['line_items'],
 								createdAt,
-								providerId: "N/A",
+								providerId: 'N/A',
+								trackingURL: null,
 								pickupDate: null,
 								dropoffDate: null,
 							};
@@ -88,7 +89,7 @@ const ViewOrder = props => {
 							_id,
 							status,
 							jobSpecification: { orderNumber, packages },
-							selectedConfiguration: { providerId, jobReference },
+							selectedConfiguration: { providerId, jobReference, trackingURL },
 							createdAt,
 						}) => {
 							let {
@@ -107,7 +108,7 @@ const ViewOrder = props => {
 								email,
 								phone,
 								providerId,
-								jobReference,
+								trackingURL,
 								address,
 								pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
 								dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'),
@@ -168,6 +169,10 @@ const ViewOrder = props => {
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Items:</h4>
 							<span className='orderShowInfoTitle'>{total}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<h4 className='orderShowLabel'>Tracking URL:</h4>
+							<span className='orderShowInfoTitle'>{order.trackingURL ? order.trackingURL : 'N/A'}</span>
 						</div>
 						<div className='d-flex flex-row align-items-center'>
 							<button className={statusBtn} disabled>
