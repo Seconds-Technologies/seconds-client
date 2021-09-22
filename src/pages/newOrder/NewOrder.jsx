@@ -245,8 +245,9 @@ const NewOrder = props => {
 											</label>
 											<input
 												autoComplete='tel'
-												name='businessPhoneNumber'
-												type='text'
+												id='pickup-phone-number'
+												name='pickupPhoneNumber'
+												type='tel'
 												className='form-control form-border mb-2'
 												placeholder='Phone Number'
 												aria-label='pickup-phone-number'

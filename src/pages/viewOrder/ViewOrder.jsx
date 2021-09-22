@@ -170,9 +170,9 @@ const ViewOrder = props => {
 							<h4 className='orderShowLabel'>Items:</h4>
 							<span className='orderShowInfoTitle'>{total}</span>
 						</div>
-						<div className='orderShowInfo'>
+						<div className='orderShowInfo flex-wrap'>
 							<h4 className='orderShowLabel'>Tracking URL:</h4>
-							<span className='orderShowInfoTitle'>{order.trackingURL ? order.trackingURL : 'N/A'}</span>
+							{order.trackingURL ? <a href={order.trackingURL} target="_blank" className='orderShowInfoTitle text-wrap'>{order.trackingURL}</a> : <span className='orderShowInfoTitle'>{'N/A'}</span>}
 						</div>
 						<div className='d-flex flex-row align-items-center'>
 							<button className={statusBtn} disabled>
