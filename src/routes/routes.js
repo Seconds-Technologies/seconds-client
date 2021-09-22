@@ -13,6 +13,7 @@ import Help from '../pages/Help';
 import Shopify from '../pages/shopify/Shopify';
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
+import ApiDoc from '../pages/apiDoc/ApiDoc';
 import { PATHS } from '../constants';
 
 const routes = (
@@ -28,6 +29,7 @@ const routes = (
 		<PrivateRoute path={PATHS.CREATE} component={NewOrder} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
 		<PrivateRoute path={PATHS.HELP} component={Help} />
+		<PrivateRoute path={PATHS.DOCUMENTATION} component={ApiDoc} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 	</Switch>
 );
