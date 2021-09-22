@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Counter from '../../components/counter/Counter';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
 import { COLOURS, STATUS } from '../../constants';
 import './Track.css';
+import { fetchOrders } from '../../store/actions/shopify';
+import { getAllJobs } from '../../store/actions/delivery';
 
 const Track = props => {
+	const dispatch = useDispatch()
 	const { isIntegrated } = useSelector(state => state['shopifyStore']);
-	const { apiKey } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const orders = useSelector(state => {
 		const { allOrders } = state['shopifyOrders'];
 		const { allJobs } = state['deliveryJobs'];
@@ -32,7 +35,11 @@ const Track = props => {
 					}
 			  );
 	});
-	console.log(orders);
+
+	useEffect(() => {
+		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email))
+	}, [])
+
 	return (
 		<div className='trackContainer py-4'>
 			<div className='row flex-row flex-nowrap'>

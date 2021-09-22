@@ -47,7 +47,7 @@ export default function Orders() {
 	}, []);
 
 	const columns = [
-		{ field: 'id', headerName: 'ID', width: 100 },
+		{ field: 'id', headerName: 'Order No.', width: 150 },
 		{
 			field: 'status',
 			headerName: 'Status',
