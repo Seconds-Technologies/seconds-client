@@ -19,8 +19,6 @@ const ViewOrder = props => {
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const { allOrders } = useSelector(state => state['shopifyOrders']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-
-	const [fleets] = useState(['Gophr', 'Stuart']);
 	const [order, setOrder] = useState({ status: '' });
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
@@ -30,11 +28,11 @@ const ViewOrder = props => {
 		orderAddButton: true,
 		'me-3': true,
 		new: order.status.toLowerCase() === STATUS.NEW.toLowerCase(),
+		pending: order.status.toLowerCase() === STATUS.PENDING.toLowerCase(),
 		dispatching: order.status.toLowerCase() === STATUS.DISPATCHING.toLowerCase(),
 		'en-route': order.status.toLowerCase() === STATUS.EN_ROUTE.toLowerCase(),
 		completed: order.status.toLowerCase() === STATUS.COMPLETED.toLowerCase(),
 		cancelled: order.status.toLowerCase() === STATUS.CANCELLED.toLowerCase(),
-		expired: order.status.toLowerCase() === STATUS.EXPIRED.toLowerCase(),
 	});
 
 	useEffect(() => {
@@ -90,7 +88,7 @@ const ViewOrder = props => {
 							_id,
 							status,
 							jobSpecification: { orderNumber, packages },
-							selectedConfiguration: { providerId },
+							selectedConfiguration: { providerId, jobReference },
 							createdAt,
 						}) => {
 							let {
@@ -109,6 +107,7 @@ const ViewOrder = props => {
 								email,
 								phone,
 								providerId,
+								jobReference,
 								address,
 								pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
 								dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'),
@@ -218,6 +217,7 @@ const ViewOrder = props => {
 													}}
 												>
 													<option value={STATUS.NEW}>New</option>
+													<option value={STATUS.PENDING}>Pending</option>
 													<option value={STATUS.DISPATCHING}>Dispatching</option>
 													<option value={STATUS.EN_ROUTE}>En-route</option>
 													<option value={STATUS.COMPLETED}>Completed</option>

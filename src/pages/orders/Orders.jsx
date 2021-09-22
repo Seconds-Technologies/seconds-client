@@ -62,6 +62,8 @@ export default function Orders() {
 							backgroundColor:
 								params.value === STATUS.NEW
 									? COLOURS.NEW
+									: params.value === STATUS.PENDING
+									? COLOURS.PENDING
 									: params.value === STATUS.DISPATCHING
 									? COLOURS.DISPATCHING
 									: params.value === STATUS.EN_ROUTE
@@ -70,7 +72,7 @@ export default function Orders() {
 									? COLOURS.COMPLETED
 									: params.value === STATUS.CANCELLED
 									? COLOURS.CANCELLED
-									: COLOURS.EXPIRED,
+									: COLOURS.UNKNOWN,
 						}}
 					>
 						<span className='text-light text-capitalize'>{params.value.toLowerCase()}</span>

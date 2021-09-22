@@ -12,7 +12,7 @@ const Track = props => {
 		const { allOrders } = state['shopifyOrders'];
 		const { allJobs } = state['deliveryJobs'];
 		return isIntegrated
-			? allOrders.map(({ order_number, status, shipping_address, created_at, customer }) => {
+			? allOrders.map(({ order_number, status, shipping_address, customer }) => {
 					let { address1, city, zip } = shipping_address;
 					let customerName = `${customer['first_name']} ${customer['last_name']}`;
 					let address = `${address1} ${city} ${zip}`;
@@ -51,6 +51,26 @@ const Track = props => {
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.NEW }} />
+									<Tile id={id} address={address} name={customerName} provider={provider} />
+								</div>
+							)
+					)}
+				</div>
+				<div className='col-sm-6 col-md-3'>
+					<div className='d-flex flex-column align-items-center justify-content-center'>
+						<h1>Pending</h1>
+						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
+					</div>
+					{orders.map(
+						({ id, customerName, address, status, provider }, index) =>
+							status === STATUS.PENDING && (
+								<div
+									key={index}
+									className='my-4 px-3'
+									role='button'
+									onClick={() => props.history.push(`/view-orders/${id}`)}
+								>
+									<div style={{ height: 4, backgroundColor: COLOURS.PENDING }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -131,26 +151,6 @@ const Track = props => {
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
 									<div style={{ height: 4, backgroundColor: COLOURS.CANCELLED }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
-					)}
-				</div>
-				<div className='col-sm-6 col-md-3'>
-					<div className='d-flex flex-column align-items-center justify-content-center'>
-						<h1>Expired</h1>
-						<Counter value={orders.filter(({ status }) => status === STATUS.EXPIRED).length} />
-					</div>
-					{orders.map(
-						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.EXPIRED && (
-								<div
-									key={index}
-									className='my-4 px-3'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: COLOURS.EXPIRED }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
