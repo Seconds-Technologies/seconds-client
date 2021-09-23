@@ -7,9 +7,9 @@ import { addError, removeError } from '../../store/actions/errors';
 import CurrencyInput from 'react-currency-input-field';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import moment from 'moment';
+import { PLACE_TYPES } from '../../constants';
 import './NewOrder.css';
 import '../../App.css';
-import { PLACE_TYPES } from '../../constants';
 
 const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -35,13 +35,13 @@ const NewOrder = props => {
 	const newJobModal = (
 		<Modal show={jobModal} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Your delivery Job!</Modal.Title>
+				<Modal.Title>Your delivery Job! 🚚</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div>
 					{Object.entries(deliveryJob).map(([key, value], index) => (
 						<div key={index} className='row p-3'>
-							<div className='col text-capitalize'>{key}</div>
+							<div className='fw-bold col text-capitalize'>{key}</div>
 							<div className='col'>{value}</div>
 						</div>
 					))}
@@ -194,20 +194,19 @@ const NewOrder = props => {
 						if (apiKey) {
 							const {
 								createdAt,
-								jobId,
-								jobSpecification: { packages },
+								jobSpecification: { packages, orderNumber },
 								status,
 								selectedConfiguration: { providerId, winnerQuote },
 							} = await dispatch(createDeliveryJob(values, apiKey));
 							let {
 								description,
-								pickupLocation: { address: pickupAddress },
-								dropoffLocation: { address: dropoffAddress },
+								pickupLocation: { fullAddress: pickupAddress },
+								dropoffLocation: { fullAddress: dropoffAddress },
 								pickupStartTime,
 								dropoffStartTime,
 							} = packages[0];
 							let newJob = {
-								jobId,
+								orderNumber,
 								description,
 								pickupAddress,
 								dropoffAddress,

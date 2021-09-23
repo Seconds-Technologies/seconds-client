@@ -8,7 +8,7 @@ import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import './viewOrder.css';
 import { STATUS } from '../../constants';
-import { updateJobsStatus } from '../../store/actions/delivery';
+import { getAllJobs, updateJobsStatus } from '../../store/actions/delivery';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -93,7 +93,7 @@ const ViewOrder = props => {
 							createdAt,
 						}) => {
 							let {
-								dropoffLocation: { address, phoneNumber: phone, firstName, lastName, email },
+								dropoffLocation: { fullAddress: address, phoneNumber: phone, firstName, lastName, email },
 								dropoffStartTime,
 								pickupStartTime,
 							} = packages[0];
@@ -120,6 +120,7 @@ const ViewOrder = props => {
 			}
 			console.log(order.status);
 		})();
+		return apiKey && dispatch(getAllJobs(apiKey, email))
 	}, []);
 
 	return (
@@ -156,7 +157,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Fleet Provider:</h4>
-							<span className='orderShowInfoTitle'>{order.providerId}</span>
+							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<h4 className='orderShowLabel'>Pickup At:</h4>

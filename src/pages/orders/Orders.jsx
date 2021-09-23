@@ -31,13 +31,13 @@ export default function Orders() {
 		return apiKey
 			? allJobs.map(({ status, jobSpecification: { orderNumber, packages }, createdAt }) => {
 					let {
-						dropoffLocation: { address, phoneNumber: phone, firstName, lastName },
+						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName },
 					} = packages[0];
 					let customerName = `${firstName} ${lastName}`;
-					phone = phone === null || undefined ? 'N/A' : phone;
+					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let date = moment(createdAt).format('DD/MM/YYYY');
 					let time = moment(createdAt).format('HH:mm:ss');
-					return { id: orderNumber, status, customerName, phoneNumber: phone, address, date, time };
+					return { id: orderNumber, status, customerName, phoneNumber, address, date, time };
 			  })
 			: [];
 	});
