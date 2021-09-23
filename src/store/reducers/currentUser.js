@@ -8,6 +8,7 @@ export const DEFAULT_STATE = {
 		company: '',
 		email: '',
 		apiKey: '',
+		selectionStrategy: '',
 		profileImageData: '',
 	}, //all user info when logged in
 };

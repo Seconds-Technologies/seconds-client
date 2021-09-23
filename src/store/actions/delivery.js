@@ -79,6 +79,7 @@ export function updateJobsStatus(apiKey, jobId, status, email){
 					console.log(message)
 					dispatch(setAllJobs(updatedJobs))
 					status === STATUS.COMPLETED && dispatch(updateCompletedJobs(jobId))
+					dispatch(removeError())
 					resolve(updatedJobs)
 				})
 				.catch(err => {
@@ -97,6 +98,7 @@ export function getAllQuotes(apiKey, data){
 			return apiCall('POST', `/api/v1/jobs/quotes`, {...data}, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
 					console.log(quotes)
+					dispatch(removeError())
 					resolve({ quotes, bestQuote })
 				})
 				.catch(err => {

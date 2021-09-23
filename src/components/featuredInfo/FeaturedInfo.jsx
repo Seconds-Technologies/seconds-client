@@ -15,7 +15,6 @@ export default function FeaturedInfo() {
             return { total, completed }
         } else {
             const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-            console.log(completed)
             return { total, completed }
         }
     });
@@ -23,7 +22,7 @@ export default function FeaturedInfo() {
     useEffect(() => {
         if (isIntegrated) {
             const { accessToken, baseURL } = credentials;
-                dispatch(getAllOrders(accessToken, baseURL, email, createdAt))
+            dispatch(getAllOrders(accessToken, baseURL, email, createdAt))
         } else {
             dispatch(getAllJobs(apiKey, email));
         }

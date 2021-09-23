@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Overlay, Tooltip } from 'react-bootstrap';
 import copy from '../../img/copy.svg';
 import { authorizeAPI } from '../../store/actions/auth';
-import './apikey.css';
 import secondsLogo from '../../img/logo.svg';
+import './apikey.css';
 
 const ApiKey = props => {
 	const dispatch = useDispatch();

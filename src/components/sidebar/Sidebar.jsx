@@ -76,7 +76,7 @@ export default function Sidebar() {
 						dispatch(logout());
 						history.push('/login');
 					}}
-					className='link px-2'
+					className='link ps-3 pe-2'
 				>
 					<div className='sidebarListItem1'>
 						<img className='sidebarIcon1' src={logoutIcon} alt='' />

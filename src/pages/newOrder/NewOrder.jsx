@@ -9,6 +9,7 @@ import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-a
 import moment from 'moment';
 import './NewOrder.css';
 import '../../App.css';
+import { PLACE_TYPES } from '../../constants';
 
 const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -106,6 +107,39 @@ const NewOrder = props => {
 		</Modal>
 	);
 
+	const getParsedAddress = data => {
+		let address = data[0].address_components;
+		let formattedAddress = {
+			street: '',
+			city: '',
+			postcode: '',
+			countryCode: 'GB',
+		};
+		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
+		components.forEach(({ long_name, types }) => {
+			switch (types[0]) {
+				case PLACE_TYPES.STREET_NUMBER:
+					formattedAddress.street = long_name + " ";
+					break;
+				case PLACE_TYPES.STREET_ADDRESS:
+					formattedAddress.street = formattedAddress.street + long_name;
+					break;
+				case PLACE_TYPES.CITY:
+					formattedAddress.city = long_name;
+					break;
+				case PLACE_TYPES.POSTCODE:
+					formattedAddress.postcode = long_name;
+					break;
+				case PLACE_TYPES.POSTCODE_PREFIX:
+					formattedAddress.postcode = long_name;
+					break;
+				default:
+					return;
+			}
+		});
+		return formattedAddress;
+	};
+
 	useEffect(() => {
 		window.addEventListener('beforeunload', () => removeError());
 		return window.removeEventListener('beforeunload', () => console.log('listener removed!'));
@@ -122,6 +156,12 @@ const NewOrder = props => {
 					pickupLastName: lastname,
 					pickupBusinessName: company,
 					pickupAddress: '',
+					pickupFormattedAddress: {
+						street: '',
+						city: '',
+						postcode: '',
+						countryCode: 'GB',
+					},
 					pickupEmailAddress: email,
 					pickupPhoneNumber: '',
 					packagePickupStartTime: '',
@@ -130,6 +170,12 @@ const NewOrder = props => {
 					dropoffLastName: '',
 					dropoffBusinessName: '',
 					dropoffAddress: '',
+					dropoffFormattedAddress: {
+						street: '',
+						city: '',
+						postcode: '',
+						country: 'GB',
+					},
 					dropoffEmailAddress: 'N/A',
 					dropoffPhoneNumber: '',
 					packageDropoffStartTime: '',
@@ -138,52 +184,50 @@ const NewOrder = props => {
 					packageDescription: '',
 					itemsCount: null,
 				}}
-				onSubmit={(values, actions) => {
+				onSubmit={async (values, actions) => {
 					const { pickupAddress, dropoffAddress } = values;
-					console.log(pickupAddress);
-					console.log(dropoffAddress);
-					geocodeByAddress(pickupAddress)
-						.then(r => console.log(r))
-						.catch(err => console.error(err));
-					apiKey
-						? dispatch(createDeliveryJob(values, apiKey))
-								.then(
-									({
-										createdAt,
-										jobId,
-										jobSpecification: { packages },
-										status,
-										selectedConfiguration: { providerId, winnerQuote },
-									}) => {
-										let {
-											description,
-											pickupLocation: { address: pickupAddress },
-											dropoffLocation: { address: dropoffAddress },
-											pickupStartTime,
-											dropoffStartTime,
-										} = packages[0];
-										let newJob = {
-											jobId,
-											description,
-											pickupAddress,
-											dropoffAddress,
-											pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-											dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-											status,
-											fleetProvider: providerId,
-										};
-										setJob(newJob);
-										handleOpen();
-									}
-								)
-								.catch(err => {
-									console.log(err);
-									err ? addError(err) : addError('Api endpoint could not be' + ' accessed!');
-								})
-						: alert(
+					try {
+						let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
+						let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+						values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+						values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+						if (apiKey) {
+							const {
+								createdAt,
+								jobId,
+								jobSpecification: { packages },
+								status,
+								selectedConfiguration: { providerId, winnerQuote },
+							} = await dispatch(createDeliveryJob(values, apiKey));
+							let {
+								description,
+								pickupLocation: { address: pickupAddress },
+								dropoffLocation: { address: dropoffAddress },
+								pickupStartTime,
+								dropoffStartTime,
+							} = packages[0];
+							let newJob = {
+								jobId,
+								description,
+								pickupAddress,
+								dropoffAddress,
+								pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								status,
+								fleetProvider: providerId,
+							};
+							setJob(newJob);
+							handleOpen();
+						} else {
+							alert(
 								'Your account does not have an API' +
 									' key associated with it. Please generate one from the integrations page'
-						  );
+							);
+						}
+					} catch (err) {
+						console.log(err);
+						err ? addError(err) : addError('Api endpoint could not be accessed!');
+					}
 				}}
 			>
 				{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
@@ -508,13 +552,20 @@ const NewOrder = props => {
 									variant='dark'
 									size='lg'
 									className='mx-3'
-									onClick={() => {
-										dispatch(getAllQuotes(apiKey, values))
-											.then(({ quotes, bestQuote }) => {
-												setQuotes(quotes);
-												showQuoteModal(true);
-											})
-											.catch(err => console.error(err));
+									onClick={async () => {
+										const { pickupAddress, dropoffAddress } = values;
+										try {
+											let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
+											let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+											values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+											const { quotes, bestQuote: {id} } = await dispatch(getAllQuotes(apiKey, values))
+											setQuotes(quotes);
+											showQuoteModal(true)
+										} catch (err) {
+											console.error(err)
+											alert(err)
+										}
 									}}
 								>
 									Get Quote
