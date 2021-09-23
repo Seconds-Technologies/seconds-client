@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import CurrencyInput from 'react-currency-input-field';
-import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
+import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import moment from 'moment';
 import './NewOrder.css';
 import '../../App.css';
@@ -107,9 +107,9 @@ const NewOrder = props => {
 	);
 
 	useEffect(() => {
-		window.addEventListener('beforeunload', () => removeError())
-		return window.removeEventListener('beforeunload', () => console.log("listener removed!"))
-	}, [])
+		window.addEventListener('beforeunload', () => removeError());
+		return window.removeEventListener('beforeunload', () => console.log('listener removed!'));
+	}, []);
 
 	return (
 		<div className='newOrder container py-4'>
@@ -139,7 +139,12 @@ const NewOrder = props => {
 					itemsCount: null,
 				}}
 				onSubmit={(values, actions) => {
-					console.log(values);
+					const { pickupAddress, dropoffAddress } = values;
+					console.log(pickupAddress);
+					console.log(dropoffAddress);
+					geocodeByAddress(pickupAddress)
+						.then(r => console.log(r))
+						.catch(err => console.error(err));
 					apiKey
 						? dispatch(createDeliveryJob(values, apiKey))
 								.then(
@@ -173,9 +178,7 @@ const NewOrder = props => {
 								)
 								.catch(err => {
 									console.log(err);
-									err
-										? addError(err)
-										: addError('Api endpoint could not be' + ' accessed!');
+									err ? addError(err) : addError('Api endpoint could not be' + ' accessed!');
 								})
 						: alert(
 								'Your account does not have an API' +
