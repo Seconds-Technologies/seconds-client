@@ -19,73 +19,70 @@ export default function Sidebar() {
 	console.log('Location', location);
 	return (
 		<div className='sidebar'>
-			<div className='sidebarWrapper'>
-				<div className='sidebarMenu'>
-					<ul className='nav nav-pills flex-column mb-auto sidebarList'>
-						<Link to={PATHS.HOME} className='link'>
-							<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
-								<img className={`sidebarIcon`} src={homeIcon} alt={''} />
-								<div className='sidebarText'>Home</div>
-							</li>
-						</Link>
-						<Link to={PATHS.ORDERS} className='link'>
-							<li className={`sidebarListItem ${location['pathname'] === PATHS.ORDERS && 'currentLink'}`}>
-								<img className={`sidebarIcon`} src={orderIcon} alt={''} />
-								<div className='sidebarText'>Orders</div>
-							</li>
-						</Link>
-						<Link to={PATHS.CREATE} className='link'>
-							<li className={`sidebarListItem ${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
-								<img className={`sidebarIcon`} src={createIcon} alt={''} />
-								<div className='sidebarText'>Create</div>
-							</li>
-						</Link>
-						<Link to={PATHS.TRACK} className='link'>
-							<li className={`sidebarListItem ${location['pathname'] === PATHS.TRACK && 'currentLink'}`}>
-								<img className={`sidebarIcon`} src={trackIcon} alt={''} />
-								<div className='sidebarText'>Track</div>
-							</li>
-						</Link>
-						<Link to={PATHS.INTEGRATE} className='link'>
-							<li
-								className={`sidebarListItem ${
-									location['pathname'] === PATHS.INTEGRATE && 'currentLink'
-								}`}
-							>
-								<img className={`sidebarIcon`} src={plugIcon} alt={''} />
-								<div className='sidebarText'>Integration</div>
-							</li>
-						</Link>
-						<Link to={PATHS.DOCUMENTATION} className='link'>
-							<li
-								className={`sidebarListItem ${
-									location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
-								}`}
-							>
-								<img className={`sidebarIcon`} src={codeIcon} alt={''} />
-								<div className='sidebarText'>Developer</div>
-							</li>
-						</Link>
-						<Link to={PATHS.HELP} className='link'>
-							<li className={`sidebarListItem ${location['pathname'] === PATHS.HELP && 'currentLink'}`}>
-								<img className={`sidebarIcon`} src={helpIcon} alt={''} />
-								<div className='sidebarText'>Help</div>
-							</li>
-						</Link>
-						<a
-							onClick={() => {
-								dispatch(logout());
-								history.push('/login');
-							}}
-							className='link'
+			<div className='sidebarMenu d-flex flex-column flex-shrink-0 ps-3 pe-2'>
+				<ul className='nav nav-pills flex-column mb-auto'>
+					<Link to={PATHS.HOME} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={homeIcon} alt={''} />
+							<div className='sidebarText'>Home</div>
+						</li>
+					</Link>
+					<Link to={PATHS.ORDERS} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.ORDERS && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={orderIcon} alt={''} />
+							<div className='sidebarText'>Orders</div>
+						</li>
+					</Link>
+					<Link to={PATHS.CREATE} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={createIcon} alt={''} />
+							<div className='sidebarText'>Create</div>
+						</li>
+					</Link>
+					<Link to={PATHS.TRACK} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.TRACK && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={trackIcon} alt={''} />
+							<div className='sidebarText'>Track</div>
+						</li>
+					</Link>
+					<Link to={PATHS.INTEGRATE} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={plugIcon} alt={''} />
+							<div className='sidebarText'>Integration</div>
+						</li>
+					</Link>
+					<Link to={PATHS.DOCUMENTATION} className='link text-black'>
+						<li
+							className={`sidebarListItem text-black${
+								location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
+							}`}
 						>
-							<li className='sidebarListItem1'>
-								<img className='sidebarIcon1' src={logoutIcon} alt='' />
-								Log Out
-							</li>
-						</a>
-					</ul>
-				</div>
+							<img className={`sidebarIcon`} src={codeIcon} width={20} height={20} alt={''} />
+							<div className='sidebarText'>Developers</div>
+						</li>
+					</Link>
+					<Link to={PATHS.HELP} className='link text-black'>
+						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.HELP && 'currentLink'}`}>
+							<img className={`sidebarIcon`} src={helpIcon} alt={''} />
+							<div className='sidebarText'>Help</div>
+						</li>
+					</Link>
+				</ul>
+				<hr />
+			</div>
+			<div className='d-flex flex-grow-1 align-items-center'>
+				<a
+					onClick={() => {
+						dispatch(logout());
+						history.push('/login');
+					}}
+					className='link px-2'
+				>
+					<div className='sidebarListItem1'>
+						<img className='sidebarIcon1' src={logoutIcon} alt='' />
+						Log Out
+					</div>
+				</a>
 			</div>
 		</div>
 	);
