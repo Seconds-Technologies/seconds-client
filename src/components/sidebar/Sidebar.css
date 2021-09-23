@@ -54,7 +54,8 @@
 
 .currentLink {
     background-color: #6BFF2C;
-    filter: invert(6)
+    filter: invert(6);
+    color: black;
 }
 
 .sidebarIcon {

@@ -6,7 +6,7 @@ import homeIcon from '../../img/home1.svg';
 import createIcon from '../../img/create.svg';
 import trackIcon from '../../img/track.svg';
 import logoutIcon from '../../img/logout.svg';
-import docIcon from '../../img/document.svg';
+import codeIcon from '../../img/developer.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { logout } from '../../store/actions/auth';
 import { useDispatch } from 'react-redux';
@@ -62,8 +62,8 @@ export default function Sidebar() {
 									location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
 								}`}
 							>
-								<img className={`sidebarIcon`} src={plugIcon} alt={''} />
-								<div className='sidebarText'>Documentaion</div>
+								<img className={`sidebarIcon`} src={codeIcon} alt={''} />
+								<div className='sidebarText'>Developer</div>
 							</li>
 						</Link>
 						<Link to={PATHS.HELP} className='link'>
