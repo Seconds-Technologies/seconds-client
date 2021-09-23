@@ -7,6 +7,7 @@ export const PATHS = {
 	INTEGRATE: "/integrate",
 	SHOPIFY: "/integrate/shopify",
 	API_KEY: "/integrate/api",
+	DOCUMENTATION: "/documentation",
 	PROFILE: "/profile",
 	HELP: "/help"
 }
