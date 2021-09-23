@@ -24,8 +24,19 @@
   cursor: pointer;
 }
 
+.integrations-header {
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.key-text {
+  font-size: 96px;
+}
+
 .api-text {
-  font-size: 120px;
+  font-size: 64px;
   color: black;
   text-decoration: none;
 }

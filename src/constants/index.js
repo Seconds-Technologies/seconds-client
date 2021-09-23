@@ -30,3 +30,11 @@ export const STATUS = {
 	COMPLETED: "COMPLETED",
 	CANCELLED: "CANCELLED",
 }
+
+export const PLACE_TYPES = {
+	STREET_NUMBER: "street_number",
+	STREET_ADDRESS: "route",
+	CITY: "postal_town",
+	POSTCODE: "postal_code",
+	POSTCODE_PREFIX: "postal_code_prefix"
+}
