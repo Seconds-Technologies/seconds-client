@@ -1,4 +1,3 @@
-import './Sidebar.css';
 import orderIcon from '../../img/orders.svg';
 import plugIcon from '../../img/plug.svg';
 import helpIcon from '../../img/help.svg';
@@ -11,6 +10,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { logout } from '../../store/actions/auth';
 import { useDispatch } from 'react-redux';
 import { PATHS } from '../../constants';
+import './Sidebar.css';
 
 export default function Sidebar() {
 	const dispatch = useDispatch();

@@ -8,12 +8,15 @@ import CurrencyInput from 'react-currency-input-field';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import moment from 'moment';
 import { PLACE_TYPES } from '../../constants';
+import loadingIcon from '../../img/loadingicon.svg';
 import './NewOrder.css';
 import '../../App.css';
 
 const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});
 	const [jobModal, showJobModal] = useState(false);
+	const [isLoading, setLoadingModal] = useState(false);
+	const [loadingText, setLoadingText] = useState("")
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
 	const handleClose = () => showJobModal(false);
@@ -107,6 +110,22 @@ const NewOrder = props => {
 		</Modal>
 	);
 
+	const loadingModal = (
+		<Modal contentClassName="model-border" allowTransparency centered show={isLoading} onHide={() => setLoadingModal(false)} style={{
+			backgroundColor: "transparent"
+		}}>
+			<Modal.Body className="d-flex justify-content-center align-item-center" style={{
+				backgroundColor: "transparent",
+				borderRadius: 40
+			}}>
+				<img src={loadingIcon} alt='' width={400} height={400} />
+			</Modal.Body>
+			<Modal.Footer className="d-flex justify-content-center align-items-center">
+				<div className="text-center h4">{`${loadingText} ...`}</div>
+			</Modal.Footer>
+		</Modal>
+	);
+
 	const getParsedAddress = data => {
 		let address = data[0].address_components;
 		let formattedAddress = {
@@ -149,6 +168,7 @@ const NewOrder = props => {
 		<div className='newOrder container py-4'>
 			{newJobModal}
 			{quotesModal}
+			{loadingModal}
 			<Formik
 				enableReinitialize
 				initialValues={{
@@ -185,6 +205,8 @@ const NewOrder = props => {
 					itemsCount: null,
 				}}
 				onSubmit={async (values, actions) => {
+					setLoadingText("Creating Order")
+					setLoadingModal(true)
 					const { pickupAddress, dropoffAddress } = values;
 					try {
 						let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
@@ -215,6 +237,7 @@ const NewOrder = props => {
 								status,
 								fleetProvider: providerId,
 							};
+							setLoadingModal(false)
 							setJob(newJob);
 							handleOpen();
 						} else {
@@ -552,6 +575,8 @@ const NewOrder = props => {
 									size='lg'
 									className='mx-3'
 									onClick={async () => {
+										setLoadingText("Getting Quote")
+										setLoadingModal(true)
 										const { pickupAddress, dropoffAddress } = values;
 										try {
 											let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
@@ -560,6 +585,7 @@ const NewOrder = props => {
 											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 											const { quotes, bestQuote: {id} } = await dispatch(getAllQuotes(apiKey, values))
 											setQuotes(quotes);
+											setLoadingModal(false)
 											showQuoteModal(true)
 										} catch (err) {
 											console.error(err)

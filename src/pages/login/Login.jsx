@@ -3,22 +3,41 @@ import logo from "../../img/secondslogin.svg";
 import { Formik } from "formik";
 import { authUser } from "../../store/actions/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
-import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import { removeError } from "../../store/actions/errors";
+import { Modal } from 'react-bootstrap';
+import loadingIcon from '../../img/loadingicon.svg';
 
-export default function Login() {
+const Login = props => {
     const errors = useSelector(state => state["errors"]);
-    const history = useHistory();
     const location = useLocation();
     const dispatch = useDispatch();
+    const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
         dispatch(removeError());
     }, [location]);
 
+    const loadingModal = (
+        <Modal contentClassName="model-border" allowTransparency centered show={isLoading} onHide={() => setLoading(false)} style={{
+            backgroundColor: "transparent"
+        }}>
+            <Modal.Body className="d-flex justify-content-center align-item-center" style={{
+                backgroundColor: "transparent",
+                borderRadius: 40
+            }}>
+                <img src={loadingIcon} alt='' width={400} height={400} />
+            </Modal.Body>
+            <Modal.Footer className="d-flex justify-content-center align-items-center">
+                <div className="text-center h4">Hold tight, logging you in...</div>
+            </Modal.Footer>
+        </Modal>
+    );
+
     return (
         <div className="loginPage container-fluid py-5">
+            {loadingModal}
             <div className="d-flex">
                 <img className="img-fluid mx-auto" src={logo} alt="" />
             </div>
@@ -41,9 +60,16 @@ export default function Login() {
                             password: ""
                         }}
                         onSubmit={(values, actions) => {
+                            setLoading(true)
                             dispatch(authUser("login", values))
-                                .then(() => history.push("/"))
-                                .catch(err => console.log(err));
+                                .then(() => {
+                                    setLoading(false)
+                                    props.history.push("/")
+                                })
+                                .catch(err => {
+                                    setLoading(false)
+                                    console.log(err)
+                                });
                         }}
                     >
                         {({
@@ -94,3 +120,5 @@ export default function Login() {
         </div>
     );
 }
+
+export default Login;
