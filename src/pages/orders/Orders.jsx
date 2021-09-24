@@ -113,7 +113,7 @@ export default function Orders() {
 				sortModel={[
 					{
 						field: 'id',
-						sort: 'asc',
+						sort: 'desc',
 					},
 				]}
 				autoHeight

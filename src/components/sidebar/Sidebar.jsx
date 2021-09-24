@@ -1,6 +1,6 @@
 import orderIcon from '../../img/orders.svg';
 import plugIcon from '../../img/plug.svg';
-import helpIcon from '../../img/help.svg';
+import settingsIcon from '../../img/settings.svg';
 import homeIcon from '../../img/home1.svg';
 import createIcon from '../../img/create.svg';
 import trackIcon from '../../img/track.svg';
@@ -71,7 +71,7 @@ export default function Sidebar() {
 							<div className='sidebarText'>Integration</div>
 						</li>
 					</Link>
-					<Link to={PATHS.DOCUMENTATION} className='link text-black'>
+					<a href="https://seconds-technologies.github.io/seconds-api" target="_blank" className='link text-black'>
 						<li
 							className={`sidebarListItem text-black ${
 								location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
@@ -80,15 +80,15 @@ export default function Sidebar() {
 							<img className={`sidebarIcon`} src={codeIcon} width={20} height={20} alt={''} />
 							<div className='sidebarText'>Developers</div>
 						</li>
-					</Link>
-					<Link to={PATHS.HELP} className='link text-black'>
+					</a>
+					<Link to={PATHS.SETTINGS} className='link text-black'>
 						<li
 							className={`sidebarListItem text-black ${
-								location['pathname'] === PATHS.HELP && 'currentLink'
+								location['pathname'] === PATHS.SETTINGS && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={helpIcon} alt={''} />
-							<div className='sidebarText'>Help</div>
+							<img className={`sidebarIcon`} src={settingsIcon} alt={''}  width={20} height={20}/>
+							<div className='sidebarText'>Settings</div>
 						</li>
 					</Link>
 				</ul>
