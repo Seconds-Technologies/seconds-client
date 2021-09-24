@@ -1,28 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import telephone from '../../img/telephone.svg';
 import mail from '../../img/mail.svg';
+import '../../App.css';
 
 const CustomerSupport = props => {
 	return (
-		<div>
-			<div className='help py-lg-5 py-md-5 py-4'>
-				<div className='container-fluid py-5'>
-					<div className='row pb-3 text-center'>
-						<div className='col'>
-							<p className='display-4 fw-bold fw-bolder'>Need help with an order?</p>
-						</div>
+		<div className='help py-lg-5 py-md-5 py-4'>
+			<div className='container-fluid py-5'>
+				<div className='row pb-3 text-center'>
+					<div className='col'>
+						<p className='display-4 fw-bold fw-bolder'>Need help with an order?</p>
 					</div>
-					<div className='row pb-3 text-center'>
-						<div className='col'>
-							<p className='text-muted h3'>Chat with us via telephone or email</p>
-						</div>
+				</div>
+				<div className='row pb-3 text-center'>
+					<div className='col'>
+						<p className='text-muted h3'>Chat with us via telephone or email</p>
 					</div>
-					<hr className='my-5 mx-5' />
-					<div className='d-flex justify-content-center align-items-center'>
-						<div>
-							<table className='table table-borderless align-middle'>
-								<tbody className=''>
+				</div>
+				<hr className='my-5 mx-5' />
+				<div className='d-flex justify-content-center align-items-center'>
+					<div>
+						<table className='table table-borderless align-middle'>
+							<tbody className=''>
 								<tr className='d-flex my-3'>
 									<td>
 										<div>
@@ -41,9 +40,8 @@ const CustomerSupport = props => {
 										<span className='h3 help-text'>secondsdelivery@gmail.com</span>
 									</td>
 								</tr>
-								</tbody>
-							</table>
-						</div>
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
@@ -51,8 +49,6 @@ const CustomerSupport = props => {
 	);
 };
 
-CustomerSupport.propTypes = {
-
-};
+CustomerSupport.propTypes = {};
 
 export default CustomerSupport;

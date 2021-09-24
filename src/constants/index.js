@@ -9,7 +9,8 @@ export const PATHS = {
 	API_KEY: "/integrate/api",
 	DOCUMENTATION: "/documentation",
 	PROFILE: "/profile",
-	SETTINGS: "/settings"
+	SETTINGS: "/settings",
+	HELP: "/help"
 }
 
 export const COLOURS = {
