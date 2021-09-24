@@ -43,7 +43,7 @@ const Track = props => {
 	return (
 		<div className='trackContainer py-4'>
 			<div className='row flex-row flex-nowrap'>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2 border-end border-dark'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>New</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
@@ -63,7 +63,7 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2 border-end border-dark'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Pending</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.PENDING).length} />
@@ -83,7 +83,8 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2 border-end border-dark'>
+				<div className="mycontent-left-right">
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Dispatching</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.DISPATCHING).length} />
@@ -102,8 +103,10 @@ const Track = props => {
 								</div>
 							)
 					)}
+					</div>
 				</div>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2 border-end border-dark'>
+				<div className="mycontent-left-right">
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>En-route</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.EN_ROUTE).length} />
@@ -122,8 +125,9 @@ const Track = props => {
 								</div>
 							)
 					)}
+					</div>
 				</div>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2 border-end border-dark'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Completed</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.COMPLETED).length} />
@@ -143,7 +147,7 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-6 col-md-3'>
+				<div className='col-sm-4 col-md-2'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Cancelled</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.CANCELLED).length} />
