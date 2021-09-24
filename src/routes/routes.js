@@ -9,12 +9,12 @@ import Integrations from '../pages/integration/Integrations';
 import PrivateRoute from '../components/PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Login from '../pages/login/Login';
-import Help from '../pages/Help';
 import Shopify from '../pages/shopify/Shopify';
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
 import ApiDoc from '../pages/apiDoc/ApiDoc';
 import { PATHS } from '../constants';
+import CustomerSupport from '../pages/settings/CustomerSupport';
 
 const routes = (
 	<Switch>
@@ -28,7 +28,7 @@ const routes = (
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute path={PATHS.CREATE} component={NewOrder} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
-		<PrivateRoute path={PATHS.HELP} component={Help} />
+		<PrivateRoute path={PATHS.SETTINGS} component={CustomerSupport} />
 		<PrivateRoute path={PATHS.DOCUMENTATION} component={ApiDoc} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 	</Switch>
