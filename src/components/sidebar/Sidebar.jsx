@@ -22,38 +22,58 @@ export default function Sidebar() {
 			<div className='sidebarMenu d-flex flex-column flex-shrink-0 ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto'>
 					<Link to={PATHS.HOME} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.HOME && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={homeIcon} alt={''} />
 							<div className='sidebarText'>Home</div>
 						</li>
 					</Link>
 					<Link to={PATHS.ORDERS} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.ORDERS && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.ORDERS && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={orderIcon} alt={''} />
 							<div className='sidebarText'>Orders</div>
 						</li>
 					</Link>
 					<Link to={PATHS.CREATE} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.CREATE && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={createIcon} alt={''} />
 							<div className='sidebarText'>Create</div>
 						</li>
 					</Link>
 					<Link to={PATHS.TRACK} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.TRACK && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.TRACK && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={trackIcon} alt={''} />
 							<div className='sidebarText'>Track</div>
 						</li>
 					</Link>
 					<Link to={PATHS.INTEGRATE} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.INTEGRATE && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={plugIcon} alt={''} />
 							<div className='sidebarText'>Integration</div>
 						</li>
 					</Link>
 					<Link to={PATHS.DOCUMENTATION} className='link text-black'>
 						<li
-							className={`sidebarListItem text-black${
+							className={`sidebarListItem text-black ${
 								location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
 							}`}
 						>
@@ -62,7 +82,11 @@ export default function Sidebar() {
 						</li>
 					</Link>
 					<Link to={PATHS.HELP} className='link text-black'>
-						<li className={`sidebarListItem text-black${location['pathname'] === PATHS.HELP && 'currentLink'}`}>
+						<li
+							className={`sidebarListItem text-black ${
+								location['pathname'] === PATHS.HELP && 'currentLink'
+							}`}
+						>
 							<img className={`sidebarIcon`} src={helpIcon} alt={''} />
 							<div className='sidebarText'>Help</div>
 						</li>

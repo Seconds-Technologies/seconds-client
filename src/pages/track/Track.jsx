@@ -28,7 +28,7 @@ const Track = props => {
 						selectedConfiguration: { providerId },
 					}) => {
 						let {
-							dropoffLocation: { address, firstName, lastName },
+							dropoffLocation: { fullAddress: address, firstName, lastName },
 						} = packages[0];
 						let customerName = `${firstName} ${lastName}`;
 						return { id: orderNumber, status, customerName, address, provider: providerId };
@@ -66,7 +66,7 @@ const Track = props => {
 				<div className='col-sm-6 col-md-3'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Pending</h1>
-						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
+						<Counter value={orders.filter(({ status }) => status === STATUS.PENDING).length} />
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
