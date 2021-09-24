@@ -52,6 +52,10 @@
   background-color: #F44336
 }
 
+.pending {
+  background-color: #9933CC;
+}
+
 .dispatching {
   background-color: #FFC107
 }
@@ -68,6 +72,3 @@
   background-color: #565656;
 }
 
-.expired {
-  background-color: #9933CC;
-}
