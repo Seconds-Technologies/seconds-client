@@ -4,7 +4,7 @@ import { PATHS } from '../../constants';
 
 const Settings = props => {
 	return (
-		<div className='settings container d-flex flex-column justify-content-center align-items-center'>
+		<div className='settings d-flex flex-column justify-content-center align-items-center'>
 			<div className='row bg-white mt-3 mb-4 option-container' onClick={() => props.history.push(PATHS.HELP)}>
 				<div className="text-center h1">😃 Customer Support</div>
 			</div>

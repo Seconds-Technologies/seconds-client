@@ -31,7 +31,7 @@ export default function Integrations() {
 	});
 
 	return (
-		<div className='integrations container'>
+		<div className='integrations'>
 			<h3 className='integrations-header'>Connect your Platform</h3>
 			<div className='d-flex flex-1 h-75 flex-column align-items-center justify-content-center'>
 				<div className='row w-100'>

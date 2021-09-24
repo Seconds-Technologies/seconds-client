@@ -224,7 +224,7 @@ const NewOrder = props => {
 	}, [props.location]);
 
 	return (
-		<div className='newOrder container py-4'>
+		<div className='newOrder py-4'>
 			{newJobModal}
 			{quotesModal}
 			{loadingModal}

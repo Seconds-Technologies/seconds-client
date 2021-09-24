@@ -27,7 +27,7 @@ export const clearAllJobs = () => ({
 	type: CLEAR_JOBS,
 });
 
-export function createDeliveryJob(deliveryParams, apiKey, providerId = null) {
+export function createDeliveryJob(deliveryParams, apiKey, providerId = "unknown") {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('Data:', deliveryParams);
