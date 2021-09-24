@@ -6,6 +6,7 @@ import { COLOURS, STATUS } from '../../constants';
 import './Track.css';
 import { fetchOrders } from '../../store/actions/shopify';
 import { getAllJobs } from '../../store/actions/delivery';
+import { removeError } from '../../store/actions/errors';
 
 const Track = props => {
 	const dispatch = useDispatch()
@@ -39,6 +40,10 @@ const Track = props => {
 	useEffect(() => {
 		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email))
 	}, [])
+
+	useEffect(() => {
+		dispatch(removeError());
+	}, [props.location]);
 
 	return (
 		<div className='trackContainer py-4'>

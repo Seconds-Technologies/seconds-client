@@ -11,13 +11,12 @@ import loadingIcon from '../../img/loadingicon.svg';
 
 const Login = props => {
     const errors = useSelector(state => state["errors"]);
-    const location = useLocation();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
         dispatch(removeError());
-    }, [location]);
+    }, [props.location]);
 
     const loadingModal = (
         <Modal contentClassName="model-border" allowTransparency centered show={isLoading} onHide={() => setLoading(false)} style={{

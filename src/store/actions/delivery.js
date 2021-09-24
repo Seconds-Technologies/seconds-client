@@ -15,8 +15,8 @@ export const setCompletedJobs = jobs => ({
 
 export const updateCompletedJobs = id => ({
 	type: UPDATE_COMPLETED_JOBS,
-	id
-})
+	id,
+});
 
 export const newDeliveryJob = job => ({
 	type: NEW_DELIVERY_JOB,
@@ -27,13 +27,18 @@ export const clearAllJobs = () => ({
 	type: CLEAR_JOBS,
 });
 
-export function createDeliveryJob(deliveryParams, apiKey) {
+export function createDeliveryJob(deliveryParams, apiKey, providerId = null) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('Data:', deliveryParams);
-			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, { headers: { 'X-Seconds-Api-Key': apiKey } })
+			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
+				headers: {
+					'X-Seconds-Api-Key': apiKey,
+					'X-Seconds-Provider-Id': providerId
+				},
+			})
 				.then(job => {
-					dispatch(newDeliveryJob(job))
+					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
@@ -54,7 +59,7 @@ export function getAllJobs(apiKey, email) {
 				.then(({ jobs }) => {
 					console.log(jobs);
 					dispatch(setAllJobs(jobs));
-					dispatch(setCompletedJobs(jobs.map(({_id: jobId, status}) => ({jobId, status}))))
+					dispatch(setCompletedJobs(jobs.map(({ _id: jobId, status }) => ({ jobId, status }))));
 					dispatch(removeError());
 					resolve(jobs);
 				})
@@ -67,45 +72,50 @@ export function getAllJobs(apiKey, email) {
 	};
 }
 
-export function updateJobsStatus(apiKey, jobId, status, email){
+export function updateJobsStatus(apiKey, jobId, status, email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
-			return apiCall('POST', `/api/v1/jobs/${jobId}`, {
-				email,
-				status
-			}, { headers: { 'X-Seconds-Api-Key': apiKey } })
-				.then(({updatedJobs, message}) => {
-					console.log(message)
-					dispatch(setAllJobs(updatedJobs))
-					status === STATUS.COMPLETED && dispatch(updateCompletedJobs(jobId))
-					dispatch(removeError())
-					resolve(updatedJobs)
+			return apiCall(
+				'POST',
+				`/api/v1/jobs/${jobId}`,
+				{
+					email,
+					status,
+				},
+				{ headers: { 'X-Seconds-Api-Key': apiKey } }
+			)
+				.then(({ updatedJobs, message }) => {
+					console.log(message);
+					dispatch(setAllJobs(updatedJobs));
+					status === STATUS.COMPLETED && dispatch(updateCompletedJobs(jobId));
+					dispatch(removeError());
+					resolve(updatedJobs);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
-				})
-		})
-	}
+				});
+		});
+	};
 }
 
-export function getAllQuotes(apiKey, data){
+export function getAllQuotes(apiKey, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
-			return apiCall('POST', `/api/v1/jobs/quotes`, {...data}, { headers: { 'X-Seconds-Api-Key': apiKey } })
+			return apiCall('POST', `/api/v1/jobs/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
-					console.log(quotes)
-					dispatch(removeError())
-					resolve({ quotes, bestQuote })
+					console.log(quotes);
+					dispatch(removeError());
+					resolve({ quotes, bestQuote });
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
-				})
-		})
-	}
+				});
+		});
+	};
 }

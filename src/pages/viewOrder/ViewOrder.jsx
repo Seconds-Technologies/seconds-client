@@ -9,6 +9,7 @@ import moment from 'moment';
 import './viewOrder.css';
 import { STATUS } from '../../constants';
 import { getAllJobs, updateJobsStatus } from '../../store/actions/delivery';
+import { removeError } from '../../store/actions/errors';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -122,6 +123,10 @@ const ViewOrder = props => {
 		})();
 		return apiKey && dispatch(getAllJobs(apiKey, email))
 	}, []);
+
+	useEffect(() => {
+		dispatch(removeError());
+	}, [props.location]);
 
 	return (
 		<div className='viewOrder'>

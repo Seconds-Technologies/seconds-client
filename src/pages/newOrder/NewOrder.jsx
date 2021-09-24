@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-a
 import moment from 'moment';
 import { PLACE_TYPES } from '../../constants';
 import loadingIcon from '../../img/loadingicon.svg';
+import { jobRequestSchema } from '../../schemas';
 import './NewOrder.css';
 import '../../App.css';
 
@@ -16,7 +17,12 @@ const NewOrder = props => {
 	const [deliveryJob, setJob] = useState({});
 	const [jobModal, showJobModal] = useState(false);
 	const [isLoading, setLoadingModal] = useState(false);
-	const [loadingText, setLoadingText] = useState("")
+	const [confirmDialog, showConfirmDialog] = useState(false);
+	const [deliveryParams, setDeliveryParams] = useState({
+		...jobRequestSchema,
+	});
+	const [fleetProvider, selectFleetProvider] = useState('');
+	const [loadingText, setLoadingText] = useState('');
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
 	const handleClose = () => showJobModal(false);
@@ -35,6 +41,99 @@ const NewOrder = props => {
 		{ field: 'quoteID', headerName: 'Quote ID', width: 150 },
 	];
 
+	const getParsedAddress = useCallback(data => {
+		let address = data[0].address_components;
+		let formattedAddress = {
+			street: '',
+			city: '',
+			postcode: '',
+			countryCode: 'GB',
+		};
+		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
+		components.forEach(({ long_name, types }) => {
+			switch (types[0]) {
+				case PLACE_TYPES.STREET_NUMBER:
+					formattedAddress.street = long_name + ' ';
+					break;
+				case PLACE_TYPES.STREET_ADDRESS:
+					formattedAddress.street = formattedAddress.street + long_name;
+					break;
+				case PLACE_TYPES.CITY:
+					formattedAddress.city = long_name;
+					break;
+				case PLACE_TYPES.POSTCODE:
+					formattedAddress.postcode = long_name;
+					break;
+				case PLACE_TYPES.POSTCODE_PREFIX:
+					formattedAddress.postcode = long_name;
+					break;
+				default:
+					return;
+			}
+		});
+		return formattedAddress;
+	}, []);
+
+	const confirmSelection = () => {
+		setLoadingText('Creating Order');
+		showConfirmDialog(false);
+		setLoadingModal(true);
+		dispatch(createDeliveryJob(deliveryParams, apiKey, fleetProvider)).then(
+			({
+				createdAt,
+				jobSpecification: { packages, orderNumber },
+				status,
+				selectedConfiguration: { providerId, winnerQuote },
+			}) => {
+				let {
+					description,
+					pickupLocation: { fullAddress: pickupAddress },
+					dropoffLocation: { fullAddress: dropoffAddress },
+					pickupStartTime,
+					dropoffStartTime,
+				} = packages[0];
+				let newJob = {
+					orderNumber,
+					description,
+					pickupAddress,
+					dropoffAddress,
+					pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					status,
+					fleetProvider: providerId,
+				};
+				setLoadingModal(false);
+				setJob(newJob);
+				handleOpen();
+			}
+		);
+	};
+
+	const loadingModal = (
+		<Modal
+			contentClassName='model-border'
+			centered
+			show={isLoading}
+			onHide={() => setLoadingModal(false)}
+			style={{
+				backgroundColor: 'transparent',
+			}}
+		>
+			<Modal.Body
+				className='d-flex justify-content-center align-item-center'
+				style={{
+					backgroundColor: 'transparent',
+					borderRadius: 40,
+				}}
+			>
+				<img src={loadingIcon} alt='' width={400} height={400} />
+			</Modal.Body>
+			<Modal.Footer className='d-flex justify-content-center align-items-center'>
+				<div className='text-center h4'>{`${loadingText} ...`}</div>
+			</Modal.Footer>
+		</Modal>
+	);
+
 	const newJobModal = (
 		<Modal show={jobModal} onHide={handleClose}>
 			<Modal.Header closeButton>
@@ -42,12 +141,14 @@ const NewOrder = props => {
 			</Modal.Header>
 			<Modal.Body>
 				<div>
-					{Object.entries(deliveryJob).map(([key, value], index) => (
-						<div key={index} className='row p-3'>
-							<div className='fw-bold col text-capitalize'>{key}</div>
-							<div className='col'>{value}</div>
-						</div>
-					))}
+					{Object.entries(deliveryJob).map(([key, value], index) => {
+						return (
+							<div key={index} className='row p-3'>
+								<div className='fw-bold col text-capitalize'>{key}</div>
+								<div className='col'>{value}</div>
+							</div>
+						);
+					})}
 				</div>
 			</Modal.Body>
 		</Modal>
@@ -60,24 +161,6 @@ const NewOrder = props => {
 			</Modal.Header>
 			<Modal.Body>
 				<div>
-					{/*<div className='row p-3'>
-						<div className='col text-capitalize fw-bold'>Fleet Provider</div>
-						<div className='col fw-bold'>Price (£)</div>
-						<div className='col fw-bold'>ETA</div>
-						<div className='col fw-bold'/>
-					</div>
-					{quotes.map(({ providerId, price, dropoffEta, createdAt }, index) => (
-						<div key={index} className='row p-3'>
-							<div className='col text-capitalize'>{providerId}</div>
-							<div className='col'>{`£${price}`}</div>
-							<div className='col'>{`${moment(dropoffEta).diff(moment(createdAt), "minutes")} minutes`}</div>
-							<div className='col'>
-								<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
-									<span className='text-decoration-none'>Select</span>
-								</button>
-							</div>
-						</div>
-					))}*/}
 					<table className='table'>
 						<thead>
 							<tr>
@@ -97,7 +180,14 @@ const NewOrder = props => {
 										'minutes'
 									)} minutes`}</td>
 									<td className='col'>
-										<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
+										<button
+											className='d-flex justify-content-center align-items-center OrdersListEdit'
+											onClick={() => {
+												showQuoteModal(false);
+												selectFleetProvider(providerId);
+												showConfirmDialog(true);
+											}}
+										>
 											<span className='text-decoration-none'>Select</span>
 										</button>
 									</td>
@@ -110,106 +200,50 @@ const NewOrder = props => {
 		</Modal>
 	);
 
-	const loadingModal = (
-		<Modal contentClassName="model-border" allowTransparency centered show={isLoading} onHide={() => setLoadingModal(false)} style={{
-			backgroundColor: "transparent"
-		}}>
-			<Modal.Body className="d-flex justify-content-center align-item-center" style={{
-				backgroundColor: "transparent",
-				borderRadius: 40
-			}}>
-				<img src={loadingIcon} alt='' width={400} height={400} />
+	const confirmModal = (
+		<Modal show={confirmDialog} onHide={() => showConfirmDialog(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Confirm Selection</Modal.Title>
+			</Modal.Header>
+			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
+				<span className='fs-4'>
+					You are confirming <span className='fw-bold text-uppercase'>{fleetProvider}</span>!
+				</span>
 			</Modal.Body>
-			<Modal.Footer className="d-flex justify-content-center align-items-center">
-				<div className="text-center h4">{`${loadingText} ...`}</div>
+			<Modal.Footer>
+				<Button variant='secondary' onClick={() => showConfirmDialog(false)}>
+					Cancel
+				</Button>
+				<Button onClick={confirmSelection}>Confirm</Button>
 			</Modal.Footer>
 		</Modal>
 	);
 
-	const getParsedAddress = data => {
-		let address = data[0].address_components;
-		let formattedAddress = {
-			street: '',
-			city: '',
-			postcode: '',
-			countryCode: 'GB',
-		};
-		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
-		components.forEach(({ long_name, types }) => {
-			switch (types[0]) {
-				case PLACE_TYPES.STREET_NUMBER:
-					formattedAddress.street = long_name + " ";
-					break;
-				case PLACE_TYPES.STREET_ADDRESS:
-					formattedAddress.street = formattedAddress.street + long_name;
-					break;
-				case PLACE_TYPES.CITY:
-					formattedAddress.city = long_name;
-					break;
-				case PLACE_TYPES.POSTCODE:
-					formattedAddress.postcode = long_name;
-					break;
-				case PLACE_TYPES.POSTCODE_PREFIX:
-					formattedAddress.postcode = long_name;
-					break;
-				default:
-					return;
-			}
-		});
-		return formattedAddress;
-	};
-
 	useEffect(() => {
-		window.addEventListener('beforeunload', () => removeError());
-		return window.removeEventListener('beforeunload', () => console.log('listener removed!'));
-	}, []);
+		dispatch(removeError());
+	}, [props.location]);
 
 	return (
 		<div className='newOrder container py-4'>
 			{newJobModal}
 			{quotesModal}
 			{loadingModal}
+			{confirmModal}
 			<Formik
 				enableReinitialize
 				initialValues={{
+					...jobRequestSchema,
 					pickupFirstName: firstname,
 					pickupLastName: lastname,
 					pickupBusinessName: company,
-					pickupAddress: '',
-					pickupFormattedAddress: {
-						street: '',
-						city: '',
-						postcode: '',
-						countryCode: 'GB',
-					},
 					pickupEmailAddress: email,
-					pickupPhoneNumber: '',
-					packagePickupStartTime: '',
-					pickupInstructions: '',
-					dropoffFirstName: '',
-					dropoffLastName: '',
-					dropoffBusinessName: '',
-					dropoffAddress: '',
-					dropoffFormattedAddress: {
-						street: '',
-						city: '',
-						postcode: '',
-						country: 'GB',
-					},
-					dropoffEmailAddress: 'N/A',
-					dropoffPhoneNumber: '',
-					packageDropoffStartTime: '',
-					dropoffInstructions: '',
-					packageValue: 0,
-					packageDescription: '',
-					itemsCount: null,
 				}}
 				onSubmit={async (values, actions) => {
-					setLoadingText("Creating Order")
-					setLoadingModal(true)
+					setLoadingText('Creating Order');
+					setLoadingModal(true);
 					const { pickupAddress, dropoffAddress } = values;
 					try {
-						let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
+						let pickupAddressComponents = await geocodeByAddress(pickupAddress);
 						let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
 						values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
 						values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
@@ -237,7 +271,7 @@ const NewOrder = props => {
 								status,
 								fleetProvider: providerId,
 							};
-							setLoadingModal(false)
+							setLoadingModal(false);
 							setJob(newJob);
 							handleOpen();
 						} else {
@@ -575,21 +609,25 @@ const NewOrder = props => {
 									size='lg'
 									className='mx-3'
 									onClick={async () => {
-										setLoadingText("Getting Quote")
-										setLoadingModal(true)
+										setLoadingText('Getting Quote');
+										setLoadingModal(true);
 										const { pickupAddress, dropoffAddress } = values;
 										try {
-											let pickupAddressComponents  = await geocodeByAddress(pickupAddress);
+											let pickupAddressComponents = await geocodeByAddress(pickupAddress);
 											let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
 											values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
 											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
-											const { quotes, bestQuote: {id} } = await dispatch(getAllQuotes(apiKey, values))
+											const {
+												quotes,
+												bestQuote: { id },
+											} = await dispatch(getAllQuotes(apiKey, values));
+											setDeliveryParams(prevState => ({ ...values }));
 											setQuotes(quotes);
-											setLoadingModal(false)
-											showQuoteModal(true)
+											setLoadingModal(false);
+											showQuoteModal(true);
 										} catch (err) {
-											console.error(err)
-											alert(err)
+											console.error(err);
+											alert(err);
 										}
 									}}
 								>
