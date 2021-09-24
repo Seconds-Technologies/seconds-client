@@ -62,7 +62,7 @@ export default function Sidebar() {
 									location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
 								}`}
 							>
-								<img className={`sidebarIcon`} src={plugIcon} alt={''} />
+								<img className={`sidebarIcon`} src={docIcon} alt={''} />
 								<div className='sidebarText'>Documentaion</div>
 							</li>
 						</Link>
