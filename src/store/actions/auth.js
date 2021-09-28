@@ -75,11 +75,11 @@ export function authUser(type, userData) {
 	};
 }
 
-export function authorizeAPI(userData, strategy) {
+export function authorizeAPI(email, strategy) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('User data:', userData);
-			return apiCall('POST', `/server/auth/token`, { ...userData, strategy })
+			console.log('User:', email);
+			return apiCall('POST', `/server/auth/token`, { email, strategy })
 				.then(({ apiKey }) => {
 					dispatch(setApiKey(apiKey));
 					resolve(apiKey);
