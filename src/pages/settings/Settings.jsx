@@ -11,7 +11,7 @@ const Settings = props => {
 			<div className='row bg-white my-4 option-container' onClick={() => props.history.push(PATHS.PROFILE)}>
 				<div className="text-center h1">👤 Profile Settings</div>
 			</div>
-			<div className='row bg-white mt-4 mb-3 option-container'>
+			<div className='row bg-white mt-4 mb-3 option-container' onClick={() => props.history.push(PATHS.PAYMENT)}>
 				<div className="text-center h1">💳 Payment Method</div>
 			</div>
 		</div>

@@ -15,6 +15,7 @@ import Profile from '../pages/profile/Profile';
 import ApiDoc from '../pages/apiDoc/ApiDoc';
 import Settings from '../pages/settings/Settings';
 import CustomerSupport from '../pages/settings/CustomerSupport';
+import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import { PATHS } from '../constants';
 
 const routes = (
@@ -33,6 +34,7 @@ const routes = (
 		<PrivateRoute path={PATHS.DOCUMENTATION} component={ApiDoc} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
+		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
 	</Switch>
 );
 

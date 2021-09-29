@@ -10,7 +10,8 @@ export const PATHS = {
 	DOCUMENTATION: "/documentation",
 	PROFILE: "/profile",
 	SETTINGS: "/settings",
-	HELP: "/help"
+	HELP: "/help",
+	PAYMENT: "/payment"
 }
 
 export const COLOURS = {
