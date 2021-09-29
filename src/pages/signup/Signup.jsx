@@ -40,7 +40,8 @@ export default function Signup(props) {
 								file: "",
 								data: ""
 							},
-							apiKey: ""
+							apiKey: "",
+							stripeCustomerId: "",
 						}}
 						onSubmit={(values, actions) => {
 							console.log(values);

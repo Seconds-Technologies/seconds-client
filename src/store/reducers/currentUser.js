@@ -10,6 +10,7 @@ export const DEFAULT_STATE = {
 		apiKey: '',
 		selectionStrategy: '',
 		profileImageData: '',
+		stripeCustomerId: '',
 	}, //all user info when logged in
 };
 

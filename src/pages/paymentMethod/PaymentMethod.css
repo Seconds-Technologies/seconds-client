@@ -1,8 +1,16 @@
 .payment-method-container {
-    flex: 7;
-    overflow-x: scroll;
-    background-color: #f2f2f2;
-    border-radius: 0px;
-    margin-right: 0px;
-    min-height: 100vh;
+  flex: 7;
+  overflow-x: scroll;
+  background-color: #f2f2f2;
+  border-radius: 0px;
+  margin-right: 0px;
+  min-height: 100vh;
+}
+
+.form-wrapper {
+  padding: 15px;
+  margin: 15px;
+  width: 700px;
+  height: 600px;
+  position: relative;
 }
