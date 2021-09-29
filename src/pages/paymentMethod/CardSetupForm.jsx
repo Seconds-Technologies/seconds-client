@@ -41,7 +41,6 @@ const ResetButton = ({ onClick }) => (
 const SubmitButton = ({ processing, error, children, disabled }) => (
   <button
     className='text-light'
-    className={`SubmitButton ${error ? "SubmitButton--error" : ""}`}
     type="submit"
     size='lg'
     disabled={processing || disabled}
