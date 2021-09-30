@@ -616,7 +616,7 @@ const NewOrder = props => {
 								</div>
 							</div>
 						</div>
-						{error.message && <div className='alert alert-danger text-center'>{error.message}</div>}
+						{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 						<div className='d-flex pt-5 justify-content-end'>
 							<style type='text/css'>
 								{`
