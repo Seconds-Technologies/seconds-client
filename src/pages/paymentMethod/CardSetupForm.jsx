@@ -18,14 +18,14 @@ const ErrorMessage = ({ children }) => (
 );
 
 const SubmitButton = ({ processing, error, children, disabled }) => (
-  <button
+  <Button
     className='text-dark'
     type="submit"
     size='lg'
     disabled={processing || disabled}
   >
     {processing ? "Processing..." : children}
-  </button>
+  </Button>
 );
 
 

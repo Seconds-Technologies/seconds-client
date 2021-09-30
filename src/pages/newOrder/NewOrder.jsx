@@ -245,11 +245,11 @@ const NewOrder = props => {
 					try {
 						let pickupAddressComponents = await geocodeByAddress(pickupAddress);
 						let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-						
+
 						values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-						console.log('+++++++++++')
-						console.log(values.pickupFormattedAddress)
-						console.log('-----------')
+						console.log('+++++++++++');
+						console.log(values.pickupFormattedAddress);
+						console.log('-----------');
 						values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 						if (apiKey) {
 							const {
@@ -554,12 +554,17 @@ const NewOrder = props => {
 									/>
 								</div>
 							</div>
-							<div className='row my-3 align-items-center'>
-								<div className='col-12 d-flex flex-column'>
-									<h4>Order Details</h4>
+							<div className='mt-4 mb-3'/>
+							<div className='col-12 d-flex flex-column'>
+								<h4>Order Details</h4>
+								<div className='border border-2 rounded-3 p-4'>
 									<div className='row'>
 										<div className='col-6'>
+											<label htmlFor='items-count' className='mb-1'>
+												Number of Items
+											</label>
 											<input
+												id='items-count'
 												name='itemsCount'
 												type='number'
 												className='form-control form-border my-2'
@@ -570,7 +575,11 @@ const NewOrder = props => {
 											/>
 										</div>
 										<div className='col-6'>
+											<label htmlFor='package-value' className='mb-1'>
+												Package Value (£)
+											</label>
 											<CurrencyInput
+												id='packageValue'
 												prefix='£'
 												defaultValue={values.packageValue}
 												className='form-control form-border my-2'
@@ -586,20 +595,30 @@ const NewOrder = props => {
 											/>
 										</div>
 									</div>
-									<textarea
-										name='packageDescription'
-										className='form-control form-border my-2'
-										placeholder='Package Description'
-										aria-label='package-description'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
+									<div className='row'>
+										<div className='col'>
+											<label htmlFor='package-description' className='mb-1'>
+												Package Description
+											</label>
+											<textarea
+												id='package-description'
+												name='packageDescription'
+												className='form-control form-border my-2'
+												placeholder='Max. 200 characters'
+												maxLength={200}
+												aria-label='package-description'
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+										</div>
+									</div>
 								</div>
 							</div>
-							{error.message && <div className='alert alert-danger text-center'>{error.message}</div>}
-							<div className='d-flex pt-5 justify-content-end'>
-								<style type='text/css'>
-									{`
+						</div>
+						{error.message && <div className='alert alert-danger text-center'>{error.message}</div>}
+						<div className='d-flex pt-5 justify-content-end'>
+							<style type='text/css'>
+								{`
 									.btn-submit {
 			                            background-color: #9400d3;
 									}
@@ -607,40 +626,39 @@ const NewOrder = props => {
 										padding: 1rem 1rem
 									}
 								`}
-								</style>
-								<Button
-									variant='dark'
-									size='lg'
-									className='mx-3'
-									onClick={async () => {
-										setLoadingText('Getting Quote');
-										setLoadingModal(true);
-										const { pickupAddress, dropoffAddress } = values;
-										try {
-											let pickupAddressComponents = await geocodeByAddress(pickupAddress);
-											let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-											values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
-											const {
-												quotes,
-												bestQuote: { id },
-											} = await dispatch(getAllQuotes(apiKey, values));
-											setDeliveryParams(prevState => ({ ...values }));
-											setQuotes(quotes);
-											setLoadingModal(false);
-											showQuoteModal(true);
-										} catch (err) {
-											console.error(err);
-											alert(err);
-										}
-									}}
-								>
-									Get Quote
-								</Button>
-								<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
-									Confirm
-								</Button>
-							</div>
+							</style>
+							<Button
+								variant='dark'
+								size='lg'
+								className='mx-3'
+								onClick={async () => {
+									setLoadingText('Getting Quote');
+									setLoadingModal(true);
+									const { pickupAddress, dropoffAddress } = values;
+									try {
+										let pickupAddressComponents = await geocodeByAddress(pickupAddress);
+										let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+										values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+										values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+										const {
+											quotes,
+											bestQuote: { id },
+										} = await dispatch(getAllQuotes(apiKey, values));
+										setDeliveryParams(prevState => ({ ...values }));
+										setQuotes(quotes);
+										setLoadingModal(false);
+										showQuoteModal(true);
+									} catch (err) {
+										console.error(err);
+										alert(err);
+									}
+								}}
+							>
+								Get Quote
+							</Button>
+							<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
+								Confirm
+							</Button>
 						</div>
 					</form>
 				)}
