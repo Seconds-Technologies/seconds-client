@@ -9,7 +9,7 @@ import './apikey.css';
 
 const ApiKey = props => {
 	const dispatch = useDispatch();
-	const { user } = useSelector(state => state['currentUser']);
+	const { apiKey, email } = useSelector(state => state['currentUser'].user);
 	const [modal, setShow] = useState(false);
 	const [apiTooltip, showApiTooltip] = useState(false);
 	const [key, setKey] = useState('');
@@ -79,7 +79,7 @@ const ApiKey = props => {
 					</Button>
 				</Modal.Footer>
 			</Modal>
-			{!user.apiKey ? (
+			{!apiKey ? (
 				<div className='container d-flex flex-column align-items-center justify-content-center h-100'>
 					<div>
 						<h2>Connect to Seconds API</h2>
@@ -92,7 +92,7 @@ const ApiKey = props => {
 								strategy: 'eta',
 							}}
 							onSubmit={(values, actions) =>
-								dispatch(authorizeAPI(user, values.strategy))
+								dispatch(authorizeAPI(email, values.strategy))
 									.then(key => {
 										setKey(key);
 										console.log('KEY:', key);
@@ -147,7 +147,7 @@ const ApiKey = props => {
 				<div className='container'>
 					<div className='pb-5'>
 						<h1>Your API Key</h1>
-						<input className='form-control form-control-lg my-4' type='text' value={user.apiKey} readOnly />
+						<input className='form-control form-control-lg my-4' type='text' value={apiKey} readOnly />
 					</div>
 					<div className='d-flex justify-content-center align-items-center'>
 						<button className='mt-2 text-center shopifyButton' onClick={props.history.goBack}>
