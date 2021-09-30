@@ -279,6 +279,7 @@ const NewOrder = props => {
 							setJob(newJob);
 							handleOpen();
 						} else {
+							setLoadingModal(false);
 							alert(
 								'Your account does not have an API' +
 									' key associated with it. Please generate one from the integrations page'
@@ -649,6 +650,7 @@ const NewOrder = props => {
 										setLoadingModal(false);
 										showQuoteModal(true);
 									} catch (err) {
+										setLoadingModal(false);
 										console.error(err);
 										alert(err);
 									}
