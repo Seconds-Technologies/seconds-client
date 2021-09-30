@@ -56,10 +56,7 @@ export function authUser(type, userData) {
 					console.log(message, token, shopify);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
-					console.log('+++++++++++++++');
-					console.log(user);
 					dispatch(setCurrentUser(user));
-					console.log('+++++++++++++++');
 					shopify && apiCall('POST', `/server/shopify`, { email: user.email })
 						.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
 							dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));

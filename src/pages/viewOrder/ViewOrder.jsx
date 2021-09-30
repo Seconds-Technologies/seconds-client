@@ -17,7 +17,7 @@ const ViewOrder = props => {
 		isIntegrated,
 		credentials: { baseURL, accessToken },
 	} = useSelector(state => state['shopifyStore']);
-	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey, stripeCustomerId } = useSelector(state => state['currentUser'].user);
 	const { allOrders } = useSelector(state => state['shopifyOrders']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const [order, setOrder] = useState({ status: '' });
@@ -204,7 +204,7 @@ const ViewOrder = props => {
 															)
 													  )
 													: dispatch(
-															updateJobsStatus(apiKey, order.id, values.status, email)
+															updateJobsStatus(apiKey, order.id, values.status, stripeCustomerId)
 													  );
 												setShow(true);
 											} catch (err) {

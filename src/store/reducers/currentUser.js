@@ -1,4 +1,4 @@
-import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
+import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, SET_PAYMENT_ID, UPDATE_CURRENT_USER } from '../actionTypes';
 
 export const DEFAULT_STATE = {
 	isAuthenticated: false, //be true when user logged in
@@ -11,6 +11,7 @@ export const DEFAULT_STATE = {
 		selectionStrategy: '',
 		profileImageData: '',
 		stripeCustomerId: '',
+		paymentMethodId: ''
 	}, //all user info when logged in
 };
 
@@ -32,6 +33,11 @@ export default (state = DEFAULT_STATE, action) => {
 				...state,
 				user: { ...state.user, apiKey: action.apiKey },
 			};
+		case SET_PAYMENT_ID:
+		return {
+			...state,
+			user: { ...state.user, paymentMethodId: action.paymentMethodId },
+		};
 		case REMOVE_CURRENT_USER:
 			return DEFAULT_STATE
 		default:

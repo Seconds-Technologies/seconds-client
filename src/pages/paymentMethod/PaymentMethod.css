@@ -14,3 +14,10 @@
   height: 600px;
   position: relative;
 }
+
+.p-3.topRight {
+  right: 0 !important;
+  z-index: 1000;
+  top: 11% !important;
+  position: absolute !important;
+} 

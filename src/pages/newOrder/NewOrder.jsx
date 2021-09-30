@@ -245,7 +245,11 @@ const NewOrder = props => {
 					try {
 						let pickupAddressComponents = await geocodeByAddress(pickupAddress);
 						let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+						
 						values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+						console.log('+++++++++++')
+						console.log(values.pickupFormattedAddress)
+						console.log('-----------')
 						values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 						if (apiKey) {
 							const {

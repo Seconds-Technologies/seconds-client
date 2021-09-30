@@ -72,7 +72,7 @@ export function getAllJobs(apiKey, email) {
 	};
 }
 
-export function updateJobsStatus(apiKey, jobId, status, email) {
+export function updateJobsStatus(apiKey, jobId, status, stripeCustomerId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
@@ -80,7 +80,7 @@ export function updateJobsStatus(apiKey, jobId, status, email) {
 				'POST',
 				`/api/v1/jobs/${jobId}`,
 				{
-					email,
+					stripeCustomerId,
 					status,
 				},
 				{ headers: { 'X-Seconds-Api-Key': apiKey } }

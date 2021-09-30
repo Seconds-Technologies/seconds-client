@@ -19,4 +19,5 @@ export const CLEAR_ORDERS = "CLEAR_ORDERS";
 export const CLEAR_PRODUCTS = "CLEAR_PRODUCTS";
 export const CLEAR_JOBS = "CLEAR_JOBS";
 export const NEW_DELIVERY_JOB = "NEW_DELIVERY_JOB";
+export const SET_PAYMENT_ID = "SET_PAYMEMT_ID";
 //export const GET_PRODUCT_IMAGE = "GET_PRODUCT_IMAGE"
