@@ -27,14 +27,14 @@ export const clearAllJobs = () => ({
 	type: CLEAR_JOBS,
 });
 
-export function createDeliveryJob(deliveryParams, apiKey, providerId = "unknown") {
+export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('Data:', deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
 				headers: {
 					'X-Seconds-Api-Key': apiKey,
-					'X-Seconds-Provider-Id': providerId
+					...(providerId) && {'X-Seconds-Provider-Id': providerId }
 				},
 			})
 				.then(job => {
