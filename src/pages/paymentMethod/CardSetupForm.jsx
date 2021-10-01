@@ -2,6 +2,8 @@ import React, { useEffect, useState }  from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Toast, Overlay, Tooltip } from 'react-bootstrap';
 import  { addPaymentMethod, fetchStripeCard, setupIntent } from '../../store/actions/payments';
+import Card from './card/index'
+import 'react-credit-cards/es/styles-compiled.css';
 import {
   CardNumberElement,
   CardCvcElement,
@@ -43,7 +45,7 @@ const CardSetupForm = ({ props, setShow }) => {
     name: '',
     exp_month: '',
     exp_year: '',
-    brand: ''
+    brand: '',
   });
 
   console.log(user);
@@ -72,7 +74,7 @@ const CardSetupForm = ({ props, setShow }) => {
           name: paymentMethod.billing_details.name, 
           exp_month: paymentMethod.card.exp_month, 
           exp_year: paymentMethod.card.exp_year,
-          brand: paymentMethod.card.brand
+          brand: paymentMethod.card.brand,
         });
       }
       fetchStripeCardPromise();
@@ -134,12 +136,21 @@ const CardSetupForm = ({ props, setShow }) => {
   return user.paymentMethodId ? 
   (
     <div className="form-group">
-      <label htmlFor="fullName">Cardholder Name</label>
+      <Card
+      cardHolder = {`${paymentMethod.name}`}
+      cardNumber = {`···· ···· ···· ${paymentMethod.last4}`}
+      cardMonth = {`${paymentMethod.exp_month}`}
+      cardYear = {`${paymentMethod.exp_year}`}
+      cardCvv = "***"
+      brand = {`${paymentMethod.brand}`}
+      >
+      </Card>
+      {/* <label htmlFor="fullName">Cardholder Name</label>
       <h1>{paymentMethod.last4}</h1>
       <h1>{paymentMethod.exp_month}</h1>
       <h1>{paymentMethod.exp_year}</h1>
       <h1>{paymentMethod.brand}</h1>
-      <h1>{paymentMethod.name}</h1>
+      <h1>{paymentMethod.name}</h1> */}
     </div>  
   ) : 
     (
