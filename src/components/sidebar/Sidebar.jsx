@@ -71,7 +71,7 @@ export default function Sidebar() {
 							<div className='sidebarText'>Integration</div>
 						</li>
 					</Link>
-					<a href="https://seconds-technologies.github.io/seconds-api" target="_blank" className='link text-black'>
+					<a href="https://seconds.stoplight.io/" target="_blank" className='link text-black'>
 						<li
 							className={`sidebarListItem text-black ${
 								location['pathname'] === PATHS.DOCUMENTATION && 'currentLink'
