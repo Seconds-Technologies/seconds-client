@@ -1,7 +1,7 @@
-import React, { useState }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Toast, Overlay, Tooltip } from 'react-bootstrap';
-import  { addPaymentMethod, setupIntent } from '../../store/actions/payments';
+import  { addPaymentMethod, fetchStripeCard, setupIntent } from '../../store/actions/payments';
 import {
   CardNumberElement,
   CardCvcElement,
@@ -36,8 +36,18 @@ const CardSetupForm = ({ props, setShow }) => {
   const [error, setError] = useState(null);
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState(null);
+  const [paymentAdded, setPaymentAdded] = useState(false);
   const [cardNumber, setCardNumber] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState({
+    last4: '',
+    name: '',
+    exp_month: '',
+    exp_year: '',
+    brand: ''
+  });
+
+  console.log(user);
+
   const [billingDetails, setBillingDetails] = useState({
     name: '',
     address: {
@@ -47,9 +57,29 @@ const CardSetupForm = ({ props, setShow }) => {
   
   const dispatch = useDispatch();
 
+  const fetchStripePromise = async () => {
+    return dispatch(fetchStripeCard(user))
+  }
+
+  useEffect(() => {
+    console.log(paymentAdded)
+		if(user.paymentMethodId){
+      async function fetchStripeCardPromise() {
+        const paymentMethod = await dispatch(fetchStripeCard(user))
+        setPaymentMethod(paymentMethod);
+        setPaymentMethod({ ...paymentMethod, 
+          last4: paymentMethod.card.last4, 
+          name: paymentMethod.billing_details.name, 
+          exp_month: paymentMethod.card.exp_month, 
+          exp_year: paymentMethod.card.exp_year,
+          brand: paymentMethod.card.brand
+        });
+      }
+      fetchStripeCardPromise();
+    }
+	}, [paymentAdded])
+
   const handleSubmit = async (event) => {
-    console.log('-------------')
-    console.log(billingDetails);
     event.preventDefault();
 
     if (!stripe || !elements) {
@@ -71,7 +101,7 @@ const CardSetupForm = ({ props, setShow }) => {
     const result = await stripe.confirmCardSetup(intent.client_secret, {
       payment_method: {
         card: elements.getElement(CardNumberElement),
-        billing_details: { email: user.email }
+        billing_details: { name: billingDetails.name, email: user.email }
       }
     });
 
@@ -83,11 +113,10 @@ const CardSetupForm = ({ props, setShow }) => {
     } else {
       console.log(result);
       console.log('success', result.setupIntent.payment_method);
-      setPaymentMethod(result.setupIntent);
-      console.log('[[[[[[')
-      dispatch(addPaymentMethod(user, result.setupIntent.payment_method))
-      console.log(']]]]]]]')
+      await dispatch(addPaymentMethod(user, result.setupIntent.payment_method))
       setShow(true)
+      setPaymentAdded(true)
+      console.log(paymentAdded)
     }
   };
 
@@ -102,22 +131,15 @@ const CardSetupForm = ({ props, setShow }) => {
     });
   };
 
-  return paymentMethod ? 
+  return user.paymentMethodId ? 
   (
     <div className="form-group">
       <label htmlFor="fullName">Cardholder Name</label>
-      <input
-        autoComplete='given-name'
-        id='dropoff-first-name'
-        name='dropoffFirstName'
-        type='text'
-        className='form-control form-border mb-2'
-        aria-label='dropoff-first-name'
-        value={billingDetails.name}
-        onChange={(e) => {
-          setBillingDetails({ ...billingDetails, name: e.target.value });
-        }}
-      />
+      <h1>{paymentMethod.last4}</h1>
+      <h1>{paymentMethod.exp_month}</h1>
+      <h1>{paymentMethod.exp_year}</h1>
+      <h1>{paymentMethod.brand}</h1>
+      <h1>{paymentMethod.name}</h1>
     </div>  
   ) : 
     (

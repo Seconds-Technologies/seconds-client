@@ -34,10 +34,10 @@ export default (state = DEFAULT_STATE, action) => {
 				user: { ...state.user, apiKey: action.apiKey },
 			};
 		case SET_PAYMENT_ID:
-		return {
-			...state,
-			user: { ...state.user, paymentMethodId: action.paymentMethodId },
-		};
+			return {
+				...state,
+				user: { ...state.user, paymentMethodId: action.paymentMethodId },
+			};
 		case REMOVE_CURRENT_USER:
 			return DEFAULT_STATE
 		default:
