@@ -11,6 +11,7 @@ const stripePromiseTest = loadStripe('pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj
 
 const PaymentMethod = props => {
     const [show, setShow] = useState(false);
+    const [showCard, setShowCard] = useState(true);
       
     return  <div className='payment-method-container'>
                 <div className='d-flex h-100 align-items-center justify-content-center'>

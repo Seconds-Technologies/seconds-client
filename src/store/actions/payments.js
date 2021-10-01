@@ -31,20 +31,40 @@ export function setupIntent(user) {
 	};
 }
 
-export function addPaymentMethod(user, id) {
+export function addPaymentMethod(user, paymentMethodId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-            console.log('------+++_____')
-            console.log(user.email)
-            console.log(user)
-			return apiCall('POST', `/api/v1/payments/add-payment-method`, { email: user.email, paymentMethodId: id }, {
+			return apiCall('POST', `/api/v1/payments/add-payment-method`, { email: user.email, paymentMethodId: paymentMethodId }, {
                 headers: {
 					'X-Seconds-Api-Key': user.apiKey,
 				},
             })
-            .then((intent) => {
-                dispatch(setPaymentMethodId(id))
-                resolve(intent);
+            .then((res) => {
+                console.log(res)
+                console.log(paymentMethodId)
+                dispatch(setPaymentMethodId(paymentMethodId))
+                resolve(null);
+            })
+            .catch(err => {
+                if (err) dispatch(addError(err.message));
+                else dispatch(addError('Api endpoint could not be accessed!'));
+                reject(err);
+            });
+		});
+	};
+}
+
+
+export function fetchStripeCard(user) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('POST', `/api/v1/payments/fetch-stripe-card`, { paymentMethodId: user.paymentMethodId }, {
+                headers: {
+					'X-Seconds-Api-Key': user.apiKey,
+				},
+            })
+            .then((card) => {
+                resolve(card);
             })
             .catch(err => {
                 if (err) dispatch(addError(err.message));
