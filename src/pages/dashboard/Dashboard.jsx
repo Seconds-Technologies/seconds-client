@@ -10,7 +10,7 @@ export default function Dashboard() {
 	return (
 		<div className='dashboard'>
 			<div className='d-flex flex-row align-items-center px-4 pt-3'>
-				<span className="fs-4 mt-2">☀️&nbsp;</span>
+				<span className="fs-3">☀️&nbsp;</span>
 				<span className='fs-5 pageName'><span className="fw-bold">{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview today</span>
 				{/*<div className='dropdown'>
 					<button

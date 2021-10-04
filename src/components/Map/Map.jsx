@@ -13,8 +13,7 @@ const Map = props => {
 	});
 
 	return (
-		<div className='mt-2 map-container'>
-			<h3 className='map-title ps-4 pt-3'>Live View</h3>
+		<div className='mt-4 map-container'>
 			<Mapbox
 				zoom={[13]}
 				containerStyle={{
