@@ -3,13 +3,13 @@ import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
 import { COLOURS, STATUS } from '../../constants';
-import './Track.css';
 import { fetchOrders } from '../../store/actions/shopify';
 import { getAllJobs } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
+import './Track.css';
 
 const Track = props => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const orders = useSelector(state => {
@@ -38,8 +38,8 @@ const Track = props => {
 	});
 
 	useEffect(() => {
-		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email))
-	}, [])
+		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email));
+	}, []);
 
 	useEffect(() => {
 		dispatch(removeError());
@@ -48,8 +48,8 @@ const Track = props => {
 	return (
 		<div className='trackContainer py-4'>
 			<div className='row flex-row flex-nowrap'>
-				<div className='col-sm-4 col-md-2'>
-					<div className='d-flex flex-column align-items-center justify-content-center border-end border-dark'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
+					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>New</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
 					</div>
@@ -58,7 +58,7 @@ const Track = props => {
 							status === STATUS.NEW && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4 ps-2'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
@@ -68,8 +68,8 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2'>
-					<div className='d-flex flex-column align-items-center justify-content-center border-end border-dark'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
+					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>Pending</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.PENDING).length} />
 					</div>
@@ -78,7 +78,7 @@ const Track = props => {
 							status === STATUS.PENDING && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
@@ -88,9 +88,8 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2'>
-				<div className="mycontent-left-right">
-					<div className='d-flex flex-column align-items-center justify-content-center border-end border-dark'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
+					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>Dispatching</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.DISPATCHING).length} />
 					</div>
@@ -99,7 +98,7 @@ const Track = props => {
 							status === STATUS.DISPATCHING && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
@@ -108,11 +107,9 @@ const Track = props => {
 								</div>
 							)
 					)}
-					</div>
 				</div>
-				<div className='col-sm-4 col-md-2'>
-				<div className="mycontent-left-right">
-					<div className='d-flex flex-column align-items-center justify-content-center border-end border-dark'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
+					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>En-route</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.EN_ROUTE).length} />
 					</div>
@@ -121,7 +118,7 @@ const Track = props => {
 							status === STATUS.EN_ROUTE && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
@@ -130,10 +127,9 @@ const Track = props => {
 								</div>
 							)
 					)}
-					</div>
 				</div>
-				<div className='col-sm-4 col-md-2'>
-					<div className='d-flex flex-column align-items-center justify-content-center border-end border-dark'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
+					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>Completed</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.COMPLETED).length} />
 					</div>
@@ -142,7 +138,7 @@ const Track = props => {
 							status === STATUS.COMPLETED && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
@@ -152,7 +148,7 @@ const Track = props => {
 							)
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2'>
+				<div className='col-sm-4 col-md-2 border-end border-start'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>Cancelled</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.CANCELLED).length} />
@@ -162,7 +158,7 @@ const Track = props => {
 							status === STATUS.CANCELLED && (
 								<div
 									key={index}
-									className='my-4 px-3'
+									className='my-4'
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>

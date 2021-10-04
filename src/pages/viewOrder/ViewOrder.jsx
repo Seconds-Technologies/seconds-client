@@ -55,6 +55,7 @@ const ViewOrder = props => {
 								id: order['id'],
 								orderNumber: order['order_number'],
 								customerName,
+								description: '',
 								email,
 								phone,
 								address,
@@ -94,16 +95,25 @@ const ViewOrder = props => {
 							createdAt,
 						}) => {
 							let {
-								dropoffLocation: { fullAddress: address, phoneNumber: phone, firstName, lastName, email },
+								description,
+								dropoffLocation: {
+									fullAddress: address,
+									phoneNumber: phone,
+									firstName,
+									lastName,
+									email,
+								},
 								dropoffStartTime,
 								pickupStartTime,
 							} = packages[0];
 							let customerName = `${firstName} ${lastName}`;
 							createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
+							console.log(moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'));
 							return {
 								id: _id,
 								orderNumber,
 								createdAt,
+								description,
 								status: status[0].toUpperCase() + status.toLowerCase().slice(1),
 								customerName,
 								email,
@@ -111,8 +121,8 @@ const ViewOrder = props => {
 								providerId,
 								trackingURL,
 								address,
-								pickupDate: moment(pickupStartTime).format('DD/MM/YYYY HH:mm:ss'),
-								dropoffDate: moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'),
+								pickupDate: pickupStartTime,
+								dropoffDate: dropoffStartTime,
 							};
 						}
 					)[0];
@@ -121,7 +131,7 @@ const ViewOrder = props => {
 			}
 			console.log(order.status);
 		})();
-		return apiKey && dispatch(getAllJobs(apiKey, email))
+		return apiKey && dispatch(getAllJobs(apiKey, email));
 	}, []);
 
 	useEffect(() => {
@@ -134,50 +144,39 @@ const ViewOrder = props => {
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
 			<div className='orderContainer'>
-				<div className='orderShow'>
-					<div className='orderShowTop'>
+				<div className='orderShow p-5'>
+					<div className='py-3 fs-3 d-flex justify-content-center'>
 						<span className='orderShowCustomerName'>{order.customerName}</span>
 					</div>
 					<div className='orderShowBottom'>
-						<span className='orderShowTitle'>Order Details</span>
 						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Order ID:</h4>
-							<span className='orderShowInfoTitle'>{order.orderNumber}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Created At:</h4>
-							<span className='orderShowInfoTitle'>{order.createdAt}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Email:</h4>
-							<span className='orderShowInfoTitle'>{Boolean(order.email) ? order.email : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Phone Number:</h4>
-							<span className='orderShowInfoTitle'>{Boolean(order.phone) ? order.phone : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Address:</h4>
+							<span className='orderShowLabel'>Address:</span>
 							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Fleet Provider:</h4>
-							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
+							<span className='orderShowLabel'>Email:</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.email) ? order.email : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Pickup At:</h4>
-							<span className='orderShowInfoTitle'>{order.pickupDate ? order.pickupDate : 'N/A'}</span>
+							<span className='orderShowLabel'>Phone Number:</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.phone) ? order.phone : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Dropoff At:</h4>
-							<span className='orderShowInfoTitle'>{order.dropoffDate ? order.dropoffDate : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<h4 className='orderShowLabel'>Items:</h4>
+							<span className='orderShowLabel'>Items:</span>
 							<span className='orderShowInfoTitle'>{total}</span>
 						</div>
-						<div className='orderShowInfo justify-content-center'>
-							{order.trackingURL ? <h4 className="orderShowLabel"><a href={order.trackingURL} target="_blank" className='link-primary orderShowInfoTitle'>Track Order</a></h4> : <span className='orderShowInfoTitle'>{'N/A'}</span>}
+						<div className='orderShowInfo flex-column'>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
+								Products Ordered
+							</span>
+							<textarea
+								className='form-control'
+								name=''
+								id=''
+								cols='30'
+								rows='5'
+								value={order.description}
+							/>
 						</div>
 						<div className='d-flex flex-row align-items-center'>
 							<button className={statusBtn} disabled>
@@ -204,7 +203,12 @@ const ViewOrder = props => {
 															)
 													  )
 													: dispatch(
-															updateJobsStatus(apiKey, order.id, values.status, stripeCustomerId)
+															updateJobsStatus(
+																apiKey,
+																order.id,
+																values.status,
+																stripeCustomerId
+															)
 													  );
 												setShow(true);
 											} catch (err) {
@@ -254,12 +258,75 @@ const ViewOrder = props => {
 						</div>
 					</div>
 				</div>
-				<div className='orderUpdate'>
-					<h3 className='orderUpdateTitle'>Products Ordered</h3>
-					{products.map(({ title, img, quantity }, index) => (
-						<ProductItem key={index} img={img} title={title} quantity={quantity} />
-					))}
-				</div>
+				{isIntegrated ? (
+					<div className='orderUpdate'>
+						<h3 className='orderUpdateTitle'>Products Ordered</h3>
+						{products.map(({ title, img, quantity }, index) => (
+							<ProductItem key={index} img={img} title={title} quantity={quantity} />
+						))}
+					</div>
+				) : (
+					<div className='deliveryDetails p-5'>
+						<div className='py-3 fs-3 d-flex justify-content-center'>
+							<span className='orderShowCustomerName'>Delivery 🚚</span>
+						</div>
+						<div className='orderShowInfo'>
+							<span className='orderShowLabel'>Order ID:</span>
+							<span className='orderShowInfoTitle'>{order.orderNumber}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<span className='orderShowLabel'>Provider:</span>
+							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<span className='orderShowLabel'>Created At:</span>
+							<span className='orderShowInfoTitle'>{order.createdAt}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<span className='orderShowLabel'>ETA:</span>
+							<span className='orderShowInfoTitle'>
+								{moment(order.dropoffDate).diff(moment(), 'minutes') < 0
+									? `0 minutes`
+									: `${moment(order.dropoffDate).diff(moment(), 'minutes')} minutes`}
+							</span>
+						</div>
+						<div className='orderShowInfo flex-column'>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
+								Driver Information
+							</span>
+							<table className='table d-flex table-borderless'>
+								<tbody>
+									<tr>
+										<td className='fw-bold'>Name</td>
+										<td>Diego Costa</td>
+									</tr>
+									<tr>
+										<td className='fw-bold'>Phone</td>
+										<td>0744596637</td>
+									</tr>
+									<tr>
+										<td className='fw-bold'>Vehicle</td>
+										<td>Cargo Bike</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div className='orderShowInfo justify-content-center'>
+							{order.trackingURL ? (
+								<a
+									href={order.trackingURL}
+									target='_blank'
+									role='button'
+									className='btn btn-lg btn-primary orderShowInfoTitle trackOrderBtn'
+								>
+									Track Order
+								</a>
+							) : (
+								<span className='orderShowInfoTitle'>{'N/A'}</span>
+							)}
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);

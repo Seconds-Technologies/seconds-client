@@ -615,11 +615,12 @@ const NewOrder = props => {
 									</div>
 								</div>
 							</div>
-						</div>
-						{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
-						<div className='d-flex pt-5 justify-content-end'>
-							<style type='text/css'>
-								{`
+							<div className="my-3 d-flex justify-content-center">
+								{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
+							</div>
+							<div className='d-flex pt-5 justify-content-end'>
+								<style type='text/css'>
+									{`
 									.btn-submit {
 			                            background-color: #9400d3;
 									}
@@ -627,40 +628,41 @@ const NewOrder = props => {
 										padding: 1rem 1rem
 									}
 								`}
-							</style>
-							<Button
-								variant='dark'
-								size='lg'
-								className='mx-3'
-								onClick={async () => {
-									setLoadingText('Getting Quote');
-									setLoadingModal(true);
-									const { pickupAddress, dropoffAddress } = values;
-									try {
-										let pickupAddressComponents = await geocodeByAddress(pickupAddress);
-										let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-										values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-										values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
-										const {
-											quotes,
-											bestQuote: { id },
-										} = await dispatch(getAllQuotes(apiKey, values));
-										setDeliveryParams(prevState => ({ ...values }));
-										setQuotes(quotes);
-										setLoadingModal(false);
-										showQuoteModal(true);
-									} catch (err) {
-										setLoadingModal(false);
-										console.error(err);
-										alert(err);
-									}
-								}}
-							>
-								Get Quote
-							</Button>
-							<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
-								Confirm
-							</Button>
+								</style>
+								<Button
+									variant='dark'
+									size='lg'
+									className='mx-3'
+									onClick={async () => {
+										setLoadingText('Getting Quote');
+										setLoadingModal(true);
+										const { pickupAddress, dropoffAddress } = values;
+										try {
+											let pickupAddressComponents = await geocodeByAddress(pickupAddress);
+											let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+											values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+											const {
+												quotes,
+												bestQuote: { id },
+											} = await dispatch(getAllQuotes(apiKey, values));
+											setDeliveryParams(prevState => ({ ...values }));
+											setQuotes(quotes);
+											setLoadingModal(false);
+											showQuoteModal(true);
+										} catch (err) {
+											setLoadingModal(false);
+											console.error(err);
+											alert(err);
+										}
+									}}
+								>
+									Get Quote
+								</Button>
+								<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
+									Confirm
+								</Button>
+							</div>
 						</div>
 					</form>
 				)}

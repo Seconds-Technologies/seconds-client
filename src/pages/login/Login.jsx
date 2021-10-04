@@ -19,7 +19,7 @@ const Login = props => {
     }, [props.location]);
 
     const loadingModal = (
-        <Modal contentClassName="model-border" allowTransparency centered show={isLoading} onHide={() => setLoading(false)} style={{
+        <Modal contentClassName="model-border" centered show={isLoading} onHide={() => setLoading(false)} style={{
             backgroundColor: "transparent"
         }}>
             <Modal.Body className="d-flex justify-content-center align-item-center" style={{

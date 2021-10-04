@@ -1,14 +1,17 @@
 import FeaturedInfo from "../../components/featuredInfo/FeaturedInfo";
-import { useState } from "react";
+import React, { useState } from "react";
 import Map from '../../components/Map/Map';
+import { useSelector } from 'react-redux';
 import "./Dashboard.css";
 
 export default function Dashboard() {
 	const [options, setOptions] = useState(["Last 24 hrs", "Last Month", "Last Year"]);
+	const { firstname, profileImageData } = useSelector(state => state["currentUser"].user)
 	return (
 		<div className='dashboard'>
-			<div className='d-flex flex-row justify-content-between align-items-center px-4 pt-3'>
-				<h3 className='pageName'>Dashboard</h3>
+			<div className='d-flex flex-row align-items-center px-4 pt-3'>
+				<span className="fs-4 mt-2">☀️&nbsp;</span>
+				<span className='fs-5 pageName'><span className="fw-bold">{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview today</span>
 				{/*<div className='dropdown'>
 					<button
 						className='btn bg-white dropdown-toggle'
@@ -32,7 +35,7 @@ export default function Dashboard() {
 				</div>*/}
 			</div>
 			<FeaturedInfo />
-			<Map/>  
+			<Map />
 		</div>
 	);
 }

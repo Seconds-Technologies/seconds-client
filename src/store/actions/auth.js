@@ -112,7 +112,7 @@ export function updateProfile({ img, id, ...data }) {
 						};
 						apiCall('POST', '/server/auth/upload', formData, config)
 							.then(({ base64Image, message }) => {
-								console.log(base64Image);
+								console.log(base64Image, message);
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
 							})
 							.catch(err => {

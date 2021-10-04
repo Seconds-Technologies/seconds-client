@@ -1,3 +1,11 @@
+/*$theme-colors: () !default;
+$theme-colors: map-merge(
+    (
+      "primary": #9400d3
+    ),
+    $theme-colors
+);*/
+
 @import '../node_modules/bootstrap/scss/bootstrap';
 
 .w-sm {

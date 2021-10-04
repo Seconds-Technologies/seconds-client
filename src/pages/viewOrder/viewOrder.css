@@ -35,7 +35,6 @@
 .orderShow {
     background-color: white;
     flex: 1;
-    padding: 20px;
     -webkit-box-shadow: 0px 0px 15px -10px #000000;
     box-shadow: 0px 0px 15px -10px #000000;
 }
@@ -49,9 +48,12 @@
     margin-left: 20px;
 }
 
-.orderShowTop {
-    display: flex;
-    align-items: center;
+.deliveryDetails {
+    background-color: white;
+    flex: 1;
+    -webkit-box-shadow: 0px 0px 15px -10px #000000;
+    box-shadow: 0px 0px 15px -10px #000000;
+    margin-left: 20px;
 }
 
 .orderShowCustomerName {
@@ -86,9 +88,8 @@
 }
 
 .orderShowInfoTitle {
-    margin-left: 20px;
+    margin-left: 5px;
     font-family: sans-serif;
-    margin-bottom: 5px;
 }
 
 .productItem {
@@ -121,6 +122,11 @@
     margin-left: 40px;
     margin-top: 100px;
     font-family: sans-serif;
+}
+
+.trackOrderBtn {
+    width: 45%;
+    border-radius: 10px;
 }
 
 

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { getAllOrders } from '../../store/actions/shopify';
 import { getAllJobs } from '../../store/actions/delivery';
 import './FeaturedInfo.css';
@@ -18,6 +18,15 @@ export default function FeaturedInfo() {
             return { total, completed }
         }
     });
+    const deliveryFee = useMemo(() => {
+        let totalFee = 0;
+        for (let order of completed){
+            console.log("MEMO:", order)
+            totalFee = totalFee + order.payout
+        }
+        console.log(totalFee)
+        return totalFee.toFixed(2)
+    }, [completed]);
 
     useEffect(() => {
         if (isIntegrated) {
@@ -30,13 +39,12 @@ export default function FeaturedInfo() {
 
     return (
         <div className='featured'>
-            <div className='featuredItem'>
+            <div className='featuredItem '>
                 <Link to='/orders' className='ordersLink d-flex flex-column align-items-center text-center'>
                     <span className='featuredTitle'>All Orders</span>
                     <div className='featuredAllOrdersContainer'>
                         <span className='featuredAllOrders'>{total.length}</span>
                     </div>
-                    <span className='featuredSub'>Total orders from your store</span>
                 </Link>
             </div>
             <div className='featuredItem d-flex flex-column align-items-center'>
@@ -44,14 +52,12 @@ export default function FeaturedInfo() {
                 <div className='featuredAllOrdersContainer'>
                     <span className='featuredAllOrders'>{completed.length}</span>
                 </div>
-                <span className='featuredSub'>Total number of orders delivered</span>
             </div>
             <div className='featuredItem featuredItem d-flex flex-column align-items-center'>
-                <span className='featuredTitle'>Delivery Payouts</span>
+                <span className='featuredTitle'>Payouts</span>
                 <div className='featuredAllOrdersContainer'>
-                    <span className='featuredAllOrders'>{`£${7 * completed.length}`}</span>
+                    <span className='featuredAllOrders'>{`£${deliveryFee}`}</span>
                 </div>
-                <span className='featuredSub'>Total delivery payouts</span>
             </div>
         </div>
     );

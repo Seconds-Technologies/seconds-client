@@ -19,11 +19,12 @@ export default (state = DEFAULT_STATE, action) => {
 		case NEW_DELIVERY_JOB:
 			return { ...state, allJobs: [...state.allJobs, action.job] }
 		case SET_COMPLETED_JOBS:
-			let newCompletedJobs = action.jobs.filter(item => item.status === STATUS.COMPLETED).map((item) => item.id)
-			console.log("newCompletedJobs", newCompletedJobs)
+			let newCompletedJobs = action.jobs.filter(item => item.status === STATUS.COMPLETED)
+			console.log("completed Jobs", newCompletedJobs)
 			return { ...state, completedJobs: newCompletedJobs }
 		case UPDATE_COMPLETED_JOBS:
-			return { ...state, completedJobs: [...state.completedJobs, action.id] }
+			console.log(action.job)
+			return { ...state, completedJobs: [...state.completedJobs, action.job] }
 		case REMOVE_COMPLETED_JOB:
 			return { ...state, completedJobs: state.completedJobs.filter(id => id !== action.id) }
 		case CLEAR_JOBS:

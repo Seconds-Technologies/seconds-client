@@ -13,9 +13,9 @@ export const setCompletedJobs = jobs => ({
 	jobs,
 });
 
-export const updateCompletedJobs = id => ({
+export const addCompletedJob = job => ({
 	type: UPDATE_COMPLETED_JOBS,
-	id,
+	job,
 });
 
 export const newDeliveryJob = job => ({
@@ -34,7 +34,7 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
 				headers: {
 					'X-Seconds-Api-Key': apiKey,
-					...(providerId) && {'X-Seconds-Provider-Id': providerId }
+					...(providerId && { 'X-Seconds-Provider-Id': providerId }),
 				},
 			})
 				.then(job => {
@@ -59,7 +59,15 @@ export function getAllJobs(apiKey, email) {
 				.then(({ jobs }) => {
 					console.log(jobs);
 					dispatch(setAllJobs(jobs));
-					dispatch(setCompletedJobs(jobs.map(({ _id: jobId, status }) => ({ jobId, status }))));
+					dispatch(
+						setCompletedJobs(
+							jobs.map(({ _id: id, selectedConfiguration: { deliveryFee }, status }) => ({
+								id,
+								payout: deliveryFee * 1.1,
+								status,
+							}))
+						)
+					);
 					dispatch(removeError());
 					resolve(jobs);
 				})
@@ -88,7 +96,8 @@ export function updateJobsStatus(apiKey, jobId, status, stripeCustomerId) {
 				.then(({ updatedJobs, message }) => {
 					console.log(message);
 					dispatch(setAllJobs(updatedJobs));
-					status === STATUS.COMPLETED && dispatch(updateCompletedJobs(jobId));
+					const { _id: id, selectedConfiguration: { deliveryFee }, status } = updatedJobs.find(item => item._id === jobId);
+					status === STATUS.COMPLETED && dispatch(addCompletedJob({ id, payout: deliveryFee * 1.1, status }));
 					dispatch(removeError());
 					resolve(updatedJobs);
 				})
@@ -105,7 +114,7 @@ export function getAllQuotes(apiKey, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
-			return apiCall('POST', `/api/v1/jobs/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
+			return apiCall('POST', `/api/v1/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
 					console.log(quotes);
 					dispatch(removeError());
