@@ -10,30 +10,33 @@ import './PaymentMethod.css';
 const stripePromiseTest = loadStripe('pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj4JuF98AIC13lLjzHiAyRdbYCH5gmeKi8j6VAZ7l2tXcESsq9xSmJvMx00rPtDSwZO');
 
 const PaymentMethod = props => {
-    const [show, setShow] = useState(false);
-    const [showCard, setShowCard] = useState(true);
+    const [toastMessage, setShowToast] = useState(false);
+
+    const confirmToast = (
+        <ToastContainer className='p-3 topRight'>
+            <ToastFade onClose={() => setShowToast(false)} show={Boolean(toastMessage)} animation={'true'} delay={3000} autohide>
+                <ToastFade.Header closeButton={false}>
+                    <img
+                        src='holder.js/20x20?text=%20'
+                        className='rounded me-2'
+                        alt=''
+                    />
+                    <strong className='me-auto'>Seconds</strong>
+                    <small>Now</small>
+                </ToastFade.Header>
+                <ToastFade.Body>{toastMessage}</ToastFade.Body>
+            </ToastFade>
+        </ToastContainer>
+    )
 
     return <div className='payment-method-container'>
         <div className='d-flex h-100 align-items-center justify-content-center'>
-            <ToastContainer className='p-3 topRight'>
-                <ToastFade onClose={() => setShow(false)} show={show} animation={'true'} delay={3000} autohide>
-                    <ToastFade.Header closeButton={false}>
-                        <img
-                            src='holder.js/20x20?text=%20'
-                            className='rounded me-2'
-                            alt=''
-                        />
-                        <strong className='me-auto'>Seconds</strong>
-                        <small>Now</small>
-                    </ToastFade.Header>
-                    <ToastFade.Body>Your payment method has been saved sucessfully.</ToastFade.Body>
-                </ToastFade>
-            </ToastContainer>
+            {confirmToast}
             <div className='form-wrapper'>
                 <h1>Payment Information</h1>
                 <div className='card card-3 rounded-3 p-4'>
                     <Elements stripe={stripePromiseTest}>
-                        <CardSetupForm {...props} setShow={setShow} />
+                        <CardSetupForm {...props} showToast={setShowToast}/>
                     </Elements>
                 </div>
             </div>
