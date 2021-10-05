@@ -218,18 +218,8 @@ const Profile = props => {
 										Get API Key
 									</Button>
 								</div>}
-								<div className='col-6 d-flex'>
-									<style type='text/css'>
-										{`
-									.btn-submit {
-			                            background-color: #9400d3;
-									}
-									.btn-xl {
-										padding: 1rem 1rem
-									}
-								`}
-									</style>
-									<Button className='text-light w-100' variant='submit' type='submit' size='lg'>
+								<div className='col-6'>
+									<Button className='text-light w-100' variant='primary' type='submit' size='lg'>
 										Save Changes
 									</Button>
 								</div>

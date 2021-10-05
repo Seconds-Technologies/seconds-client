@@ -619,16 +619,6 @@ const NewOrder = props => {
 								{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 							</div>
 							<div className='d-flex pt-5 justify-content-end'>
-								<style type='text/css'>
-									{`
-									.btn-submit {
-			                            background-color: #9400d3;
-									}
-									.btn-xl {
-										padding: 1rem 1rem
-									}
-								`}
-								</style>
 								<Button
 									variant='dark'
 									size='lg'
@@ -659,7 +649,7 @@ const NewOrder = props => {
 								>
 									Get Quote
 								</Button>
-								<Button className='text-light' variant='submit' type='submit' size='lg' value='newJob'>
+								<Button className='text-light' variant='primary' type='submit' size='lg' value='newJob'>
 									Confirm
 								</Button>
 							</div>

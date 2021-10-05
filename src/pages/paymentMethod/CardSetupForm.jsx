@@ -22,9 +22,21 @@ const ErrorMessage = ({ children }) => (
 );
 
 const SubmitButton = ({ processing, error, children, disabled }) => (
-	<Button className='text-dark' type='submit' size='lg' disabled={processing || disabled}>
-		{processing ? 'Processing...' : children}
-	</Button>
+	<div>
+		<style type='text/css'>
+			{`
+            .btn-submit {
+              background-color: #9400d3;
+            }
+            .btn-xl {
+              padding: 1rem 1rem
+            }
+          `}
+		</style>
+		<Button className="text-light" variant='submit' type='submit' size='lg' disabled={processing || disabled}>
+			{processing ? 'Processing...' : children}
+		</Button>
+	</div>
 );
 
 const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, processing, stripe }) => (
@@ -64,16 +76,6 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 		</div>
 		{error && <ErrorMessage>{error.message}</ErrorMessage>}
 		<div className='d-flex pt-5 justify-content-end'>
-			<style type='text/css'>
-				{`
-            .btn-submit {
-              background-color: #9400d3;
-            }
-            .btn-xl {
-              padding: 1rem 1rem
-            }
-          `}
-			</style>
 			<SubmitButton processing={processing} error={error} disabled={!stripe}>
 				Confirm
 			</SubmitButton>
@@ -360,10 +362,10 @@ const CardSetupForm = ({ showToast }) => {
 				brand={`${paymentMethod.brand}`}
 			/>
 			<div className='d-flex justify-content-end pt-5 pb-4'>
-				<button className='btn btn-lg btn-warning mx-2' onClick={edit}>
-					Edit Card
+				<button className='btn btn-edit mx-2' onClick={edit}>
+					Edit card
 				</button>
-				<button className='btn btn-lg btn-danger mx-2' onClick={remove}>
+				<button className='btn btn-danger mx-2' onClick={remove}>
 					Remove card
 				</button>
 			</div>
