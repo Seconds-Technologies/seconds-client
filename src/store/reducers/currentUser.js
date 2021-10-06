@@ -18,6 +18,7 @@ export const DEFAULT_STATE = {
 		profileImageData: '',
 		stripeCustomerId: '',
 		paymentMethodId: '',
+		subscriptionId: '',
 	}, //all user info when logged in
 };
 

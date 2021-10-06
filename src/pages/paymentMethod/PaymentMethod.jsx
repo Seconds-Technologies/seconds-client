@@ -11,10 +11,12 @@ const stripePromiseTest = loadStripe('pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj
 
 const PaymentMethod = props => {
     const [toastMessage, setShowToast] = useState(false);
+    const [subscriptionPlans, setShowSubscription] = useState(false);
 
     const confirmToast = (
         <ToastContainer className='p-3 topRight'>
-            <ToastFade onClose={() => setShowToast(false)} show={Boolean(toastMessage)} animation={'true'} delay={3000} autohide>
+            <ToastFade onClose={() => setShowToast(false)} show={Boolean(toastMessage)} animation={'true'} delay={3000}
+                       autohide>
                 <ToastFade.Header closeButton={false}>
                     <img
                         src='holder.js/20x20?text=%20'
@@ -27,21 +29,25 @@ const PaymentMethod = props => {
                 <ToastFade.Body>{toastMessage}</ToastFade.Body>
             </ToastFade>
         </ToastContainer>
-    )
+    );
 
-    return <div className='payment-method-container'>
-        <div className='d-flex h-100 align-items-center justify-content-center'>
-            {confirmToast}
-            <div className='form-wrapper'>
-                <h1>Payment Information</h1>
-                <div className='card card-3 rounded-3 p-4'>
-                    <Elements stripe={stripePromiseTest}>
-                        <CardSetupForm {...props} showToast={setShowToast}/>
-                    </Elements>
+    return (
+        <div className='payment-method-container'>
+            <div className='d-flex h-100 align-items-center justify-content-center'>
+                {confirmToast}
+                <div className='form-wrapper w-md'>
+                    <h1>Payment Information</h1>
+                    <span className='small'>Your card will be used for collecting commission charges for your deliveries.</span><br />
+                    <span className='small'>The commission fee is <strong>10%</strong> per completed order</span>
+                    <div className='card card-3 rounded-3 p-4 my-3'>
+                        <Elements stripe={stripePromiseTest}>
+                            <CardSetupForm {...props} showToast={setShowToast} showSubscription={setShowSubscription}/>
+                        </Elements>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>;
+    );
 };
 
 export default PaymentMethod;

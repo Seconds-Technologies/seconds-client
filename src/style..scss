@@ -15,12 +15,22 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
   width: 50%
 }
 
+.w-md {
+  width: 50%
+}
+
 .pb-xs-4 {
   padding-bottom: 0;
 }
 
 @include media-breakpoint-down(sm) {
   .w-sm {
+    width: 75%
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .w-md {
     width: 75%
   }
 }

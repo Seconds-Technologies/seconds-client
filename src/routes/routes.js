@@ -17,6 +17,7 @@ import Settings from '../pages/settings/Settings';
 import CustomerSupport from '../pages/settings/CustomerSupport';
 import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import { PATHS } from '../constants';
+import Subscription from '../pages/subscription/Subscription';
 
 const routes = (
 	<Switch>
@@ -35,6 +36,7 @@ const routes = (
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
 		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
+		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
 	</Switch>
 );
 

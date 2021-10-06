@@ -106,8 +106,8 @@ export default function Orders() {
 	];
 
 	return (
-		<div className='ordersList'>
-			<h3 className='totalOrders'>Total Orders</h3>
+		<div className='ordersList px-3 py-4'>
+			<h3 className='totalOrders ms-3'>Total Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
 				sortModel={[
@@ -117,7 +117,7 @@ export default function Orders() {
 					},
 				]}
 				autoHeight
-				className='grid'
+				className='mt-3 mx-3'
 				rows={isIntegrated ? orders : jobs}
 				disableSelectionOnClick
 				columns={columns}

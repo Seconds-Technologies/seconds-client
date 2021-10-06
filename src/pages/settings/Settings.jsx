@@ -12,7 +12,7 @@ const Settings = props => {
 				<div className="text-center h1">👤 Profile Settings</div>
 			</div>
 			<div className='row bg-white mt-4 mb-3 option-container' onClick={() => props.history.push(PATHS.PAYMENT)}>
-				<div className="text-center h1">💳 Payment Method</div>
+				<div className="text-center h1">💳 Manage Payments</div>
 			</div>
 		</div>
 	);

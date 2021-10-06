@@ -1,23 +1,21 @@
-.profile {
+.subscription {
     flex: 7;
+    overflow-x: scroll;
     background-color: #FCFCFC;
     border-radius: 0px;
     margin-right: 0px;
     min-height: 100vh;
 }
 
-.profile-wrapper {
+.description {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    flex: 1;
-    width: 90%;
-    height: 70%;
-    border-radius: 20px;
 }
 
-.img-placeholder {
-    display: inline;
-    z-index: 1000;
+.seconds-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
 }

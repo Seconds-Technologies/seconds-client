@@ -11,7 +11,8 @@ export const PATHS = {
 	PROFILE: "/profile",
 	SETTINGS: "/settings",
 	HELP: "/help",
-	PAYMENT: "/payment"
+	PAYMENT: "/payment",
+	SUBSCRIPTION: "/subscription"
 }
 
 export const COLOURS = {
@@ -39,4 +40,10 @@ export const PLACE_TYPES = {
 	CITY: "postal_town",
 	POSTCODE: "postal_code",
 	POSTCODE_PREFIX: "postal_code_prefix"
+}
+
+
+export const STRIPE = {
+	CHECKOUT_SESSION: process.env.REACT_APP_STRIPE_CHECKOUT_SESSION || "http://localhost:3001/api/v1/subscription/create-checkout-session",
+	PORTAL_SESSION: process.env.REACT_APP_STRIPE_PORTAL_SESSION || "http://localhost:3001/api/v1/subscription/create-portal-session"
 }

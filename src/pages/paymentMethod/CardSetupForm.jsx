@@ -2,6 +2,7 @@ import 'react-credit-cards/es/styles-compiled.css';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { useHistory } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import moment from 'moment';
@@ -14,6 +15,7 @@ import {
 } from '../../store/actions/payments';
 import Card from './card/index';
 import './CardSetupForm.css';
+import { PATHS } from '../../constants';
 
 const ErrorMessage = ({ children }) => (
 	<div className='ErrorMessage ' role='alert'>
@@ -85,6 +87,7 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 
 const CardSetupForm = ({ showToast }) => {
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const user = useSelector(state => state['currentUser'].user);
 	const stripe = useStripe();
 	const elements = useElements();
@@ -205,7 +208,7 @@ const CardSetupForm = ({ showToast }) => {
 	};
 
 	return user.paymentMethodId ? (
-		<div className='form-group'>
+		<div className='form-group py-4'>
 			<Modal size='lg' show={showModal} onHide={() => setShowModal(false)} centered>
 				<Modal.Header closeButton>
 					<Modal.Title>Edit payment method</Modal.Title>
@@ -361,13 +364,20 @@ const CardSetupForm = ({ showToast }) => {
 				cardCvv='***'
 				brand={`${paymentMethod.brand}`}
 			/>
-			<div className='d-flex justify-content-end pt-5 pb-4'>
+			<div className='d-flex justify-content-between pt-5'>
+				<div>
+				<button className="btn btn-warning" onClick={() => history.push(PATHS.SUBSCRIPTION)}>
+					Manage Subscription
+				</button>
+				</div>
+				<div>
 				<button className='btn btn-edit mx-2' onClick={edit}>
 					Edit card
 				</button>
 				<button className='btn btn-danger mx-2' onClick={remove}>
 					Remove card
 				</button>
+				</div>
 			</div>
 		</div>
 	) : (
