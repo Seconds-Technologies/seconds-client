@@ -4,6 +4,7 @@
     border-radius: 0px;
     margin-right: 0px;
     min-height: 100vh;
+    font-family: Roboto-Regular;
 }
 
 .description {
@@ -17,4 +18,22 @@
     margin-left: auto;
     margin-right: auto;
     width: 120px;
+}
+
+.plan-text{
+    font-weight: 600;
+}
+
+.price-text{
+    font-weight: bold;
+}
+
+.description-text {
+    font-weight: 600;
+}
+
+.plan-wrapper {
+    z-index: 1;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(156,156,156, 0.3);
 }

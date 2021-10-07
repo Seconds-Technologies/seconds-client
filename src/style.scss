@@ -1,6 +1,7 @@
-$primary: #9400d3;
+$primary: #AD00FF; //#9400d3;
 $edit: #0e2a54;
 $light: #FAFAFA;
+$grey: #888888;
 
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
@@ -8,6 +9,7 @@ $light: #FAFAFA;
 
 $custom-colors: (
   "edit": $edit,
+  "grey": $grey
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
