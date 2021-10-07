@@ -8,7 +8,7 @@ export default function Dashboard() {
 	const [options, setOptions] = useState(["Last 24 hrs", "Last Month", "Last Year"]);
 	const { firstname, profileImageData } = useSelector(state => state["currentUser"].user)
 	return (
-		<div className='dashboard'>
+		<div className='dashboard bg-light'>
 			<div className='d-flex flex-row align-items-center px-4 pt-3'>
 				<span className="fs-3">☀️&nbsp;</span>
 				<span className='fs-5 pageName'><span className="fw-bold">{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview today</span>

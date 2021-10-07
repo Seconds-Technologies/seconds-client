@@ -1,7 +1,6 @@
 .subscription {
     flex: 7;
     overflow-x: scroll;
-    background-color: #FCFCFC;
     border-radius: 0px;
     margin-right: 0px;
     min-height: 100vh;

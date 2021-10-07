@@ -1,7 +1,6 @@
 .trackContainer {
     flex: 7;
     overflow-x: scroll;
-    background-color: #FCFCFC;
     min-height: 100vh;
     font-family: sans-serif;
 }

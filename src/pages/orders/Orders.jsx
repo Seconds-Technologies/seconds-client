@@ -106,7 +106,7 @@ export default function Orders() {
 	];
 
 	return (
-		<div className='ordersList px-3 py-4'>
+		<div className='ordersContainer bg-light px-3 py-4'>
 			<h3 className='totalOrders ms-3'>Total Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}

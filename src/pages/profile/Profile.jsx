@@ -69,10 +69,10 @@ const Profile = props => {
 	})
 
 	return (
-		<div className='profile container d-flex justify-content-center align-items-center px-5'>
+		<div className='profile bg-light d-flex justify-content-center align-items-center px-5'>
 			{modal1}
 			{modal2}
-			<div className='profile-wrapper bg-white border-light'>
+			<div className='profile-wrapper bg-white'>
 				<Formik
 					initialValues={{
 						firstname,

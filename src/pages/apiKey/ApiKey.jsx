@@ -18,7 +18,7 @@ const ApiKey = props => {
 	const apiKeyRef = useRef(null);
 
 	return (
-		<div className='api-key-container p-4'>
+		<div className='api-key-container bg-light p-4'>
 			<Modal show={modal} onHide={handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Generated API Key</Modal.Title>
@@ -118,9 +118,9 @@ const ApiKey = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									>
-										<option value='eta'>Shortest ETA</option>
+										<option value='eta'>Fastest Delivery Time</option>
 										<option value='price'>Lowest Price</option>
-										<option value='rating'>Best Rating</option>
+										<option value='rating'>Best Driver Rating</option>
 									</select>
 									<div id='strategy-help' className='form-text fs-6 mb-4'>
 										Your delivery strategy reflects which fleet providers we choose for your

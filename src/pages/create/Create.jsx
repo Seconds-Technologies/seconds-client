@@ -10,10 +10,10 @@ import moment from 'moment';
 import { PLACE_TYPES } from '../../constants';
 import loadingIcon from '../../img/loadingicon.svg';
 import { jobRequestSchema } from '../../schemas';
-import './NewOrder.css';
+import './create.css';
 import '../../App.css';
 
-const NewOrder = props => {
+const Create = props => {
 	const [deliveryJob, setJob] = useState({});
 	const [jobModal, showJobModal] = useState(false);
 	const [isLoading, setLoadingModal] = useState(false);
@@ -224,7 +224,7 @@ const NewOrder = props => {
 	}, [props.location]);
 
 	return (
-		<div className='newOrder py-4'>
+		<div className='create bg-light py-4'>
 			{newJobModal}
 			{quotesModal}
 			{loadingModal}
@@ -661,4 +661,4 @@ const NewOrder = props => {
 	);
 };
 
-export default NewOrder;
+export default Create;

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import moment from 'moment';
+import { PATHS } from '../../constants';
 import {
 	addPaymentMethod,
 	fetchStripeCard,
@@ -15,7 +16,6 @@ import {
 } from '../../store/actions/payments';
 import Card from './card/index';
 import './CardSetupForm.css';
-import { PATHS } from '../../constants';
 
 const ErrorMessage = ({ children }) => (
 	<div className='ErrorMessage ' role='alert'>
@@ -88,7 +88,7 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 const CardSetupForm = ({ showToast }) => {
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const user = useSelector(state => state['currentUser'].user);
+	const { user } = useSelector(state => state['currentUser']);
 	const stripe = useStripe();
 	const elements = useElements();
 	const [showModal, setShowModal] = useState(false);
@@ -104,7 +104,7 @@ const CardSetupForm = ({ showToast }) => {
 		brand: '',
 	});
 	const [billingDetails, setBillingDetails] = useState({
-		name: '',
+		name: `${user.firstname} ${user.lastname}`,
 		address: {
 			postal_code: '',
 		},
@@ -162,7 +162,6 @@ const CardSetupForm = ({ showToast }) => {
 			setProcessing(true);
 		}
 
-		console.log(user);
 		const intent = await dispatch(setupIntent(user));
 
 		const result = await stripe.confirmCardSetup(intent.client_secret, {
@@ -283,18 +282,18 @@ const CardSetupForm = ({ showToast }) => {
 													}))
 												}
 											>
-												<option value='1'>January</option>
-												<option value='2'>February</option>
-												<option value='3'>March</option>
-												<option value='4'>April</option>
+												<option value='1'>Jan</option>
+												<option value='2'>Feb</option>
+												<option value='3'>Mar</option>
+												<option value='4'>Apr</option>
 												<option value='5'>May</option>
-												<option value='6'>June</option>
-												<option value='7'>July</option>
-												<option value='8'>August</option>
-												<option value='9'>September</option>
-												<option value='10'>October</option>
-												<option value='11'>November</option>
-												<option value='12'>December</option>
+												<option value='6'>Jun</option>
+												<option value='7'>Jul</option>
+												<option value='8'>Aug</option>
+												<option value='9'>Sep</option>
+												<option value='10'>Oct</option>
+												<option value='11'>Nov</option>
+												<option value='12'>Dec</option>
 											</select>
 										</div>
 										<div className='col'>

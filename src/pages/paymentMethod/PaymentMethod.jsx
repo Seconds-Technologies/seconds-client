@@ -6,8 +6,8 @@ import CardSetupForm from './CardSetupForm';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import './PaymentMethod.css';
 
-//const stripePromise = loadStripe('pk_live_51JdEkaEJUYyCW3GHvJM0z1jCiy2mv078mWcFnGB62wkHySznwxN0Hkvzlh4eytlpA6of9VGIjp42lXmsLuJoRRq400PKk3zJAF');
-const stripePromiseTest = loadStripe('pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj4JuF98AIC13lLjzHiAyRdbYCH5gmeKi8j6VAZ7l2tXcESsq9xSmJvMx00rPtDSwZO');
+const stripePromise = loadStripe("pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj4JuF98AIC13lLjzHiAyRdbYCH5gmeKi8j6VAZ7l2tXcESsq9xSmJvMx00rPtDSwZO");
+console.log(stripePromise)
 
 const PaymentMethod = props => {
     const [toastMessage, setShowToast] = useState(false);
@@ -32,7 +32,7 @@ const PaymentMethod = props => {
     );
 
     return (
-        <div className='payment-method-container'>
+        <div className='payment-method-container bg-light'>
             <div className='d-flex h-100 align-items-center justify-content-center'>
                 {confirmToast}
                 <div className='form-wrapper w-md'>
@@ -40,7 +40,7 @@ const PaymentMethod = props => {
                     <span className='small'>Your card will be used for collecting commission charges for your deliveries.</span><br />
                     <span className='small'>The commission fee is <strong>10%</strong> per completed order</span>
                     <div className='card card-3 rounded-3 p-4 my-3'>
-                        <Elements stripe={stripePromiseTest}>
+                        <Elements stripe={stripePromise}>
                             <CardSetupForm {...props} showToast={setShowToast} showSubscription={setShowSubscription}/>
                         </Elements>
                     </div>

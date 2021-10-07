@@ -11,7 +11,7 @@ const Shopify = props => {
 	const [error, setError] = useState(null);
 	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
 	return (
-		<div className='shopifyContainer container pb-3'>
+		<div className='shopifyContainer bg-light pb-3'>
 			{!isIntegrated ? (
 				<h2 className='shopifyConnect'>Connect your Shopify Account</h2>
 			) : (

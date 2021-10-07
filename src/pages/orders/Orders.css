@@ -1,6 +1,5 @@
-.ordersList {
+.ordersContainer {
     flex: 7;
-    background-color: #FCFCFC;
     min-height: 100vh;
     font-family: sans-serif;
 }

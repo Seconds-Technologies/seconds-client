@@ -14,7 +14,7 @@ const ProductDisplay = ({ plan, price, email, customerId }) => (
 				<h5>£25.00 / month</h5>
 			</div>
 		</div>
-		<form action={STRIPE.CHECKOUT_SESSION} method="POST">
+		<form action={String(process.env.REACT_APP_STRIPE_CHECKOUT_SESSION) || STRIPE.CHECKOUT_SESSION} method="POST">
 			<input type='hidden' name='lookup_key' value='seconds' />
 			<input type='hidden' name='email' value={email} />
 			<input type='hidden' name='stripe_customer_id' value={customerId} />
@@ -34,7 +34,7 @@ const SuccessDisplay = ({ stripeCustomerId }) => {
 					<h3>Subscription to starter plan successful!</h3>
 				</div>
 			</div>
-			<form action={STRIPE.PORTAL_SESSION} method='POST'>
+			<form action={String(process.env.REACT_APP_STRIPE_CHECKOUT_SESSION) || STRIPE.PORTAL_SESSION} method='POST'>
 				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
 				<button id='checkout-and-portal-button' type='submit'>
 					Manage your billing information
@@ -93,7 +93,7 @@ const Subscription = () => {
 	};
 
 	return (
-		<div className='subscription justify-content-center align-items-center py-5'>
+		<div className='subscription bg-light justify-content-center align-items-center py-5'>
 			{!success && !message ? (
 				<ProductDisplay email={user.email} customerId={user.stripeCustomerId} />
 			) : success && portalLink !== '' ? (

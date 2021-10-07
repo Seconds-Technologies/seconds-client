@@ -31,18 +31,18 @@ export default function Integrations() {
 	});
 
 	return (
-		<div className='integrations'>
+		<div className='integrations bg-light'>
 			<h3 className='integrations-header'>Connect your Platform</h3>
 			<div className='d-flex flex-1 h-75 flex-column align-items-center justify-content-center'>
 				<div className='row w-100'>
 					<Link to={PATHS.API_KEY} role='button' className={ApiLinkBtn}>
-						<div className='d-flex flex-column w-75 justify-content-center align-items-center bg-white api-wrapper'>
+						<div className='d-flex flex-column w-75 justify-content-center align-items-center bg-white api-wrapper border'>
 							<span className='key-text text-center'>🔑</span>
 							<span className='api-text text-center'>API KEY</span>
 						</div>
 					</Link>
 					<Link to={PATHS.SHOPIFY} role='button' className={ShopifyLinkBtn}>
-						<div className='d-flex w-75 justify-content-center align-items-center bg-white api-wrapper'>
+						<div className='d-flex w-75 justify-content-center align-items-center bg-white api-wrapper border'>
 							<img className='img-fluid' width={250} src={shopifyLogo} alt='shopify logo' />
 						</div>
 					</Link>

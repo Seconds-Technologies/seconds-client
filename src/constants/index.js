@@ -44,6 +44,6 @@ export const PLACE_TYPES = {
 
 
 export const STRIPE = {
-	CHECKOUT_SESSION: process.env.REACT_APP_STRIPE_CHECKOUT_SESSION || "http://localhost:3001/api/v1/subscription/create-checkout-session",
-	PORTAL_SESSION: process.env.REACT_APP_STRIPE_PORTAL_SESSION || "http://localhost:3001/api/v1/subscription/create-portal-session"
+	CHECKOUT_SESSION: "http://localhost:3001/api/v1/subscription/create-checkout-session",
+	PORTAL_SESSION: "http://localhost:3001/api/v1/subscription/create-portal-session"
 }
