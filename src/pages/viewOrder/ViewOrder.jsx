@@ -139,7 +139,7 @@ const ViewOrder = props => {
 	}, [props.location]);
 
 	return (
-		<div className='viewOrder'>
+		<div className='viewOrder bg-light'>
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
