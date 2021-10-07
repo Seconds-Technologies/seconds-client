@@ -35,7 +35,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 			</button>
 		</form>
 		<div className='py-4'>
-			<span className='fw-bold'>{`Your card will be charged ${price} when you checkout`}</span>
+			<span className='fw-bold'>{`Your card will be charged £${price.toFixed(2)} when you checkout`}</span>
 		</div>
 	</section>
 );
@@ -80,7 +80,7 @@ const Subscription = () => {
 	let [success, setSuccess] = useState(false);
 	let [portalLink, setPortalLink] = useState('');
 
-	/*useEffect(() => {
+	useEffect(() => {
 		return () => {
 			const query = new URLSearchParams(window.location.search);
 			setSuccess(true);
@@ -110,7 +110,7 @@ const Subscription = () => {
 				setMessage('Order canceled');
 			}
 		};
-	}, [portalLink]);*/
+	}, [portalLink]);
 
 	const initiateSubscription = async lookupKey => {
 		await dispatch(createCheckoutSession(user, lookupKey));
