@@ -58,7 +58,7 @@ export default function Orders() {
 						className='h-75 d-flex justify-content-center align-items-center'
 						style={{
 							width: 110,
-							borderRadius: 50,
+							borderRadius: 10,
 							backgroundColor:
 								params.value === STATUS.NEW
 									? BACKGROUND.NEW

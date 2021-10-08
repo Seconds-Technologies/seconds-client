@@ -8,14 +8,32 @@ import card from '../../img/bank_card.svg';
 const Settings = props => {
 	return (
 		<div className='settings bg-light d-flex flex-column justify-content-center align-items-center'>
-			<div className='row bg-white mt-3 mb-4 option-container border' onClick={() => props.history.push(PATHS.HELP)}>
-				<div className="text-center h1"><img src={support} alt='' className="img-fluid mx-4" width={50} height={50} />Customer Support</div>
+			<div
+				className='row bg-white mt-3 mb-4 option-container border'
+				onClick={() => props.history.push(PATHS.HELP)}
+			>
+				<div className='d-flex justify-content-center'>
+					<img src={support} alt='' className='img-fluid mx-4' width={50} height={50} />
+					<div className='text-center h1'>Customer Support</div>
+				</div>
 			</div>
-			<div className='row bg-white my-4 option-container border' onClick={() => props.history.push(PATHS.PROFILE)}>
-				<div className="text-center h1"><img src={profile} alt='' className="img-fluid mx-4" width={50} height={50} />Profile Settings</div>
+			<div
+				className='row bg-white my-4 option-container border'
+				onClick={() => props.history.push(PATHS.PROFILE)}
+			>
+				<div className='d-flex justify-content-center'>
+					<img src={profile} alt='' className='img-fluid mx-5' width={50} height={50} />
+					<div className='text-center h1'>Profile Settings</div>
+				</div>
 			</div>
-			<div className='row bg-white mt-4 mb-3 option-container border' onClick={() => props.history.push(PATHS.PAYMENT)}>
-				<div className="text-center h1"><img src={card} alt='' className="img-fluid mx-4" width={50} height={50} />Manage Payments</div>
+			<div
+				className='row bg-white mt-4 mb-3 option-container border'
+				onClick={() => props.history.push(PATHS.PAYMENT)}
+			>
+				<div className='d-flex justify-content-center'>
+					<img src={card} alt='' className='img-fluid mx-4' width={50} height={50} />
+					<div className='text-center h1'>Manage Payments</div>
+				</div>
 			</div>
 		</div>
 	);

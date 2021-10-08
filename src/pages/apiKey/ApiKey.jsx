@@ -48,30 +48,6 @@ const ApiKey = props => {
 							</Overlay>
 						</div>
 					</div>
-					{/*<div className='row d-flex align-items-end'>
-						<div className='col-9 d-flex flex-column'>
-							<label htmlFor=''>Secret key</label>
-							<input className="form-control" type='text' value={keys.secretKey} />
-						</div>
-						<div className='col-3 d-flex flex-column'>
-							<Button variant="light" ref={secretRef} onClick={() => {
-								navigator.clipboard.writeText(keys.secretKey).then(r => {
-									showSecretTooltip(true)
-									setTimeout(() => showSecretTooltip(false), 2000)
-								})
-							}}>
-								<img src={copy} alt='' width={30} height={30} />
-								&nbsp;Copy
-							</Button>
-							<Overlay target={secretRef.current} show={secretTooltip} placement="right">
-								{(
-									<Tooltip id="overlay-example">
-										Secret key copied!
-									</Tooltip>
-								)}
-							</Overlay>
-						</div>
-					</div>*/}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant='secondary' onClick={handleClose}>
@@ -147,7 +123,7 @@ const ApiKey = props => {
 				<div className='container'>
 					<div className='pb-5'>
 						<h1>Your API Key</h1>
-						<input className='form-control form-control-lg my-4' type='text' value={apiKey} readOnly />
+						<input className='form-control form-control-lg my-4 rounded-0' type='text' value={apiKey} readOnly />
 					</div>
 					<div className='d-flex justify-content-center align-items-center'>
 						<button className='mt-2 text-center shopifyButton' onClick={props.history.goBack}>

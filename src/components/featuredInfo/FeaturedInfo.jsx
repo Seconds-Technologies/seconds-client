@@ -4,6 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { getAllOrders } from '../../store/actions/shopify';
 import { getAllJobs } from '../../store/actions/delivery';
 import './FeaturedInfo.css';
+import { STATUS } from '../../constants';
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ export default function FeaturedInfo() {
             return { total, completed }
         }
     });
+
     const deliveryFee = useMemo(() => {
         let totalFee = 0;
         for (let order of completed){
@@ -27,6 +29,10 @@ export default function FeaturedInfo() {
         console.log(totalFee)
         return totalFee.toFixed(2)
     }, [completed]);
+
+    const inTransit = useMemo(() => {
+        return (total.filter(job => job.status === STATUS.DISPATCHING || job.status === STATUS.EN_ROUTE)).length
+    }, [total])
 
     useEffect(() => {
         if (isIntegrated) {
@@ -47,7 +53,7 @@ export default function FeaturedInfo() {
             </div>
             <div className='featuredItem d-flex flex-column align-items-center py-1'>
                 <span className='featuredTitle mb-1'>In Transit</span>
-                <span className='featuredValue'>{completed.length}</span>
+                <span className='featuredValue'>{inTransit}</span>
             </div>
             <div className='featuredItem d-flex flex-column align-items-center py-1'>
                 <span className='featuredTitle mb-1'>Completed Orders</span>

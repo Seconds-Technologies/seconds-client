@@ -46,9 +46,9 @@ const Track = props => {
 	}, [props.location]);
 
 	return (
-		<div className='trackContainer bg-light py-4'>
+		<div className='trackContainer container bg-light py-4'>
 			<div className='row'>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
+				<div className='col-sm-4 col-md-2 border-end'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>New</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />

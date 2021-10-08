@@ -7,9 +7,9 @@
     height: 20%;
     width: 60%;
     border: 1px white solid;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    border-radius: 50px;
 }
 
 .option-container:hover {

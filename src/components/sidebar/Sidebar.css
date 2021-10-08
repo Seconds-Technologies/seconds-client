@@ -1,28 +1,15 @@
 :root {
     --PRIMARY: #9400d3;
-    --SECONDARY: #D4D1CD;
+    --SECONDARY: #6BFF2C;
     --GREEN: #6BFF2C
 }
 
 .sidebar {
     flex: 1;
-    /*height: calc(100vh - 50px);*/
+    height: calc(100vh - 70px);
     background-color: white;
     position: sticky;
     top: 50px;
-}
-
-.sidebarWrapper {
-    padding: 20px;
-}
-
-.sidebarMenu {
-    margin-bottom: 10px;
-}
-
-.sidebarList {
-    list-style: none;
-    padding: 5px;
 }
 
 .sidebarListItem {
@@ -34,10 +21,17 @@
     margin-top: 15px;
 }
 
-.sidebarListItem:hover {
-    background-color: var(--SECONDARY);
-    color: black;
-    filter: invert(6);
+.sidebarIcon {
+    margin-right: 15px;
+    font-size: 20px !important;
+}
+
+.sidebarListItem:hover .sidebarIcon {
+    filter: invert(15%) sepia(93%) saturate(6799%) hue-rotate(283deg) brightness(85%) contrast(115%);
+}
+
+.sidebarListItem:hover .item-hover {
+    color: var(--PRIMARY);
 }
 
 .sidebarListItem1 {
@@ -45,7 +39,8 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
 }
 
 .sidebarListItem1:hover {
@@ -53,19 +48,11 @@
 }
 
 .currentLink {
-    background-color: var(--SECONDARY);
-    filter: invert(6);
-    color: black;
+    color: var(--PRIMARY);
 }
 
-.sidebarIcon {
-    margin-right: 5px;
-    font-size: 20px !important;
-}
-
-.sidebarIcon1 {
-    margin-right: 5px;
-    font-size: 20px !important;
+.currentIcon {
+    filter: invert(15%) sepia(93%) saturate(6799%) hue-rotate(283deg) brightness(85%) contrast(115%);
 }
 
 .filter-white {
