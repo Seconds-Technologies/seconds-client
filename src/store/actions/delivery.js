@@ -63,7 +63,7 @@ export function getAllJobs(apiKey, email) {
 						setCompletedJobs(
 							jobs.map(({ _id: id, selectedConfiguration: { deliveryFee }, status }) => ({
 								id,
-								payout: deliveryFee * 1.1,
+								deliveryFee,
 								status,
 							}))
 						)

@@ -12,7 +12,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 		<span className='h1 price-text'>{`£${price} / month`}</span>
 		<div className='d-flex flex-column mt-4'>
 			<span className='text-uppercase text-muted mb-4 account-text'>User Accounts</span>
-			<div className='border border-2 border-grey py-4 ps-3 w-75'>{numUsers}</div>
+			<div className='border border-2 border-grey py-2 ps-3 w-75'>{numUsers}</div>
 			<div className='mt-3 text-muted'>{description}</div>
 		</div>
 		<form

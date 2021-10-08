@@ -24,7 +24,7 @@ export default function FeaturedInfo() {
         let totalFee = 0;
         for (let order of completed){
             console.log("MEMO:", order)
-            totalFee = totalFee + order.payout
+            totalFee = totalFee + order.deliveryFee
         }
         console.log(totalFee)
         return totalFee.toFixed(2)
