@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import secondsLogo from '../../img/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCheckoutSession } from '../../store/actions/subscriptions';
+import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
+import Modal from 'react-bootstrap/Modal';
 import { STRIPE } from '../../constants';
 import './subscription.css';
 
@@ -10,7 +11,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 		<span className='text-uppercase text-muted mb-4 plan-text'>{`${plan} account`}</span>
 		<span className='h1 price-text'>{`£${price.toFixed(2)} / month`}</span>
 		<div className='d-flex flex-column mt-4'>
-			<span className='text-uppercase text-muted mb-4 plan-text'>User Account</span>
+			<span className='text-uppercase text-muted mb-4 account-text'>User Account</span>
 			<div className='border border-2 border-grey py-4 ps-3'>{numUsers}</div>
 			<div className='mt-3 text-muted description-text'>{description}</div>
 		</div>
@@ -40,13 +41,13 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 	</section>
 );
 
-const SuccessDisplay = ({ stripeCustomerId }) => {
+const SuccessDisplay = ({ stripeCustomerId, planName }) => {
 	return (
-		<section className='d-flex flex-column align-items-center justify-content-center m-1 w-100'>
+		<section className='d-flex flex-column align-items-center justify-content-center h-75 m-1 w-100'>
 			<div className='product Box-root'>
 				<img className='img-fluid seconds-logo my-4' src={secondsLogo} alt='' />
 				<div className='description Box-root'>
-					<h3>Subscription to starter plan successful!</h3>
+					<h3>Subscription to {planName} plan successful!</h3>
 				</div>
 			</div>
 			<form
@@ -58,7 +59,7 @@ const SuccessDisplay = ({ stripeCustomerId }) => {
 				method='POST'
 			>
 				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
-				<button id='checkout-and-portal-button' type='submit'>
+				<button id='checkout-and-portal-button' className='btn btn-primary btn-lg text-white' type='submit'>
 					Manage your billing information
 				</button>
 			</form>
@@ -66,38 +67,42 @@ const SuccessDisplay = ({ stripeCustomerId }) => {
 	);
 };
 
-const Message = ({ message }) => (
-	<div className='d-flex h-100 justify-content-center align-items-center'>
-		<div className='alert alert-danger w-50 text-center'>{message}</div>
-	</div>
+const Message = ({ message, onHide }) => (
+	<Modal show={message} onHide={onHide} className="alert alert-danger">
+		<Modal.Header className='alert' closeButton>
+			<Modal.Title>Error</Modal.Title>
+		</Modal.Header>
+		<Modal.Body>{message}</Modal.Body>
+	</Modal>
 );
 
 const Subscription = () => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
-	console.log(!!process.env.REACT_APP_STRIPE_CHECKOUT_SESSION);
 	let [message, setMessage] = useState('');
-	let [success, setSuccess] = useState(false);
+
 	let [portalLink, setPortalLink] = useState('');
 
 	useEffect(() => {
+		(async function fetchSubscription(){
+			await dispatch(checkSubscriptionStatus(user.email))
+		})()
 		return () => {
 			const query = new URLSearchParams(window.location.search);
-			setSuccess(true);
 			window.fetch(STRIPE.PORTAL_SESSION, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					stripe_customer_id: user.stripeCustomerId
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						stripe_customer_id: user.stripeCustomerId,
+					}),
 				})
-			})
-				.then(res => res.json())
+				.then(res => {
+					console.log(res);
+					return res.json();
+				})
 				.then(data => {
-					console.log('********************************');
-					console.log('DATA:', data);
-					console.log('********************************');
 					if (data.portal_url) {
 						setPortalLink(data.portal_url);
 					}
@@ -106,19 +111,19 @@ const Subscription = () => {
 					setMessage(`Error occurred ${error}`);
 				});
 			if (query.get('canceled')) {
-				setSuccess(false);
 				setMessage('Order canceled');
 			}
 		};
 	}, [portalLink]);
 
 	const initiateSubscription = async lookupKey => {
-		await dispatch(createCheckoutSession(user, lookupKey));
+		await dispatch(checkSubscriptionStatus(user.email));
 	};
 
 	return (
 		<div className='subscription bg-light justify-content-center align-items-center py-5'>
-			{!success && !message ? (
+			<Message message={message} onHide={() => setMessage('')} />
+			{!user.subscriptionId ? (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>
 					<ProductDisplay
 						lookupKey={'basic'}
@@ -143,10 +148,8 @@ const Subscription = () => {
 						checkoutText={'Upgrade'}
 					/>
 				</div>
-			) : success && portalLink !== '' ? (
-				<SuccessDisplay stripeCustomerId={user.stripeCustomerId} />
 			) : (
-				<Message message={message} />
+				<SuccessDisplay stripeCustomerId={user.stripeCustomerId} />
 			)}
 		</div>
 	);

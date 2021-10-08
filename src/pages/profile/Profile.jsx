@@ -54,7 +54,7 @@ const Profile = props => {
 			<Modal.Header closeButton />
 			<Modal.Body>
 				<div className='alert alert-success text-center'>
-					<span className='fs-4'>Profile updated successfully!</span>
+					<span className='fs-4'>Profile updated!</span>
 				</div>
 			</Modal.Body>
 		</Modal>

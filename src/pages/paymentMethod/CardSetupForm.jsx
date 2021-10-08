@@ -14,7 +14,7 @@ import {
 	setupIntent,
 	updatePaymentMethod,
 } from '../../store/actions/payments';
-import Card from './card/index';
+import Card from '../../components/card/Card';
 import './CardSetupForm.css';
 
 const ErrorMessage = ({ children }) => (

@@ -1,26 +1,22 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
+import { updateCurrentUser } from './auth';
 
-export function createCheckoutSession(user, lookupKey) {
+export function checkSubscriptionStatus(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('stripeCustomerId:', user.stripeCustomerId, lookupKey);
-			apiCall(
-				'POST',
-				'/api/v1/subscription/create-checkout-session',
-				{ lookupKey },
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
-				}
-			).then((res) => {
-				resolve(res);
-			}).catch(err => {
-				if (err) dispatch(addError(err.message));
-				else dispatch(addError('Api endpoint could not be accessed!'));
-				reject(err);
-			});
+			console.log(email);
+			apiCall('POST', '/api/v1/subscription/fetch-stripe-subscription', { email })
+				.then(({ id: subscriptionId, status }) => {
+					console.log(subscriptionId, status)
+					dispatch(updateCurrentUser({ subscriptionId }));
+					resolve(status === "active");
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
 		});
 	};
 }

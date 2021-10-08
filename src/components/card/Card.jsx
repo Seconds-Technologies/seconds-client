@@ -63,8 +63,7 @@ const Card = ({
 	}, [currentFocusedElm]);
 
 	const maskCardNumber = cardNumber => {
-		let cardNumberArr = cardNumber.split('');
-		return cardNumberArr;
+		return cardNumber.split('');
 	};
 
 	return (

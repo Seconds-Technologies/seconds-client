@@ -43,12 +43,7 @@ export function addPaymentMethod(user, paymentMethodId) {
 				`/api/v1/payments/add-payment-method`,
 				{
 					email: user.email,
-					paymentMethodId: paymentMethodId,
-				},
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
+					paymentMethodId: paymentMethodId
 				}
 			)
 				.then(res => {
@@ -102,12 +97,7 @@ export function removePaymentMethod(user) {
 				`/api/v1/payments/remove-payment-method`,
 				{
 					email: user.email,
-					paymentMethodId: user.paymentMethodId,
-				},
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
+					paymentMethodId: user.paymentMethodId
 				}
 			)
 				.then(({ message }) => {
@@ -130,12 +120,7 @@ export function fetchStripeCard(user) {
 			return apiCall(
 				'POST',
 				`/api/v1/payments/fetch-stripe-card`,
-				{ paymentMethodId: user.paymentMethodId },
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
-				}
+				{ paymentMethodId: user.paymentMethodId }
 			)
 				.then(card => {
 					resolve(card);
