@@ -311,7 +311,7 @@ const ViewOrder = props => {
 								</tbody>
 							</table>
 						</div>
-						<div className='orderShowInfo justify-content-center'>
+						<div className='my-3 d-flex align-items-center justify-content-center'>
 							{order.trackingURL ? (
 								<a
 									href={order.trackingURL}

@@ -22,8 +22,8 @@ const Settings = props => {
 				onClick={() => props.history.push(PATHS.PROFILE)}
 			>
 				<div className='d-flex justify-content-center'>
-					<img src={profile} alt='' className='img-fluid mx-5' width={50} height={50} />
-					<div className='text-center h1'>Profile Settings</div>
+					<img src={profile} alt='' className='img-fluid me-5' width={50} height={50} />
+					<div className='text-center h1 ms-2'>Profile Settings</div>
 				</div>
 			</div>
 			<div

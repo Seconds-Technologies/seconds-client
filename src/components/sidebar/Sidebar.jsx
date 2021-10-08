@@ -88,7 +88,7 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Integration</div>
+							<div className='item-hover'>Integrations</div>
 						</li>
 					</Link>
 					<a
@@ -120,10 +120,10 @@ export default function Sidebar() {
 							dispatch(logout());
 							history.push('/login');
 						}}
-						className='link pe-2'
+						className='link'
 					>
 						<div className='sidebarListItem'>
-							<img className='sidebarIcon item-hover' src={logoutIcon} alt='' />
+							<img className='sidebarIcon item-hover' src={logoutIcon} alt=''width={25} height={25} />
 							<div className='item-hover'>Log Out</div>
 						</div>
 					</a>
