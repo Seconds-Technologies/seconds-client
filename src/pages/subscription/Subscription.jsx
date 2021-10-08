@@ -9,11 +9,11 @@ import './subscription.css';
 const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey, numUsers, checkoutText }) => (
 	<section className='d-flex flex-column mx-4 p-5 h-100 w-100 plan-wrapper'>
 		<span className='text-uppercase text-muted mb-4 plan-text'>{`${plan} account`}</span>
-		<span className='h1 price-text'>{`£${price.toFixed(2)} / month`}</span>
+		<span className='h1 price-text'>{`£${price}E / month`}</span>
 		<div className='d-flex flex-column mt-4'>
-			<span className='text-uppercase text-muted mb-4 account-text'>User Account</span>
-			<div className='border border-2 border-grey py-4 ps-3'>{numUsers}</div>
-			<div className='mt-3 text-muted description-text'>{description}</div>
+			<span className='text-uppercase text-muted mb-4 account-text'>User Accounts</span>
+			<div className='border border-2 border-grey py-4 ps-3 w-75'>{numUsers}</div>
+			<div className='mt-3 text-muted'>{description}</div>
 		</div>
 		<form
 			action={
@@ -68,7 +68,7 @@ const SuccessDisplay = ({ stripeCustomerId, planName }) => {
 };
 
 const Message = ({ message, onHide }) => (
-	<Modal show={message} onHide={onHide} className="alert alert-danger">
+	<Modal show={message} onHide={onHide} className="alert alert-danger" centered>
 		<Modal.Header className='alert' closeButton>
 			<Modal.Title>Error</Modal.Title>
 		</Modal.Header>
@@ -128,7 +128,7 @@ const Subscription = () => {
 					<ProductDisplay
 						lookupKey={'basic'}
 						plan={'Basic'}
-						price={49.0}
+						price={49}
 						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={1}
@@ -138,7 +138,7 @@ const Subscription = () => {
 					<ProductDisplay
 						lookupKey={'pro'}
 						plan={'Pro'}
-						price={499.0}
+						price={499}
 						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={5}

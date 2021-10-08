@@ -140,12 +140,25 @@ const ViewOrder = props => {
 
 	return (
 		<div className='viewOrder bg-light'>
+			<div className='d-block flex-grow-1 justify-content-center pt-3'>
+				{show && (
+					<div className='alert alert-success alert-dismissible fade show' role='alert'>
+						<h2 className='text-center'>Order updated</h2>
+						<button
+							type='button'
+							className='btn btn-close'
+							data-bs-dismiss='alert'
+							aria-label='Close'
+						/>
+					</div>
+				)}
+			</div>
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
-			<div className='orderContainer'>
-				<div className='orderShow p-5'>
-					<div className='py-3 fs-3 d-flex justify-content-center'>
+			<div className='orderContainer mt-3'>
+				<div className='orderShow pt-4 pb-2 px-5'>
+					<div className='fs-3 d-flex justify-content-center'>
 						<span className='orderShowCustomerName'>{order.customerName}</span>
 					</div>
 					<div className='orderShowBottom'>
@@ -174,7 +187,7 @@ const ViewOrder = props => {
 								name=''
 								id=''
 								cols='30'
-								rows='5'
+								rows='4'
 								value={order.description}
 							/>
 						</div>
@@ -243,19 +256,6 @@ const ViewOrder = props => {
 								</Formik>
 							</div>
 						</div>
-						<div className='d-block flex-grow-1 justify-content-center pt-3'>
-							{show && (
-								<div className='alert alert-success alert-dismissible fade show' role='alert'>
-									<h2 className='text-center'>Order updated</h2>
-									<button
-										type='button'
-										className='btn btn-close'
-										data-bs-dismiss='alert'
-										aria-label='Close'
-									/>
-								</div>
-							)}
-						</div>
 					</div>
 				</div>
 				{isIntegrated ? (
@@ -266,9 +266,9 @@ const ViewOrder = props => {
 						))}
 					</div>
 				) : (
-					<div className='deliveryDetails p-5'>
-						<div className='py-3 fs-3 d-flex justify-content-center'>
-							<span className='orderShowCustomerName'>Delivery 🚚</span>
+					<div className='deliveryDetails pt-4 pb-2 px-5'>
+						<div className='d-flex justify-content-center'>
+							<span className='fs-3 orderShowCustomerName'>Delivery Information</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Order ID:</span>
@@ -292,7 +292,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo flex-column'>
 							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-								Driver Information
+								Driver
 							</span>
 							<table className='table d-flex table-borderless'>
 								<tbody>

@@ -1,9 +1,9 @@
-import orderIcon from '../../img/orders.svg';
-import plugIcon from '../../img/plug.svg';
+import orderIcon from '../../img/orders1.svg';
+import integrateIcon from '../../img/integrate.svg';
 import settingsIcon from '../../img/settings.svg';
-import homeIcon from '../../img/home1.svg';
-import createIcon from '../../img/create.svg';
-import trackIcon from '../../img/track.svg';
+import dashboardIcon from '../../img/dashboard.svg';
+import createIcon from '../../img/create1.svg';
+import trackIcon from '../../img/track1.svg';
 import logoutIcon from '../../img/logout.svg';
 import codeIcon from '../../img/developer.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -27,8 +27,8 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.HOME && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={homeIcon} alt={''} />
-							<div className='sidebarText'>Home</div>
+							<img className={`sidebarIcon`} src={dashboardIcon} alt={''} width={25} height={25} />
+							<div className='sidebarText'>Dashboard</div>
 						</li>
 					</Link>
 					<Link to={PATHS.ORDERS} className='link text-black'>
@@ -37,7 +37,7 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.ORDERS && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={orderIcon} alt={''} />
+							<img className={`sidebarIcon`} src={orderIcon} alt={''} width={25} height={25} />
 							<div className='sidebarText'>Orders</div>
 						</li>
 					</Link>
@@ -47,7 +47,7 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.CREATE && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={createIcon} alt={''} />
+							<img className={`sidebarIcon`} src={createIcon} alt={''} width={25} height={25}/>
 							<div className='sidebarText'>Create</div>
 						</li>
 					</Link>
@@ -57,7 +57,7 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.TRACK && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={trackIcon} alt={''} />
+							<img className={`sidebarIcon`} src={trackIcon} alt={''} width={25} height={25} />
 							<div className='sidebarText'>Track</div>
 						</li>
 					</Link>
@@ -67,7 +67,7 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.INTEGRATE && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={plugIcon} alt={''} />
+							<img className={`sidebarIcon`} src={integrateIcon} alt={''} width={25} height={25} />
 							<div className='sidebarText'>Integration</div>
 						</li>
 					</Link>
@@ -87,7 +87,7 @@ export default function Sidebar() {
 								location['pathname'] === PATHS.SETTINGS && 'currentLink'
 							}`}
 						>
-							<img className={`sidebarIcon`} src={settingsIcon} alt={''}  width={20} height={20}/>
+							<img className={`sidebarIcon`} src={settingsIcon} alt={''} width={25} height={25}/>
 							<div className='sidebarText'>Settings</div>
 						</li>
 					</Link>

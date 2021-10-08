@@ -39,25 +39,23 @@ export default function FeaturedInfo() {
 
     return (
         <div className='featured'>
-            <div className='featuredItem '>
-                <Link to='/orders' className='ordersLink d-flex flex-column align-items-center text-center'>
-                    <span className='featuredTitle'>All Orders</span>
-                    <div className='featuredAllOrdersContainer'>
-                        <span className='featuredAllOrders'>{total.length}</span>
-                    </div>
+            <div className='featuredItem py-1'>
+                <Link to='/orders' className='ordersLink d-flex flex-column align-items-center text-center justify-content-between'>
+                    <span className='featuredTitle mb-1'>All Orders</span>
+                    <span className='featuredValue'>{total.length}</span>
                 </Link>
             </div>
-            <div className='featuredItem d-flex flex-column align-items-center'>
-                <span className='featuredTitle'>Completed Orders</span>
-                <div className='featuredAllOrdersContainer'>
-                    <span className='featuredAllOrders'>{completed.length}</span>
-                </div>
+            <div className='featuredItem d-flex flex-column align-items-center py-1'>
+                <span className='featuredTitle mb-1'>In Transit</span>
+                <span className='featuredValue'>{completed.length}</span>
             </div>
-            <div className='featuredItem featuredItem d-flex flex-column align-items-center'>
-                <span className='featuredTitle'>Payouts</span>
-                <div className='featuredAllOrdersContainer'>
-                    <span className='featuredAllOrders'>{`£${deliveryFee}`}</span>
-                </div>
+            <div className='featuredItem d-flex flex-column align-items-center py-1'>
+                <span className='featuredTitle mb-1'>Completed Orders</span>
+                <span className='featuredValue'>{completed.length}</span>
+            </div>
+            <div className='featuredItem d-flex flex-column align-items-center py-1'>
+                <span className='featuredTitle mb-1'>Payouts</span>
+                <span className='featuredValue'>{`£${deliveryFee}`}</span>
             </div>
         </div>
     );

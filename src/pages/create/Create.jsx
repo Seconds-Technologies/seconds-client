@@ -137,7 +137,7 @@ const Create = props => {
 	const newJobModal = (
 		<Modal show={jobModal} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Your delivery Job! 🚚</Modal.Title>
+				<Modal.Title>Your delivery Job!</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div>
@@ -157,7 +157,7 @@ const Create = props => {
 	const quotesModal = (
 		<Modal show={quoteModal} onHide={() => showQuoteModal(false)}>
 			<Modal.Header closeButton>
-				<Modal.Title>Fleet Provider Quotes 🛴</Modal.Title>
+				<Modal.Title>Fleet Provider Quotes</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div>

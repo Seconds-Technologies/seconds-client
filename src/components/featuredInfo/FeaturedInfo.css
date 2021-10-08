@@ -8,26 +8,27 @@
 .featuredItem {
   flex: 1;
   margin: 0px 20px;
-  padding: 10px 30px;
   border-radius: 5px;
   cursor: pointer;
   background-color: white;
-  -webkit-box-shadow: 0px 0px 5px -1px #000000;
-  box-shadow: 0px 0px 5px -1px #000000;
+  border: 1px solid lightgray;
+  -webkit-box-shadow: 0px 0px 1px -1px #000000;
+  box-shadow: 0px 0px 1px -1px #000000;
 }
 
 .featuredTitle {
   color: black;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .featuredAllOrdersContainer {
   display: flex;
   align-items: center;
 }
-.featuredAllOrders {
-  font-size: 60px;
-  font-weight: 600;
+
+.featuredValue {
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .featuredAllOrdersRate {

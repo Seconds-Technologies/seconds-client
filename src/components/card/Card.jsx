@@ -67,8 +67,8 @@ const Card = ({
 	};
 
 	return (
-		<div className={'card-item ' + (isCardFlipped ? '-active' : '')}>
-			<div className='card-item__side -front'>
+		<div className={'mx-auto card-item ' + (isCardFlipped ? '-active' : '')}>
+			<div className='card-item__side-front'>
 				<div className={`card-item__focus ${currentFocusedElm ? `-active` : ``}`} style={style} />
 				<div className='card-item__cover'/>
 				<div className='card-item__wrapper'>

@@ -25,6 +25,16 @@ export const COLOURS = {
 	UNKNOWN: "#795548"
 }
 
+export const BACKGROUND = {
+	NEW: "rgba(244,67, 54, 0.25)",
+	PENDING: "rgba(153, 51, 204, 0.25)",
+	DISPATCHING: "rgba(255, 122, 0, 0.25)",
+	EN_ROUTE: "rgba(66, 133, 244, 0.25)",
+	COMPLETED: "rgba(0, 255, 25, 0.25)",
+	CANCELLED: "rgba(86, 86, 86, 0.25)",
+	UNKNOWN: "rgba(121, 85, 72, 0.25)"
+}
+
 export const STATUS = {
 	NEW: "NEW",
 	PENDING: "PENDING",

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
-import { COLOURS, PATHS, STATUS } from '../../constants';
+import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
 import { getAllJobs } from '../../store/actions/delivery';
 import './Orders.css';
 
@@ -61,21 +61,41 @@ export default function Orders() {
 							borderRadius: 50,
 							backgroundColor:
 								params.value === STATUS.NEW
-									? COLOURS.NEW
+									? BACKGROUND.NEW
 									: params.value === STATUS.PENDING
-									? COLOURS.PENDING
+									? BACKGROUND.PENDING
 									: params.value === STATUS.DISPATCHING
-									? COLOURS.DISPATCHING
+									? BACKGROUND.DISPATCHING
 									: params.value === STATUS.EN_ROUTE
-									? COLOURS.EN_ROUTE
+									? BACKGROUND.EN_ROUTE
 									: params.value === STATUS.COMPLETED
-									? COLOURS.COMPLETED
+									? BACKGROUND.COMPLETED
 									: params.value === STATUS.CANCELLED
-									? COLOURS.CANCELLED
-									: COLOURS.UNKNOWN,
+									? BACKGROUND.CANCELLED
+									: BACKGROUND.UNKNOWN,
 						}}
 					>
-						<span className='text-light text-capitalize'>{params.value.toLowerCase()}</span>
+						<span
+							className='text-capitalize'
+							style={{
+								color:
+									params.value === STATUS.NEW
+										? COLOURS.NEW
+										: params.value === STATUS.PENDING
+										? COLOURS.PENDING
+										: params.value === STATUS.DISPATCHING
+										? COLOURS.DISPATCHING
+										: params.value === STATUS.EN_ROUTE
+										? COLOURS.EN_ROUTE
+										: params.value === STATUS.COMPLETED
+										? COLOURS.COMPLETED
+										: params.value === STATUS.CANCELLED
+										? COLOURS.CANCELLED
+										: COLOURS.UNKNOWN,
+							}}
+						>
+							{params.value.toLowerCase()}
+						</span>
 					</div>
 				</div>
 			),
@@ -95,6 +115,7 @@ export default function Orders() {
 						to={{
 							pathname: `${PATHS.VIEW_ORDER}/${params.row.id}`,
 						}}
+						className='text-decoration-none'
 					>
 						<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
 							<span className='text-decoration-none'>View</span>
@@ -107,7 +128,7 @@ export default function Orders() {
 
 	return (
 		<div className='ordersContainer bg-light px-3 py-4'>
-			<h3 className='totalOrders ms-3'>Total Orders</h3>
+			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
 				sortModel={[

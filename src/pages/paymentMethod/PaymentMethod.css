@@ -1,16 +1,6 @@
 .payment-method-container {
   flex: 7;
-  overflow-x: scroll;
-  border-radius: 0px;
-  margin-right: 0px;
-  min-height: 100vh;
-}
-
-.form-wrapper {
-  padding: 15px;
-  margin: 15px;
-  height: 600px;
-  position: relative;
+  min-height: calc(100vh - 70px);
 }
 
 .p-3.topRight {

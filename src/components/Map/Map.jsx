@@ -12,14 +12,19 @@ const Map = props => {
 		accessToken: process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"
 	});
 
+	const onLoaded = (map) => {
+		map.resize()
+	}
+
 	return (
 		<div className='mt-4 map-container'>
 			<Mapbox
 				zoom={[13]}
 				containerStyle={{
-					height: 500,
-					width: '',
+					height: "calc(100vh - 300px)",
+					width: "100%",
 				}}
+				onStyleLoad={map => onLoaded(map)}
 				maxZoom={15}
 				minZoom={10}
 				center={[longitude, latitude]}

@@ -2,8 +2,15 @@
   flex: 7;
   border-radius: 0px;
   margin-right: 0px;
+  min-height: calc(100vh - 70);
 }
 
-.pageName {
-  font-family: sans-serif;
+.dashboard-header {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.bold-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
 }

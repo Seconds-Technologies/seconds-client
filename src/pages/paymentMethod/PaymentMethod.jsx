@@ -32,10 +32,10 @@ const PaymentMethod = props => {
     );
 
     return (
-        <div className='payment-method-container bg-light'>
-            <div className='d-flex h-100 align-items-center justify-content-center'>
+        <div className='payment-method-container pt-5 bg-light'>
+            <div className='d-flex align-items-center justify-content-center'>
                 {confirmToast}
-                <div className='form-wrapper w-md'>
+                <div className='w-md'>
                     <h1>Payment Information</h1>
                     <span className='small'>Your card will be used for collecting payments for your deliveries.</span><br />
                     <span className='small'>The commission fee is <strong>0%</strong> per completed order</span>

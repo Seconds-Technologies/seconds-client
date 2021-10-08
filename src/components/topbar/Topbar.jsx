@@ -1,5 +1,4 @@
 import 'antd/dist/antd.css';
-import './Topbar.css';
 import React from 'react';
 import logo from '../../img/secondsapp.svg';
 import { Link, useHistory } from 'react-router-dom';
@@ -7,13 +6,14 @@ import { PATHS } from '../../constants';
 import { useSelector } from 'react-redux';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import './Topbar.css';
 
 export default function Topbar() {
 	const { firstname, lastname, profileImageData } = useSelector(state => state['currentUser'].user);
 	const history = useHistory();
 
 	return (
-		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white'>
+		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white topbar'>
 			<div className='container-fluid d-flex ms-3'>
 				<Link to='/' className='navbar-brand' href=''>
 					<span className='logo'>

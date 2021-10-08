@@ -1,11 +1,9 @@
 .ordersContainer {
     flex: 7;
-    min-height: 100vh;
-    font-family: sans-serif;
+    min-height: calc(100vh - 70px);
 }
 
 .totalOrders {
-    font-family: sans-serif;
     font-weight: bold;
 }
 

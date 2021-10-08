@@ -43,6 +43,7 @@ export function addPaymentMethod(user, paymentMethodId) {
 				`/api/v1/payments/add-payment-method`,
 				{
 					email: user.email,
+					customerId: user.stripeCustomerId,
 					paymentMethodId: paymentMethodId
 				}
 			)

@@ -1,7 +1,6 @@
 .integrations {
   flex: 7;
-  font-family: sans-serif;
-  min-height: 100vh;
+  min-height: calc(100vh - 70px);
 }
 
 .button-wrapper {
@@ -14,7 +13,6 @@
 .api-wrapper {
   height: 400px;
   border: 1px white solid;
-  border-radius: 50px;
 }
 
 .api-wrapper:hover {
@@ -23,10 +21,7 @@
 }
 
 .integrations-header {
-  font-family: sans-serif;
   font-weight: bold;
-  margin-top: 20px;
-  margin-left: 20px;
 }
 
 .key-text {

@@ -363,9 +363,9 @@ const CardSetupForm = ({ showToast }) => {
 				cardCvv='***'
 				brand={`${paymentMethod.brand}`}
 			/>
-			<div className='d-flex justify-content-between pt-5'>
+			<div className='d-flex justify-content-between mt-5'>
 				<div>
-				<button className="btn btn-warning" onClick={() => history.push(PATHS.SUBSCRIPTION)}>
+				<button className="btn btn-edit" onClick={() => history.push(PATHS.SUBSCRIPTION)}>
 					Manage Subscription
 				</button>
 				</div>

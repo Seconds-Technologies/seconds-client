@@ -1,7 +1,6 @@
 .settings {
     flex: 7;
-    border-radius: 0px;
-    margin-right: 0px;
+    min-height: calc(100vh - 70px);
 }
 
 .option-container {
