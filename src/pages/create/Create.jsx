@@ -27,7 +27,7 @@ const Create = props => {
 	const [quotes, setQuotes] = useState([]);
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
-	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
 
@@ -237,21 +237,22 @@ const Create = props => {
 					pickupLastName: lastname,
 					pickupBusinessName: company,
 					pickupEmailAddress: email,
+					pickupPhoneNumber: phone,
+					pickupAddress: address
 				}}
 				onSubmit={async (values, actions) => {
 					setLoadingText('Creating Order');
 					setLoadingModal(true);
 					const { pickupAddress, dropoffAddress } = values;
 					try {
-						let pickupAddressComponents = await geocodeByAddress(pickupAddress);
-						let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-
-						values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-						console.log('+++++++++++');
-						console.log(values.pickupFormattedAddress);
-						console.log('-----------');
-						values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 						if (apiKey) {
+							let pickupAddressComponents = await geocodeByAddress(pickupAddress);
+							let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+							values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+							console.log('+++++++++++');
+							console.log(values.pickupFormattedAddress);
+							console.log('-----------');
+							values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 							const {
 								createdAt,
 								jobSpecification: { packages, orderNumber },
@@ -356,6 +357,7 @@ const Create = props => {
 												id='pickup-phone-number'
 												name='pickupPhoneNumber'
 												type='tel'
+												defaultValue={phone}
 												className='form-control form-border mb-2'
 												placeholder='Phone Number'
 												aria-label='pickup-phone-number'
@@ -394,10 +396,27 @@ const Create = props => {
 												region: 'GB',
 											}}
 											selectProps={{
+												defaultInputValue: address,
+												defaultValue: address,
 												onChange: ({ label }) => {
 													setFieldValue('pickupAddress', label);
 													console.log(label, values);
 												},
+
+												/*styles: {
+													input: (provided) => ({
+														...provided,
+														color: 'blue',
+													}),
+													option: (provided) => ({
+														...provided,
+														color: 'blue',
+													}),
+													singleValue: (provided) => ({
+														...provided,
+														color: 'blue',
+													}),
+												},*/
 											}}
 											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 										/>
@@ -624,22 +643,30 @@ const Create = props => {
 									size='lg'
 									className='mx-3'
 									onClick={async () => {
-										setLoadingText('Getting Quote');
-										setLoadingModal(true);
-										const { pickupAddress, dropoffAddress } = values;
 										try {
-											let pickupAddressComponents = await geocodeByAddress(pickupAddress);
-											let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-											values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-											values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
-											const {
-												quotes,
-												bestQuote: { id },
-											} = await dispatch(getAllQuotes(apiKey, values));
-											setDeliveryParams(prevState => ({ ...values }));
-											setQuotes(quotes);
-											setLoadingModal(false);
-											showQuoteModal(true);
+											if(apiKey) {
+												setLoadingText('Getting Quote');
+												setLoadingModal(true);
+												const { pickupAddress, dropoffAddress } = values;
+												let pickupAddressComponents = await geocodeByAddress(pickupAddress);
+												let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+												values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+												values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+												const {
+													quotes,
+													bestQuote: { id },
+												} = await dispatch(getAllQuotes(apiKey, values));
+												setDeliveryParams(prevState => ({ ...values }));
+												setQuotes(quotes);
+												setLoadingModal(false);
+												showQuoteModal(true);
+											} else {
+												setLoadingModal(false);
+												alert(
+													'Your account does not have an API' +
+													' key associated with it. Please generate one from the integrations page'
+												);
+											}
 										} catch (err) {
 											setLoadingModal(false);
 											console.error(err);

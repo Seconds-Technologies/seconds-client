@@ -92,6 +92,7 @@ const ViewOrder = props => {
 							status,
 							jobSpecification: { orderNumber, packages },
 							selectedConfiguration: { providerId, jobReference, trackingURL },
+							driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
 							createdAt,
 						}) => {
 							let {
@@ -121,6 +122,9 @@ const ViewOrder = props => {
 								providerId,
 								trackingURL,
 								address,
+								driverName,
+								driverPhone,
+								driverVehicle,
 								pickupDate: pickupStartTime,
 								dropoffDate: dropoffStartTime,
 							};
@@ -144,12 +148,7 @@ const ViewOrder = props => {
 				{show && (
 					<div className='alert alert-success alert-dismissible fade show' role='alert'>
 						<h2 className='text-center'>Order updated</h2>
-						<button
-							type='button'
-							className='btn btn-close'
-							data-bs-dismiss='alert'
-							aria-label='Close'
-						/>
+						<button type='button' className='btn btn-close' data-bs-dismiss='alert' aria-label='Close' />
 					</div>
 				)}
 			</div>
@@ -291,22 +290,20 @@ const ViewOrder = props => {
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>
-							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-								Driver
-							</span>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Driver</span>
 							<table className='table d-flex table-borderless'>
 								<tbody>
 									<tr>
 										<td className='fw-bold'>Name</td>
-										<td>Diego Costa</td>
+										<td>{order.driverName}</td>
 									</tr>
 									<tr>
 										<td className='fw-bold'>Phone</td>
-										<td>0744596637</td>
+										<td>{order.driverPhone}</td>
 									</tr>
 									<tr>
 										<td className='fw-bold'>Vehicle</td>
-										<td>Cargo Bike</td>
+										<td>{order.driverVehicle}</td>
 									</tr>
 								</tbody>
 							</table>
