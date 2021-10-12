@@ -284,7 +284,9 @@ const ViewOrder = props => {
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>ETA:</span>
 							<span className='orderShowInfoTitle'>
-								{moment(order.dropoffDate).diff(moment(), 'minutes') < 0
+								{!order.dropoffDate
+									? 'Estimating...'
+									: moment(order.dropoffDate).diff(moment(), 'minutes') < 0
 									? `0 minutes`
 									: `${moment(order.dropoffDate).diff(moment(), 'minutes')} minutes`}
 							</span>
@@ -302,7 +304,7 @@ const ViewOrder = props => {
 										<td>{order.driverPhone}</td>
 									</tr>
 									<tr>
-										<td className='fw-bold'>Vehicle</td>
+										<td className='fw-bold'>Transport</td>
 										<td>{order.driverVehicle}</td>
 									</tr>
 								</tbody>

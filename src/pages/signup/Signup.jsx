@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeError } from '../../store/actions/errors';
 import React, { useEffect } from 'react';
 import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
+import { SignUpSchema } from '../../validation';
+import ErrorField from '../../components/ErrorField';
 
 export default function Signup(props) {
 	const errors = useSelector(state => state['errors']);
@@ -31,6 +33,7 @@ export default function Signup(props) {
 						</div>
 					)}
 					<Formik
+						validationSchema={SignUpSchema}
 						initialValues={{
 							firstname: '',
 							lastname: '',
@@ -77,6 +80,7 @@ export default function Signup(props) {
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
+										<ErrorField name="firstname" />
 									</div>
 									<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-3'>
 										<input
@@ -88,6 +92,7 @@ export default function Signup(props) {
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
+										<ErrorField name="lastname" />
 									</div>
 								</div>
 								<div className='row mt-3'>
@@ -101,6 +106,7 @@ export default function Signup(props) {
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
+										<ErrorField name="company" />
 									</div>
 									<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-3'>
 										<input
@@ -112,6 +118,7 @@ export default function Signup(props) {
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
+										<ErrorField name="phone" />
 									</div>
 								</div>
 								<div className='mt-sm-3 mt-md-4'>
@@ -130,6 +137,7 @@ export default function Signup(props) {
 												setFieldValue('address', label);
 												console.log(label, values);
 											},
+											placeholder: "Address"
 										}}
 										apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 									/>
@@ -144,6 +152,7 @@ export default function Signup(props) {
 										onBlur={handleBlur}
 										onChange={handleChange}
 									/>
+									<ErrorField name="email" />
 								</div>
 								<div className='mt-3'>
 									<input
@@ -155,6 +164,7 @@ export default function Signup(props) {
 										onBlur={handleBlur}
 										onChange={handleChange}
 									/>
+									<ErrorField name="password" />
 								</div>
 								<div>
 									<button type='submit' className='signUp w-100'>

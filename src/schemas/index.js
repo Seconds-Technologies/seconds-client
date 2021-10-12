@@ -27,7 +27,7 @@ export const jobRequestSchema = {
 	dropoffPhoneNumber: '',
 	packageDropoffStartTime: '',
 	dropoffInstructions: '',
-	packageValue: 0,
 	packageDescription: '',
 	itemsCount: null,
+	vehicleType: '',
 }

@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@types/prop-types": "^15.7.3",
     "@types/redux-persist": "^4.3.1",
+    "@types/yup": "^0.29.13",
     "antd": "^4.16.13",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
@@ -42,6 +43,7 @@
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-select": "^5.1.0",
     "react-transition-group": "^4.4.2",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
@@ -49,7 +51,8 @@
     "redux-thunk": "^2.3.0",
     "shorthash": "^0.0.2",
     "web-vitals": "^1.0.1",
-    "worker-loader": "^3.0.8"
+    "worker-loader": "^3.0.8",
+    "yup": "^0.32.10"
   },
   "scripts": {
     "start": "react-scripts start",

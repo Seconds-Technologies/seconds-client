@@ -4,12 +4,13 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
-import CurrencyInput from 'react-currency-input-field';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
+import Select, { components } from 'react-select';
 import moment from 'moment';
-import { PLACE_TYPES } from '../../constants';
+import { PLACE_TYPES, VEHICLE_TYPES } from '../../constants';
 import loadingIcon from '../../img/loadingicon.svg';
 import { jobRequestSchema } from '../../schemas';
+import { CreateOrderSchema } from '../../validation';
 import './create.css';
 import '../../App.css';
 
@@ -27,19 +28,21 @@ const Create = props => {
 	const [quotes, setQuotes] = useState([]);
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
-	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(
+		state => state['currentUser'].user
+	);
 	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
 
-	const columns = [
-		{ field: 'id', headerName: 'Job ID', width: 100 },
-		{ field: 'pickupAddress', headerName: 'pickup address', width: 150 },
-		{ field: 'dropoffAddress', headerName: 'dropoff Address', width: 150 },
-		{ field: 'pickupStartTime', type: 'dateTime', headerName: 'pickup time', width: 150 },
-		{ field: 'dropoffStartTime', type: 'dateTime', headerName: 'dropoff time', width: 150 },
-		{ field: 'description', headerName: 'Description', width: 150 },
-		{ field: 'quoteID', headerName: 'Quote ID', width: 150 },
-	];
+	const Option = props => (
+		<components.Option {...props}>
+			<div className='left'>{props.isSelected ? '✔' : ''}</div>
+			<div className='right'>
+				<strong className='title'>{props.data.label}</strong>
+				<div>{props.data.description}</div>
+			</div>
+		</components.Option>
+	);
 
 	const getParsedAddress = useCallback(data => {
 		let address = data[0].address_components;
@@ -240,18 +243,17 @@ const Create = props => {
 					pickupPhoneNumber: phone,
 					pickupAddress: address
 				}}
+				validationSchema={CreateOrderSchema}
 				onSubmit={async (values, actions) => {
 					setLoadingText('Creating Order');
 					setLoadingModal(true);
-					const { pickupAddress, dropoffAddress } = values;
 					try {
 						if (apiKey) {
-							let pickupAddressComponents = await geocodeByAddress(pickupAddress);
-							let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
+							const { pickupAddress: pickup, dropoffAddress: dropoff } = values;
+							let pickupAddressComponents = await geocodeByAddress(pickup);
+							let dropoffAddressComponents = await geocodeByAddress(dropoff);
 							values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-							console.log('+++++++++++');
 							console.log(values.pickupFormattedAddress);
-							console.log('-----------');
 							values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 							const {
 								createdAt,
@@ -294,7 +296,7 @@ const Create = props => {
 			>
 				{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
 					<form onSubmit={handleSubmit} autoComplete='on'>
-						<div className='row mx-3 align-items-center'>
+						<div className='row mx-3'>
 							<div className='col-6 d-flex flex-column'>
 								<h4>Pickup</h4>
 								<div className='border border-2 rounded-3 p-4'>
@@ -304,10 +306,11 @@ const Create = props => {
 												First Name
 											</label>
 											<input
+												required
 												autoComplete='given-name'
 												name='pickupFirstName'
 												type='text'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												defaultValue={firstname}
 												aria-label='pickup-first-name'
 												onChange={handleChange}
@@ -319,11 +322,12 @@ const Create = props => {
 												Last Name
 											</label>
 											<input
+												required
 												autoComplete='family-name'
 												id='pickup-last-name'
 												name='pickupLastName'
 												type='text'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												defaultValue={lastname}
 												aria-label='pickup-last-name'
 												onChange={handleChange}
@@ -331,17 +335,18 @@ const Create = props => {
 											/>
 										</div>
 									</div>
-									<div className='row'>
+									<div className='row mt-1'>
 										<div className='col-6'>
 											<label htmlFor='pickup-email-address' className='mb-1'>
 												Email Address
 											</label>
 											<input
+												required
 												autoComplete='email'
 												id='pickup-email-address'
 												name='pickupEmailAddress'
 												type='email'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												defaultValue={email}
 												aria-label='pickup-email-address'
 												onChange={handleChange}
@@ -353,12 +358,13 @@ const Create = props => {
 												Phone Number
 											</label>
 											<input
+												required
 												autoComplete='tel'
 												id='pickup-phone-number'
 												name='pickupPhoneNumber'
 												type='tel'
 												defaultValue={phone}
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												placeholder='Phone Number'
 												aria-label='pickup-phone-number'
 												onChange={handleChange}
@@ -366,15 +372,16 @@ const Create = props => {
 											/>
 										</div>
 									</div>
-									<label htmlFor='pickup-business-name' className='mb-1'>
+									<label htmlFor='pickup-business-name' className='my-1'>
 										Business Name
 									</label>
 									<input
+										required
 										autoComplete='organization'
 										id='pickup-business-name'
 										name='pickupBusinessName'
 										type='text'
-										className='form-control form-border mb-3'
+										className='form-control form-border rounded-3 mb-3'
 										defaultValue={company}
 										aria-label='pickup-business-name'
 										onChange={handleChange}
@@ -396,8 +403,7 @@ const Create = props => {
 												region: 'GB',
 											}}
 											selectProps={{
-												defaultInputValue: address,
-												defaultValue: address,
+												defaultInputValue: values.pickupAddress,
 												onChange: ({ label }) => {
 													setFieldValue('pickupAddress', label);
 													console.log(label, values);
@@ -428,7 +434,7 @@ const Create = props => {
 										name='packagePickupStartTime'
 										id='pickup-datetime'
 										type='datetime-local'
-										className='form-control form-border mb-3'
+										className='form-control form-border rounded-3 mb-3'
 										aria-label='pickup-datetime'
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -439,7 +445,7 @@ const Create = props => {
 									<textarea
 										id='pickup-instructions'
 										name='pickupInstructions'
-										className='form-control form-border mb-3'
+										className='form-control form-border rounded-3 mb-3'
 										aria-label='pickup-instructions'
 										onChange={handleChange}
 										onBlur={handleBlur}
@@ -455,11 +461,12 @@ const Create = props => {
 												First Name
 											</label>
 											<input
+												required
 												autoComplete='given-name'
 												id='dropoff-first-name'
 												name='dropoffFirstName'
 												type='text'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												aria-label='dropoff-first-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -470,28 +477,30 @@ const Create = props => {
 												Last Name
 											</label>
 											<input
+												required
 												autoComplete='family-name'
 												id='dropoff-last-name'
 												name='dropoffLastName'
 												type='text'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												aria-label='dropoff-last-name'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 									</div>
-									<div className='row'>
+									<div className='row mt-1'>
 										<div className='col-6'>
 											<label htmlFor='dropoff-email-address' className='mb-1'>
 												Email Address
 											</label>
 											<input
+												required
 												autoComplete='email'
 												id='dropoff-email-address'
 												name='dropoffEmailAddress'
 												type='email'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												aria-label='dropoff-email-address'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -502,29 +511,18 @@ const Create = props => {
 												Phone Number
 											</label>
 											<input
+												required
 												autoComplete='tel'
 												name='dropoffPhoneNumber'
 												type='text'
-												className='form-control form-border mb-2'
+												className='form-control form-border rounded-3 mb-2'
 												aria-label='dropoff-phone-number'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 										</div>
 									</div>
-									<label htmlFor='dropoff-business-name' className='mb-1'>
-										Business Name
-									</label>
-									<input
-										autoComplete='organization'
-										id='dropoff-business-name'
-										name='dropoffBusinessName'
-										type='text'
-										className='form-control form-border mb-3'
-										aria-label='dropoff-business-name'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
+									<div className='mb-1' />
 									<label htmlFor='dropoff-street-address' className='mb-1'>
 										Dropoff Address
 									</label>
@@ -556,7 +554,7 @@ const Create = props => {
 										id='dropoff-datetime'
 										name='packageDropoffStartTime'
 										type='datetime-local'
-										className='form-control form-border mb-3'
+										className='form-control form-border rounded-3 mb-3'
 										placeholder='Dropoff At'
 										aria-label='dropoff-datetime'
 										onChange={handleChange}
@@ -567,14 +565,14 @@ const Create = props => {
 									</label>
 									<textarea
 										name='dropoffInstructions'
-										className='form-control form-border mb-3'
+										className='form-control form-border rounded-3 mb-3'
 										aria-label='dropoff-instructions'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
 								</div>
 							</div>
-							<div className='mt-4 mb-3'/>
+							<div className='mt-4 mb-3' />
 							<div className='col-12 d-flex flex-column'>
 								<h4>Order Details</h4>
 								<div className='border border-2 rounded-3 p-4'>
@@ -584,10 +582,11 @@ const Create = props => {
 												Number of Items
 											</label>
 											<input
+												required
 												id='items-count'
 												name='itemsCount'
 												type='number'
-												className='form-control form-border my-2'
+												className='form-control form-border rounded-3 my-2'
 												placeholder='Number of Items'
 												aria-label='items-count'
 												onChange={handleChange}
@@ -595,23 +594,21 @@ const Create = props => {
 											/>
 										</div>
 										<div className='col-6'>
-											<label htmlFor='package-value' className='mb-1'>
-												Package Value (£)
+											<label htmlFor='vehicle-type' className='mb-1'>
+												Vehicle Type
 											</label>
-											<CurrencyInput
-												id='packageValue'
-												prefix='£'
-												defaultValue={values.packageValue}
-												className='form-control form-border my-2'
-												name='packageValue'
-												placeholder='Package Price'
-												aria-label='package-value'
-												fixedDecimalLength={2}
-												decimalsLimit={2}
-												decimalScale={2}
-												onValueChange={value => setFieldValue('packageValue', Number(value))}
-												onBlur={handleBlur}
-												step={1}
+											<Select
+												id='vehicle-type'
+												name='vehicleType'
+												className='my-2'
+												options={VEHICLE_TYPES}
+												components={{ Option }}
+												onChange={({ value }) => {
+													setFieldValue('vehicleType', value);
+													console.log(value);
+												}}
+												aria-label='vehicle type selection'
+												required
 											/>
 										</div>
 									</div>
@@ -623,7 +620,7 @@ const Create = props => {
 											<textarea
 												id='package-description'
 												name='packageDescription'
-												className='form-control form-border my-2'
+												className='form-control form-border rounded-3 my-2'
 												placeholder='Max. 200 characters'
 												maxLength={200}
 												aria-label='package-description'
@@ -634,8 +631,10 @@ const Create = props => {
 									</div>
 								</div>
 							</div>
-							<div className="my-3 d-flex justify-content-center">
-								{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
+							<div className='my-3 d-flex justify-content-center'>
+								{error.message && (
+									<div className='alert alert-danger text-center w-75'>{error.message}</div>
+								)}
 							</div>
 							<div className='d-flex pt-5 justify-content-end'>
 								<Button
@@ -644,14 +643,16 @@ const Create = props => {
 									className='mx-3'
 									onClick={async () => {
 										try {
-											if(apiKey) {
+											if (apiKey) {
 												setLoadingText('Getting Quote');
 												setLoadingModal(true);
 												const { pickupAddress, dropoffAddress } = values;
 												let pickupAddressComponents = await geocodeByAddress(pickupAddress);
 												let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
-												values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-												values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+												values.pickupFormattedAddress =
+													getParsedAddress(pickupAddressComponents);
+												values.dropoffFormattedAddress =
+													getParsedAddress(dropoffAddressComponents);
 												const {
 													quotes,
 													bestQuote: { id },
@@ -664,7 +665,7 @@ const Create = props => {
 												setLoadingModal(false);
 												alert(
 													'Your account does not have an API' +
-													' key associated with it. Please generate one from the integrations page'
+														' key associated with it. Please generate one from the integrations page'
 												);
 											}
 										} catch (err) {

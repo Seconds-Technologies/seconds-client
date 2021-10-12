@@ -43,11 +43,11 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 
 const SuccessDisplay = ({ stripeCustomerId, planName }) => {
 	return (
-		<section className='d-flex flex-column align-items-center justify-content-center h-75 m-1 w-100'>
-			<div className='product Box-root'>
-				<img className='img-fluid seconds-logo my-4' src={secondsLogo} alt='' />
+		<section className='d-flex flex-column align-items-center success-wrapper py-5'>
+			<div className="d-flex flex-column">
+				<img className='img-fluid seconds-logo' src={secondsLogo} alt='' />
 				<div className='description Box-root'>
-					<h3>Subscription to {planName} plan successful!</h3>
+					<h3>You are subscribed!</h3>
 				</div>
 			</div>
 			<form
@@ -59,7 +59,7 @@ const SuccessDisplay = ({ stripeCustomerId, planName }) => {
 				method='POST'
 			>
 				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
-				<button id='checkout-and-portal-button' className='btn btn-primary btn-lg text-white' type='submit'>
+				<button id='checkout-and-portal-button' className='btn btn-primary btn-lg text-white mt-4' type='submit'>
 					Manage your billing information
 				</button>
 			</form>
@@ -121,7 +121,7 @@ const Subscription = () => {
 	};
 
 	return (
-		<div className='subscription bg-light justify-content-center align-items-center py-5'>
+		<div className='subscription d-flex bg-light justify-content-center align-items-center py-5'>
 			<Message message={message} onHide={() => setMessage('')} />
 			{!user.subscriptionId ? (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>
@@ -149,7 +149,9 @@ const Subscription = () => {
 					/>
 				</div>
 			) : (
-				<SuccessDisplay stripeCustomerId={user.stripeCustomerId} />
+				<div className="d-flex flex-grow-1 flex-column align-items-center justify-content-center h-75 m-1">
+					<SuccessDisplay stripeCustomerId={user.stripeCustomerId} />
+				</div>
 			)}
 		</div>
 	);
