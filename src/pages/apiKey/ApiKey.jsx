@@ -31,7 +31,7 @@ const ApiKey = props => {
 						</div>
 						<div className='col-3 d-flex flex-column'>
 							<Button
-								className="rounded-3"
+								className='rounded-3'
 								variant='light'
 								ref={apiKeyRef}
 								onClick={() => {
@@ -107,7 +107,7 @@ const ApiKey = props => {
 											Generate API Key
 										</button>
 										<button
-											type="button"
+											type='button'
 											className='mt-2 text-center shopifyButton'
 											onClick={props.history.goBack}
 										>
@@ -123,7 +123,21 @@ const ApiKey = props => {
 				<div className='container'>
 					<div className='pb-5'>
 						<h1>Your API Key</h1>
-						<input className='form-control form-control-lg my-4 rounded-0' type='text' value={apiKey} readOnly />
+						<small>
+							You can use this API key to authenticate your own service with Seconds and create your own
+							workflow or use the dashboard.
+						</small>
+						<br/>
+						<small>
+							When you generate a new API key, you will be able to see the key in this box and use it as
+							many times as you need.
+						</small>
+						<input
+							className='form-control form-control-lg my-4 rounded-0'
+							type='text'
+							value={apiKey}
+							readOnly
+						/>
 					</div>
 					<div className='d-flex justify-content-center align-items-center'>
 						<button className='mt-2 text-center shopifyButton' onClick={props.history.goBack}>

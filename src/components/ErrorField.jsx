@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useFormikContext } from 'formik';
+import PropTypes from 'prop-types';
 
-const ErrorField = ({ name }) => {
+const ErrorField = ({ name, classNames }) => {
 	const { errors, touched, isSubmitting } = useFormikContext();
 	useEffect(() =>{
 		console.log(name)
@@ -9,7 +10,12 @@ const ErrorField = ({ name }) => {
 	if (!errors[name] && !touched[name]) {
 		return null;
 	}
-	return <div className="text-danger">{errors[name]}</div>;
+	return <div className={classNames ? `${classNames} text-danger`: "text-danger"}>{errors[name]}</div>;
 };
+
+ErrorField.propTypes = {
+	name: PropTypes.string.isRequired,
+	classNames: PropTypes.string
+}
 
 export default ErrorField;

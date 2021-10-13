@@ -1,4 +1,5 @@
 export const jobRequestSchema = {
+	deliveryType: "",
 	pickupFirstName: "",
 	pickupLastName: "",
 	pickupBusinessName: "",

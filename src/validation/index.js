@@ -14,14 +14,16 @@ export const SignUpSchema = Yup.object().shape({
 });
 
 export const CreateOrderSchema = Yup.object().shape({
-	pickupFirstName: Yup.string().max(20, 'Max. 20 characters').required('Required'),
-	pickupLastName: Yup.string().max(20, 'Max. 20 characters').required('Required'),
-	pickupEmailAddress: Yup.string().email('Invalid email address!').required('Required'),
-	pickupPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('Required'),
-	pickupBusinessName: Yup.string().required('Required'),
-	dropoffFirstName: Yup.string().max(20, 'Max. 20 characters').required('Required'),
-	dropoffLastName: Yup.string().max(20, 'Max. 20 characters').required('Required'),
-	dropoffEmailAddress: Yup.string().email('Invalid email address!').required('Required'),
-	dropoffPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('Required'),
-	vehicleType: Yup.string().required('Required')
+	pickupFirstName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
+	pickupLastName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
+	pickupEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
+	pickupPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
+	pickupBusinessName: Yup.string().required('* Required'),
+	pickupAddress: Yup.string().required('* Required'),
+	dropoffAddress: Yup.string().required('* Required'),
+	dropoffFirstName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
+	dropoffLastName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
+	dropoffEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
+	dropoffPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
+	vehicleType: Yup.string().required('* Required')
 });

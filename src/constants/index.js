@@ -52,6 +52,11 @@ export const PLACE_TYPES = {
 	POSTCODE_PREFIX: 'postal_code_prefix',
 };
 
+export const SUBMISSION_TYPES = {
+	CREATE_JOB: "job",
+	GET_QUOTE: "quote"
+}
+
 export const VEHICLE_TYPES = [
 	{
 		value: 'BIC',
