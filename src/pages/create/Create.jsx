@@ -2,8 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Accordion from 'react-bootstrap/Accordion';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
@@ -13,10 +12,18 @@ import moment from 'moment';
 import { PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 import loadingIcon from '../../img/loadingicon.svg';
 import { jobRequestSchema } from '../../schemas';
+import ErrorField from '../../components/ErrorField';
 import { CreateOrderSchema } from '../../validation';
+import bicycle from '../../img/bicycle.svg';
+import motorbike from '../../img/motorbike.svg';
+import car from '../../img/car.svg';
+import cargobike from '../../img/cargobike.svg';
+import van from '../../img/van.svg';
+import stuart from '../../img/stuart.svg';
+import gophr from '../../img/gophr.svg';
+import streetStream from '../../img/street-stream.svg';
 import './create.css';
 import '../../App.css';
-import ErrorField from '../../components/ErrorField';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -42,15 +49,37 @@ const Create = props => {
 		dispatch(removeError());
 	}, [props.location]);
 
-	const Option = props => (
-		<components.Option {...props}>
-			<div className='left'>{props.isSelected ? '✔' : ''}</div>
-			<div className='right'>
-				<strong className='title'>{props.data.label}</strong>
-				<div>{props.data.description}</div>
-			</div>
-		</components.Option>
-	);
+	const Option = props => {
+		return (
+			<components.Option {...props}>
+				<div className='d-flex align-items-center'>
+					<div className='me-3'>
+						<img
+							src={
+								props.value === 'BIC'
+									? bicycle
+									: props.value === 'MTB'
+									? motorbike
+									: props.value === 'CGB'
+									? cargobike
+									: props.value === 'CAR'
+									? car
+									: van
+							}
+							className='img-fluid'
+							alt=''
+							width={50}
+							height={50}
+						/>
+					</div>
+					<div className='right'>
+						<strong className='title'>{props.data.label}</strong>
+						<div>{props.data.description}</div>
+					</div>
+				</div>
+			</components.Option>
+		);
+	};
 
 	const getParsedAddress = useCallback(data => {
 		let address = data[0].address_components;
@@ -152,14 +181,14 @@ const Create = props => {
 			</Modal.Header>
 			<Modal.Body>
 				<div>
-					{Object.entries(deliveryJob).map(([key, value], index) => {
-						return (
-							<div key={index} className='row p-3'>
-								<div className='fw-bold col text-capitalize'>{key}</div>
-								<div className='col'>{value}</div>
-							</div>
-						);
-					})}
+					<ul className='list-group list-group-flush'>
+						{Object.entries(deliveryJob).map(([key, value]) => (
+							<li className='list-group-item'>
+								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
+								<div className='text-capitalize'>{value}</div>
+							</li>
+						))}
+					</ul>
 				</div>
 			</Modal.Body>
 		</Modal>
@@ -184,7 +213,22 @@ const Create = props => {
 						<tbody>
 							{quotes.map(({ providerId, price, dropoffEta, createdAt }, index) => (
 								<tr key={index}>
-									<td className='col text-capitalize'>{providerId}</td>
+									<td className='col text-capitalize'>
+										<img
+											src={
+												providerId === 'stuart'
+													? stuart
+													: providerId === 'gophr'
+													? gophr
+													: streetStream
+											}
+											alt=''
+											className='me-3'
+											width={25}
+											height={25}
+										/>
+										<span>{providerId}</span>
+									</td>
 									<td className='col'>{`£${price}`}</td>
 									<td className='col'>{`${moment(dropoffEta).diff(
 										moment(createdAt),
@@ -231,7 +275,7 @@ const Create = props => {
 	);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Loading your content...'>
+		<LoadingOverlay active={isLoading} spinner text={loadingText}>
 			<div className='create bg-light py-4'>
 				{newJobModal}
 				{quotesModal}
@@ -337,362 +381,352 @@ const Create = props => {
 							}}
 							autoComplete='on'
 						>
-							<Accordion defaultActiveKey='0'>
-								<div className='row mx-3 '>
-									<Accordion.Item eventKey='0'>
-										<div className='col-12'>
-											<Accordion.Header>
-												<h4>Delivery Type</h4>
-											</Accordion.Header>
-											{/*<div className='border border-2 rounded-3 px-4 py-3'>*/}
-											<Accordion.Body>
-												<div className='row'>
-													<div className='col-12'>
-														<div className='form-check mb-2'>
-															<input
-																className='form-check-input'
-																type='radio'
-																name='deliveryType'
-																id='radio-1'
-																checked={values.deliveryType === 'on-demand'}
-																onChange={e => {
-																	setFieldValue('deliveryType', 'on-demand');
-																	setFieldValue('packagePickupStartTime', '');
-																	setFieldValue('packageDropoffStartTime', '');
-																}}
-																onBlur={handleBlur}
-															/>
-															<label className='form-check-label' htmlFor='radio-1'>
-																On Demand
-															</label>
-														</div>
-														<div className='form-check'>
-															<input
-																className='form-check-input'
-																type='radio'
-																name='deliveryType'
-																id='radio-2'
-																checked={values.deliveryType === 'scheduled'}
-																onChange={e =>
-																	setFieldValue('deliveryType', 'scheduled')
-																}
-																onBlur={handleBlur}
-															/>
-															<label className='form-check-label' htmlFor='radio-2'>
-																Scheduled
-															</label>
-														</div>
-													</div>
-												</div>
-											</Accordion.Body>
-											{/*</div>*/}
-										</div>
-									</Accordion.Item>
-									<div className='mt-2 mb-2' />
-									<div className='col-12 d-flex flex-column'>
-										<h4>Pickup</h4>
-										<div className='border border-2 rounded-3 px-4 py-3'>
-											<div className='row'>
-												<div className='col-6'>
-													<label htmlFor='pickup-address' className='mb-1'>
-														Pickup Address
-													</label>
-													<div className='mb-3'>
-														<input
-															type='text'
-															name='pickupAddress'
-															style={{ display: 'none' }}
-														/>
-														<GooglePlaceAutocomplete
-															autocompletionRequest={{
-																componentRestrictions: {
-																	country: ['GB'],
-																},
-															}}
-															apiOptions={{
-																language: 'GB',
-																region: 'GB',
-															}}
-															selectProps={{
-																defaultInputValue: values.pickupAddress,
-																onChange: ({ label }) => {
-																	setFieldValue('pickupAddress', label);
-																	console.log(label, values);
-																},
-
-																/*styles: {
-																	input: (provided) => ({
-																		...provided,
-																		color: 'blue',
-																	}),
-																	option: (provided) => ({
-																		...provided,
-																		color: 'blue',
-																	}),
-																	singleValue: (provided) => ({
-																		...provided,
-																		color: 'blue',
-																	}),
-																},*/
-															}}
-															apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
-														/>
-														<ErrorField name='pickupAddress' classNames='text-end' />
-													</div>
-												</div>
-												<div className='col-6'>
-													<label htmlFor='pickup-datetime' className='mb-1'>
-														Pickup At
-													</label>
+							<div className='row mx-3'>
+								<div className='col-12 d-flex flex-column'>
+									<h4>Delivery Type</h4>
+									<div className='border border-2 rounded-3 px-4 py-3'>
+										<div className='row'>
+											<div className='col-12'>
+												<div className='form-check mb-2'>
 													<input
-														disabled={values.deliveryType === 'on-demand'}
-														name='packagePickupStartTime'
-														id='pickup-datetime'
-														type='datetime-local'
-														className='form-control form-border rounded-3 mb-3'
-														aria-label='pickup-datetime'
-														onChange={handleChange}
-														onBlur={handleBlur}
-														min={moment().toISOString()}
-														max={moment().add(30, 'days').toISOString()}
-													/>
-												</div>
-											</div>
-											<div className='row'>
-												<div className='col-12'>
-													<label htmlFor='pickup-instructions' className='mb-1'>
-														Pickup Instructions
-													</label>
-													<textarea
-														id='pickup-instructions'
-														name='pickupInstructions'
-														className='form-control form-border rounded-3 mb-3'
-														aria-label='pickup-instructions'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div className='mt-2 mb-2' />
-									<div className='col-12 d-flex flex-column'>
-										<h4>Dropoff</h4>
-										<div className='border border-2 rounded-3 px-4 py-3'>
-											<div className='row'>
-												<div className='col-6'>
-													<label htmlFor='dropoff-first-name' className='mb-1'>
-														First Name
-													</label>
-													<input
-														autoComplete='given-name'
-														id='dropoff-first-name'
-														name='dropoffFirstName'
-														type='text'
-														className='form-control form-border rounded-3 mb-2'
-														aria-label='dropoff-first-name'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-													<ErrorField name='dropoffFirstName' classNames='text-end' />
-												</div>
-												<div className='col-6'>
-													<label htmlFor='dropoff-last-name' className='mb-1'>
-														Last Name
-													</label>
-													<input
-														autoComplete='family-name'
-														id='dropoff-last-name'
-														name='dropoffLastName'
-														type='text'
-														className='form-control form-border rounded-3 mb-2'
-														aria-label='dropoff-last-name'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-													<ErrorField name='dropoffLastName' classNames='text-end' />
-												</div>
-											</div>
-											<div className='row mt-1'>
-												<div className='col-6'>
-													<label htmlFor='dropoff-email-address' className='mb-1'>
-														Email Address
-													</label>
-													<input
-														autoComplete='email'
-														id='dropoff-email-address'
-														name='dropoffEmailAddress'
-														type='email'
-														className='form-control form-border rounded-3 mb-2'
-														aria-label='dropoff-email-address'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-													<ErrorField name='dropoffEmailAddress' classNames='text-end' />
-												</div>
-												<div className='col-6'>
-													<label htmlFor='dropoff-phone-number' className='mb-1'>
-														Phone Number
-													</label>
-													<input
-														autoComplete='tel'
-														name='dropoffPhoneNumber'
-														type='text'
-														className='form-control form-border rounded-3 mb-2'
-														aria-label='dropoff-phone-number'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-													<ErrorField name='dropoffPhoneNumber' classNames='text-end' />
-												</div>
-											</div>
-											<div className='mb-1' />
-											<label htmlFor='dropoff-street-address' className='mb-1'>
-												Dropoff Address
-											</label>
-											<div className='mb-3'>
-												<input type='text' name='dropoffAddress' style={{ display: 'none' }} />
-												<GooglePlaceAutocomplete
-													apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
-													autocompletionRequest={{
-														componentRestrictions: {
-															country: ['GB'],
-														},
-													}}
-													apiOptions={{
-														language: 'GB',
-														region: 'GB',
-													}}
-													selectProps={{
-														onChange: ({ label }) => {
-															setFieldValue('dropoffAddress', label);
-															console.log(label, values);
-														},
-													}}
-												/>
-												<ErrorField name='dropoffAddress' classNames='text-end' />
-											</div>
-											<label htmlFor='dropoff-datetime' className='mb-1'>
-												Dropoff At
-											</label>
-											<input
-												disabled={values.deliveryType === 'on-demand'}
-												id='dropoff-datetime'
-												name='packageDropoffStartTime'
-												type='datetime-local'
-												className='form-control form-border rounded-3 mb-3'
-												placeholder='Dropoff At'
-												aria-label='dropoff-datetime'
-												onChange={handleChange}
-												onBlur={handleBlur}
-												min={moment()}
-												max={
-													values.packagePickupStartTime
-														? moment(values.packagePickupStartTime)
-																.add(30, 'days')
-																.toISOString()
-														: moment().add('30', 'days').toISOString()
-												}
-											/>
-											<label htmlFor='dropoff-instructions' className='mb-1'>
-												Dropoff Instructions
-											</label>
-											<textarea
-												name='dropoffInstructions'
-												className='form-control form-border rounded-3 mb-3'
-												aria-label='dropoff-instructions'
-												onChange={handleChange}
-												onBlur={handleBlur}
-											/>
-										</div>
-									</div>
-									<div className='mt-2 mb-2' />
-									<div className='col-12 d-flex flex-column'>
-										<h4>Package Details</h4>
-										<div className='border border-2 rounded-3 px-4 py-3'>
-											<div className='row'>
-												<div className='col-6'>
-													<label htmlFor='items-count' className='mb-1'>
-														Number of Items
-													</label>
-													<input
-														id='items-count'
-														name='itemsCount'
-														type='number'
-														className='form-control form-border rounded-3 my-2'
-														placeholder='Number of Items'
-														aria-label='items-count'
-														onChange={handleChange}
-														onBlur={handleBlur}
-													/>
-												</div>
-												<div className='col-6'>
-													<label htmlFor='vehicle-type' className='mb-1'>
-														Vehicle Type
-													</label>
-													<Select
-														id='vehicle-type'
-														name='vehicleType'
-														className='my-2'
-														options={VEHICLE_TYPES}
-														components={{ Option }}
-														onChange={({ value }) => {
-															setFieldValue('vehicleType', value);
-															console.log(value);
+														className='form-check-input'
+														type='radio'
+														name='deliveryType'
+														id='radio-1'
+														checked={values.deliveryType === 'on-demand'}
+														onChange={e => {
+															setFieldValue('deliveryType', 'on-demand');
+															setFieldValue('packagePickupStartTime', '');
+															setFieldValue('packageDropoffStartTime', '');
 														}}
-														aria-label='vehicle type selection'
-													/>
-													<ErrorField name='vehicleType' classNames='text-end' />
-												</div>
-											</div>
-											<div className='row'>
-												<div className='col'>
-													<label htmlFor='package-description' className='mb-1'>
-														Package Description
-													</label>
-													<textarea
-														id='package-description'
-														name='packageDescription'
-														className='form-control form-border rounded-3 my-2'
-														placeholder='Max. 200 characters'
-														maxLength={200}
-														aria-label='package-description'
-														onChange={handleChange}
 														onBlur={handleBlur}
 													/>
+													<label className='form-check-label' htmlFor='radio-1'>
+														On Demand
+													</label>
+												</div>
+												<div className='form-check'>
+													<input
+														className='form-check-input'
+														type='radio'
+														name='deliveryType'
+														id='radio-2'
+														checked={values.deliveryType === 'scheduled'}
+														onChange={e => setFieldValue('deliveryType', 'scheduled')}
+														onBlur={handleBlur}
+													/>
+													<label className='form-check-label' htmlFor='radio-2'>
+														Scheduled
+													</label>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div className='my-3 d-flex justify-content-center'>
-										{error.message && (
-											<div className='alert alert-danger text-center w-75'>{error.message}</div>
-										)}
-									</div>
-									<div className='d-flex pt-5 justify-content-end'>
-										<Button
-											type='submit'
-											name={SUBMISSION_TYPES.GET_QUOTE}
-											value={SUBMISSION_TYPES.GET_QUOTE}
-											variant='dark'
-											size='lg'
-											className='mx-3'
-										>
-											Get Quote
-										</Button>
-										<Button
-											className='text-light'
-											variant='primary'
-											type='submit'
-											size='lg'
-											name={SUBMISSION_TYPES.CREATE_JOB}
-											value={SUBMISSION_TYPES.CREATE_JOB}
-										>
-											Confirm
-										</Button>
 									</div>
 								</div>
-							</Accordion>
+								<div className='mt-2 mb-2' />
+								<div className='col-12 d-flex flex-column'>
+									<h4>Pickup</h4>
+									<div className='border border-2 rounded-3 px-4 py-3'>
+										<div className='row'>
+											<div className='col-6'>
+												<label htmlFor='pickup-address' className='mb-1'>
+													Pickup Address
+												</label>
+												<div className='mb-3'>
+													<input
+														type='text'
+														name='pickupAddress'
+														style={{ display: 'none' }}
+													/>
+													<GooglePlaceAutocomplete
+														autocompletionRequest={{
+															componentRestrictions: {
+																country: ['GB'],
+															},
+														}}
+														apiOptions={{
+															language: 'GB',
+															region: 'GB',
+														}}
+														selectProps={{
+															defaultInputValue: values.pickupAddress,
+															onChange: ({ label }) => {
+																setFieldValue('pickupAddress', label);
+																console.log(label, values);
+															},
+
+															/*styles: {
+																input: (provided) => ({
+																	...provided,
+																	color: 'blue',
+																}),
+																option: (provided) => ({
+																	...provided,
+																	color: 'blue',
+																}),
+																singleValue: (provided) => ({
+																	...provided,
+																	color: 'blue',
+																}),
+															},*/
+														}}
+														apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+													/>
+													<ErrorField name='pickupAddress' classNames='text-end' />
+												</div>
+											</div>
+											<div className='col-6'>
+												<label htmlFor='pickup-datetime' className='mb-1'>
+													Pickup At
+												</label>
+												<input
+													disabled={values.deliveryType === 'on-demand'}
+													name='packagePickupStartTime'
+													id='pickup-datetime'
+													type='datetime-local'
+													className='form-control form-border rounded-3 mb-3'
+													aria-label='pickup-datetime'
+													onChange={handleChange}
+													onBlur={handleBlur}
+													min={moment().toISOString()}
+													max={moment().add(30, 'days').toISOString()}
+												/>
+											</div>
+										</div>
+										<div className='row'>
+											<div className='col-12'>
+												<label htmlFor='pickup-instructions' className='mb-1'>
+													Pickup Instructions
+												</label>
+												<textarea
+													id='pickup-instructions'
+													name='pickupInstructions'
+													className='form-control form-border rounded-3 mb-3'
+													aria-label='pickup-instructions'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='mt-2 mb-2' />
+								<div className='col-12 d-flex flex-column'>
+									<h4>Dropoff</h4>
+									<div className='border border-2 rounded-3 px-4 py-3'>
+										<div className='row'>
+											<div className='col-6'>
+												<label htmlFor='dropoff-first-name' className='mb-1'>
+													First Name
+												</label>
+												<input
+													autoComplete='given-name'
+													id='dropoff-first-name'
+													name='dropoffFirstName'
+													type='text'
+													className='form-control form-border rounded-3 mb-2'
+													aria-label='dropoff-first-name'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<ErrorField name='dropoffFirstName' classNames='text-end' />
+											</div>
+											<div className='col-6'>
+												<label htmlFor='dropoff-last-name' className='mb-1'>
+													Last Name
+												</label>
+												<input
+													autoComplete='family-name'
+													id='dropoff-last-name'
+													name='dropoffLastName'
+													type='text'
+													className='form-control form-border rounded-3 mb-2'
+													aria-label='dropoff-last-name'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<ErrorField name='dropoffLastName' classNames='text-end' />
+											</div>
+										</div>
+										<div className='row mt-1'>
+											<div className='col-6'>
+												<label htmlFor='dropoff-email-address' className='mb-1'>
+													Email Address
+												</label>
+												<input
+													autoComplete='email'
+													id='dropoff-email-address'
+													name='dropoffEmailAddress'
+													type='email'
+													className='form-control form-border rounded-3 mb-2'
+													aria-label='dropoff-email-address'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<ErrorField name='dropoffEmailAddress' classNames='text-end' />
+											</div>
+											<div className='col-6'>
+												<label htmlFor='dropoff-phone-number' className='mb-1'>
+													Phone Number
+												</label>
+												<input
+													autoComplete='tel'
+													name='dropoffPhoneNumber'
+													type='text'
+													className='form-control form-border rounded-3 mb-2'
+													aria-label='dropoff-phone-number'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<ErrorField name='dropoffPhoneNumber' classNames='text-end' />
+											</div>
+										</div>
+										<div className='mb-1' />
+										<label htmlFor='dropoff-street-address' className='mb-1'>
+											Dropoff Address
+										</label>
+										<div className='mb-3'>
+											<input type='text' name='dropoffAddress' style={{ display: 'none' }} />
+											<GooglePlaceAutocomplete
+												apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+												autocompletionRequest={{
+													componentRestrictions: {
+														country: ['GB'],
+													},
+												}}
+												apiOptions={{
+													language: 'GB',
+													region: 'GB',
+												}}
+												selectProps={{
+													onChange: ({ label }) => {
+														setFieldValue('dropoffAddress', label);
+														console.log(label, values);
+													},
+												}}
+											/>
+											<ErrorField name='dropoffAddress' classNames='text-end' />
+										</div>
+										<label htmlFor='dropoff-datetime' className='mb-1'>
+											Dropoff At
+										</label>
+										<input
+											disabled={values.deliveryType === 'on-demand'}
+											id='dropoff-datetime'
+											name='packageDropoffStartTime'
+											type='datetime-local'
+											className='form-control form-border rounded-3 mb-3'
+											placeholder='Dropoff At'
+											aria-label='dropoff-datetime'
+											onChange={handleChange}
+											onBlur={handleBlur}
+											min={moment()}
+											max={
+												values.packagePickupStartTime
+													? moment(values.packagePickupStartTime)
+															.add(30, 'days')
+															.toISOString()
+													: moment().add('30', 'days').toISOString()
+											}
+										/>
+										<label htmlFor='dropoff-instructions' className='mb-1'>
+											Dropoff Instructions
+										</label>
+										<textarea
+											name='dropoffInstructions'
+											className='form-control form-border rounded-3 mb-3'
+											aria-label='dropoff-instructions'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+								</div>
+								<div className='mt-2 mb-2' />
+								<div className='col-12 d-flex flex-column'>
+									<h4>Package Details</h4>
+									<div className='border border-2 rounded-3 px-4 py-3'>
+										<div className='row'>
+											<div className='col-6'>
+												<label htmlFor='items-count' className='mb-1'>
+													Number of Items
+												</label>
+												<input
+													id='items-count'
+													name='itemsCount'
+													type='number'
+													className='form-control form-border rounded-3 my-2'
+													placeholder='Number of Items'
+													aria-label='items-count'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+											</div>
+											<div className='col-6'>
+												<label htmlFor='vehicle-type' className='mb-1'>
+													Vehicle Type
+												</label>
+												<Select
+													id='vehicle-type'
+													name='vehicleType'
+													className='my-2'
+													options={VEHICLE_TYPES}
+													components={{ Option }}
+													onChange={({ value }) => {
+														setFieldValue('vehicleType', value);
+														console.log(value);
+													}}
+													aria-label='vehicle type selection'
+												/>
+												<ErrorField name='vehicleType' classNames='text-end' />
+											</div>
+										</div>
+										<div className='row'>
+											<div className='col'>
+												<label htmlFor='package-description' className='mb-1'>
+													Package Description
+												</label>
+												<textarea
+													id='package-description'
+													name='packageDescription'
+													className='form-control form-border rounded-3 my-2'
+													placeholder='Max. 200 characters'
+													maxLength={200}
+													aria-label='package-description'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div className='my-3 d-flex justify-content-center'>
+									{error.message && (
+										<div className='alert alert-danger text-center w-75'>{error.message}</div>
+									)}
+								</div>
+								<div className='d-flex pt-5 justify-content-end'>
+									<Button
+										type='submit'
+										name={SUBMISSION_TYPES.GET_QUOTE}
+										value={SUBMISSION_TYPES.GET_QUOTE}
+										variant='dark'
+										size='lg'
+										className='mx-3'
+									>
+										Get Quote
+									</Button>
+									<Button
+										className='text-light'
+										variant='primary'
+										type='submit'
+										size='lg'
+										name={SUBMISSION_TYPES.CREATE_JOB}
+										value={SUBMISSION_TYPES.CREATE_JOB}
+									>
+										Confirm
+									</Button>
+								</div>
+							</div>
 						</form>
 					)}
 				</Formik>

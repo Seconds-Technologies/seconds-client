@@ -101,10 +101,10 @@ export default function Orders() {
 			),
 		},
 		{ field: 'customerName', headerName: 'Customer', width: 150 },
-		{ field: 'phoneNumber', headerName: 'Number', type: 'number', width: 150 },
-		{ field: 'address', headerName: 'Address', width: 150 },
-		{ field: 'date', headerName: 'Date', width: 150 },
-		{ field: 'time', headerName: 'Time', width: 150 },
+		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
+		{ field: 'address', headerName: 'Address', width: 200 },
+		{ field: 'date', headerName: 'Date', width: 130 },
+		{ field: 'time', headerName: 'Time', width: 130 },
 		{
 			field: 'action',
 			headerName: 'Action',
@@ -127,7 +127,7 @@ export default function Orders() {
 	];
 
 	return (
-		<div className='ordersContainer bg-light px-3 py-4'>
+		<div className='ordersContainer d-flex flex-column bg-light px-2 py-4'>
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
