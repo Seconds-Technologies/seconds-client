@@ -275,7 +275,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Provider:</span>
-							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
+							<span className='orderShowInfoTitle text-capitalize'>{order.providerId.replace(/_/g, ' ')}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Created At:</span>
@@ -321,7 +321,7 @@ const ViewOrder = props => {
 									Track Order
 								</a>
 							) : (
-								<span className='orderShowInfoTitle'>{'N/A'}</span>
+								<span className='orderShowInfoTitle'>No tracking URL available for this provider</span>
 							)}
 						</div>
 					</div>

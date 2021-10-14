@@ -185,7 +185,7 @@ const Create = props => {
 						{Object.entries(deliveryJob).map(([key, value]) => (
 							<li className='list-group-item'>
 								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
-								<div className='text-capitalize'>{value}</div>
+								<div className='text-capitalize'>{value.replace(/_/g, ' ')}</div>
 							</li>
 						))}
 					</ul>
@@ -195,7 +195,7 @@ const Create = props => {
 	);
 
 	const quotesModal = (
-		<Modal show={quoteModal} onHide={() => showQuoteModal(false)}>
+		<Modal show={quoteModal} onHide={() => showQuoteModal(false)} size='lg'>
 			<Modal.Header closeButton>
 				<Modal.Title>Fleet Provider Quotes</Modal.Title>
 			</Modal.Header>
@@ -205,49 +205,54 @@ const Create = props => {
 						<thead>
 							<tr>
 								<th scope='col'>Fleet Provider</th>
-								<th scope='col'>Price</th>
+								<th scope='col' colSpan={2}>
+									Price (Exc. VAT)
+								</th>
 								<th scope='col'>ETA</th>
 								<th scope='col' />
 							</tr>
 						</thead>
 						<tbody>
-							{quotes.map(({ providerId, price, dropoffEta, createdAt }, index) => (
-								<tr key={index}>
-									<td className='col text-capitalize'>
-										<img
-											src={
-												providerId === 'stuart'
-													? stuart
-													: providerId === 'gophr'
-													? gophr
-													: streetStream
-											}
-											alt=''
-											className='me-3'
-											width={25}
-											height={25}
-										/>
-										<span>{providerId}</span>
-									</td>
-									<td className='col'>{`£${price}`}</td>
-									<td className='col'>{`${moment(dropoffEta).diff(
-										moment(createdAt),
-										'minutes'
-									)} minutes`}</td>
-									<td className='col'>
-										<button
-											className='d-flex justify-content-center align-items-center OrdersListEdit'
-											onClick={() => {
-												showQuoteModal(false);
-												selectFleetProvider(providerId);
-												showConfirmDialog(true);
-											}}
-										>
-											<span className='text-decoration-none'>Select</span>
-										</button>
-									</td>
-								</tr>
-							))}
+							{quotes.map(({ providerId, priceExVAT, dropoffEta, createdAt }, index) => {
+								console.log(providerId)
+								return (
+									<tr key={index}>
+										<td className='col text-capitalize'>
+											<img
+												src={
+													providerId === 'stuart'
+														? stuart
+														: providerId === 'gophr'
+														? gophr
+														: streetStream
+												}
+												alt=''
+												className='me-3'
+												width={25}
+												height={25}
+											/>
+											<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
+										</td>
+										<td className='col' colSpan={2}>{`£${priceExVAT}`}</td>
+										<td className='col'>{`${moment(dropoffEta).diff(
+											moment(createdAt),
+											'minutes'
+										)} minutes`}</td>
+										<td className='col'>
+											<button
+												className='d-flex justify-content-center align-items-center OrdersListEdit'
+												onClick={() => {
+													showQuoteModal(false);
+													selectFleetProvider(providerId);
+													showConfirmDialog(true);
+												}}
+											>
+												<span className='text-decoration-none'>Select</span>
+											</button>
+										</td>
+									</tr>
+								);
+							})}
 						</tbody>
 					</table>
 				</div>
@@ -290,7 +295,7 @@ const Create = props => {
 						pickupEmailAddress: email,
 						pickupPhoneNumber: phone,
 						pickupAddress: address,
-						type: '',
+						packageDeliveryType: 'on-demand',
 					}}
 					validationSchema={CreateOrderSchema}
 					validateOnChange={false}
@@ -393,9 +398,9 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-1'
-														checked={values.deliveryType === 'on-demand'}
+														checked={values.packageDeliveryType === 'on-demand'}
 														onChange={e => {
-															setFieldValue('deliveryType', 'on-demand');
+															setFieldValue('packageDeliveryType', 'on-demand');
 															setFieldValue('packagePickupStartTime', '');
 															setFieldValue('packageDropoffStartTime', '');
 														}}
@@ -411,8 +416,10 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-2'
-														checked={values.deliveryType === 'scheduled'}
-														onChange={e => setFieldValue('deliveryType', 'scheduled')}
+														checked={values.packageDeliveryType === 'scheduled'}
+														onChange={e =>
+															setFieldValue('packageDeliveryType', 'scheduled')
+														}
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
@@ -454,21 +461,6 @@ const Create = props => {
 																setFieldValue('pickupAddress', label);
 																console.log(label, values);
 															},
-
-															/*styles: {
-																input: (provided) => ({
-																	...provided,
-																	color: 'blue',
-																}),
-																option: (provided) => ({
-																	...provided,
-																	color: 'blue',
-																}),
-																singleValue: (provided) => ({
-																	...provided,
-																	color: 'blue',
-																}),
-															},*/
 														}}
 														apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 													/>
@@ -480,7 +472,7 @@ const Create = props => {
 													Pickup At
 												</label>
 												<input
-													disabled={values.deliveryType === 'on-demand'}
+													disabled={values.packageDeliveryType === 'on-demand'}
 													name='packagePickupStartTime'
 													id='pickup-datetime'
 													type='datetime-local'
@@ -618,7 +610,7 @@ const Create = props => {
 													Dropoff At
 												</label>
 												<input
-													disabled={values.deliveryType === 'on-demand'}
+													disabled={values.packageDeliveryType === 'on-demand'}
 													id='dropoff-datetime'
 													name='packageDropoffStartTime'
 													type='datetime-local'
