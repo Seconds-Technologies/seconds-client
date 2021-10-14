@@ -581,54 +581,63 @@ const Create = props => {
 												<ErrorField name='dropoffPhoneNumber' classNames='text-end' />
 											</div>
 										</div>
-										<div className='mb-1' />
-										<label htmlFor='dropoff-street-address' className='mb-1'>
-											Dropoff Address
-										</label>
-										<div className='mb-3'>
-											<input type='text' name='dropoffAddress' style={{ display: 'none' }} />
-											<GooglePlaceAutocomplete
-												apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
-												autocompletionRequest={{
-													componentRestrictions: {
-														country: ['GB'],
-													},
-												}}
-												apiOptions={{
-													language: 'GB',
-													region: 'GB',
-												}}
-												selectProps={{
-													onChange: ({ label }) => {
-														setFieldValue('dropoffAddress', label);
-														console.log(label, values);
-													},
-												}}
-											/>
-											<ErrorField name='dropoffAddress' classNames='text-end' />
+										<div className='row mt-1'>
+											<div className='col-6'>
+												<label htmlFor='dropoff-street-address' className='mb-1'>
+													Dropoff Address
+												</label>
+												<div className='mb-3'>
+													<input
+														type='text'
+														name='dropoffAddress'
+														style={{ display: 'none' }}
+													/>
+													<GooglePlaceAutocomplete
+														apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+														autocompletionRequest={{
+															componentRestrictions: {
+																country: ['GB'],
+															},
+														}}
+														apiOptions={{
+															language: 'GB',
+															region: 'GB',
+														}}
+														selectProps={{
+															onChange: ({ label }) => {
+																setFieldValue('dropoffAddress', label);
+																console.log(label, values);
+															},
+														}}
+													/>
+													<ErrorField name='dropoffAddress' classNames='text-end' />
+												</div>
+											</div>
+											<div className='col-6'>
+												<label htmlFor='dropoff-datetime' className='mb-1'>
+													Dropoff At
+												</label>
+												<input
+													disabled={values.deliveryType === 'on-demand'}
+													id='dropoff-datetime'
+													name='packageDropoffStartTime'
+													type='datetime-local'
+													className='form-control form-border rounded-3 mb-3'
+													placeholder='Dropoff At'
+													aria-label='dropoff-datetime'
+													onChange={handleChange}
+													onBlur={handleBlur}
+													min={moment()}
+													max={
+														values.packagePickupStartTime
+															? moment(values.packagePickupStartTime)
+																	.add(30, 'days')
+																	.toISOString()
+															: moment().add('30', 'days').toISOString()
+													}
+												/>
+											</div>
 										</div>
-										<label htmlFor='dropoff-datetime' className='mb-1'>
-											Dropoff At
-										</label>
-										<input
-											disabled={values.deliveryType === 'on-demand'}
-											id='dropoff-datetime'
-											name='packageDropoffStartTime'
-											type='datetime-local'
-											className='form-control form-border rounded-3 mb-3'
-											placeholder='Dropoff At'
-											aria-label='dropoff-datetime'
-											onChange={handleChange}
-											onBlur={handleBlur}
-											min={moment()}
-											max={
-												values.packagePickupStartTime
-													? moment(values.packagePickupStartTime)
-															.add(30, 'days')
-															.toISOString()
-													: moment().add('30', 'days').toISOString()
-											}
-										/>
 										<label htmlFor='dropoff-instructions' className='mb-1'>
 											Dropoff Instructions
 										</label>
