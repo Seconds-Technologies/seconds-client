@@ -275,7 +275,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Provider:</span>
-							<span className='orderShowInfoTitle text-capitalize'>{order.providerId.replace(/_/g, ' ')}</span>
+							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Created At:</span>
