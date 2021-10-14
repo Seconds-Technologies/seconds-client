@@ -61,27 +61,27 @@ export const VEHICLE_TYPES = [
 	{
 		value: 'BIC',
 		label: 'Bicycle',
-		description: '40(L) x 20(W) x 15(H) - Up to 8kg',
+		description: '40(W) x 20(H) x 15(D) - Up to 8kg',
 	},
 	{
 		value: 'MTB',
 		label: 'Motorbike',
-		description: '40(L) x 30(W) x 30(H) - Up to 12kg',
+		description: '40(W) x 30(H) x 30(D) - Up to 12kg',
 	},
 	{
 		value: 'CGB',
 		label: 'CargoBike',
-		description: '60(L) x 50(W) x 50(H) - Up to 65kg',
+		description: '60(W) x 50(H) x 50(D) - Up to 65kg',
 	},
 	{
 		value: 'CAR',
 		label: 'Car',
-		description: '60(L) x 40(W) x 40(H) - Up to 25kg',
+		description: '60(W) x 40(H) x 40(D) - Up to 25kg',
 	},
 	{
 		value: 'VAN',
 		label: 'Van',
-		description: '150(L) x 120(W) x 90(H) - Up to 200kg',
+		description: '150(W) x 120(H) x 90(D) - Up to 200kg',
 	},
 ];
 
