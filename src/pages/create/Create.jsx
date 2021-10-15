@@ -2,17 +2,21 @@ import React, { useCallback, useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
-import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
-import { addError, removeError } from '../../store/actions/errors';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import Select, { components } from 'react-select';
 import moment from 'moment';
+import { Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+// functions
+import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
+import { addError, removeError } from '../../store/actions/errors';
+//constants
 import { PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
+// components
+import ErrorField from '../../components/ErrorField';
+// assets
 import loadingIcon from '../../img/loadingicon.svg';
 import { jobRequestSchema } from '../../schemas';
-import ErrorField from '../../components/ErrorField';
 import { CreateOrderSchema } from '../../validation';
 import bicycle from '../../img/bicycle.svg';
 import motorbike from '../../img/motorbike.svg';
@@ -22,8 +26,8 @@ import van from '../../img/van.svg';
 import stuart from '../../img/stuart.svg';
 import gophr from '../../img/gophr.svg';
 import streetStream from '../../img/street-stream.svg';
+// styles
 import './create.css';
-import '../../App.css';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -213,46 +217,43 @@ const Create = props => {
 							</tr>
 						</thead>
 						<tbody>
-							{quotes.map(({ providerId, priceExVAT, dropoffEta, createdAt }, index) => {
-								console.log(providerId)
-								return (
-									<tr key={index}>
-										<td className='col text-capitalize'>
-											<img
-												src={
-													providerId === 'stuart'
-														? stuart
-														: providerId === 'gophr'
-														? gophr
-														: streetStream
-												}
-												alt=''
-												className='me-3'
-												width={25}
-												height={25}
-											/>
-											<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
-										</td>
-										<td className='col' colSpan={2}>{`£${priceExVAT}`}</td>
-										<td className='col'>{`${moment(dropoffEta).diff(
-											moment(createdAt),
-											'minutes'
-										)} minutes`}</td>
-										<td className='col'>
-											<button
-												className='d-flex justify-content-center align-items-center OrdersListEdit'
-												onClick={() => {
-													showQuoteModal(false);
-													selectFleetProvider(providerId);
-													showConfirmDialog(true);
-												}}
-											>
-												<span className='text-decoration-none'>Select</span>
-											</button>
-										</td>
-									</tr>
-								);
-							})}
+							{quotes.map(({ providerId, priceExVAT, dropoffEta, createdAt }, index) => (
+								<tr key={index}>
+									<td className='col text-capitalize'>
+										<img
+											src={
+												providerId === 'stuart'
+													? stuart
+													: providerId === 'gophr'
+													? gophr
+													: streetStream
+											}
+											alt=''
+											className='me-3'
+											width={25}
+											height={25}
+										/>
+										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
+									</td>
+									<td className='col' colSpan={2}>{`£${priceExVAT}`}</td>
+									<td className='col'>{`${moment(dropoffEta).diff(
+										moment(createdAt),
+										'minutes'
+									)} minutes`}</td>
+									<td className='col'>
+										<button
+											className='d-flex justify-content-center align-items-center OrdersListEdit'
+											onClick={() => {
+												showQuoteModal(false);
+												selectFleetProvider(providerId);
+												showConfirmDialog(true);
+											}}
+										>
+											<span className='text-decoration-none'>Select</span>
+										</button>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>

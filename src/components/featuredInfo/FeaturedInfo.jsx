@@ -1,13 +1,46 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import './FeaturedInfo.css';
 import { STATUS } from '../../constants';
 import { getAllOrders } from '../../store/actions/shopify';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
+import moment from 'moment';
 
-export default function FeaturedInfo() {
+const FeaturedInfo = ({interval}) => {
     const dispatch = useDispatch();
+    const filterByInterval = useCallback((data) => {
+        console.log("INTERVAL: ", interval)
+        switch(interval){
+            case "day":
+                return data.filter(({createdAt}) => {
+                    let duration = moment.duration(moment().diff(moment(createdAt))).as("day")
+                    console.log("DURATION", duration)
+                    return duration < 1
+                })
+            case "week":
+                return data.filter(({createdAt}) => {
+                    let duration = moment.duration(moment().diff(moment(createdAt))).as("week")
+                    console.log("DURATION", duration)
+                    return duration < 1
+                })
+            case "month":
+                return data.filter(({createdAt}) => {
+                    let duration = moment.duration(moment().diff(moment(createdAt))).as("month")
+                    console.log("DURATION", duration)
+                    return duration < 1
+                })
+            case "year":
+                return data.filter(({createdAt}) => {
+                    let duration = moment.duration(moment().diff(moment(createdAt))).as("year")
+                    console.log("DURATION", duration)
+                    return duration < 1
+                })
+            default:
+                return data
+        }
+    },[interval])
+
     const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
     const { email, createdAt, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
@@ -16,8 +49,8 @@ export default function FeaturedInfo() {
             return { total, completed }
         } else {
             const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-            console.log(total)
-            return { total, completed }
+            console.log(completed)
+            return { total: filterByInterval(total), completed: filterByInterval(completed) }
         }
     });
 
@@ -64,3 +97,5 @@ export default function FeaturedInfo() {
         </div>
     );
 }
+
+export default FeaturedInfo;

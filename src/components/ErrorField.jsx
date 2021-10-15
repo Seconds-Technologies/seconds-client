@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFormikContext } from 'formik';
 import PropTypes from 'prop-types';
 
 const ErrorField = ({ name, classNames }) => {
 	const { errors, touched, isSubmitting } = useFormikContext();
-	useEffect(() =>{
-		console.log(name)
-	}, [])
+
 	if (!errors[name] && !touched[name]) {
 		return null;
 	}

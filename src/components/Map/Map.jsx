@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useMemo } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import marker from '../../img/marker.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 
-const Map = props => {
-	const latitude = Number(localStorage.getItem("latitude"))
-	const longitude = Number(localStorage.getItem("longitude"))
-	const [showMap, setShowMap] = useState(false);
-	const Mapbox = ReactMapboxGl({
+const Map = () => {
+	const latitude = useMemo(() => Number(localStorage.getItem("latitude")), [])
+	const longitude = useMemo(() => Number(localStorage.getItem("longitude")), [])
+	const Mapbox = useMemo(() => ReactMapboxGl({
 		accessToken: process.env.REACT_APP_MAPBOX_TOKEN || "pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA"
-	});
+	}), []);
 
 	const onLoaded = (map) => {
 		map.resize()
@@ -21,7 +20,7 @@ const Map = props => {
 			<Mapbox
 				zoom={[13]}
 				containerStyle={{
-					height: "calc(100vh - 300px)",
+					height: "calc(100vh - 320px)",
 					width: "100%",
 				}}
 				onStyleLoad={map => onLoaded(map)}

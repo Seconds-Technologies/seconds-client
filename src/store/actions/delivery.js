@@ -39,6 +39,7 @@ let timer = null;
 
 export const subscribe = (apiKey, email) => dispatch => {
 	clearInterval(timer);
+	dispatch(getAllJobs(apiKey, email))
 	timer = setInterval(() => dispatch(getAllJobs(apiKey, email)), 5000);
 	dispatch({ type: TIMER_START, timer });
 };
@@ -82,8 +83,9 @@ export function getAllJobs(apiKey, email) {
 					dispatch(setAllJobs(jobs));
 					dispatch(
 						setCompletedJobs(
-							jobs.map(({ _id: id, selectedConfiguration: { deliveryFee }, status }) => ({
+							jobs.map(({ _id: id, createdAt, selectedConfiguration: { deliveryFee }, status }) => ({
 								id,
+								createdAt,
 								deliveryFee,
 								status,
 							}))
@@ -119,10 +121,11 @@ export function updateJobsStatus(apiKey, jobId, status, stripeCustomerId) {
 					dispatch(setAllJobs(updatedJobs));
 					const {
 						_id: id,
+						createdAt,
 						selectedConfiguration: { deliveryFee },
 						status,
 					} = updatedJobs.find(item => item._id === jobId);
-					status === STATUS.COMPLETED && dispatch(addCompletedJob({ id, payout: deliveryFee * 1.1, status }));
+					status === STATUS.COMPLETED && dispatch(addCompletedJob({ id, createdAt, deliveryFee, status }));
 					dispatch(removeError());
 					resolve(updatedJobs);
 				})
