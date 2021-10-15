@@ -43,6 +43,11 @@ $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
   padding-bottom: 0;
 }
 
+.form-control:focus{
+  border-color: #ced4da;
+  box-shadow: none;
+}
+
 @include media-breakpoint-down(sm) {
   .w-sm {
     width: 75%

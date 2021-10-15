@@ -281,7 +281,12 @@ const Create = props => {
 	);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text={loadingText}>
+		<LoadingOverlay active={isLoading} spinner text={loadingText} styles={{
+			wrapper: {
+				width: '100vw',
+				height: '100vh'
+			}
+		}}>
 			<div className='create bg-light py-4'>
 				{newJobModal}
 				{quotesModal}
@@ -424,7 +429,7 @@ const Create = props => {
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
-														Scheduled
+														Scheduled Same Day
 													</label>
 												</div>
 											</div>

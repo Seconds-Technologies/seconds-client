@@ -69,17 +69,18 @@
 .orderShowInfo {
     display: flex;
     align-items: center;
-    margin: 20px 0px;
+    margin: 15px 0px;
     color: #444;
 }
 
 .orderShowLabel {
-    font-size: 20px !important;
+    font-size: 20px;
     font-weight: bold;
 }
 
 .orderShowInfoTitle {
-    margin-left: 5px;
+    margin-left: 10px;
+    font-size: 20px;
 }
 
 .productItem {

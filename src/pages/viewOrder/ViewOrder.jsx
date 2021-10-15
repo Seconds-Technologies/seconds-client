@@ -92,7 +92,7 @@ const ViewOrder = props => {
 							_id,
 							status,
 							jobSpecification: { orderNumber, packages },
-							selectedConfiguration: { providerId, jobReference, trackingURL },
+							selectedConfiguration: { providerId, jobReference, trackingURL, deliveryFee },
 							driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
 							createdAt,
 						}) => {
@@ -121,6 +121,7 @@ const ViewOrder = props => {
 								phone,
 								providerId,
 								trackingURL,
+								deliveryFee,
 								address,
 								driverName,
 								driverPhone,
@@ -269,12 +270,16 @@ const ViewOrder = props => {
 							<span className='fs-3 orderShowCustomerName'>Delivery Information</span>
 						</div>
 						<div className='orderShowInfo'>
-							<span className='orderShowLabel'>Order ID:</span>
+							<span className='orderShowLabel'>Order Number:</span>
 							<span className='orderShowInfoTitle'>{order.orderNumber}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Provider:</span>
 							<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
+						</div>
+						<div className='orderShowInfo'>
+							<span className='orderShowLabel'>Price:</span>
+							<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee}`}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Created At:</span>
