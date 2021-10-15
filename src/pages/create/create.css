@@ -11,3 +11,5 @@
     border: 1px solid black;
     border-radius: 40px;
 }
+
+._loading_overlay_overlay {   position: fixed; }

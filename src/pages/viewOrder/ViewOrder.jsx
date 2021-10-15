@@ -233,6 +233,7 @@ const ViewOrder = props => {
 										<form action='' onSubmit={handleSubmit}>
 											<div className='d-flex flex-row align-items-center py-2'>
 												<select
+													role="button"
 													value={values.status}
 													className='form-select'
 													name='status'
@@ -291,8 +292,8 @@ const ViewOrder = props => {
 								{!order.dropoffDate
 									? 'Estimating...'
 									: moment(order.dropoffDate).diff(moment(), 'minutes') < 0
-									? `0 minutes`
-									: `${moment(order.dropoffDate).diff(moment(), 'minutes')} minutes`}
+									? `Delivered`
+									: `${moment().to(moment(order.dropoffDate))}`}
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>

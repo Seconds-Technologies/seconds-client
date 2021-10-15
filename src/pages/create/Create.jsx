@@ -15,7 +15,6 @@ import { PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
 // assets
-import loadingIcon from '../../img/loadingicon.svg';
 import { jobRequestSchema } from '../../schemas';
 import { CreateOrderSchema } from '../../validation';
 import bicycle from '../../img/bicycle.svg';
@@ -94,6 +93,7 @@ const Create = props => {
 			countryCode: 'GB',
 		};
 		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
+		console.log(components)
 		components.forEach(({ long_name, types }) => {
 			switch (types[0]) {
 				case PLACE_TYPES.STREET_NUMBER:
@@ -109,14 +109,29 @@ const Create = props => {
 					formattedAddress.postcode = long_name;
 					break;
 				case PLACE_TYPES.POSTCODE_PREFIX:
+					// make postcode property empty since the real value is not a full postcode
 					formattedAddress.postcode = long_name;
 					break;
 				default:
 					return;
 			}
 		});
+		console.log(formattedAddress)
 		return formattedAddress;
 	}, []);
+
+	const validateAddresses = useCallback((pickup, dropoff) => {
+		const types = ['street address', 'city', 'postcode']
+		Object.values(pickup).forEach((item, index) => {
+			if(!item) throw new Error(`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`)
+			else if(index === 2 && item.length < 6) throw new Error(`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`)
+		})
+		Object.values(dropoff).forEach((item, index) => {
+			if(!item) throw new Error(`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`)
+			else if(index === 2 && item.length < 6) throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`)
+		})
+		return true
+	}, [])
 
 	const confirmSelection = () => {
 		setLoadingText('Creating Order');
@@ -152,31 +167,6 @@ const Create = props => {
 			}
 		);
 	};
-
-	const loadingModal = (
-		<Modal
-			contentClassName='model-border'
-			centered
-			show={isLoading}
-			onHide={() => setLoadingModal(false)}
-			style={{
-				backgroundColor: 'transparent',
-			}}
-		>
-			<Modal.Body
-				className='d-flex justify-content-center align-item-center'
-				style={{
-					backgroundColor: 'transparent',
-					borderRadius: 40,
-				}}
-			>
-				<img src={loadingIcon} alt='' width={400} height={400} />
-			</Modal.Body>
-			<Modal.Footer className='d-flex justify-content-center align-items-center'>
-				<div className='text-center h4'>{`${loadingText} ...`}</div>
-			</Modal.Footer>
-		</Modal>
-	);
 
 	const newJobModal = (
 		<Modal show={jobModal} onHide={handleClose}>
@@ -281,12 +271,7 @@ const Create = props => {
 	);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text={loadingText} styles={{
-			wrapper: {
-				width: '100vw',
-				height: '100vh'
-			}
-		}}>
+		<LoadingOverlay active={isLoading} spinner text={loadingText}>
 			<div className='create bg-light py-4'>
 				{newJobModal}
 				{quotesModal}
@@ -319,6 +304,7 @@ const Create = props => {
 									let dropoffAddressComponents = await geocodeByAddress(dropoffAddress);
 									values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
 									values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+									validateAddresses(values.pickupFormattedAddress, values.dropoffFormattedAddress);
 									const {
 										quotes,
 										bestQuote: { id },
@@ -330,7 +316,7 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.error(err);
-									err ? addError(err) : addError('Api endpoint could not be accessed!');
+									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							} else {
 								setLoadingText('Creating Order');
@@ -341,6 +327,7 @@ const Create = props => {
 									let dropoffAddressComponents = await geocodeByAddress(dropoff);
 									values.pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
 									values.dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+									validateAddresses(values.pickupFormattedAddress, values.dropoffFormattedAddress);
 									const {
 										createdAt,
 										jobSpecification: { packages, orderNumber },
@@ -368,8 +355,9 @@ const Create = props => {
 									setJob(newJob);
 									handleOpen();
 								} catch (err) {
+									setLoadingModal(false);
 									console.log(err);
-									err ? addError(err) : addError('Api endpoint could not be accessed!');
+									err ? dispatch(addError(err)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							}
 						} else {
@@ -456,6 +444,7 @@ const Create = props => {
 															componentRestrictions: {
 																country: ['GB'],
 															},
+															types: ['address']
 														}}
 														apiOptions={{
 															language: 'GB',
@@ -596,6 +585,7 @@ const Create = props => {
 															componentRestrictions: {
 																country: ['GB'],
 															},
+															types: ['address']
 														}}
 														apiOptions={{
 															language: 'GB',

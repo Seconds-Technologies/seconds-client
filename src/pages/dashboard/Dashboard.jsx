@@ -33,12 +33,11 @@ export default function Dashboard() {
 					<span className='dashboard-header mb-3'>Dashboard</span>
 					<span className='fs-5'>
 						<span className='bold-text'>{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview
-						today
 					</span>
 				</div>
 				<div className='dropdown'>
 					<button
-						className='btn bg-white dropdown-toggle border border-1 border-grey'
+						className='btn btn-lg bg-white dropdown-toggle border border-1 border-grey'
 						type='button'
 						id='dropdownMenuButton1'
 						data-bs-toggle='dropdown'
@@ -50,7 +49,7 @@ export default function Dashboard() {
 						{options.map(
 							({ id, name }, index) =>
 								id !== active.id && (
-									<li key={index}>
+									<li key={index} role="button">
 										{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
 										<div className='dropdown-item' onClick={() => setActive({id,name})}>
 											{name}
