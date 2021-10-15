@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import { STATUS } from '../../constants';
-import { getAllJobs, updateJobsStatus } from '../../store/actions/delivery';
+import { subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import './viewOrder.css';
 
@@ -38,6 +38,7 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		(async () => {
+			apiKey && dispatch(subscribe(apiKey, email))
 			const orderID = props.location['pathname'].split('/').reverse()[0];
 			if (isIntegrated) {
 				let currentOrder = allOrders
@@ -109,7 +110,6 @@ const ViewOrder = props => {
 							} = packages[0];
 							let customerName = `${firstName} ${lastName}`;
 							createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
-							console.log(moment(dropoffStartTime).format('DD/MM/YYYY HH:mm:ss'));
 							return {
 								id: _id,
 								orderNumber,
@@ -133,9 +133,8 @@ const ViewOrder = props => {
 				console.log(currentOrder);
 				setOrder(currentOrder);
 			}
-			console.log(order.status);
 		})();
-		return apiKey && dispatch(getAllJobs(apiKey, email));
+		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
 	useEffect(() => {

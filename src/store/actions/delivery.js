@@ -1,6 +1,14 @@
 import { addError, removeError } from './errors';
 import { apiCall, setTokenHeader } from '../../api';
-import { CLEAR_JOBS, NEW_DELIVERY_JOB, SET_ALL_JOBS, SET_COMPLETED_JOBS, UPDATE_COMPLETED_JOBS } from '../actionTypes';
+import {
+	CLEAR_JOBS,
+	NEW_DELIVERY_JOB,
+	SET_ALL_JOBS,
+	SET_COMPLETED_JOBS,
+	UPDATE_COMPLETED_JOBS,
+	TIMER_START,
+	TIMER_STOP,
+} from '../actionTypes';
 import { STATUS } from '../../constants';
 
 export const setAllJobs = jobs => ({
@@ -26,6 +34,19 @@ export const newDeliveryJob = job => ({
 export const clearAllJobs = () => ({
 	type: CLEAR_JOBS,
 });
+
+let timer = null;
+
+export const subscribe = (apiKey, email) => dispatch => {
+	clearInterval(timer);
+	timer = setInterval(() => dispatch(getAllJobs(apiKey, email)), 5000);
+	dispatch({ type: TIMER_START, timer });
+};
+
+export const unsubscribe = () => dispatch => {
+	clearInterval(timer);
+	dispatch({ type: TIMER_STOP });
+};
 
 export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined) {
 	return dispatch => {
@@ -96,7 +117,11 @@ export function updateJobsStatus(apiKey, jobId, status, stripeCustomerId) {
 				.then(({ updatedJobs, message }) => {
 					console.log(message);
 					dispatch(setAllJobs(updatedJobs));
-					const { _id: id, selectedConfiguration: { deliveryFee }, status } = updatedJobs.find(item => item._id === jobId);
+					const {
+						_id: id,
+						selectedConfiguration: { deliveryFee },
+						status,
+					} = updatedJobs.find(item => item._id === jobId);
 					status === STATUS.COMPLETED && dispatch(addCompletedJob({ id, payout: deliveryFee * 1.1, status }));
 					dispatch(removeError());
 					resolve(updatedJobs);

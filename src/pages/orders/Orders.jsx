@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
-import { getAllJobs } from '../../store/actions/delivery';
+import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import './Orders.css';
 
 export default function Orders() {
@@ -43,7 +43,9 @@ export default function Orders() {
 	});
 
 	useEffect(() => {
-		isIntegrated ? dispatch(fetchOrders(email)) : dispatch(getAllJobs(apiKey, email));
+		isIntegrated && dispatch(fetchOrders(email));
+		apiKey && dispatch(subscribe(apiKey, email));
+		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
 	const columns = [

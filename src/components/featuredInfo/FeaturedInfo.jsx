@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useMemo } from 'react';
-import { getAllOrders } from '../../store/actions/shopify';
-import { getAllJobs } from '../../store/actions/delivery';
 import './FeaturedInfo.css';
 import { STATUS } from '../../constants';
+import { getAllOrders } from '../../store/actions/shopify';
+import { subscribe, unsubscribe } from '../../store/actions/delivery';
 
 export default function FeaturedInfo() {
     const dispatch = useDispatch();
@@ -16,9 +16,16 @@ export default function FeaturedInfo() {
             return { total, completed }
         } else {
             const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
+            console.log(total)
             return { total, completed }
         }
     });
+
+    useEffect(() => {
+        isIntegrated && dispatch(getAllOrders(credentials.accessToken, credentials.baseURL, email, createdAt))
+        apiKey && dispatch(subscribe(apiKey, email));
+        return () => apiKey && dispatch(unsubscribe());
+    }, [isIntegrated, apiKey]);
 
     const deliveryFee = useMemo(() => {
         let totalFee = 0;
@@ -33,15 +40,6 @@ export default function FeaturedInfo() {
     const inTransit = useMemo(() => {
         return (total.filter(job => job.status === STATUS.DISPATCHING || job.status === STATUS.EN_ROUTE)).length
     }, [total])
-
-    useEffect(() => {
-        if (isIntegrated) {
-            const { accessToken, baseURL } = credentials;
-            dispatch(getAllOrders(accessToken, baseURL, email, createdAt))
-        } else {
-            dispatch(getAllJobs(apiKey, email));
-        }
-    }, [isIntegrated]);
 
     return (
         <div className='featured'>

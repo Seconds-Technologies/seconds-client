@@ -295,7 +295,7 @@ const Create = props => {
 						pickupEmailAddress: email,
 						pickupPhoneNumber: phone,
 						pickupAddress: address,
-						packageDeliveryType: 'on-demand',
+						packageDeliveryType: '',
 					}}
 					validationSchema={CreateOrderSchema}
 					validateOnChange={false}

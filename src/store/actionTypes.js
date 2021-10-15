@@ -20,4 +20,6 @@ export const CLEAR_PRODUCTS = "CLEAR_PRODUCTS";
 export const CLEAR_JOBS = "CLEAR_JOBS";
 export const NEW_DELIVERY_JOB = "NEW_DELIVERY_JOB";
 export const SET_PAYMENT_ID = "SET_PAYMENT_ID";
+export const TIMER_START = "TIMER_START"
+export const TIMER_STOP = "TIMER_STOP"
 //export const GET_PRODUCT_IMAGE = "GET_PRODUCT_IMAGE"
