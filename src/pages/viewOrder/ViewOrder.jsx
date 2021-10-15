@@ -296,7 +296,7 @@ const ViewOrder = props => {
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>
-							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Driver</span>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Driver Assigned</span>
 							<table className='table d-flex table-borderless'>
 								<tbody>
 									<tr>
