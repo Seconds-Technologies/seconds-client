@@ -52,3 +52,14 @@
 .signup-aside-text {
   font-weight: 500;
 }
+
+.pass-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.eye-icon {
+  position: absolute;
+}

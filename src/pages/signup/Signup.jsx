@@ -1,6 +1,5 @@
 import './Signup.css';
 import logo from '../../img/seconds-logo-black.svg';
-import eye from '../../img/eye.svg';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';
@@ -10,6 +9,7 @@ import React, { useEffect } from 'react';
 import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
 import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
+import PasswordField from '../../components/PasswordField';
 
 export default function Signup(props) {
 	const errors = useSelector(state => state['errors']);
@@ -209,15 +209,11 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className="mb-2" htmlFor='password'>Password</label>
-										<input
-											autoComplete='new-password”'
-											type='password'
-											name='password'
-											className='form-control rounded-3'
+										<PasswordField
+											label="password"
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
-										<i>{eye}</i>
 										<ErrorField name='password' />
 									</div>
 									<div>
