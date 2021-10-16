@@ -93,7 +93,6 @@ const Create = props => {
 			countryCode: 'GB',
 		};
 		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
-		console.log(components)
 		components.forEach(({ long_name, types }) => {
 			switch (types[0]) {
 				case PLACE_TYPES.STREET_NUMBER:
@@ -116,22 +115,34 @@ const Create = props => {
 					return;
 			}
 		});
-		console.log(formattedAddress)
+		console.log(formattedAddress);
 		return formattedAddress;
 	}, []);
 
 	const validateAddresses = useCallback((pickup, dropoff) => {
-		const types = ['street address', 'city', 'postcode']
+		const types = ['street address', 'city', 'postcode'];
 		Object.values(pickup).forEach((item, index) => {
-			if(!item) throw new Error(`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`)
-			else if(index === 2 && item.length < 6) throw new Error(`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`)
-		})
+			if (!item)
+				throw new Error(
+					`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`
+				);
+			else if (index === 2 && item.length < 6)
+				throw new Error(
+					`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`
+				);
+		});
 		Object.values(dropoff).forEach((item, index) => {
-			if(!item) throw new Error(`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`)
-			else if(index === 2 && item.length < 6) throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`)
-		})
-		return true
-	}, [])
+			if (!item)
+				throw new Error(
+					`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`
+				);
+			else if (index === 2 && item.length < 6)
+				throw new Error(
+					`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`
+				);
+		});
+		return true;
+	}, []);
 
 	const confirmSelection = () => {
 		setLoadingText('Creating Order');
@@ -225,11 +236,12 @@ const Create = props => {
 										/>
 										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
 									</td>
-									<td className='col' colSpan={2}>{`£${priceExVAT}`}</td>
-									<td className='col'>{`${moment(dropoffEta).diff(
-										moment(createdAt),
-										'minutes'
-									)} minutes`}</td>
+									<td className='col' colSpan={2}>{`£${priceExVAT.toFixed(2)}`}</td>
+									<td className='col'>
+										{dropoffEta
+											? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes`
+											: 'N/A'}
+									</td>
 									<td className='col'>
 										<button
 											className='d-flex justify-content-center align-items-center OrdersListEdit'
@@ -316,7 +328,9 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.error(err);
-									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+									err
+										? dispatch(addError(err.message))
+										: dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							} else {
 								setLoadingText('Creating Order');
@@ -357,7 +371,9 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.log(err);
-									err ? dispatch(addError(err)) : dispatch(addError('Api endpoint could not be accessed!'));
+									err
+										? dispatch(addError(err))
+										: dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							}
 						} else {
@@ -444,7 +460,7 @@ const Create = props => {
 															componentRestrictions: {
 																country: ['GB'],
 															},
-															types: ['address']
+															types: ['address'],
 														}}
 														apiOptions={{
 															language: 'GB',
@@ -585,7 +601,7 @@ const Create = props => {
 															componentRestrictions: {
 																country: ['GB'],
 															},
-															types: ['address']
+															types: ['address'],
 														}}
 														apiOptions={{
 															language: 'GB',
