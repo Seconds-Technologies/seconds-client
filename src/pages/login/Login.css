@@ -1,42 +1,32 @@
 .loginPage {
-  background-color: #9400d3;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
+}
+
+._loading_overlay_wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+  background-color: white;
+}
+
+.login-aside{
+  background-color: #EEEEEE;
+}
+
+.login-aside-header {
+  font-weight: 700;
 }
 
 .loginLogo {
   width: 15%;
 }
 
-.greeting {
-  margin-top: 60px;
-  text-align: center;
-  color: white;
-}
-
-.welcome {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-.moreMessage {
-  margin-top: 20px;
-  font-weight: normal;
-}
-
-.loginContainer {
-  margin-top: 30px;
-  padding: 10px;
-  border-radius: 20px;
-  background-color: white;
-  -webkit-box-shadow: 0px 0px 11px -1px #000000;
-  box-shadow: 0px 0px 11px -1px #000000;
-}
-
-.getStarted {
-  text-align: center;
-  font-weight: normal;
-  font-family: sans-serif;
+.login-header {
+  font-weight: 600;
 }
 
 .loginItem {
@@ -55,20 +45,6 @@
   border-radius: 10px;
   border-color: #777777;
   border-width: 1px;
-}
-
-
-.logIn {
-  margin-top: 20px;
-  background-color: #9400d3;
-  height: 70px;
-  border-radius: 50px;
-  color: white;
-  border-color: #9400d3;
-  font-size: 20px;
-  font-family: sans-serif;
-  font-weight: bold;
-  cursor: pointer;
 }
 
 .motto {
