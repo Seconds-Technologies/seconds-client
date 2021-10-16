@@ -37,7 +37,7 @@ export default function Dashboard() {
 				</div>
 				<div className='dropdown'>
 					<button
-						className='btn btn-lg bg-white dropdown-toggle border border-1 border-grey'
+						className='btn bg-white dropdown-toggle border border-1 border-grey'
 						type='button'
 						id='dropdownMenuButton1'
 						data-bs-toggle='dropdown'
