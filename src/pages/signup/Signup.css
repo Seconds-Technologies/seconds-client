@@ -1,7 +1,10 @@
 .signupPage {
-  background-color: #9400d3;
   min-height: 100vh;
   width: 100vw;
+}
+
+.signup-aside{
+  background-color: #EEEEEE;
 }
 
 .signupLogo {
@@ -10,31 +13,8 @@
   width: 15%;
 }
 
-.signupContainer {
-  width: 50%;
-  padding: 10px;
-  border-radius: 20px;
-  background-color: white;
-  -webkit-box-shadow: 0px 0px 11px -1px #000000;
-  box-shadow: 0px 0px 11px -1px #000000;
-}
-
-.getStarted {
-  text-align: center;
-  font-weight: normal;
-  font-family: sans-serif;
-}
-
-.signupItem {
-  display: flex;
-  justify-content: space-between;
-  margin-right: 60px;
-  margin-left: 50px;
-  margin-top: 20px;
-}
-
-.signupItem1 {
-  margin-top: 20px;
+.signup-header {
+  font-weight: 600;
 }
 
 .signupInput {
@@ -65,16 +45,10 @@
   font-weight: bold;
   cursor: pointer;
 }
-
-.motto {
-  color: white;
-  font-family: sans-serif;
-  font-weight: normal;
-  font-size: 20px;
-  text-align: center;
-  margin-top: 50px;
+.signup-aside-header {
+  font-weight: 700;
 }
 
-.test1 {
-  border: blue solid 1px
+.signup-aside-text {
+  font-weight: 500;
 }
