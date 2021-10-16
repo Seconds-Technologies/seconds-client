@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { removeError } from '../../store/actions/errors';
 import LoadingOverlay from 'react-loading-overlay';
+import PasswordField from '../../components/PasswordField';
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -92,13 +93,10 @@ const Login = props => {
 										<label className='mb-2' htmlFor='password'>
 											Password
 										</label>
-										<input
-											autoComplete='current-password'
-											type='password'
-											name='password'
-											className='form-control form-control-lg'
-											onChange={handleChange}
-											onBlur={handleBlur}
+										<PasswordField
+										    onBlur={handleBlur}
+										    onChange={handleChange}
+										    classNames="form-control form-control-lg"
 										/>
 									</div>
 									<div className='mt-5'>

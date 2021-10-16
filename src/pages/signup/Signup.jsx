@@ -232,7 +232,11 @@ export default function Signup(props) {
 										<label className='mb-2' htmlFor='password'>
 											Password
 										</label>
-										<PasswordField label='password' onBlur={handleBlur} onChange={handleChange} />
+										<PasswordField
+											onBlur={handleBlur}
+											onChange={handleChange}
+											classNames='form-control rounded-3'
+										/>
 										<ErrorField name='password' />
 									</div>
 									<div>

@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 const eye = <FontAwesomeIcon icon={faEye} />;
 const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
 
-const PasswordField = ({ label, onBlur, onChange }) => {
+const PasswordField = ({ onBlur, onChange, classNames }) => {
 	const [type, setType] = useState('password');
 
 	const handleClick = () => setType(type === 'text' ? 'password' : 'text');
@@ -17,7 +17,7 @@ const PasswordField = ({ label, onBlur, onChange }) => {
 				autoComplete='new-password”'
 				type={type}
 				name='password'
-				className='form-control rounded-3'
+				className={classNames}
 				onBlur={onBlur}
 				onChange={onChange}
 			/>
@@ -29,7 +29,7 @@ const PasswordField = ({ label, onBlur, onChange }) => {
 };
 
 PasswordField.propTypes = {
-	label: PropTypes.string.isRequired,
+	classNames: PropTypes.string,
 	onBlur: PropTypes.func.isRequired,
 	onChange: PropTypes.func.isRequired,
 };
