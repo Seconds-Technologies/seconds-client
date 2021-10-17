@@ -40,7 +40,7 @@ let timer = null;
 export const subscribe = (apiKey, email) => dispatch => {
 	clearInterval(timer);
 	dispatch(getAllJobs(apiKey, email))
-	timer = setInterval(() => dispatch(getAllJobs(apiKey, email)), 5000);
+	timer = setInterval(() => dispatch(getAllJobs(apiKey, email)), 10000);
 	dispatch({ type: TIMER_START, timer });
 };
 

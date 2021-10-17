@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
-import { subscribe, unsubscribe } from '../../store/actions/delivery';
+import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
 import './Orders.css';
 
 export default function Orders() {
@@ -44,7 +44,7 @@ export default function Orders() {
 
 	useEffect(() => {
 		isIntegrated && dispatch(fetchOrders(email));
-		apiKey && dispatch(subscribe(apiKey, email));
+		apiKey && dispatch(getAllJobs(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 

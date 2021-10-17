@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
 import { COLOURS, STATUS } from '../../constants';
 import { fetchOrders } from '../../store/actions/shopify';
-import { subscribe, unsubscribe } from '../../store/actions/delivery';
+import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import './Track.css';
 
@@ -39,7 +39,7 @@ const Track = props => {
 
 	useEffect(() => {
 		isIntegrated && dispatch(fetchOrders(email))
-		apiKey && dispatch(subscribe(apiKey, email));
+		apiKey && dispatch(getAllJobs(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
