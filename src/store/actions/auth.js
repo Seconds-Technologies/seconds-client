@@ -53,7 +53,9 @@ export function authUser(type, userData) {
 			console.log('User data:', userData);
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, ...user }) => {
-					console.log(message, token, shopify);
+					console.log(message)
+					console.log("Auth token", token)
+					console.log("shopify", !!shopify);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					dispatch(setCurrentUser(user));

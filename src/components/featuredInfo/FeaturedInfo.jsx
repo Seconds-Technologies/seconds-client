@@ -10,30 +10,25 @@ import moment from 'moment';
 const FeaturedInfo = ({interval}) => {
     const dispatch = useDispatch();
     const filterByInterval = useCallback((data) => {
-        console.log("INTERVAL: ", interval)
         switch(interval){
             case "day":
                 return data.filter(({createdAt}) => {
                     let duration = moment.duration(moment().diff(moment(createdAt))).as("day")
-                    console.log("DURATION", duration)
                     return duration < 1
                 })
             case "week":
                 return data.filter(({createdAt}) => {
                     let duration = moment.duration(moment().diff(moment(createdAt))).as("week")
-                    console.log("DURATION", duration)
                     return duration < 1
                 })
             case "month":
                 return data.filter(({createdAt}) => {
                     let duration = moment.duration(moment().diff(moment(createdAt))).as("month")
-                    console.log("DURATION", duration)
                     return duration < 1
                 })
             case "year":
                 return data.filter(({createdAt}) => {
                     let duration = moment.duration(moment().diff(moment(createdAt))).as("year")
-                    console.log("DURATION", duration)
                     return duration < 1
                 })
             default:
@@ -49,7 +44,6 @@ const FeaturedInfo = ({interval}) => {
             return { total, completed }
         } else {
             const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-            console.log(completed)
             return { total: filterByInterval(total), completed: filterByInterval(completed) }
         }
     });
@@ -63,10 +57,8 @@ const FeaturedInfo = ({interval}) => {
     const deliveryFee = useMemo(() => {
         let totalFee = 0;
         for (let order of completed){
-            console.log("MEMO:", order)
             totalFee = totalFee + order.deliveryFee
         }
-        console.log(totalFee)
         return totalFee.toFixed(2)
     }, [completed]);
 
