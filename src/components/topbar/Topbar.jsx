@@ -13,7 +13,7 @@ export default function Topbar() {
 	const history = useHistory();
 
 	return (
-		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white topbar ms-3'>
+		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white topbar ps-3'>
 			<Link to='/' className='navbar-brand' href=''>
 				<span className='logo'>
 					<img src={logo} alt='' width={150} />

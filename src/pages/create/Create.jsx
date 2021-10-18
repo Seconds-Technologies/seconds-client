@@ -49,6 +49,7 @@ const Create = props => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		console.log(moment().utc(true).format('YYYY-MM-DDTHH:mm'));
 		dispatch(removeError());
 	}, [props.location]);
 
@@ -437,6 +438,7 @@ const Create = props => {
 													</label>
 												</div>
 											</div>
+											<ErrorField name='deliveryType' classNames='mt-2' />
 										</div>
 									</div>
 								</div>
@@ -491,8 +493,8 @@ const Create = props => {
 													aria-label='pickup-datetime'
 													onChange={handleChange}
 													onBlur={handleBlur}
-													min={moment().toISOString()}
-													max={moment().add(30, 'days').toISOString()}
+													min={moment().utc(true).format('YYYY-MM-DDTHH:mm')}
+													max={moment().add(7, 'days').utc(true).format('YYYY-MM-DDTHH:mm')}
 												/>
 											</div>
 										</div>
@@ -621,25 +623,44 @@ const Create = props => {
 												<label htmlFor='dropoff-datetime' className='mb-1'>
 													Dropoff At
 												</label>
-												<input
-													disabled={values.packageDeliveryType === 'on-demand'}
-													id='dropoff-datetime'
-													name='packageDropoffStartTime'
-													type='datetime-local'
-													className='form-control form-border rounded-3 mb-3'
-													placeholder='Dropoff At'
-													aria-label='dropoff-datetime'
-													onChange={handleChange}
-													onBlur={handleBlur}
-													min={moment()}
-													max={
-														values.packagePickupStartTime
-															? moment(values.packagePickupStartTime)
-																	.add(30, 'days')
-																	.toISOString()
-															: moment().add('30', 'days').toISOString()
-													}
-												/>
+												{values.packagePickupStartTime ? (
+													<input
+														disabled={values.packageDeliveryType === 'on-demand'}
+														id='dropoff-datetime'
+														name='packageDropoffStartTime'
+														type='datetime-local'
+														className='form-control form-border rounded-3 mb-3'
+														placeholder='Dropoff At'
+														aria-label='dropoff-datetime'
+														onChange={handleChange}
+														onBlur={handleBlur}
+														min={moment(values.packagePickupStartTime)
+															.subtract(1, 'minute')
+															.utc(true)
+															.format('YYYY-MM-DDTHH:mm')}
+														max={moment(values.packagePickupStartTime)
+															.add(1, 'days')
+															.utc(true)
+															.format('YYYY-MM-DDTHH:mm')}
+													/>
+												) : (
+													<input
+														disabled={values.packageDeliveryType === 'on-demand'}
+														id='dropoff-datetime'
+														name='packageDropoffStartTime'
+														type='datetime-local'
+														className='form-control form-border rounded-3 mb-3'
+														placeholder='Dropoff At'
+														aria-label='dropoff-datetime'
+														onChange={handleChange}
+														onBlur={handleBlur}
+														min={moment().utc(true).format('YYYY-MM-DDTHH:mm')}
+														max={moment()
+															.add('30', 'days')
+															.utc(true)
+															.format('YYYY-MM-DDTHH:mm')}
+													/>
+												)}
 											</div>
 										</div>
 										<label htmlFor='dropoff-instructions' className='mb-1'>
