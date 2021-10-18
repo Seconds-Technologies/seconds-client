@@ -44,7 +44,7 @@ export default function Orders() {
 
 	useEffect(() => {
 		isIntegrated && dispatch(fetchOrders(email));
-		apiKey && dispatch(getAllJobs(apiKey, email));
+		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 

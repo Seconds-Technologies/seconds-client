@@ -213,7 +213,7 @@ const Profile = props => {
 										variant='dark'
 										size='lg'
 										className='w-100'
-										onClick={() => apiKey ? handleOpen('api') : isIntegrated ? props.history.push(PATHS.API_KEY) : null}
+										onClick={() => apiKey ? handleOpen('api') : props.history.push(PATHS.API_KEY)}
 									>
 										Get API Key
 									</Button>

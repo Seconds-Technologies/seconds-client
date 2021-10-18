@@ -39,7 +39,7 @@ const Track = props => {
 
 	useEffect(() => {
 		isIntegrated && dispatch(fetchOrders(email))
-		apiKey && dispatch(getAllJobs(apiKey, email));
+		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 

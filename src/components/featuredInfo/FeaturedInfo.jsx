@@ -50,7 +50,7 @@ const FeaturedInfo = ({interval}) => {
 
     useEffect(() => {
         isIntegrated && dispatch(getAllOrders(credentials.accessToken, credentials.baseURL, email, createdAt))
-        apiKey && dispatch(getAllJobs(apiKey, email));
+        apiKey && dispatch(subscribe(apiKey, email));
         return () => apiKey && dispatch(unsubscribe());
     }, [isIntegrated, apiKey]);
 

@@ -38,7 +38,7 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		(async () => {
-			apiKey && dispatch(getAllJobs(apiKey, email))
+			apiKey && dispatch(subscribe(apiKey, email))
 			const orderID = props.location['pathname'].split('/').reverse()[0];
 			if (isIntegrated) {
 				let currentOrder = allOrders

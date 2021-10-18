@@ -13,15 +13,13 @@ export default function Topbar() {
 	const history = useHistory();
 
 	return (
-		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white topbar'>
-			<div className='container-fluid d-flex ms-3'>
-				<Link to='/' className='navbar-brand' href=''>
-					<span className='logo'>
-						<img src={logo} alt='' />
-					</span>
-				</Link>
-			</div>
-			<div className='collapse navbar-collapse' id='profile'>
+		<nav className='navbar navbar-expand-md navbar-light sticky-top bg-white topbar ms-3'>
+			<Link to='/' className='navbar-brand' href=''>
+				<span className='logo'>
+					<img src={logo} alt='' width={150} />
+				</span>
+			</Link>
+			<div className="d-flex flex-grow-1 justify-content-end" id='profile'>
 				<div className='navbar-text me-5' onClick={() => history.push(PATHS.PROFILE)}>
 					<div className='d-flex align-items-center' role='button'>
 						{profileImageData ? (
@@ -33,10 +31,10 @@ export default function Topbar() {
 								height={50}
 							/>
 						) : (
-							<Avatar className="me-3" size="large" icon={<UserOutlined />} />
+							<Avatar className='me-3' size='large' icon={<UserOutlined />} />
 						)}
-						<span className='profile-text fs-6 text-dark'>{firstname}&nbsp;</span>
-						<span className='profile-text fs-6 text-dark'>{lastname}</span>
+						<span className='fs-6 text-dark'>{firstname}&nbsp;</span>
+						<span className='fs-6 text-dark'>{lastname}</span>
 					</div>
 				</div>
 			</div>
