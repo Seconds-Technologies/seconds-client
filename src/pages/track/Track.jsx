@@ -48,7 +48,7 @@ const Track = props => {
 	}, [props.location]);
 
 	return (
-		<div className='trackContainer container bg-light py-4'>
+		<div className='trackContainer container-fluid bg-light py-4'>
 			<div className='row'>
 				<div className='col-sm-4 col-md-2 border-end'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
