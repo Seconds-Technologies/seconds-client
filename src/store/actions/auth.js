@@ -123,6 +123,7 @@ export function updateProfile({ img, id, ...data }) {
 							});
 					}
 					dispatch(updateCurrentUser({ ...data }));
+					dispatch(removeError());
 					resolve(message);
 				})
 				.catch(err => {

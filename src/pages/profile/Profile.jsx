@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,12 +7,15 @@ import camera from '../../img/camera.svg';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import './profile.css';
+import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
+import { removeError } from '../../store/actions/errors';
 
 const Profile = props => {
 	const dispatch = useDispatch();
-	const { id, email, firstname, lastname, company, apiKey, profileImageData } = useSelector(
+	const { id, email, firstname, lastname, company, phone, address, apiKey, profileImageData } = useSelector(
 		state => state['currentUser'].user
 	);
+	const errors = useSelector(state => state['errors']);
 	const { isIntegrated } = useSelector(state => state["shopifyStore"])
 	const [src, setSrc] = useState(null);
 	const [apiModal, showAPIModal] = useState(false);
@@ -21,6 +24,11 @@ const Profile = props => {
 	const handleOpen = type => (type === 'api' ? showAPIModal(true) : showSuccessModal(true));
 	const uploadedImage = useRef(null);
 	const imageUploader = useRef(null);
+
+	useEffect(() => {
+		return () => dispatch(removeError())
+	}, [props.location]);
+
 
 	const handleImageUpload = e => {
 		const [file] = e.target.files;
@@ -79,12 +87,15 @@ const Profile = props => {
 						lastname,
 						company,
 						email,
+						phone,
+						address,
 						profileImage: null,
 					}}
 					onSubmit={({ profileImage, ...values }) => {
+						console.log(values)
 						dispatch(updateProfile({ img: profileImage, id, ...values }))
 							.then(message => handleOpen('profile'))
-							.catch(err => alert(err));
+							.catch(err => console.log(err));
 					}}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
@@ -148,9 +159,19 @@ const Profile = props => {
 									</div>
 								</div>
 							</div>
+							{errors.message && (
+								<div className='alert alert-danger alert-dismissible' role='alert'>
+									<span>{errors.message}</span>
+									<button
+										onClick={() => dispatch(removeError())}
+										type='button'
+										className='btn btn-close'
+									/>
+								</div>
+							)}
 							<div className='row my-4'>
 								<div className='col'>
-									<label htmlFor='floatingInput'>First Name</label>
+									<label htmlFor='firstname'>First Name</label>
 									<input
 										defaultValue={values.firstname}
 										name='firstname'
@@ -163,7 +184,7 @@ const Profile = props => {
 									/>
 								</div>
 								<div className='col'>
-									<label htmlFor='floatingInput'>Last Name</label>
+									<label htmlFor='lastname'>Last Name</label>
 									<input
 										defaultValue={values.lastname}
 										name='lastname'
@@ -178,7 +199,37 @@ const Profile = props => {
 							</div>
 							<div className='row my-4'>
 								<div className='col'>
-									<label htmlFor='floatingInput'>Company</label>
+									<div className='col'>
+										<label htmlFor='phone'>Phone</label>
+										<input
+											defaultValue={values.phone}
+											name='phone'
+											className='form-control border rounded-3'
+											type='tel'
+											placeholder='Phone Number'
+											required
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+								</div>
+								<div className='col'>
+									<label htmlFor='email'>Email Address</label>
+									<input
+										defaultValue={values.email}
+										name='email'
+										className=' form-control border rounded-3'
+										type='email'
+										placeholder='Email'
+										required
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+								</div>
+							</div>
+							<div className='row my-4'>
+								<div className='col'>
+									<label htmlFor='company'>Company</label>
 									<input
 										defaultValue={values.company}
 										name='company'
@@ -191,16 +242,26 @@ const Profile = props => {
 									/>
 								</div>
 								<div className='col'>
-									<label htmlFor='floatingInput'>Email Address</label>
-									<input
-										defaultValue={values.email}
-										name='email'
-										className=' form-control border rounded-3'
-										type='email'
-										placeholder='Email'
-										required
-										onChange={handleChange}
-										onBlur={handleBlur}
+									<label htmlFor='address'>Company Address</label>
+									<GooglePlaceAutocomplete
+										autocompletionRequest={{
+											componentRestrictions: {
+												country: ['GB'],
+											},
+											types: ['geocode', 'establishment'],
+										}}
+										apiOptions={{
+											language: 'GB',
+											region: 'GB',
+										}}
+										selectProps={{
+											defaultInputValue: values.address,
+											onChange: ({ label }) => {
+												setFieldValue('address', label);
+												console.log(label, values);
+											},
+										}}
+										apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 									/>
 								</div>
 							</div>
