@@ -81,7 +81,7 @@ export function getAllJobs(apiKey, email) {
 				headers: { 'X-Seconds-Api-Key': apiKey },
 				params: { email }
 			})
-				.then(({ jobs }) => {
+				.then(jobs => {
 					console.log(jobs);
 					dispatch(setAllJobs(jobs));
 					dispatch(
