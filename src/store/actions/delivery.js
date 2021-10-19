@@ -77,7 +77,10 @@ export function getAllJobs(apiKey, email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
-			return apiCall('POST', `/api/v1/jobs`, { email }, { headers: { 'X-Seconds-Api-Key': apiKey } })
+			return apiCall('GET', `/api/v1/jobs`, null, {
+				headers: { 'X-Seconds-Api-Key': apiKey },
+				params: { email }
+			})
 				.then(({ jobs }) => {
 					console.log(jobs);
 					dispatch(setAllJobs(jobs));

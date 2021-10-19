@@ -1,12 +1,13 @@
-import axios from "axios";
+import axios from 'axios';
 
 export function setTokenHeader(token) {
 	if (token) {
-		axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+		axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 	} else {
-		delete axios.defaults.headers.common["Authorization"];
+		delete axios.defaults.headers.common['Authorization'];
 	}
 }
+
 /**
  * A wrapper around axios APIs that formats errors, etc
  * @param method the HTTP verb being used
@@ -15,16 +16,26 @@ export function setTokenHeader(token) {
  * @param config (optional) extra configurations for the request e.g. headers, query params, etc.
  * @returns {Promise<JSON>}
  */
-export function apiCall(method, path, data, config={}) {
+export function apiCall(method, path, data = null, config = {}) {
 	return new Promise((resolve, reject) => {
-		return axios[method.toLowerCase()](path, data, config)
-			.then(res => {
-				console.log(res.data)
-				resolve(res.data)
-			})
-			.catch(err => {
-				console.error(err)
-				reject(err.response.data.error);
-			})
+		return !data
+			? axios[method.toLowerCase()](path, config)
+					.then(res => {
+						console.log(res.data);
+						resolve(res.data);
+					})
+					.catch(err => {
+						console.error(err);
+						reject(err.response.data.error);
+					})
+			: axios[method.toLowerCase()](path, data, config)
+					.then(res => {
+						console.log(res.data);
+						resolve(res.data);
+					})
+					.catch(err => {
+						console.error(err);
+						reject(err.response.data.error);
+					});
 	});
 }
