@@ -6,8 +6,8 @@ import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import { removeError } from '../../store/actions/errors';
-import LoadingOverlay from 'react-loading-overlay';
 import PasswordField from '../../components/PasswordField';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -19,7 +19,7 @@ const Login = props => {
 	}, [props.location]);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Hold tight, logging you in...'>
+		<div className='loginPage container-fluid bg-white'>
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 login-aside'>
 					<div className='d-flex flex-column h-100'>
@@ -94,14 +94,15 @@ const Login = props => {
 											Password
 										</label>
 										<PasswordField
-										    onBlur={handleBlur}
-										    onChange={handleChange}
-										    classNames="form-control form-control-lg"
+											onBlur={handleBlur}
+											onChange={handleChange}
+											classNames='form-control form-control-lg'
 										/>
 									</div>
 									<div className='mt-5'>
-										<button type='submit' className='btn btn-dark btn-lg w-100'>
-											Sign In
+										<button type='submit' className='btn btn-dark btn-lg d-flex justify-content-center align-items-center w-100'>
+											<span className="me-3">Sign In</span>
+											<ClipLoader color="white" loading={isLoading} size={20}/>
 										</button>
 									</div>
 								</form>
@@ -117,7 +118,7 @@ const Login = props => {
 					</div>
 				</div>
 			</div>
-		</LoadingOverlay>
+		</div>
 	);
 };
 
