@@ -225,7 +225,7 @@ const Profile = props => {
 								</div>
 							</div>
 							<div className='row my-4'>
-								<div className='col'>
+								<div className='col-6'>
 									<label htmlFor='company'>Company</label>
 									<input
 										defaultValue={values.company}
@@ -238,7 +238,7 @@ const Profile = props => {
 										onBlur={handleBlur}
 									/>
 								</div>
-								<div className='col'>
+								<div className='col-6'>
 									<label htmlFor='address'>Company Address</label>
 									<GooglePlaceAutocomplete
 										autocompletionRequest={{
