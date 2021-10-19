@@ -16,7 +16,7 @@ const Profile = props => {
 		state => state['currentUser'].user
 	);
 	const errors = useSelector(state => state['errors']);
-	const { isIntegrated } = useSelector(state => state["shopifyStore"])
+	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const [src, setSrc] = useState(null);
 	const [apiModal, showAPIModal] = useState(false);
 	const [successModal, showSuccessModal] = useState(false);
@@ -26,9 +26,8 @@ const Profile = props => {
 	const imageUploader = useRef(null);
 
 	useEffect(() => {
-		return () => dispatch(removeError())
+		return () => dispatch(removeError());
 	}, [props.location]);
-
 
 	const handleImageUpload = e => {
 		const [file] = e.target.files;
@@ -69,12 +68,12 @@ const Profile = props => {
 	);
 
 	const btnContainer = classnames({
-		"row": true,
-		"d-flex": true,
-		"justify-content-center": true,
-		"my-4": !isIntegrated,
-		"my-5": isIntegrated
-	})
+		row: true,
+		'd-flex': true,
+		'justify-content-center': true,
+		'my-4': !isIntegrated,
+		'my-5': isIntegrated,
+	});
 
 	return (
 		<div className='profile bg-light d-flex justify-content-center align-items-center px-5'>
@@ -92,7 +91,7 @@ const Profile = props => {
 						profileImage: null,
 					}}
 					onSubmit={({ profileImage, ...values }) => {
-						console.log(values)
+						console.log(values);
 						dispatch(updateProfile({ img: profileImage, id, ...values }))
 							.then(message => handleOpen('profile'))
 							.catch(err => console.log(err));
@@ -116,7 +115,7 @@ const Profile = props => {
 										}}
 									/>
 									<div
-										role="button"
+										role='button'
 										className='border-1 rounded-circle text-center'
 										style={{
 											display: 'inline-flex',
@@ -199,19 +198,17 @@ const Profile = props => {
 							</div>
 							<div className='row my-4'>
 								<div className='col'>
-									<div className='col'>
-										<label htmlFor='phone'>Phone</label>
-										<input
-											defaultValue={values.phone}
-											name='phone'
-											className='form-control border rounded-3'
-											type='tel'
-											placeholder='Phone Number'
-											required
-											onChange={handleChange}
-											onBlur={handleBlur}
-										/>
-									</div>
+									<label htmlFor='phone'>Phone</label>
+									<input
+										defaultValue={values.phone}
+										name='phone'
+										className='form-control border rounded-3'
+										type='tel'
+										placeholder='Phone Number'
+										required
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
 								</div>
 								<div className='col'>
 									<label htmlFor='email'>Email Address</label>
@@ -266,19 +263,25 @@ const Profile = props => {
 								</div>
 							</div>
 							<div className={btnContainer}>
-								{!isIntegrated && <div className='col-12'>
-									<span>For developers</span>
-								</div>}
-								{!isIntegrated && <div className='col-6'>
-									<Button
-										variant='dark'
-										size='lg'
-										className='w-100'
-										onClick={() => apiKey ? handleOpen('api') : props.history.push(PATHS.API_KEY)}
-									>
-										Get API Key
-									</Button>
-								</div>}
+								{!isIntegrated && (
+									<div className='col-12'>
+										<span>For developers</span>
+									</div>
+								)}
+								{!isIntegrated && (
+									<div className='col-6'>
+										<Button
+											variant='dark'
+											size='lg'
+											className='w-100'
+											onClick={() =>
+												apiKey ? handleOpen('api') : props.history.push(PATHS.API_KEY)
+											}
+										>
+											Get API Key
+										</Button>
+									</div>
+								)}
 								<div className='col-6'>
 									<Button className='text-light w-100' variant='primary' type='submit' size='lg'>
 										Save Changes
