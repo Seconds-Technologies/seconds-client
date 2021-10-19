@@ -116,10 +116,6 @@ const Subscription = () => {
 		};
 	}, [portalLink]);
 
-	const initiateSubscription = async lookupKey => {
-		await dispatch(checkSubscriptionStatus(user.email));
-	};
-
 	return (
 		<div className='subscription d-flex bg-light justify-content-center align-items-center py-5'>
 			<Message message={message} onHide={() => setMessage('')} />

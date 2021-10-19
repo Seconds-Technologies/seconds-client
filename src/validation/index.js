@@ -26,5 +26,6 @@ export const CreateOrderSchema = Yup.object().shape({
 	dropoffLastName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
 	dropoffEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
 	dropoffPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
-	vehicleType: Yup.string().required('* Required')
+	vehicleType: Yup.string().required('* Required'),
+	itemsCount: Yup.number().min(0).max(10)
 });

@@ -177,7 +177,6 @@ const CardSetupForm = ({ showToast }) => {
 			console.log(result.error);
 			setError(result.error);
 		} else {
-			console.log(result);
 			console.log('success', result.setupIntent.payment_method);
 			await dispatch(addPaymentMethod(user, result.setupIntent.payment_method));
 			showToast('Your payment method has been saved successfully!');

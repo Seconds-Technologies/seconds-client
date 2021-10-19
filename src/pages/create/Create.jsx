@@ -693,6 +693,8 @@ const Create = props => {
 													aria-label='items-count'
 													onChange={handleChange}
 													onBlur={handleBlur}
+													min={0}
+													max={10}
 												/>
 											</div>
 											<div className='col-6'>
