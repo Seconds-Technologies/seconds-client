@@ -6,7 +6,7 @@ import CardSetupForm from './CardSetupForm';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import './PaymentMethod.css';
 
-const stripePromise = loadStripe("pk_test_51JdEkaEJUYyCW3GHyXT6h77JbzzeO5qfj4JuF98AIC13lLjzHiAyRdbYCH5gmeKi8j6VAZ7l2tXcESsq9xSmJvMx00rPtDSwZO");
+const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
 console.log(stripePromise)
 
 const PaymentMethod = props => {
