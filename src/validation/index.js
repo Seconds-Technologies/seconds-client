@@ -11,6 +11,7 @@ export const SignUpSchema = Yup.object().shape({
 	phone: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('*Required'),
 	address: Yup.string().required('*Required'),
 	password: Yup.string().min(8, 'Min. 8 characters').required('*Required'),
+	terms: Yup.boolean().oneOf([true], 'Must Accept Terms and Conditions')
 });
 
 export const CreateOrderSchema = Yup.object().shape({

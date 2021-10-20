@@ -43,7 +43,7 @@ $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
   padding-bottom: 0;
 }
 
-.form-control:focus, .btn:focus, .form-select:focus{
+.form-control:focus, .btn:focus, .form-select:focus, .form-check-input:focus {
   border-color: #ced4da;
   box-shadow: none;
 }

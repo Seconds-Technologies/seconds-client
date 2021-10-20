@@ -1,6 +1,6 @@
 import './Signup.css';
 import logo from '../../img/seconds-logo-black.svg';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -62,7 +62,7 @@ export default function Signup(props) {
 						</div>
 					</div>
 				</div>
-				<div className='col-sm-12 col-md-9 w-sm mx-auto my-auto py-sm-5 px-md-5 px-sm-3'>
+				<div className='col-sm-12 col-md-9 w-sm mx-auto my-auto py-sm-4 px-md-5 px-sm-3'>
 					<div className='d-flex flex-grow-1 justify-content-center flex-column'>
 						<div className='py-4'>
 							<h2 className='signup-header pb-2'>Sign up for your account</h2>
@@ -90,12 +90,9 @@ export default function Signup(props) {
 								password: '',
 								phone: '',
 								address: '',
-								profileImage: {
-									file: '',
-									data: '',
-								},
 								apiKey: '',
 								stripeCustomerId: '',
+								terms: false,
 							}}
 							onSubmit={(values, actions) => {
 								setLoading(true);
@@ -140,7 +137,7 @@ export default function Signup(props) {
 											/>
 											<ErrorField name='firstname' classNames='text-end' />
 										</div>
-										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-3'>
+										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
 												Last Name
 											</label>
@@ -172,7 +169,7 @@ export default function Signup(props) {
 											/>
 											<ErrorField name='company' classNames='text-end' />
 										</div>
-										<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-3'>
+										<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='company'>
 												Phone
 											</label>
@@ -238,6 +235,32 @@ export default function Signup(props) {
 											classNames='form-control rounded-3'
 										/>
 										<ErrorField name='password' />
+									</div>
+									<div className='d-flex justify-content-between mt-3 form-check'>
+										<div>
+											<Field
+												className='form-check-input me-2'
+												type='checkbox'
+												id='terms'
+												name='terms'
+												onChange={e => {
+													console.log(e.target.value);
+													handleChange(e);
+													console.log(values.terms);
+												}}
+												onBlur={handleBlur}
+											/>
+											<label htmlFor='terms'>
+												I agree to the&nbsp;
+												<a
+													href='https://aerial-rook-d63.notion.site/Terms-of-Use-a0c41b327ae54d118185a11d939ffc0a'
+													target='_blank'
+												>
+													terms of service
+												</a>
+											</label>
+										</div>
+										<ErrorField name='terms' />
 									</div>
 									<div>
 										<button type='submit' className='btn btn-dark btn-lg w-100 mt-4'>
