@@ -7,10 +7,10 @@ export const SignUpSchema = Yup.object().shape({
 	firstname: Yup.string().max(20, 'Max. 20 characters').required('*Required'),
 	lastname: Yup.string().max(20, 'Max. 20 characters').required('*Required'),
 	company: Yup.string().max(25, 'Max. 25 characters').required('*Required'),
-	email: Yup.string().email('Invalid email address!').required('*Required'),
 	phone: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('*Required'),
 	address: Yup.string().required('*Required'),
-	password: Yup.string().min(8, 'Min. 8 characters').required('*Required'),
+	email: Yup.string().email('Invalid email address!').required('Required'),
+	password: Yup.string().min(8, 'Min. 8 characters').required('Required'),
 	terms: Yup.boolean().oneOf([true], 'Must Accept Terms and Conditions')
 });
 

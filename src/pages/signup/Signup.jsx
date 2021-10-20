@@ -124,7 +124,7 @@ export default function Signup(props) {
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												First Name
+												<span>{errors['firstname'] && <span className="text-danger">*</span>}First Name</span>
 											</label>
 											<input
 												autoComplete='given-name'
@@ -135,11 +135,10 @@ export default function Signup(props) {
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
-											<ErrorField name='firstname' classNames='text-end' />
 										</div>
 										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
-												Last Name
+												<span>{errors['lastname'] && <span className="text-danger">*</span>}Last Name</span>
 											</label>
 											<input
 												autoComplete='family-name'
@@ -150,13 +149,12 @@ export default function Signup(props) {
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
-											<ErrorField name='lastname' classNames='text-end' />
 										</div>
 									</div>
 									<div className='row mt-3'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='company'>
-												Company
+												<span>{errors['company'] && <span className="text-danger">*</span>}Company</span>
 											</label>
 											<input
 												autoComplete='organization'
@@ -167,11 +165,10 @@ export default function Signup(props) {
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
-											<ErrorField name='company' classNames='text-end' />
 										</div>
 										<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='company'>
-												Phone
+												<span>{errors['phone'] && <span className="text-danger">*</span>}Phone</span>
 											</label>
 											<input
 												autoComplete='tel'
@@ -182,12 +179,11 @@ export default function Signup(props) {
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
-											<ErrorField name='phone' classNames='text-end' />
 										</div>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company-address'>
-											Company address
+											<span>{errors['address'] && <span className="text-danger">*</span>}Company Address</span>
 										</label>
 										<GooglePlaceAutocomplete
 											autocompletionRequest={{
@@ -208,11 +204,10 @@ export default function Signup(props) {
 											}}
 											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 										/>
-										<ErrorField name='address' classNames='text-end' />
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>
-											Email address
+											<span>{errors['email'] && <span className="text-danger">*</span>}Email Address</span>
 										</label>
 										<input
 											autoComplete='email'
@@ -223,18 +218,18 @@ export default function Signup(props) {
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
-										<ErrorField name='email' />
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='password'>
-											Password
+											<span>{errors['password'] && <span className="text-danger">*</span>}Password</span>
 										</label>
 										<PasswordField
 											onBlur={handleBlur}
 											onChange={handleChange}
 											classNames='form-control rounded-3'
+											min={8}
+											max={50}
 										/>
-										<ErrorField name='password' />
 									</div>
 									<div className='d-flex justify-content-between mt-3 form-check'>
 										<div>
