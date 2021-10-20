@@ -136,11 +136,6 @@ const CardSetupForm = ({ showToast }) => {
 		}
 	}, [paymentAdded]);
 
-	useEffect(() => {
-		console.log('payment method:');
-		console.log(paymentMethod);
-	}, [paymentMethod]);
-
 	const handleChange = e => setBillingDetails({ ...billingDetails, name: e.target.value });
 
 	const handleError = e => {

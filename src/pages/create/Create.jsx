@@ -177,7 +177,13 @@ const Create = props => {
 				setJob(newJob);
 				handleOpen();
 			}
-		);
+		).catch(err => {
+			setLoadingModal(false);
+			console.log(err);
+			err
+				? dispatch(addError(err.message))
+				: dispatch(addError('Api endpoint could not be accessed!'));
+		});
 	};
 
 	const newJobModal = (
@@ -373,7 +379,7 @@ const Create = props => {
 									setLoadingModal(false);
 									console.log(err);
 									err
-										? dispatch(addError(err))
+										? dispatch(addError(err.message))
 										: dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							}
