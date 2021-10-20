@@ -84,8 +84,3 @@ export const VEHICLE_TYPES = [
 		description: '150(W) x 120(H) x 90(D) - Up to 200kg',
 	},
 ];
-
-export const STRIPE = {
-	CHECKOUT_SESSION: 'http://localhost:3001/api/v1/subscription/create-checkout-session',
-	PORTAL_SESSION: 'http://localhost:3001/api/v1/subscription/create-portal-session',
-};

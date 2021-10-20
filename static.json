@@ -5,10 +5,10 @@
 	},
 	"proxies": {
 		"/api": {
-			"origin": "${API_HOST}/api"
+			"origin": "${REACT_APP_API_HOST}/api"
 		},
 		"/server": {
-			"origin": "${SERVER_HOST}/server"
+			"origin": "${REACT_APP_SERVER_HOST}/server"
 		}
 	}
 }

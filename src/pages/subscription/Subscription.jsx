@@ -3,7 +3,6 @@ import secondsLogo from '../../img/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
 import Modal from 'react-bootstrap/Modal';
-import { STRIPE } from '../../constants';
 import './subscription.css';
 
 const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey, numUsers, checkoutText }) => (
@@ -16,11 +15,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 			<div className='mt-3 text-muted'>{description}</div>
 		</div>
 		<form
-			action={
-				!!process.env.REACT_APP_STRIPE_CHECKOUT_SESSION
-					? String(process.env.REACT_APP_STRIPE_CHECKOUT_SESSION)
-					: STRIPE.CHECKOUT_SESSION
-			}
+			action={`${String(process.env.REACT_APP_API_HOST)}/api/v1/subscription/create-checkout-session`}
 			method='POST'
 		>
 			<input type='hidden' name='lookup_key' value={lookupKey} />
@@ -41,7 +36,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 	</section>
 );
 
-const SuccessDisplay = ({ stripeCustomerId, planName }) => {
+const SuccessDisplay = ({ stripeCustomerId }) => {
 	return (
 		<section className='d-flex flex-column align-items-center success-wrapper py-5'>
 			<div className="d-flex flex-column">
@@ -51,11 +46,7 @@ const SuccessDisplay = ({ stripeCustomerId, planName }) => {
 				</div>
 			</div>
 			<form
-				action={
-					!!process.env.REACT_APP_STRIPE_PORTAL_SESSION
-						? String(process.env.REACT_APP_STRIPE_PORTAL_SESSION)
-						: STRIPE.PORTAL_SESSION
-				}
+				action={`${String(process.env.REACT_APP_API_HOST)}/api/v1/subscription/create-portal-session`}
 				method='POST'
 			>
 				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
@@ -89,7 +80,7 @@ const Subscription = () => {
 		})()
 		return () => {
 			const query = new URLSearchParams(window.location.search);
-			window.fetch(STRIPE.PORTAL_SESSION, {
+			window.fetch(`${process.env.REACT_APP_API_HOST}/api/v1/subscription/create-portal-session`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
