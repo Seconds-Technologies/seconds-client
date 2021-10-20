@@ -144,6 +144,9 @@ const ViewOrder = props => {
 
 	return (
 		<div className='viewOrder bg-light'>
+			<div className='orderDetailsTitleContainer'>
+				<h2 className='orderTitle'>Order Details</h2>
+			</div>
 			<div className='d-block flex-grow-1 justify-content-center pt-3'>
 				{show && (
 					<div className='alert alert-success alert-dismissible fade show' role='alert'>
@@ -152,15 +155,12 @@ const ViewOrder = props => {
 					</div>
 				)}
 			</div>
-			<div className='orderDetailsTitleContainer'>
-				<h2 className='orderTitle'>Order Details</h2>
-			</div>
 			<div className='orderContainer mt-3'>
-				<div className='orderShow pt-4 pb-2 px-5'>
+				<div className='orderShow pt-4 pb-3 px-5'>
 					<div className='fs-3 d-flex justify-content-center'>
 						<span className='orderShowCustomerName'>{order.customerName}</span>
 					</div>
-					<div className='orderShowBottom'>
+					<div className='d-flex flex-column mt-3'>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Address:</span>
 							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : 'N/A'}</span>

@@ -26,7 +26,7 @@ const Profile = props => {
 	const imageUploader = useRef(null);
 
 	useEffect(() => {
-		return () => dispatch(removeError());
+		dispatch(removeError());
 	}, [props.location]);
 
 	const handleImageUpload = e => {
