@@ -30,3 +30,8 @@ export const CreateOrderSchema = Yup.object().shape({
 	vehicleType: Yup.string().required('* Required'),
 	itemsCount: Yup.number().min(0).max(10)
 });
+
+export const ResetPasswordSchema = Yup.object().shape({
+	password: Yup.string().required('Password is required'),
+	confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+})

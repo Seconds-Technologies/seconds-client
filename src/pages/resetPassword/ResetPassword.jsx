@@ -1,38 +1,49 @@
-import './forgotPassword.css';
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Formik } from 'formik';
 import logo from '../../img/seconds-logo-black.svg';
 import { removeError } from '../../store/actions/errors';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { sendPasswordResetEmail } from '../../store/actions/auth';
+import { Formik } from 'formik';
+import { resetPassword } from '../../store/actions/auth';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { Link } from 'react-router-dom';
+import PasswordField from '../../components/PasswordField';
+import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-bootstrap/Modal';
+import { PATHS } from '../../constants';
+import { ResetPasswordSchema } from '../../validation';
+import './resetPassword.css';
 
-const ForgotPassword = props => {
+const ResetPassword = props => {
 	const dispatch = useDispatch();
 	const errors = useSelector(state => state['errors']);
 	const [isLoading, setLoading] = useState(false);
 	const [showSuccess, setSuccess] = useState(false);
-
-	useEffect(() => {
-		dispatch(removeError());
-	}, [props.location]);
+	const [token, setToken] = useState("")
 
 	const successModal = (
 		<Modal show={showSuccess} onHide={() => setSuccess(false)} centered>
-			<Modal.Header closeButton />
+			<Modal.Header closeButton >
+				<Modal.Title>Success!</Modal.Title>
+			</Modal.Header>
 			<Modal.Body>
 				<div className='alert alert-success text-center'>
-					<span className='fs-4'>Password reset link has been sent to your email</span>
+					<span className='fs-4'>You can now log in with your new password</span>
 				</div>
 			</Modal.Body>
+			<Modal.Footer>
+				<Link to={PATHS.LOGIN} className="btn btn-primary">Login Here</Link>
+			</Modal.Footer>
 		</Modal>
 	);
 
+	useEffect(() => {
+		console.log(props.location)
+		const search = props.location.search
+		const token = new URLSearchParams(search).get('token')
+		setToken(token)
+	}, [props.location]);
+
 	return (
-		<div className='forgotPasswordPage container-fluid bg-white'>
+		<div className='resetPasswordPage container-fluid bg-white'>
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 aside'>
 					<div className='d-flex flex-column h-100'>
@@ -50,8 +61,8 @@ const ForgotPassword = props => {
 				<div className='col-md-9 col-sm-12 w-sm mx-auto my-auto py-sm-5 px-md-4 px-sm-3'>
 					{successModal}
 					<div className='d-flex flex-grow-1 flex-column justify-content-center'>
-						<h2 className='login-header pb-2'>Forgot your password?</h2>
-						<span className='text-muted'>Don't worry! We will help you recover your password</span>
+						<h2 className='login-header pb-2'>Reset your password</h2>
+						<span className='text-muted'>Enter your new password below</span>
 						{errors.message && (
 							<div className='alert alert-danger alert-dismissible' role='alert'>
 								<span>{errors.message}</span>
@@ -64,11 +75,15 @@ const ForgotPassword = props => {
 						)}
 						<Formik
 							initialValues={{
-								email: '',
+								password: '',
+								confirmPassword: ''
 							}}
+							validationSchema={ResetPasswordSchema}
+							validateOnBlur={false}
+							validateOnChange={false}
 							onSubmit={(values, actions) => {
 								setLoading(true);
-								dispatch(sendPasswordResetEmail(values.email))
+								dispatch(resetPassword(values, token))
 									.then(res => {
 										setLoading(false);
 										setSuccess(true)
@@ -81,27 +96,40 @@ const ForgotPassword = props => {
 							}}
 						>
 							{({
-								values,
-								errors,
-								touched,
-								handleChange,
-								handleBlur,
-								handleSubmit,
-								isSubmitting,
-								/* and other goodies */
-							}) => (
+								  values,
+								  errors,
+								  touched,
+								  handleChange,
+								  handleBlur,
+								  handleSubmit,
+								  isSubmitting,
+								  /* and other goodies */
+							  }) => (
 								<form onSubmit={handleSubmit}>
 									<div className='loginItem1'>
 										<label className='mb-2' htmlFor='email'>
-											Email
+											Password
 										</label>
-										<input
-											autoComplete='email'
-											type='email'
-											name='email'
-											className='form-control form-control-lg'
+										<PasswordField
+											name='password'
+											classNames='form-control form-control-lg'
 											onChange={handleChange}
 											onBlur={handleBlur}
+											min={8}
+											max={50}
+										/>
+									</div>
+									<div className='loginItem1'>
+										<label className='mb-2' htmlFor='e  mail'>
+											Confirm Password
+										</label>
+										<PasswordField
+										    name='confirmPassword'
+											classNames='form-control form-control-lg'
+											onChange={handleChange}
+											onBlur={handleBlur}
+											min={8}
+											max={50}
 										/>
 									</div>
 									<div className='mt-4'>
@@ -130,6 +158,4 @@ const ForgotPassword = props => {
 	);
 };
 
-ForgotPassword.propTypes = {};
-
-export default ForgotPassword;
+export default ResetPassword;

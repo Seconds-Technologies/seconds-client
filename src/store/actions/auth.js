@@ -81,7 +81,7 @@ export function authorizeAPI(email, strategy) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('User:', email);
-			return apiCall('POST', `/server/auth/token`, { email, strategy })
+			return apiCall('POST', `/server/main/token`, { email, strategy })
 				.then(({ apiKey }) => {
 					dispatch(setApiKey(apiKey));
 					resolve(apiKey);
@@ -100,7 +100,7 @@ export function updateProfile({ img, id, ...data }) {
 		return new Promise((resolve, reject) => {
 			console.log('Image:', img);
 			console.log('Data:', data);
-			return apiCall('POST', '/server/auth/update', { img, id, data })
+			return apiCall('POST', '/server/main/update', { img, id, data })
 				.then(({ message, ...data }) => {
 					if (img) {
 						const formData = new FormData();
@@ -112,7 +112,7 @@ export function updateProfile({ img, id, ...data }) {
 								'content-type': 'multipart/form-data',
 							},
 						};
-						apiCall('POST', '/server/auth/upload', formData, config)
+						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
 								console.log(message);
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
@@ -140,6 +140,17 @@ export function sendPasswordResetEmail(email){
 		return new Promise((resolve, reject) => {
 			console.log(email)
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
+				.then(res => resolve(res))
+				.catch(err => reject(err));
+		})
+	}
+}
+
+export function resetPassword({ password }, token) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			const config = { params: { token} }
+			return apiCall('PATCH', '/server/auth/reset-password', { password }, config)
 				.then(res => resolve(res))
 				.catch(err => reject(err));
 		})

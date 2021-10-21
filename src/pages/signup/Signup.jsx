@@ -224,12 +224,13 @@ export default function Signup(props) {
 											<span>{errors['password'] && <span className="text-danger">*</span>}Password</span>
 										</label>
 										<PasswordField
+											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
 											classNames='form-control rounded-3'
 											min={8}
 											max={50}
-										/>
+										 />
 									</div>
 									<div className='d-flex justify-content-between mt-3 form-check'>
 										<div>

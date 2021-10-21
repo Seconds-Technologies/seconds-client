@@ -26,8 +26,6 @@
 .help {
   flex: 7;
   background-color: #f2f2f2;
-  border-radius: 0px;
-  margin-right: 0px;
 }
 
 .help-text {
@@ -70,5 +68,9 @@
 
 .cancelled {
   background-color: #565656;
+}
+
+.aside {
+  background-color: #EEEEEE;
 }
 

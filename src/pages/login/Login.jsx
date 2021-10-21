@@ -94,15 +94,19 @@ const Login = props => {
 											Password
 										</label>
 										<PasswordField
+											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
 											classNames='form-control form-control-lg'
 										/>
 									</div>
 									<div className='mt-5'>
-										<button type='submit' className='btn btn-dark btn-lg d-flex justify-content-center align-items-center w-100'>
-											<span className="me-3">Sign In</span>
-											<ClipLoader color="white" loading={isLoading} size={20}/>
+										<button
+											type='submit'
+											className='btn btn-dark btn-lg d-flex justify-content-center align-items-center w-100'
+										>
+											<span className='me-3'>Sign In</span>
+											<ClipLoader color='white' loading={isLoading} size={20} />
 										</button>
 									</div>
 								</form>

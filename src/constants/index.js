@@ -2,6 +2,7 @@ export const PATHS = {
 	SIGNUP: '/signup',
 	LOGIN: '/login',
 	FORGOT: '/forgot',
+	RESET: '/reset',
 	HOME: '/home',
 	ORDERS: '/orders',
 	VIEW_ORDER: '/view-orders',

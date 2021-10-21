@@ -18,12 +18,14 @@ import CustomerSupport from '../pages/settings/CustomerSupport';
 import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import Subscription from '../pages/subscription/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
+import ResetPassword from '../pages/resetPassword/ResetPassword';
 
 const routes = (
 	<Switch>
 		<Route exact path={PATHS.SIGNUP} component={Signup} />
 		<Route exact path={PATHS.LOGIN} component={Login} />
 		<Route exact path={PATHS.FORGOT} component={ForgotPassword} />
+		<Route exact path={PATHS.RESET} component={ResetPassword} />
 		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
