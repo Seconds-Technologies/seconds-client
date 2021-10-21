@@ -115,7 +115,7 @@ const Login = props => {
 						<div className='pt-4'>
 							<span className='text-primary'>
 								<Link to='/forgot' className='text-decoration-none'>
-									Forgot Password
+									Forgot Password?
 								</Link>
 							</span>
 						</div>
