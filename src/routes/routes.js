@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { PATHS } from '../constants';
 import Dashboard from '../pages/dashboard/Dashboard';
 import Orders from '../pages/orders/Orders';
 import Track from '../pages/track/Track';
@@ -15,13 +16,14 @@ import Profile from '../pages/profile/Profile';
 import Settings from '../pages/settings/Settings';
 import CustomerSupport from '../pages/settings/CustomerSupport';
 import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
-import { PATHS } from '../constants';
 import Subscription from '../pages/subscription/Subscription';
+import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 
 const routes = (
 	<Switch>
-		<Route exact path='/signup' component={Signup} />
-		<Route exact path='/login' component={Login} />
+		<Route exact path={PATHS.SIGNUP} component={Signup} />
+		<Route exact path={PATHS.LOGIN} component={Login} />
+		<Route exact path={PATHS.FORGOT} component={ForgotPassword} />
 		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />

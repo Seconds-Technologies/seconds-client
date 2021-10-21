@@ -1,27 +1,27 @@
-import './Login.css';
-import logo from '../../img/seconds-logo-black.svg';
-import { Link } from 'react-router-dom';
-import { Formik } from 'formik';
-import { authUser } from '../../store/actions/auth';
-import { useDispatch, useSelector } from 'react-redux';
+import './forgotPassword.css';
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Formik } from 'formik';
+import logo from '../../img/seconds-logo-black.svg';
 import { removeError } from '../../store/actions/errors';
-import PasswordField from '../../components/PasswordField';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { sendPasswordResetEmail } from '../../store/actions/auth';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-const Login = props => {
-	const errors = useSelector(state => state['errors']);
+const ForgotPassword = props => {
 	const dispatch = useDispatch();
+	const errors = useSelector(state => state['errors']);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
-		dispatch(removeError());
+		dispatch(removeError())
 	}, [props.location]);
 
 	return (
-		<div className='loginPage container-fluid bg-white'>
+		<div className='forgotPasswordPage container-fluid bg-white'>
 			<div className='row h-100'>
-				<div className='col-md-3 d-none d-md-block h-100 p-4 login-aside'>
+				<div className='col-md-3 d-none d-md-block h-100 p-4 forgot-aside'>
 					<div className='d-flex flex-column h-100'>
 						<img src={logo} alt='' className='img-fluid' width={150} />
 						<div className='mb-5' />
@@ -36,7 +36,8 @@ const Login = props => {
 				</div>
 				<div className='col-md-9 col-sm-12 w-sm mx-auto my-auto py-sm-5 px-md-4 px-sm-3'>
 					<div className='d-flex flex-grow-1 flex-column justify-content-center'>
-						<h2 className='login-header pb-2'>Login to your account</h2>
+						<h2 className='login-header pb-2'>Forgot your password?</h2>
+						<span className='text-muted'>Don't worry! We will help you recover your password</span>
 						{errors.message && (
 							<div className='alert alert-danger alert-dismissible' role='alert'>
 								<span>{errors.message}</span>
@@ -50,14 +51,13 @@ const Login = props => {
 						<Formik
 							initialValues={{
 								email: '',
-								password: '',
 							}}
 							onSubmit={(values, actions) => {
 								setLoading(true);
-								dispatch(authUser('login', values))
-									.then(() => {
+								dispatch(sendPasswordResetEmail(values.email))
+									.then((res) => {
 										setLoading(false);
-										props.history.push('/');
+										console.log(res)
 									})
 									.catch(err => {
 										setLoading(false);
@@ -89,19 +89,9 @@ const Login = props => {
 											onBlur={handleBlur}
 										/>
 									</div>
-									<div className='loginItem1'>
-										<label className='mb-2' htmlFor='password'>
-											Password
-										</label>
-										<PasswordField
-											onBlur={handleBlur}
-											onChange={handleChange}
-											classNames='form-control form-control-lg'
-										/>
-									</div>
-									<div className='mt-5'>
+									<div className='mt-4'>
 										<button type='submit' className='btn btn-dark btn-lg d-flex justify-content-center align-items-center w-100'>
-											<span className="me-3">Sign In</span>
+											<span className="me-3">Continue</span>
 											<ClipLoader color="white" loading={isLoading} size={20}/>
 										</button>
 									</div>
@@ -110,8 +100,8 @@ const Login = props => {
 						</Formik>
 						<div className='pt-4'>
 							<span className='text-primary'>
-								<Link to='/forgot' className='text-decoration-none'>
-									Forgot Password
+								<Link to='/login' className='text-decoration-none'>
+									Back to Login
 								</Link>
 							</span>
 						</div>
@@ -122,4 +112,6 @@ const Login = props => {
 	);
 };
 
-export default Login;
+ForgotPassword.propTypes = {};
+
+export default ForgotPassword;

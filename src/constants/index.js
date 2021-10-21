@@ -1,4 +1,7 @@
 export const PATHS = {
+	SIGNUP: '/signup',
+	LOGIN: '/login',
+	FORGOT: '/forgot',
 	HOME: '/home',
 	ORDERS: '/orders',
 	VIEW_ORDER: '/view-orders',

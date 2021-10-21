@@ -134,3 +134,14 @@ export function updateProfile({ img, id, ...data }) {
 		});
 	};
 }
+
+export function sendPasswordResetEmail(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log(email)
+			return apiCall('POST', '/server/auth/send-reset-email', { email })
+				.then(res => resolve(res))
+				.catch(err => reject(err));
+		})
+	}
+}
