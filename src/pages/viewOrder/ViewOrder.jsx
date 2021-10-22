@@ -23,7 +23,6 @@ const ViewOrder = props => {
 	const [order, setOrder] = useState({ status: '' });
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
-	const [total, setQuantity] = useState(0);
 
 	const statusBtn = classnames({
 		orderAddButton: true,
@@ -111,6 +110,10 @@ const ViewOrder = props => {
 							} = packages[0];
 							let customerName = `${firstName} ${lastName}`;
 							createdAt = moment(createdAt).utc().format('DD/MM/YYYY HH:mm:ss');
+							console.log(moment(dropoffStartTime).utc().format('DD/MM/YYYY HH:mm:ss'))
+							console.log(moment(dropoffStartTime).utc(true).format('DD/MM/YYYY HH:mm:ss'))
+							console.log(moment().to(moment(dropoffStartTime)))
+							console.log(moment().utc().to(moment(dropoffStartTime).utc()))
 							return {
 								id: _id,
 								itemsCount,

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { fetchOrders } from '../../store/actions/shopify';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
-import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import './Orders.css';
 
 export default function Orders() {
@@ -139,13 +139,14 @@ export default function Orders() {
 						sort: 'desc',
 					},
 				]}
-				autoHeight
+				autoHeight={false}
 				className='mt-3 mx-3'
 				rows={isIntegrated ? orders : jobs}
 				disableSelectionOnClick
 				columns={columns}
-				pageSize={10}
 				checkboxSelection
+				autoPageSize
+				pagination
 			/>
 		</div>
 	);
