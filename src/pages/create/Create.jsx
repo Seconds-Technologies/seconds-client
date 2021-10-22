@@ -49,7 +49,7 @@ const Create = props => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		console.log(moment().utc(true).format('YYYY-MM-DDTHH:mm'));
+		console.log(moment().format('YYYY-MM-DDTHH:mm'));
 		dispatch(removeError());
 	}, [props.location]);
 
@@ -168,8 +168,8 @@ const Create = props => {
 					description,
 					pickupAddress,
 					dropoffAddress,
-					pickupStartTime: moment(pickupStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
-					dropoffStartTime: moment(dropoffStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
+					pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 					status,
 					fleetProvider: providerId,
 				};
@@ -367,8 +367,8 @@ const Create = props => {
 										description,
 										pickupAddress,
 										dropoffAddress,
-										pickupStartTime: moment(pickupStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
-										dropoffStartTime: moment(dropoffStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
+										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 										status,
 										fleetProvider: providerId,
 									};
@@ -499,8 +499,8 @@ const Create = props => {
 													aria-label='pickup-datetime'
 													onChange={handleChange}
 													onBlur={handleBlur}
-													min={moment().utc(true).format('YYYY-MM-DDTHH:mm')}
-													max={moment().add(7, 'days').utc(true).format('YYYY-MM-DDTHH:mm')}
+													min={moment().format('YYYY-MM-DDTHH:mm')}
+													max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 												/>
 											</div>
 										</div>
@@ -642,11 +642,9 @@ const Create = props => {
 														onBlur={handleBlur}
 														min={moment(values.packagePickupStartTime)
 															.subtract(1, 'minute')
-															.utc(true)
 															.format('YYYY-MM-DDTHH:mm')}
 														max={moment(values.packagePickupStartTime)
 															.add(1, 'days')
-															.utc(true)
 															.format('YYYY-MM-DDTHH:mm')}
 													/>
 												) : (
@@ -660,11 +658,11 @@ const Create = props => {
 														aria-label='dropoff-datetime'
 														onChange={handleChange}
 														onBlur={handleBlur}
-														min={moment().utc(true).format('YYYY-MM-DDTHH:mm')}
+														min={moment().format('YYYY-MM-DDTHH:mm')}
 														max={moment()
 															.add('30', 'days')
-															.utc(true)
-															.format('YYYY-MM-DDTHH:mm')}
+															.format('YYYY-MM-DDTHH:mm')
+														}
 													/>
 												)}
 											</div>

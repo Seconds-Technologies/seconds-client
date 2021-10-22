@@ -51,7 +51,7 @@ const ViewOrder = props => {
 							let phone = order['customer']['phone'];
 							let { address1, city, zip } = order['shipping_address'];
 							let address = `${address1} ${city} ${zip}`;
-							let createdAt = moment(order['created_at']).utc().format('DD/MM/YYYY HH:mm:ss');
+							let createdAt = moment(order['created_at']).format('DD/MM/YYYY HH:mm:ss');
 							return {
 								id: order['id'],
 								orderNumber: order['order_number'],
@@ -110,11 +110,11 @@ const ViewOrder = props => {
 								itemsCount,
 							} = packages[0];
 							let customerName = `${firstName} ${lastName}`;
-							createdAt = moment(createdAt).utc().format('DD/MM/YYYY HH:mm:ss');
-							console.log(moment(dropoffStartTime).utc().format('DD/MM/YYYY HH:mm:ss'))
-							console.log(moment(dropoffStartTime).utc(true).format('DD/MM/YYYY HH:mm:ss'))
+							createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
+							console.log(dropoffStartTime)
+							console.log(moment())
+							console.log(moment.parseZone(dropoffStartTime))
 							console.log(moment().to(moment(dropoffStartTime)))
-							console.log(moment().utc().to(moment(dropoffStartTime).utc()))
 							return {
 								id: _id,
 								itemsCount,
@@ -299,7 +299,7 @@ const ViewOrder = props => {
 									? 'Estimating...'
 									: moment(order.dropoffDate).diff(moment(), 'minutes') < 0
 									? `Delivered`
-									: `${moment().utc().to(moment(order.dropoffDate).utc())}`}
+									: `${moment().to(moment(order.dropoffDate))}`}
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>

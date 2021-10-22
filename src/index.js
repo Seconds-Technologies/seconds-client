@@ -12,6 +12,8 @@ import { PersistGate } from "redux-persist/integration/react";
 //import "bootstrap/dist/css/bootstrap.min.css";
 import './style.scss';
 import "bootstrap/dist/js/bootstrap.min";
+import moment from 'moment-timezone';
+moment.tz.setDefault('Europe/London');
 
 ReactDOM.render(
 	<React.StrictMode>
