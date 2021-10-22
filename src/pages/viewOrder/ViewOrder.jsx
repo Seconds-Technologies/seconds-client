@@ -23,6 +23,7 @@ const ViewOrder = props => {
 	const [order, setOrder] = useState({ status: '' });
 	const [show, setShow] = useState(false);
 	const [products, setProducts] = useState([]);
+	const [total, setQuantity] = useState(0);
 
 	const statusBtn = classnames({
 		orderAddButton: true,
