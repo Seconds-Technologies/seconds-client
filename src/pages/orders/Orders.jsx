@@ -35,8 +35,8 @@ export default function Orders() {
 					} = packages[0];
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
-					let date = moment(createdAt).format('DD/MM/YYYY');
-					let time = moment(createdAt).format('HH:mm:ss');
+					let date = moment(createdAt).utc(true).format('DD/MM/YYYY');
+					let time = moment(createdAt).utc(true).format('HH:mm:ss');
 					return { id: orderNumber, status, customerName, phoneNumber, address, date, time };
 			  })
 			: [];
