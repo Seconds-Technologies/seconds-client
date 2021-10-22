@@ -82,7 +82,6 @@ export function getAllJobs(apiKey, email) {
 				params: { email }
 			})
 				.then(jobs => {
-					console.log(jobs);
 					dispatch(setAllJobs(jobs));
 					dispatch(
 						setCompletedJobs(

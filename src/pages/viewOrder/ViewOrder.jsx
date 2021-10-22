@@ -7,7 +7,7 @@ import classnames from 'classnames';
 import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import { STATUS } from '../../constants';
-import { getAllJobs, subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
+import { subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import './viewOrder.css';
 
@@ -51,7 +51,7 @@ const ViewOrder = props => {
 							let phone = order['customer']['phone'];
 							let { address1, city, zip } = order['shipping_address'];
 							let address = `${address1} ${city} ${zip}`;
-							let createdAt = moment(order['created_at']).utc(true).format('DD/MM/YYYY HH:mm:ss');
+							let createdAt = moment(order['created_at']).utc().format('DD/MM/YYYY HH:mm:ss');
 							return {
 								id: order['id'],
 								orderNumber: order['order_number'],
@@ -107,11 +107,13 @@ const ViewOrder = props => {
 								},
 								dropoffStartTime,
 								pickupStartTime,
+								itemsCount,
 							} = packages[0];
 							let customerName = `${firstName} ${lastName}`;
-							createdAt = moment(createdAt).utc(true).format('DD/MM/YYYY HH:mm:ss');
+							createdAt = moment(createdAt).utc().format('DD/MM/YYYY HH:mm:ss');
 							return {
 								id: _id,
+								itemsCount,
 								orderNumber,
 								createdAt,
 								description,
@@ -175,7 +177,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Items:</span>
-							<span className='orderShowInfoTitle'>{total}</span>
+							<span className='orderShowInfoTitle'>{Boolean(order.itemsCount) ? order.itemsCount : 0}</span>
 						</div>
 						<div className='orderShowInfo flex-column'>
 							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
@@ -293,7 +295,7 @@ const ViewOrder = props => {
 									? 'Estimating...'
 									: moment(order.dropoffDate).diff(moment(), 'minutes') < 0
 									? `Delivered`
-									: `${moment().to(moment(order.dropoffDate))}`}
+									: `${moment().utc().to(moment(order.dropoffDate).utc())}`}
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>

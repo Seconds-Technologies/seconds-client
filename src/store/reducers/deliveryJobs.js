@@ -20,7 +20,6 @@ export default (state = DEFAULT_STATE, action) => {
 			return { ...state, allJobs: [...state.allJobs, action.job] }
 		case SET_COMPLETED_JOBS:
 			let newCompletedJobs = action.jobs.filter(item => item.status === STATUS.COMPLETED)
-			console.log("completed Jobs", newCompletedJobs)
 			return { ...state, completedJobs: newCompletedJobs }
 		case UPDATE_COMPLETED_JOBS:
 			console.log(action.job)

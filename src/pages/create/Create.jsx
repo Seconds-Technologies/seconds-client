@@ -168,8 +168,8 @@ const Create = props => {
 					description,
 					pickupAddress,
 					dropoffAddress,
-					pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-					dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					pickupStartTime: moment(pickupStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
+					dropoffStartTime: moment(dropoffStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
 					status,
 					fleetProvider: providerId,
 				};
@@ -194,8 +194,8 @@ const Create = props => {
 			<Modal.Body>
 				<div>
 					<ul className='list-group list-group-flush'>
-						{Object.entries(deliveryJob).map(([key, value]) => (
-							<li className='list-group-item'>
+						{Object.entries(deliveryJob).map(([key, value], index) => (
+							<li key={index} className='list-group-item'>
 								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
 								<div className='text-capitalize'>{value.replace(/_/g, ' ')}</div>
 							</li>
@@ -367,8 +367,8 @@ const Create = props => {
 										description,
 										pickupAddress,
 										dropoffAddress,
-										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										pickupStartTime: moment(pickupStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
+										dropoffStartTime: moment(dropoffStartTime).utc().format('DD-MM-YYYY HH:mm:ss'),
 										status,
 										fleetProvider: providerId,
 									};
