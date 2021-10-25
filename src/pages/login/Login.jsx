@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { removeError } from '../../store/actions/errors';
 import PasswordField from '../../components/PasswordField';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { Mixpanel } from '../../config/mixpanel'
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -55,11 +56,21 @@ const Login = props => {
 							onSubmit={(values, actions) => {
 								setLoading(true);
 								dispatch(authUser('login', values))
-									.then(() => {
+									.then((user) => {
+										Mixpanel.identify(user.id)
+										Mixpanel.track('Successful login')
+										Mixpanel.people.set({
+											$first_name: user.firstname,
+											$last_name: user.lastname,
+											$email: user.email,
+											$apiKey: false,
+											$subscribed: false
+										})
 										setLoading(false);
 										props.history.push('/');
 									})
 									.catch(err => {
+										Mixpanel.track('Unsuccessful login');
 										setLoading(false);
 										console.log(err);
 									});

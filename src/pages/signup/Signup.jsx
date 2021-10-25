@@ -11,6 +11,7 @@ import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
 import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
+import { Mixpanel } from '../../config/mixpanel';
 
 export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);
@@ -100,10 +101,17 @@ export default function Signup(props) {
 								// const formData = this.mapStateToFormData();
 								dispatch(authUser('register', values))
 									.then(() => {
+										Mixpanel.identify(user.id)
+										Mixpanel.track('Successful login')
+										Mixpanel.people.set({
+											$first_name: user.firstname,
+											$last_name: user.lastname,
+										})
 										setLoading(false);
 										props.history.push('/home');
 									})
 									.catch(err => {
+										Mixpanel.track('Unsuccessful registration');
 										setLoading(false);
 										console.log(err);
 									});
