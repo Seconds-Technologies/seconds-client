@@ -12,4 +12,10 @@
     border-radius: 40px;
 }
 
-._loading_overlay_overlay {   position: fixed; }
+._loading_overlay_overlay {  position: fixed; }
+._loading_overlay_wrapper {
+    margin: 0;
+    padding: 0;
+    background-color: #FAFAFA;
+    min-height: calc(100vh - 70px);
+}

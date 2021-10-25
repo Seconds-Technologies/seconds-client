@@ -88,3 +88,8 @@ export const VEHICLE_TYPES = [
 		description: '150(W) x 120(H) x 90(D) - Up to 200kg',
 	},
 ];
+
+export const DELIVERY_TYPES = {
+	ON_DEMAND: 'ON_DEMAND',
+	SAME_DAY: 'SAME_DAY'
+}

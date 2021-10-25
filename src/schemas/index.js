@@ -1,8 +1,7 @@
 export const jobRequestSchema = {
-	deliveryType: "",
-	pickupFirstName: "",
-	pickupLastName: "",
-	pickupBusinessName: "",
+	pickupFirstName: '',
+	pickupLastName: '',
+	pickupBusinessName: '',
 	pickupAddress: '',
 	pickupFormattedAddress: {
 		street: '',
@@ -10,10 +9,10 @@ export const jobRequestSchema = {
 		postcode: '',
 		countryCode: 'GB',
 	},
-	pickupEmailAddress: "",
+	pickupEmailAddress: '',
 	pickupPhoneNumber: '',
-	packagePickupStartTime: '',
 	pickupInstructions: '',
+	packagePickupStartTime: '',
 	dropoffFirstName: '',
 	dropoffLastName: '',
 	dropoffBusinessName: '',
@@ -26,9 +25,10 @@ export const jobRequestSchema = {
 	},
 	dropoffEmailAddress: 'N/A',
 	dropoffPhoneNumber: '',
-	packageDropoffStartTime: '',
 	dropoffInstructions: '',
+	packageDropoffStartTime: '',
 	packageDescription: '',
+	packageDeliveryType: '',
 	itemsCount: null,
 	vehicleType: '',
-}
+};

@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
-import { PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
+import { DELIVERY_TYPES, PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
 // assets
@@ -305,7 +305,6 @@ const Create = props => {
 						pickupEmailAddress: email,
 						pickupPhoneNumber: phone,
 						pickupAddress: address,
-						packageDeliveryType: '',
 					}}
 					validationSchema={CreateOrderSchema}
 					validateOnChange={false}
@@ -415,9 +414,9 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-1'
-														checked={values.packageDeliveryType === 'on-demand'}
+														checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 														onChange={e => {
-															setFieldValue('packageDeliveryType', 'on-demand');
+															setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
 															setFieldValue('packagePickupStartTime', '');
 															setFieldValue('packageDropoffStartTime', '');
 														}}
@@ -433,10 +432,8 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-2'
-														checked={values.packageDeliveryType === 'scheduled'}
-														onChange={e =>
-															setFieldValue('packageDeliveryType', 'scheduled')
-														}
+														checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
+														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
@@ -444,7 +441,7 @@ const Create = props => {
 													</label>
 												</div>
 											</div>
-											<ErrorField name='deliveryType' classNames='mt-2' />
+											<ErrorField name='packageDeliveryType' classNames='mt-2' />
 										</div>
 									</div>
 								</div>
@@ -491,7 +488,7 @@ const Create = props => {
 													Pickup At
 												</label>
 												<input
-													disabled={values.packageDeliveryType === 'on-demand'}
+													disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 													name='packagePickupStartTime'
 													id='pickup-datetime'
 													type='datetime-local'
@@ -631,7 +628,7 @@ const Create = props => {
 												</label>
 												{values.packagePickupStartTime ? (
 													<input
-														disabled={values.packageDeliveryType === 'on-demand'}
+														disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 														id='dropoff-datetime'
 														name='packageDropoffStartTime'
 														type='datetime-local'
@@ -649,7 +646,7 @@ const Create = props => {
 													/>
 												) : (
 													<input
-														disabled={values.packageDeliveryType === 'on-demand'}
+														disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 														id='dropoff-datetime'
 														name='packageDropoffStartTime'
 														type='datetime-local'
@@ -744,7 +741,7 @@ const Create = props => {
 										<div className='alert alert-danger text-center w-75'>{error.message}</div>
 									)}
 								</div>
-								<div className='d-flex pt-5 justify-content-end'>
+								<div className='d-flex pt-3 justify-content-end'>
 									<Button
 										type='submit'
 										name={SUBMISSION_TYPES.GET_QUOTE}
