@@ -100,7 +100,7 @@ export default function Signup(props) {
 								console.log(values);
 								// const formData = this.mapStateToFormData();
 								dispatch(authUser('register', values))
-									.then(() => {
+									.then((user) => {
 										Mixpanel.identify(user.id)
 										Mixpanel.track('Successful login')
 										Mixpanel.people.set({
