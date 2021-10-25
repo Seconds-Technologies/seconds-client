@@ -7,6 +7,7 @@ import { fetchOrders } from '../../store/actions/shopify';
 import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import './Track.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const Track = props => {
 	const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const Track = props => {
 	});
 
 	useEffect(() => {
+		Mixpanel.people.increment("page_views")
 		isIntegrated && dispatch(fetchOrders(email))
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());

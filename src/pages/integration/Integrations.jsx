@@ -1,11 +1,12 @@
-import React from 'react';
-import shopifyLogo from '../../img/shopify.svg';
 import './integrations.css';
+import React, { useEffect } from 'react';
+import shopifyLogo from '../../img/shopify.svg';
 import { Link } from 'react-router-dom';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import { useSelector } from 'react-redux';
 import plug from '../../img/apikey.svg';
+import { Mixpanel } from '../../config/mixpanel';
 
 export default function Integrations() {
 	const { isIntegrated } = useSelector(state => state['shopifyStore']);
@@ -31,6 +32,11 @@ export default function Integrations() {
 		'my-3': true,
 		'link-disabled': Boolean(apiKey),
 	});
+
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
+
 
 	return (
 		<div className='integrations bg-light p-4'>

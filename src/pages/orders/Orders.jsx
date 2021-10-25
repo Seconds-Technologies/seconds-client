@@ -7,6 +7,7 @@ import { fetchOrders } from '../../store/actions/shopify';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import './Orders.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 export default function Orders() {
 	const dispatch = useDispatch();
@@ -43,6 +44,7 @@ export default function Orders() {
 	});
 
 	useEffect(() => {
+		Mixpanel.people.increment("page_views")
 		isIntegrated && dispatch(fetchOrders(email));
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());

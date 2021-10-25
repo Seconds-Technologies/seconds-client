@@ -1,3 +1,4 @@
+import './profile.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
@@ -6,9 +7,9 @@ import { updateProfile } from '../../store/actions/auth';
 import camera from '../../img/camera.svg';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
-import './profile.css';
 import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
 import { removeError } from '../../store/actions/errors';
+import { Mixpanel } from '../../config/mixpanel';
 
 const Profile = props => {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const Profile = props => {
 	const imageUploader = useRef(null);
 
 	useEffect(() => {
+		Mixpanel.people.increment("page_views")
 		dispatch(removeError());
 	}, [props.location]);
 

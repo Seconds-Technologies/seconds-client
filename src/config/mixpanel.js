@@ -21,6 +21,9 @@ let actions = {
 		set: (props) => {
 			if (env_check) mixpanel.people.set(props);
 		},
+		increment: (props) => {
+			if (env_check) mixpanel.people.increment(props)
+		}
 	}
 };
 

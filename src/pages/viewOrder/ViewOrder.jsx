@@ -10,6 +10,7 @@ import { STATUS } from '../../constants';
 import { subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import './viewOrder.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -145,6 +146,7 @@ const ViewOrder = props => {
 	}, []);
 
 	useEffect(() => {
+		Mixpanel.people.increment("page_views")
 		dispatch(removeError());
 	}, [props.location]);
 

@@ -1,11 +1,12 @@
-import React, { useRef, useState } from 'react';
+import './apikey.css';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Overlay, Tooltip } from 'react-bootstrap';
 import copy from '../../img/copy.svg';
 import { authorizeAPI } from '../../store/actions/auth';
 import secondsLogo from '../../img/logo.svg';
-import './apikey.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const ApiKey = props => {
 	const dispatch = useDispatch();
@@ -16,6 +17,10 @@ const ApiKey = props => {
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
 	const apiKeyRef = useRef(null);
+
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
 
 	return (
 		<div className='api-key-container bg-light p-4'>

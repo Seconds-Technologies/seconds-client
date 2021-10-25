@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import telephone from '../../img/telephone.svg';
 import mail from '../../img/mail.svg';
-import '../../App.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const CustomerSupport = props => {
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
+
 	return (
 		<div className='help py-lg-5 py-md-5 py-4'>
 			<div className='container-fluid py-5'>

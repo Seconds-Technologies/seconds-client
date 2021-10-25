@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import ToastFade from 'react-bootstrap/Toast';
 import CardSetupForm from './CardSetupForm';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import './PaymentMethod.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
 console.log(stripePromise)
@@ -12,6 +13,11 @@ console.log(stripePromise)
 const PaymentMethod = props => {
     const [toastMessage, setShowToast] = useState(false);
     const [subscriptionPlans, setShowSubscription] = useState(false);
+
+    useEffect(() => {
+        Mixpanel.people.increment("page_views")
+    }, []);
+
 
     const confirmToast = (
         <ToastContainer className='p-3 topRight'>

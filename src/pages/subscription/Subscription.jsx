@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
 import Modal from 'react-bootstrap/Modal';
 import './subscription.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey, numUsers, checkoutText }) => (
 	<section className='d-flex flex-column mx-4 p-5 h-100 w-100 plan-wrapper'>
@@ -78,6 +79,7 @@ const Subscription = () => {
 		(async function fetchSubscription(){
 			await dispatch(checkSubscriptionStatus(user.email))
 		})()
+		Mixpanel.people.increment("page_views")
 		return () => {
 			const query = new URLSearchParams(window.location.search);
 			window.fetch(`${process.env.REACT_APP_API_HOST}/api/v1/subscription/create-portal-session`, {

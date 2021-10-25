@@ -1,8 +1,9 @@
+import './Dashboard.css';
+import React, { useEffect, useState } from 'react';
 import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
-import React, { useState } from 'react';
 import Map from '../../components/Map/Map';
 import { useSelector } from 'react-redux';
-import './Dashboard.css';
+import { Mixpanel } from '../../config/mixpanel'
 
 export default function Dashboard() {
 	const [options] = useState([
@@ -25,6 +26,10 @@ export default function Dashboard() {
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const { firstname } = useSelector(state => state['currentUser'].user);
+
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
 
 	return (
 		<div className='dashboard bg-light'>

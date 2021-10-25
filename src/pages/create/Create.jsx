@@ -27,6 +27,7 @@ import gophr from '../../img/gophr.svg';
 import streetStream from '../../img/street-stream.svg';
 // styles
 import './create.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -47,6 +48,10 @@ const Create = props => {
 	);
 	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
+
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
 
 	useEffect(() => {
 		console.log(moment().format('YYYY-MM-DDTHH:mm'));

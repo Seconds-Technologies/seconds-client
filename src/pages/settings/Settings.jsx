@@ -1,11 +1,16 @@
-import React from 'react';
 import './settings.css';
+import React, { useEffect } from 'react';
 import { PATHS } from '../../constants';
 import support from '../../img/support.svg';
 import profile from '../../img/profile.svg';
 import card from '../../img/bank_card.svg';
+import { Mixpanel } from '../../config/mixpanel';
 
 const Settings = props => {
+	useEffect(() => {
+		Mixpanel.people.increment("page_views")
+	}, []);
+
 	return (
 		<div className='settings bg-light d-flex flex-column justify-content-center align-items-center'>
 			<div
