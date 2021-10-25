@@ -106,6 +106,9 @@ export default function Signup(props) {
 										Mixpanel.people.set({
 											$first_name: user.firstname,
 											$last_name: user.lastname,
+											$email: user.email,
+											$apiKey: false,
+											$subscribed: false
 										})
 										setLoading(false);
 										props.history.push('/home');

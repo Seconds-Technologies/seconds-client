@@ -1,7 +1,8 @@
 import mixpanel from 'mixpanel-browser';
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN);
+mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {debug: true});
 
-let env_check = process.env.REACT_APP_MIXPANEL_ENV === 'production' || 'staging';
+let env_check = process.env.REACT_APP_MIXPANEL_ENV === 'production' || process.env.REACT_APP_MIXPANEL_ENV === 'staging';
+console.log(env_check)
 
 let actions = {
 	identify: (id) => {
