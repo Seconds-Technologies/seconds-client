@@ -16,6 +16,7 @@ import {
 } from '../../store/actions/payments';
 import Card from '../../components/card/Card';
 import './CardSetupForm.css';
+import { Mixpanel } from '../../config/mixpanel';
 
 const ErrorMessage = ({ children }) => (
 	<div className='ErrorMessage ' role='alert'>
@@ -171,8 +172,14 @@ const CardSetupForm = ({ showToast }) => {
 		if (result.error) {
 			console.log(result.error);
 			setError(result.error);
+			Mixpanel.track('Add payment method', {
+				$type: 'FAILURE'
+			});
 		} else {
 			console.log('success', result.setupIntent.payment_method);
+			Mixpanel.track('Add payment method', {
+				$type: 'SUCCESS'
+			});
 			await dispatch(addPaymentMethod(user, result.setupIntent.payment_method));
 			showToast('Your payment method has been saved successfully!');
 			setPaymentAdded(1);

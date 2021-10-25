@@ -75,6 +75,9 @@ const ApiKey = props => {
 							onSubmit={(values, actions) =>
 								dispatch(authorizeAPI(email, values.strategy))
 									.then(key => {
+										Mixpanel.track('ApiKey generation', {
+											$strategy: values.strategy
+										});
 										setKey(key);
 										console.log('KEY:', key);
 										handleShow();

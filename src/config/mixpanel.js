@@ -17,12 +17,15 @@ let actions = {
 	track: (name, props) => {
 		if (env_check) mixpanel.track(name, props);
 	},
+	track_links: (element, description, props={}) => {
+		if (env_check) mixpanel.track_links(element, description, props)
+	},
 	people: {
 		set: (props) => {
 			if (env_check) mixpanel.people.set(props);
 		},
-		increment: (props) => {
-			if (env_check) mixpanel.people.increment(props)
+		increment: (name) => {
+			if (env_check) mixpanel.people.increment(name)
 		}
 	}
 };
