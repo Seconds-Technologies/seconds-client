@@ -6,7 +6,7 @@ export function checkSubscriptionStatus(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log(email);
-			apiCall('POST', '/api/v1/subscription/fetch-stripe-subscription', { email })
+			apiCall('POST', '/server/subscription/fetch-stripe-subscription', { email })
 				.then(({ id: subscriptionId, status }) => {
 					console.log(subscriptionId, status)
 					dispatch(updateCurrentUser({ subscriptionId }));

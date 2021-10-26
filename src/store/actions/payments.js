@@ -13,16 +13,7 @@ export function setupIntent(user) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('stripeCustomerId:', user.stripeCustomerId);
-			return apiCall(
-				'POST',
-				`/api/v1/payments/setup-intent`,
-				{ stripeCustomerId: user.stripeCustomerId },
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
-				}
-			)
+			return apiCall('POST', `/server/payment/setup-intent`, { stripeCustomerId: user.stripeCustomerId })
 				.then(intent => {
 					resolve(intent);
 				})
@@ -38,17 +29,12 @@ export function setupIntent(user) {
 export function addPaymentMethod(user, paymentMethodId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall(
-				'POST',
-				`/api/v1/payments/add-payment-method`,
-				{
-					email: user.email,
-					customerId: user.stripeCustomerId,
-					paymentMethodId: paymentMethodId
-				}
-			)
+			return apiCall('POST', `/server/payment/add-payment-method`, {
+				email: user.email,
+				customerId: user.stripeCustomerId,
+				paymentMethodId: paymentMethodId,
+			})
 				.then(res => {
-					console.log(res);
 					console.log(paymentMethodId);
 					dispatch(setPaymentMethodId(paymentMethodId));
 					resolve(null);
@@ -65,20 +51,11 @@ export function addPaymentMethod(user, paymentMethodId) {
 export function updatePaymentMethod(user, paymentDetails) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall(
-				'POST',
-				`/api/v1/payments/update-payment-method`,
-				{
-					email: user.email,
-					paymentMethodId: user.paymentMethodId,
-					paymentDetails,
-				},
-				{
-					headers: {
-						'X-Seconds-Api-Key': user.apiKey,
-					},
-				}
-			)
+			return apiCall('POST', `/server/payment/update-payment-method`, {
+				email: user.email,
+				paymentMethodId: user.paymentMethodId,
+				paymentDetails,
+			})
 				.then(res => resolve(res))
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
@@ -93,14 +70,10 @@ export function removePaymentMethod(user) {
 	return dispatch => {
 		console.log(user.paymentMethodId);
 		return new Promise((resolve, reject) => {
-			return apiCall(
-				'POST',
-				`/api/v1/payments/remove-payment-method`,
-				{
-					email: user.email,
-					paymentMethodId: user.paymentMethodId
-				}
-			)
+			return apiCall('POST', `/server/payment/remove-payment-method`, {
+				email: user.email,
+				paymentMethodId: user.paymentMethodId,
+			})
 				.then(({ message }) => {
 					console.log(message);
 					dispatch(setPaymentMethodId(''));
@@ -118,11 +91,7 @@ export function removePaymentMethod(user) {
 export function fetchStripeCard(user) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall(
-				'POST',
-				`/api/v1/payments/fetch-stripe-card`,
-				{ paymentMethodId: user.paymentMethodId }
-			)
+			return apiCall('POST', `/server/payment/fetch-stripe-card`, { paymentMethodId: user.paymentMethodId })
 				.then(card => {
 					resolve(card);
 				})
