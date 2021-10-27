@@ -1,8 +1,6 @@
 .shopifyContainer {
     flex: 7;
-    border-radius: 0px;
-    margin-right: 0px;
-    min-height: 100vh;
+    min-height: calc(100vh - 70px);
 }
 
 .shopifyConnect {
@@ -19,12 +17,11 @@
 }
 
 .shopifyButton {
-    background-color: #565656;
     border-color: #565656;
+    border-radius: 5px;
     cursor: pointer;
     color: white;
     height: 50px;
     width: 200px;
-    border-radius: 5px;
     font-size: 20px;
 }

@@ -12,6 +12,7 @@ export const DEFAULT_STATE = {
 		firstname: '',
 		lastname: '',
 		company: '',
+		phone: '',
 		email: '',
 		apiKey: '',
 		selectionStrategy: '',

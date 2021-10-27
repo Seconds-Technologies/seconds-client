@@ -1,5 +1,5 @@
 import './profile.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,15 +7,14 @@ import { updateProfile } from '../../store/actions/auth';
 import camera from '../../img/camera.svg';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
-import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
-import { removeError } from '../../store/actions/errors';
+import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
+import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
+import { parseAddress } from '../../helpers';
 
 const Profile = props => {
 	const dispatch = useDispatch();
-	const { id, email, firstname, lastname, company, phone, address, apiKey, profileImageData } = useSelector(
-		state => state['currentUser'].user
-	);
+	const { user } = useSelector(state => state['currentUser']);
 	const errors = useSelector(state => state['errors']);
 	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const [src, setSrc] = useState(null);
@@ -27,7 +26,7 @@ const Profile = props => {
 	const imageUploader = useRef(null);
 
 	useEffect(() => {
-		Mixpanel.people.increment("page_views")
+		Mixpanel.people.increment('page_views');
 		dispatch(removeError());
 	}, [props.location]);
 
@@ -52,7 +51,7 @@ const Profile = props => {
 			</Modal.Header>
 			<Modal.Body>
 				<div className='text-center'>
-					<span className='fs-5'>{apiKey}</span>
+					<span className='fs-5'>{user.apiKey}</span>
 				</div>
 			</Modal.Body>
 		</Modal>
@@ -77,26 +76,67 @@ const Profile = props => {
 		'my-5': isIntegrated,
 	});
 
+	const validateAddress = useCallback(address => {
+		let err;
+		const types = ['street address', 'city', 'postcode'];
+		Object.values(address).forEach((item, index) => {
+			if (!item) {
+				err = `Address does not include a '${types[index]}'. Please add all parts of the address and try again`;
+				dispatch(addError(err));
+				throw new Error(err);
+			} else if (index === 2 && item.length < 6) {
+				err = `Postcode,' ${item}', is not complete. Please include a full UK postcode in your address`;
+				dispatch(addError(err));
+				throw new Error(err);
+			}
+		});
+		return true;
+	}, []);
+
+	const getParsedAddress = useCallback(parseAddress, []);
+
 	return (
 		<div className='profile bg-light d-flex justify-content-center align-items-center px-5'>
 			{modal1}
 			{modal2}
 			<div className='profile-wrapper bg-white'>
 				<Formik
+					enableReinitialize
 					initialValues={{
-						firstname,
-						lastname,
-						company,
-						email,
-						phone,
-						address,
+						firstname: user.firstname,
+						lastname: user.lastname,
+						company: user.company,
+						email: user.email,
+						phone: user.phone,
+						fullAddress: user.fullAddress,
 						profileImage: null,
 					}}
-					onSubmit={({ profileImage, ...values }) => {
-						console.log(values);
-						dispatch(updateProfile({ img: profileImage, id, ...values }))
-							.then(message => handleOpen('profile'))
-							.catch(err => console.log(err));
+					onSubmit={async ({ profileImage, fullAddress, ...values }) => {
+						try {
+							console.log(fullAddress);
+							console.log(user.fullAddress);
+							// check if address has changed
+							if (fullAddress !== user.fullAddress) {
+								values.fullAddress = fullAddress;
+								let addressComponents = await geocodeByAddress(fullAddress);
+								values.address = getParsedAddress(addressComponents);
+								validateAddress(values.address);
+							}
+							console.log(values);
+							const message = await dispatch(
+								updateProfile({
+									img: profileImage,
+									id: user.id,
+									...values,
+								})
+							);
+							console.log(message);
+							handleOpen('profile');
+							Mixpanel.track('Successful profile update');
+						} catch (err) {
+							Mixpanel.track('Unsuccessful profile update');
+							console.log(err);
+						}
 					}}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
@@ -129,15 +169,16 @@ const Profile = props => {
 										}}
 										onClick={() => imageUploader.current.click()}
 									>
-										{profileImageData ? (
+										{user.profileImageData ? (
 											<img
-												src={`data:image/jpeg;base64,${profileImageData}`}
+												src={`data:image/jpeg;base64,${user.profileImageData}`}
 												className={'border-1 rounded-circle'}
 												ref={uploadedImage}
 												style={{
 													width: '100px',
 													height: '100px',
 												}}
+												alt='profile-button'
 											/>
 										) : (
 											<img
@@ -155,6 +196,7 @@ const Profile = props => {
 																height: '30px',
 														  }
 												}
+												alt='upload-button'
 											/>
 										)}
 									</div>
@@ -254,9 +296,9 @@ const Profile = props => {
 											region: 'GB',
 										}}
 										selectProps={{
-											defaultInputValue: values.address,
+											defaultInputValue: values.fullAddress,
 											onChange: ({ label }) => {
-												setFieldValue('address', label);
+												setFieldValue('fullAddress', label);
 												console.log(label, values);
 											},
 										}}
@@ -265,25 +307,19 @@ const Profile = props => {
 								</div>
 							</div>
 							<div className={btnContainer}>
-								{!isIntegrated && (
-									<div className='col-12'>
-										<span>For developers</span>
-									</div>
-								)}
-								{!isIntegrated && (
-									<div className='col-6'>
-										<Button
-											variant='dark'
-											size='lg'
-											className='w-100'
-											onClick={() =>
-												apiKey ? handleOpen('api') : props.history.push(PATHS.API_KEY)
-											}
-										>
-											Get API Key
-										</Button>
-									</div>
-								)}
+								<div className='col-12'>
+									<span>For developers</span>
+								</div>
+								<div className='col-6'>
+									<Button
+										variant='dark'
+										size='lg'
+										className='w-100'
+										onClick={() => user.apiKey ? handleOpen('api') : props.history.push(PATHS.API_KEY)}
+									>
+										Get API Key
+									</Button>
+								</div>
 								<div className='col-6'>
 									<Button className='text-light w-100' variant='primary' type='submit' size='lg'>
 										Save Changes

@@ -1,31 +1,32 @@
+import './PaymentMethod.css';
+import secondsLogo from '../../img/logo.svg';
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import ToastFade from 'react-bootstrap/Toast';
 import CardSetupForm from './CardSetupForm';
 import ToastContainer from 'react-bootstrap/ToastContainer';
-import './PaymentMethod.css';
 import { Mixpanel } from '../../config/mixpanel';
 
 const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
-console.log(stripePromise)
 
 const PaymentMethod = props => {
     const [toastMessage, setShowToast] = useState(false);
     const [subscriptionPlans, setShowSubscription] = useState(false);
 
     useEffect(() => {
+        console.log(stripePromise)
         Mixpanel.people.increment("page_views")
     }, []);
 
 
     const confirmToast = (
-        <ToastContainer className='p-3 topRight'>
+        <ToastContainer className='topRight'>
             <ToastFade onClose={() => setShowToast(false)} show={Boolean(toastMessage)} animation={'true'} delay={3000}
                        autohide>
                 <ToastFade.Header closeButton={false}>
                     <img
-                        src='holder.js/20x20?text=%20'
+                        src={secondsLogo}
                         className='rounded me-2'
                         alt=''
                     />

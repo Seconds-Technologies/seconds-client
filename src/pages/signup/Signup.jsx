@@ -4,14 +4,15 @@ import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeError } from '../../store/actions/errors';
-import React, { useEffect, useState } from 'react';
-import GooglePlaceAutocomplete from 'react-google-places-autocomplete';
+import { addError, removeError } from '../../store/actions/errors';
+import React, { useCallback, useEffect, useState } from 'react';
+import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
 import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
 import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
 import { Mixpanel } from '../../config/mixpanel';
+import { parseAddress } from '../../helpers';
 
 export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);
@@ -21,6 +22,25 @@ export default function Signup(props) {
 	useEffect(() => {
 		dispatch(removeError());
 	}, [props.location]);
+
+	const validateAddress = useCallback(address => {
+		let err;
+		const types = ['street address', 'city', 'postcode'];
+		Object.values(address).forEach((item, index) => {
+			if (!item){
+				err = `Address does not include a '${types[index]}'. Please add all parts of the address and try again`
+				dispatch(addError(err))
+				throw new Error(err);
+			} else if (index === 2 && item.length < 6) {
+				err = `Postcode,' ${item}', is not complete. Please include a full UK postcode in your address`
+				dispatch(addError(err))
+				throw new Error(err);
+			}
+		});
+		return true;
+	}, []);
+
+	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
 		<LoadingOverlay active={isLoading} spinner text='Hold tight, signing you up...'>
@@ -80,6 +100,7 @@ export default function Signup(props) {
 							</div>
 						)}
 						<Formik
+							enableReinitialize
 							validationSchema={SignUpSchema}
 							validateOnChange={false}
 							validateOnBlur={false}
@@ -90,34 +111,41 @@ export default function Signup(props) {
 								company: '',
 								password: '',
 								phone: '',
-								address: '',
+								fullAddress: '',
+								address: {
+									street: '',
+									city: '',
+									postcode: '',
+									countryCode: 'GB'
+								},
 								apiKey: '',
-								stripeCustomerId: '',
 								terms: false,
 							}}
-							onSubmit={(values, actions) => {
-								setLoading(true);
-								console.log(values);
-								// const formData = this.mapStateToFormData();
-								dispatch(authUser('register', values))
-									.then((user) => {
-										Mixpanel.identify(user.id)
-										Mixpanel.track('Successful login')
-										Mixpanel.people.set({
-											$first_name: user.firstname,
-											$last_name: user.lastname,
-											$email: user.email,
-											$apiKey: false,
-											$subscribed: false
-										})
-										setLoading(false);
-										props.history.push('/home');
-									})
-									.catch(err => {
-										Mixpanel.track('Unsuccessful registration');
-										setLoading(false);
-										console.log(err);
+							onSubmit={async (values, actions) => {
+								try {
+									setLoading(true);
+									console.log(values.fullAddress)
+									let addressComponents = await geocodeByAddress(values.fullAddress);
+									values.address = getParsedAddress(addressComponents);
+									validateAddress(values.address)
+									console.log(values.address)
+									const user = await dispatch(authUser('register', values));
+									Mixpanel.identify(user.id);
+									Mixpanel.track('Successful login');
+									Mixpanel.people.set({
+										$first_name: user.firstname,
+										$last_name: user.lastname,
+										$email: user.email,
+										$apiKey: false,
+										$subscribed: false,
 									});
+									setLoading(false);
+									props.history.push('/home');
+								} catch (err) {
+									Mixpanel.track('Unsuccessful registration');
+									setLoading(false);
+									console.log(err);
+								}
 							}}
 						>
 							{({
@@ -135,7 +163,10 @@ export default function Signup(props) {
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												<span>{errors['firstname'] && <span className="text-danger">*</span>}First Name</span>
+												<span>
+													{errors['firstname'] && <span className='text-danger'>*</span>}First
+													Name
+												</span>
 											</label>
 											<input
 												autoComplete='given-name'
@@ -149,7 +180,10 @@ export default function Signup(props) {
 										</div>
 										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
-												<span>{errors['lastname'] && <span className="text-danger">*</span>}Last Name</span>
+												<span>
+													{errors['lastname'] && <span className='text-danger'>*</span>}Last
+													Name
+												</span>
 											</label>
 											<input
 												autoComplete='family-name'
@@ -165,7 +199,9 @@ export default function Signup(props) {
 									<div className='row mt-3'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='company'>
-												<span>{errors['company'] && <span className="text-danger">*</span>}Company</span>
+												<span>
+													{errors['company'] && <span className='text-danger'>*</span>}Company
+												</span>
 											</label>
 											<input
 												autoComplete='organization'
@@ -179,7 +215,9 @@ export default function Signup(props) {
 										</div>
 										<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='company'>
-												<span>{errors['phone'] && <span className="text-danger">*</span>}Phone</span>
+												<span>
+													{errors['phone'] && <span className='text-danger'>*</span>}Phone
+												</span>
 											</label>
 											<input
 												autoComplete='tel'
@@ -194,7 +232,10 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company-address'>
-											<span>{errors['address'] && <span className="text-danger">*</span>}Company Address</span>
+											<span>
+												{errors['fullAddress'] && <span className='text-danger'>*</span>}Company
+												Address
+											</span>
 										</label>
 										<GooglePlaceAutocomplete
 											autocompletionRequest={{
@@ -208,17 +249,17 @@ export default function Signup(props) {
 												region: 'GB',
 											}}
 											selectProps={{
-												onChange: ({ label }) => {
-													setFieldValue('address', label);
-													console.log(label, values);
-												},
+												defaultInputValue: values.fullAddress,
+												onChange: ({ label }) => setFieldValue('fullAddress', label)
 											}}
 											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
 										/>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>
-											<span>{errors['email'] && <span className="text-danger">*</span>}Email Address</span>
+											<span>
+												{errors['email'] && <span className='text-danger'>*</span>}Email Address
+											</span>
 										</label>
 										<input
 											autoComplete='email'
@@ -232,7 +273,9 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='password'>
-											<span>{errors['password'] && <span className="text-danger">*</span>}Password</span>
+											<span>
+												{errors['password'] && <span className='text-danger'>*</span>}Password
+											</span>
 										</label>
 										<PasswordField
 											name='password'
@@ -241,7 +284,7 @@ export default function Signup(props) {
 											classNames='form-control rounded-3'
 											min={8}
 											max={50}
-										 />
+										/>
 									</div>
 									<div className='d-flex justify-content-between mt-3 form-check'>
 										<div>

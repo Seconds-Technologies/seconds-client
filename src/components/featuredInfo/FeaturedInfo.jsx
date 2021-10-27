@@ -1,10 +1,9 @@
+import './FeaturedInfo.css';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
-import './FeaturedInfo.css';
 import { STATUS } from '../../constants';
-import { getAllOrders } from '../../store/actions/shopify';
-import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import moment from 'moment';
 
 const FeaturedInfo = ({interval}) => {
@@ -49,7 +48,6 @@ const FeaturedInfo = ({interval}) => {
     });
 
     useEffect(() => {
-        isIntegrated && dispatch(getAllOrders(credentials.accessToken, credentials.baseURL, email, createdAt))
         apiKey && dispatch(subscribe(apiKey, email));
         return () => apiKey && dispatch(unsubscribe());
     }, [isIntegrated, apiKey]);

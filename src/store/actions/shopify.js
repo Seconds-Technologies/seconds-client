@@ -69,26 +69,6 @@ export function validateShopify(data) {
 	};
 }
 
-export function getAllOrders(token, baseURL, email, createdAt) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			//setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/server/shopify/all-orders`, { token, baseURL, email, createdAt })
-				.then(({ orders }) => {
-					dispatch(setAllOrders(orders));
-					dispatch(setCompletedOrders(orders.map(({id, status}) => ({id, status}))))
-					dispatch(removeError());
-					resolve(orders);
-				})
-				.catch(err => {
-					if (err) dispatch(addError(err.message));
-					else dispatch(addError("Api endpoint could not be accessed!"));
-					reject(err);
-				});
-		});
-	};
-}
-
 export function getAllProducts(token, baseURL, email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
@@ -98,25 +78,6 @@ export function getAllProducts(token, baseURL, email) {
 					dispatch(setAllProducts(products));
 					dispatch(removeError());
 					resolve(products);
-				})
-				.catch(err => {
-					if (err) dispatch(addError(err.message));
-					else dispatch(addError("Api endpoint could not be accessed!"));
-					reject(err);
-				});
-		});
-	};
-}
-
-export function fetchOrders(email) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			setTokenHeader(localStorage.getItem("jwt_token"));
-			return apiCall("POST", `/server/shopify/fetch-orders`, { email })
-				.then(({ orders }) => {
-					dispatch(setAllOrders(orders));
-					dispatch(removeError());
-					resolve(orders);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

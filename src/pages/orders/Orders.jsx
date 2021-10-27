@@ -1,32 +1,16 @@
+import './Orders.css';
 import React, { useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { fetchOrders } from '../../store/actions/shopify';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
-import './Orders.css';
 import { Mixpanel } from '../../config/mixpanel';
 
 export default function Orders() {
 	const dispatch = useDispatch();
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
-	const { isIntegrated } = useSelector(state => state['shopifyStore']);
-	const orders = useSelector(state => {
-		const allOrders = state['shopifyOrders'].allOrders;
-		return isIntegrated
-			? allOrders.map(({ order_number, status, shipping_address, phone, created_at, customer }) => {
-					let { address1, city, zip } = shipping_address;
-					let customerName = `${customer['first_name']} ${customer['last_name']}`;
-					let address = `${address1} ${city} ${zip}`;
-					phone = phone === null || undefined ? 'N/A' : phone;
-					let date = moment(created_at).format('DD/MM/YYYY');
-					let time = moment(created_at).format('HH:mm:ss');
-					return { id: order_number, status, customerName, phoneNumber: phone, address, date, time };
-			  })
-			: [];
-	});
 	const jobs = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return apiKey
@@ -44,8 +28,7 @@ export default function Orders() {
 	});
 
 	useEffect(() => {
-		Mixpanel.people.increment("page_views")
-		isIntegrated && dispatch(fetchOrders(email));
+		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
@@ -143,7 +126,7 @@ export default function Orders() {
 				]}
 				autoHeight={false}
 				className='mt-3 mx-3'
-				rows={isIntegrated ? orders : jobs}
+				rows={jobs}
 				disableSelectionOnClick
 				columns={columns}
 				checkboxSelection

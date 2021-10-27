@@ -1,46 +1,31 @@
+import './Track.css';
 import React, { useEffect } from 'react';
 import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
 import { COLOURS, STATUS } from '../../constants';
-import { fetchOrders } from '../../store/actions/shopify';
-import { getAllJobs, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
-import './Track.css';
 import { Mixpanel } from '../../config/mixpanel';
 
 const Track = props => {
 	const dispatch = useDispatch();
-	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const orders = useSelector(state => {
-		const { allOrders } = state['shopifyOrders'];
 		const { allJobs } = state['deliveryJobs'];
-		return isIntegrated
-			? allOrders.map(({ order_number, status, shipping_address, customer }) => {
-					let { address1, city, zip } = shipping_address;
-					let customerName = `${customer['first_name']} ${customer['last_name']}`;
-					let address = `${address1} ${city} ${zip}`;
-					return { id: order_number, status, customerName, address, provider: 'N/A' };
-			  })
-			: allJobs.map(
-					({
-						status,
-						jobSpecification: { orderNumber, packages },
-						selectedConfiguration: { providerId },
-					}) => {
-						let {
-							dropoffLocation: { fullAddress: address, firstName, lastName },
-						} = packages[0];
-						let customerName = `${firstName} ${lastName}`;
-						return { id: orderNumber, status, customerName, address, provider: providerId };
-					}
-			  );
+		return allJobs.map(
+			({ status, jobSpecification: { orderNumber, packages }, selectedConfiguration: { providerId } }) => {
+				let {
+					dropoffLocation: { fullAddress: address, firstName, lastName },
+				} = packages[0];
+				let customerName = `${firstName} ${lastName}`;
+				return { id: orderNumber, status, customerName, address, provider: providerId };
+			}
+		);
 	});
 
 	useEffect(() => {
-		Mixpanel.people.increment("page_views")
-		isIntegrated && dispatch(fetchOrders(email))
+		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);

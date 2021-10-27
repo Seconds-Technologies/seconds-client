@@ -85,7 +85,7 @@ const ApiKey = props => {
 									.catch(err => console.log(err))
 							}
 						>
-							{({ values, errors, handleChange, handleBlur, handleSubmit }) => (
+							{({ handleChange, handleBlur, handleSubmit }) => (
 								<form
 									className='d-flex flex-grow-1 flex-column justify-content-center align-items-center'
 									onSubmit={handleSubmit}
@@ -111,12 +111,12 @@ const ApiKey = props => {
 										customers
 									</div>
 									<div>
-										<button type='submit' className='me-5 api-key-button'>
+										<button type='submit' className='me-5 btn btn-primary btn-lg api-key-button'>
 											Generate API Key
 										</button>
 										<button
 											type='button'
-											className='mt-2 text-center shopifyButton'
+											className='text-center btn btn-secondary btn-lg shopifyButton'
 											onClick={props.history.goBack}
 										>
 											Go Back
@@ -148,7 +148,7 @@ const ApiKey = props => {
 						/>
 					</div>
 					<div className='d-flex justify-content-center align-items-center'>
-						<button className='mt-2 text-center shopifyButton' onClick={props.history.goBack}>
+						<button className='mt-2 text-center btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 							Go Back
 						</button>
 					</div>

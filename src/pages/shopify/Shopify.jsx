@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { getAllOrders, getAllProducts, validateShopify } from '../../store/actions/shopify';
+import { getAllProducts, validateShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../img/shopify.svg';
 import './shopify.css';
@@ -38,7 +38,6 @@ const Shopify = props => {
 							dispatch(validateShopify({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
-									dispatch(getAllOrders(shop.accessToken, shop.baseURL, email, createdAt));
 									dispatch(getAllProducts(shop.accessToken, shop.baseURL, email));
 								})
 								.catch(err => setError(err.message));
@@ -61,6 +60,7 @@ const Shopify = props => {
 									</label>
 									<input
 										type='text'
+										autoComplete='organization'
 										className='form-control rounded-3'
 										id='shopName'
 										name='shopName'
@@ -109,11 +109,11 @@ const Shopify = props => {
 									/>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
-									<button type='submit' className='shopifyButton'>
-										Connect
-									</button>
-									<button className='shopifyButton' onClick={props.history.goBack}>
+									<button className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 										Go Back
+									</button>
+									<button type='submit' className='btn btn-primary btn-lg shopifyButton'>
+										Connect
 									</button>
 								</div>
 							</form>
@@ -124,7 +124,7 @@ const Shopify = props => {
 						<p className='lead'>Shop Owner: {credentials.shopOwner}</p>
 						<p className='lead'>Domain: {credentials.domain}</p>
 						<p className='lead'>Country: {credentials.country}</p>
-						<button className='mt-5 shopifyButton' onClick={props.history.goBack}>
+						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.goBack}>
 							Go Back
 						</button>
 					</div>

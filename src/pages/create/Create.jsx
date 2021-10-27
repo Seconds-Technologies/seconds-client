@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createDeliveryJob, getAllQuotes } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
-import { DELIVERY_TYPES, PLACE_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
+import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
 // assets
@@ -28,6 +28,7 @@ import streetStream from '../../img/street-stream.svg';
 // styles
 import './create.css';
 import { Mixpanel } from '../../config/mixpanel';
+import { parseAddress } from '../../helpers';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -43,7 +44,7 @@ const Create = props => {
 	const [quotes, setQuotes] = useState([]);
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
-	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(
+	const { firstname, lastname, email, company, apiKey, phone, fullAddress } = useSelector(
 		state => state['currentUser'].user
 	);
 	const error = useSelector(state => state['errors']);
@@ -90,40 +91,7 @@ const Create = props => {
 		);
 	};
 
-	const getParsedAddress = useCallback(data => {
-		let address = data[0].address_components;
-		let formattedAddress = {
-			street: '',
-			city: '',
-			postcode: '',
-			countryCode: 'GB',
-		};
-		let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
-		components.forEach(({ long_name, types }) => {
-			switch (types[0]) {
-				case PLACE_TYPES.STREET_NUMBER:
-					formattedAddress.street = long_name + ' ';
-					break;
-				case PLACE_TYPES.STREET_ADDRESS:
-					formattedAddress.street = formattedAddress.street + long_name;
-					break;
-				case PLACE_TYPES.CITY:
-					formattedAddress.city = long_name;
-					break;
-				case PLACE_TYPES.POSTCODE:
-					formattedAddress.postcode = long_name;
-					break;
-				case PLACE_TYPES.POSTCODE_PREFIX:
-					// make postcode property empty since the real value is not a full postcode
-					formattedAddress.postcode = long_name;
-					break;
-				default:
-					return;
-			}
-		});
-		console.log(formattedAddress);
-		return formattedAddress;
-	}, []);
+	const getParsedAddress = useCallback(parseAddress, []);
 
 	const validateAddresses = useCallback((pickup, dropoff) => {
 		const types = ['street address', 'city', 'postcode'];
@@ -309,7 +277,7 @@ const Create = props => {
 						pickupBusinessName: company,
 						pickupEmailAddress: email,
 						pickupPhoneNumber: phone,
-						pickupAddress: address,
+						pickupAddress: fullAddress,
 					}}
 					validationSchema={CreateOrderSchema}
 					validateOnChange={false}
