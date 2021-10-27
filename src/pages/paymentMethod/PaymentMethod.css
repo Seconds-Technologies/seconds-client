@@ -2,10 +2,3 @@
   flex: 7;
   min-height: calc(100vh - 70px);
 }
-
-.p-3.topRight {
-  right: 0 !important;
-  z-index: 1000;
-  top: 11% !important;
-  position: absolute !important;
-} 

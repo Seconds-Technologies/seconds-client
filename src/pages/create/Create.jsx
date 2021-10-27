@@ -29,6 +29,9 @@ import streetStream from '../../img/street-stream.svg';
 import './create.css';
 import { Mixpanel } from '../../config/mixpanel';
 import { parseAddress } from '../../helpers';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import ToastFade from 'react-bootstrap/Toast';
+import secondsLogo from '../../img/logo.svg';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});
@@ -38,6 +41,7 @@ const Create = props => {
 	const [deliveryParams, setDeliveryParams] = useState({
 		...jobRequestSchema,
 	});
+	const [toastMessage, setToast] = useState('');
 	const [fleetProvider, selectFleetProvider] = useState('');
 	const [loadingText, setLoadingText] = useState('');
 	const [quoteModal, showQuoteModal] = useState(false);
@@ -51,7 +55,7 @@ const Create = props => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		Mixpanel.people.increment("page_views")
+		Mixpanel.people.increment('page_views');
 	}, []);
 
 	useEffect(() => {
@@ -122,41 +126,41 @@ const Create = props => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
 		setLoadingModal(true);
-		dispatch(createDeliveryJob(deliveryParams, apiKey, fleetProvider)).then(
-			({
-				createdAt,
-				jobSpecification: { packages, orderNumber },
-				status,
-				selectedConfiguration: { providerId, winnerQuote },
-			}) => {
-				let {
-					description,
-					pickupLocation: { fullAddress: pickupAddress },
-					dropoffLocation: { fullAddress: dropoffAddress },
-					pickupStartTime,
-					dropoffStartTime,
-				} = packages[0];
-				let newJob = {
-					orderNumber,
-					description,
-					pickupAddress,
-					dropoffAddress,
-					pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-					dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+		dispatch(createDeliveryJob(deliveryParams, apiKey, fleetProvider))
+			.then(
+				({
+					createdAt,
+					jobSpecification: { packages, orderNumber },
 					status,
-					fleetProvider: providerId,
-				};
+					selectedConfiguration: { providerId, winnerQuote },
+				}) => {
+					let {
+						description,
+						pickupLocation: { fullAddress: pickupAddress },
+						dropoffLocation: { fullAddress: dropoffAddress },
+						pickupStartTime,
+						dropoffStartTime,
+					} = packages[0];
+					let newJob = {
+						orderNumber,
+						description,
+						pickupAddress,
+						dropoffAddress,
+						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						status,
+						fleetProvider: providerId,
+					};
+					setLoadingModal(false);
+					setJob(newJob);
+					handleOpen();
+				}
+			)
+			.catch(err => {
 				setLoadingModal(false);
-				setJob(newJob);
-				handleOpen();
-			}
-		).catch(err => {
-			setLoadingModal(false);
-			console.log(err);
-			err
-				? dispatch(addError(err.message))
-				: dispatch(addError('Api endpoint could not be accessed!'));
-		});
+				console.log(err);
+				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+			});
 	};
 
 	const newJobModal = (
@@ -262,12 +266,30 @@ const Create = props => {
 		</Modal>
 	);
 
+	const apiKeyToast = (
+		<ToastContainer className='bottomRight'>
+			<ToastFade onClose={() => setToast("")} show={!!toastMessage} animation={'true'} delay={3000}
+			           autohide>
+				<ToastFade.Header closeButton={false}>
+					<img
+						src={secondsLogo}
+						className='rounded me-2'
+						alt=''
+					/>
+					<strong className='me-auto'>Seconds</strong>
+				</ToastFade.Header>
+				<ToastFade.Body>{toastMessage}</ToastFade.Body>
+			</ToastFade>
+		</ToastContainer>
+	);
+
 	return (
 		<LoadingOverlay active={isLoading} spinner text={loadingText}>
 			<div className='create bg-light py-4'>
 				{newJobModal}
 				{quotesModal}
 				{confirmModal}
+				{apiKeyToast}
 				<Formik
 					enableReinitialize
 					initialValues={{
@@ -357,9 +379,8 @@ const Create = props => {
 							}
 						} else {
 							setLoadingModal(false);
-							alert(
-								'Your account does not have an API' +
-									' key associated with it. Please generate one from the integrations page'
+							setToast(
+								'Your account does not have an API key associated with it. Please generate one from the integrations page'
 							);
 						}
 					}}
@@ -387,9 +408,14 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-1'
-														checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+														checked={
+															values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
+														}
 														onChange={e => {
-															setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
+															setFieldValue(
+																'packageDeliveryType',
+																DELIVERY_TYPES.ON_DEMAND
+															);
 															setFieldValue('packagePickupStartTime', '');
 															setFieldValue('packageDropoffStartTime', '');
 														}}
@@ -406,7 +432,12 @@ const Create = props => {
 														name='deliveryType'
 														id='radio-2'
 														checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
-														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
+														onChange={e =>
+															setFieldValue(
+																'packageDeliveryType',
+																DELIVERY_TYPES.SAME_DAY
+															)
+														}
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
@@ -601,7 +632,9 @@ const Create = props => {
 												</label>
 												{values.packagePickupStartTime ? (
 													<input
-														disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+														disabled={
+															values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
+														}
 														id='dropoff-datetime'
 														name='packageDropoffStartTime'
 														type='datetime-local'
@@ -619,7 +652,9 @@ const Create = props => {
 													/>
 												) : (
 													<input
-														disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+														disabled={
+															values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
+														}
 														id='dropoff-datetime'
 														name='packageDropoffStartTime'
 														type='datetime-local'
@@ -629,10 +664,7 @@ const Create = props => {
 														onChange={handleChange}
 														onBlur={handleBlur}
 														min={moment().format('YYYY-MM-DDTHH:mm')}
-														max={moment()
-															.add('30', 'days')
-															.format('YYYY-MM-DDTHH:mm')
-														}
+														max={moment().add('30', 'days').format('YYYY-MM-DDTHH:mm')}
 													/>
 												)}
 											</div>

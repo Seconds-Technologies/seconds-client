@@ -74,3 +74,24 @@
   background-color: #EEEEEE;
 }
 
+.topRight {
+  right: 0 !important;
+  z-index: 1000;
+  top: 11% !important;
+  position: absolute !important;
+}
+
+.topLeft {
+  left: 0 !important;
+  z-index: 1000;
+  top: 11% !important;
+  position: absolute !important;
+}
+
+.bottomRight {
+  right: 0 !important;
+  z-index: 1000;
+  bottom: 11% !important;
+  position: absolute !important;
+}
+
