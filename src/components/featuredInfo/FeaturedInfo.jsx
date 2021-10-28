@@ -38,13 +38,8 @@ const FeaturedInfo = ({interval}) => {
     const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
     const { email, createdAt, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
-        if (isIntegrated) {
-            const { allOrders: total, completedOrders: completed } = state['shopifyOrders'];
-            return { total, completed }
-        } else {
-            const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-            return { total: filterByInterval(total), completed: filterByInterval(completed) }
-        }
+        const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
+        return { total: filterByInterval(total), completed: filterByInterval(completed) }
     });
 
     useEffect(() => {
