@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import classnames from 'classnames';
-import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import { STATUS } from '../../constants';
 import { subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
@@ -53,10 +52,6 @@ const ViewOrder = props => {
 						} = packages[0];
 						let customerName = `${firstName} ${lastName}`;
 						createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
-						console.log(dropoffStartTime);
-						console.log(moment());
-						console.log(moment.parseZone(dropoffStartTime));
-						console.log(moment().to(moment(dropoffStartTime)));
 						return {
 							id: _id,
 							itemsCount,
