@@ -7,13 +7,13 @@ import { updateOrderStatus } from '../../store/actions/shopify';
 import moment from 'moment';
 import { STATUS } from '../../constants';
 import { subscribe, unsubscribe, updateJobsStatus } from '../../store/actions/delivery';
-import { removeError } from '../../store/actions/errors';
+import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const { email, apiKey, stripeCustomerId } = useSelector(state => state['currentUser'].user);
+	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const [order, setOrder] = useState({ status: '' });
 	const [show, setShow] = useState(false);
@@ -102,6 +102,12 @@ const ViewOrder = props => {
 						<button type='button' className='btn btn-close' data-bs-dismiss='alert' aria-label='Close' />
 					</div>
 				)}
+				{error.message && (
+					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
+						<h2 className='text-center'>{error.message}</h2>
+						<button type='button' className='btn btn-close' data-bs-dismiss='alert' aria-label='Close' />
+					</div>
+				)}
 			</div>
 			<div className='orderContainer mt-3'>
 				<div className='orderShow pt-4 pb-3 px-5'>
@@ -155,26 +161,11 @@ const ViewOrder = props => {
 										console.log('CHOSEN STATUS', values);
 										if (order.status !== values.status) {
 											try {
-												isIntegrated
-													? dispatch(
-															updateOrderStatus(
-																order.id,
-																email,
-																values.status,
-																order.status
-															)
-													  )
-													: dispatch(
-															updateJobsStatus(
-																apiKey,
-																order.id,
-																values.status,
-																stripeCustomerId
-															)
-													  );
+												dispatch(updateJobsStatus(apiKey, order.id, values.status, stripeCustomerId));
 												setShow(true);
 											} catch (err) {
-												alert(err);
+												console.error(err);
+												dispatch(addError(err.message));
 											}
 										}
 									}}
