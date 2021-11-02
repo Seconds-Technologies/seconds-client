@@ -25,6 +25,7 @@ import van from '../../img/van.svg';
 import stuart from '../../img/stuart.svg';
 import gophr from '../../img/gophr.svg';
 import streetStream from '../../img/street-stream.svg';
+import ecofleet from '../../img/ecofleet.svg';
 // styles
 import './create.css';
 import { Mixpanel } from '../../config/mixpanel';
@@ -211,7 +212,9 @@ const Create = props => {
 													? stuart
 													: providerId === 'gophr'
 													? gophr
-													: streetStream
+													: providerId === 'street_stream'
+													? streetStream
+													: ecofleet
 											}
 											alt=''
 											className='me-3'
@@ -220,7 +223,9 @@ const Create = props => {
 										/>
 										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
 									</td>
-									<td className='col' colSpan={2}>{`£${priceExVAT.toFixed(2)}`}</td>
+									<td className='col' colSpan={2}>
+										{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
+									</td>
 									<td className='col'>
 										{dropoffEta
 											? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes`
@@ -268,14 +273,9 @@ const Create = props => {
 
 	const apiKeyToast = (
 		<ToastContainer className='bottomRight'>
-			<ToastFade onClose={() => setToast("")} show={!!toastMessage} animation={'true'} delay={3000}
-			           autohide>
+			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={'true'} delay={3000} autohide>
 				<ToastFade.Header closeButton={false}>
-					<img
-						src={secondsLogo}
-						className='rounded me-2'
-						alt=''
-					/>
+					<img src={secondsLogo} className='rounded me-2' alt='' />
 					<strong className='me-auto'>Seconds</strong>
 				</ToastFade.Header>
 				<ToastFade.Body>{toastMessage}</ToastFade.Body>

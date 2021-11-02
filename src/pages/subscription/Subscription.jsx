@@ -6,7 +6,7 @@ import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
 import Modal from 'react-bootstrap/Modal';
 import { Mixpanel } from '../../config/mixpanel';
 
-const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey, numUsers, checkoutText }) => (
+const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey, numUsers, checkoutText, commission }) => (
 	<section className='d-flex flex-column mx-4 p-5 h-100 w-100 plan-wrapper'>
 		<span className='text-uppercase text-muted mb-4 plan-text'>{`${plan} account`}</span>
 		<span className='h1 price-text'>{`£${price} / month`}</span>
@@ -31,8 +31,9 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 				<span className='text-uppercase'>{checkoutText}</span>
 			</button>
 		</form>
-		<div className='py-4'>
-			<span className='fw-bold'>{`Your card will be charged £${price.toFixed(2)} when you checkout`}</span>
+		<div className='py-4 d-flex flex-column'>
+			<span className='fw-bold mb-3'>{`Your card will be charged £${price.toFixed(2)} when you checkout`}</span>
+			<small>*£{commission.price} order after the first {commission.orders} orders</small>
 		</div>
 	</section>
 );
@@ -115,19 +116,20 @@ const Subscription = () => {
 			{!user.subscriptionId ? (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>
 					<ProductDisplay
-						lookupKey={'basic'}
-						plan={'Basic'}
-						price={49}
+						lookupKey={'growth'}
+						plan={'Growth'}
+						price={29}
 						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={1}
 						checkoutText={'Checkout'}
 						description={'For developers and small businesses doing small or medium order volume'}
+						commission={{price: 0.49, orders: 20}}
 					/>
 					<ProductDisplay
-						lookupKey={'pro'}
-						plan={'Pro'}
-						price={499}
+						lookupKey={'enterprise'}
+						plan={'Enterprise'}
+						price={49}
 						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={5}
@@ -135,6 +137,7 @@ const Subscription = () => {
 							'For medium, large and fast-growing businesses \n' + 'doing medium to large order volume'
 						}
 						checkoutText={'Upgrade'}
+						commission={{price: 0.99, orders: 50}}
 					/>
 				</div>
 			) : (
