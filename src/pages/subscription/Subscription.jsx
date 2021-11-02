@@ -33,7 +33,7 @@ const ProductDisplay = ({ plan, price, description, email, customerId, lookupKey
 		</form>
 		<div className='py-4 d-flex flex-column'>
 			<span className='fw-bold mb-3'>{`Your card will be charged £${price.toFixed(2)} when you checkout`}</span>
-			<small>*£{commission.price} order after the first {commission.orders} orders</small>
+			<small>*£{commission.price} / order after the first {commission.orders} orders</small>
 		</div>
 	</section>
 );
