@@ -45,7 +45,6 @@ const PaymentMethod = props => {
                 <div className='w-md'>
                     <h1>Payment Information</h1>
                     <span className='small'>Your card will be used for collecting payments for your deliveries.</span><br />
-                    <span className='small'>The commission fee is <strong>0%</strong> per completed order</span>
                     <div className='card card-3 rounded-3 p-4 my-3'>
                         <Elements stripe={stripePromise}>
                             <CardSetupForm {...props} showToast={setShowToast} showSubscription={setShowSubscription}/>
