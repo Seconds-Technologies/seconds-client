@@ -55,7 +55,7 @@ const ViewOrder = props => {
 						return {
 							id: _id,
 							itemsCount,
-							orderNumber,
+							reference: jobReference,
 							createdAt,
 							description,
 							status: status[0].toUpperCase() + status.toLowerCase().slice(1),
@@ -199,8 +199,8 @@ const ViewOrder = props => {
 						<span className='fs-3 orderShowCustomerName'>Delivery Information</span>
 					</div>
 					<div className='orderShowInfo'>
-						<span className='orderShowLabel'>Order Number:</span>
-						<span className='orderShowInfoTitle'>{order.orderNumber}</span>
+						<span className='orderShowLabel'>Order Reference:</span>
+						<span className='orderShowInfoTitle'>{order.reference}</span>
 					</div>
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Provider:</span>
