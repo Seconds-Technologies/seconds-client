@@ -19,6 +19,7 @@ import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import Subscription from '../pages/subscription/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
+import Couriers from '../pages/couriers/Couriers';
 
 const routes = (
 	<Switch>
@@ -34,6 +35,7 @@ const routes = (
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
+		<PrivateRoute path={PATHS.COURIERS} component={Couriers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />

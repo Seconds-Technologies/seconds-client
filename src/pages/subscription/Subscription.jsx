@@ -118,7 +118,7 @@ const Subscription = () => {
 					<ProductDisplay
 						lookupKey={'growth'}
 						plan={'Growth'}
-						price={29}
+						price={25}
 						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={1}

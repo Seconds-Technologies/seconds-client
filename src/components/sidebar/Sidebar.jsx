@@ -6,6 +6,7 @@ import createIcon from '../../img/create1.svg';
 import trackIcon from '../../img/track1.svg';
 import logoutIcon from '../../img/logout.svg';
 import codeIcon from '../../img/developer.svg';
+import courierIcon from  '../../img/courier.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { logout } from '../../store/actions/auth';
 import { useDispatch } from 'react-redux';
@@ -89,6 +90,20 @@ export default function Sidebar() {
 								height={25}
 							/>
 							<div className='item-hover'>Integrations</div>
+						</li>
+					</Link>
+					<Link to={PATHS.COURIERS} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.COURIERS && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${
+									location['pathname'] === PATHS.COURIERS && 'currentIcon'
+								}`}
+								src={courierIcon}
+								alt={''}
+								width={25}
+								height={25}
+							/>
+							<div className='item-hover'>Couriers</div>
 						</li>
 					</Link>
 					<a
