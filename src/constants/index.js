@@ -17,7 +17,8 @@ export const PATHS = {
 	HELP: '/help',
 	PAYMENT: '/payment',
 	SUBSCRIPTION: '/subscription',
-	COURIERS: '/couriers'
+	COURIERS: '/couriers',
+	DELIVERY_TIMES: '/delivery-times'
 };
 
 export const COLOURS = {

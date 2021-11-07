@@ -53,24 +53,25 @@ export function authUser(type, userData) {
 			console.log('User data:', userData);
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, ...user }) => {
-					console.log(message)
-					console.log("Auth token", token)
-					console.log("shopify", !!shopify);
+					console.log(message);
+					console.log('Auth token', token);
+					console.log('shopify', !!shopify);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					dispatch(setCurrentUser(user));
-					shopify && apiCall('POST', `/server/shopify`, { email: user.email })
-						.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
-							dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));
-							resolve({ baseURL, accessToken, shopId, domain, country, shopOwner });
-						})
-						.catch(err => reject(err));
+					shopify &&
+						apiCall('POST', `/server/shopify`, { email: user.email })
+							.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
+								dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));
+								resolve({ baseURL, accessToken, shopId, domain, country, shopOwner });
+							})
+							.catch(err => reject(err));
 					dispatch(removeError());
 					resolve(user);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
+					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
 		});
@@ -100,7 +101,7 @@ export function updateProfile({ img, id, ...data }) {
 		return new Promise((resolve, reject) => {
 			console.log('Image:', img);
 			console.log('Data:', data);
-			return apiCall('POST', '/server/main/update', { img, id, data })
+			return apiCall('POST', '/server/main/update-profile', { img, id, data })
 				.then(({ message, ...data }) => {
 					if (img) {
 						const formData = new FormData();
@@ -128,31 +129,57 @@ export function updateProfile({ img, id, ...data }) {
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
+					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
 		});
 	};
 }
 
-export function sendPasswordResetEmail(email){
+export function sendPasswordResetEmail(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(email)
+			console.log(email);
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
 				.then(res => resolve(res))
-				.catch(err => reject(err));
-		})
-	}
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
 }
 
 export function resetPassword({ password }, token) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			const config = { params: { token} }
+			const config = { params: { token } };
 			return apiCall('PATCH', '/server/auth/reset-password', { password }, config)
 				.then(res => resolve(res))
-				.catch(err => reject(err));
-		})
-	}
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function updateDeliveryTimes(email, deliveryHours) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log(email);
+			return apiCall('POST', '/server/main/update-delivery-hours', deliveryHours, { params: { email } })
+				.then(res => {
+					dispatch(updateCurrentUser({ deliveryHours }));
+					resolve('New delivery times set!');
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
 }

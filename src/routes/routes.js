@@ -20,6 +20,7 @@ import Subscription from '../pages/subscription/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Couriers from '../pages/couriers/Couriers';
+import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
 
 const routes = (
 	<Switch>
@@ -39,6 +40,7 @@ const routes = (
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
+		<PrivateRoute path={PATHS.DELIVERY_TIMES} component={DeliveryTimes} />
 		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
 		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
 	</Switch>
