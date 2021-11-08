@@ -203,7 +203,7 @@ const Create = props => {
 							</tr>
 						</thead>
 						<tbody>
-							{quotes.map(({ providerId, priceExVAT, dropoffEta, createdAt }, index) => (
+							{quotes.map(({ providerId, priceExVAT, dropoffEta, createdAt }, index) => providerId !== "ecofleet" && (
 								<tr key={index}>
 									<td className='col text-capitalize'>
 										<img
