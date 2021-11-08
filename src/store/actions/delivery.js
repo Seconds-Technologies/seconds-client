@@ -10,6 +10,7 @@ import {
 	TIMER_STOP,
 } from '../actionTypes';
 import { STATUS } from '../../constants';
+import { Mixpanel } from '../../config/mixpanel';
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,
@@ -60,11 +61,13 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 				},
 			})
 				.then(job => {
+					Mixpanel.track('Successful Delivery job creation')
 					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
+					Mixpanel.track('Unsuccessful Delivery job creation')
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -147,10 +150,12 @@ export function getAllQuotes(apiKey, data) {
 			return apiCall('POST', `/api/v1/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
 					console.log(quotes);
+					Mixpanel.track('Successful fetch of delivery quotes')
 					dispatch(removeError());
 					resolve({ quotes, bestQuote });
 				})
 				.catch(err => {
+					Mixpanel.track('Unsuccessful fetch of delivery quotes')
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);

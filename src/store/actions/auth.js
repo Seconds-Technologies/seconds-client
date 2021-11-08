@@ -3,6 +3,7 @@ import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER
 import { addError, removeError } from './errors';
 import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
 import { clearAllJobs } from './delivery';
+import { Mixpanel } from '../../config/mixpanel';
 
 export const removeUser = () => {
 	return {
@@ -85,9 +86,15 @@ export function authorizeAPI(email, strategy) {
 			return apiCall('POST', `/server/main/token`, { email, strategy })
 				.then(({ apiKey }) => {
 					dispatch(setApiKey(apiKey));
+					Mixpanel.track('Successful Api Key generation', {
+						$strategy: strategy
+					});
 					resolve(apiKey);
 				})
 				.catch(err => {
+					Mixpanel.track('Unsuccessful Api Key generation', {
+						$error: err.message
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -103,6 +110,7 @@ export function updateProfile({ img, id, ...data }) {
 			console.log('Data:', data);
 			return apiCall('POST', '/server/main/update-profile', { img, id, data })
 				.then(({ message, ...data }) => {
+					Mixpanel.track("Successful updated profile")
 					if (img) {
 						const formData = new FormData();
 						console.log(img);
@@ -115,10 +123,12 @@ export function updateProfile({ img, id, ...data }) {
 						};
 						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
+								Mixpanel.track("Successful profile image upload")
 								console.log(message);
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
 							})
 							.catch(err => {
+								Mixpanel.track("Unsuccessful profile image upload", { $error: err.message})
 								console.error(err);
 								reject(err);
 							});
@@ -128,6 +138,7 @@ export function updateProfile({ img, id, ...data }) {
 					resolve(message);
 				})
 				.catch(err => {
+					Mixpanel.track("Unsuccessful profile update", { $error: err.message})
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -141,8 +152,12 @@ export function sendPasswordResetEmail(email) {
 		return new Promise((resolve, reject) => {
 			console.log(email);
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
-				.then(res => resolve(res))
+				.then(res => {
+					Mixpanel.track("Successful request to reset password")
+					resolve(res)
+				})
 				.catch(err => {
+					Mixpanel.track("Unsuccessful request to reset password", { $error: err.message})
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -156,8 +171,12 @@ export function resetPassword({ password }, token) {
 		return new Promise((resolve, reject) => {
 			const config = { params: { token } };
 			return apiCall('PATCH', '/server/auth/reset-password', { password }, config)
-				.then(res => resolve(res))
+				.then(res => {
+					Mixpanel.track("Successful password reset")
+					resolve(res)
+				})
 				.catch(err => {
+					Mixpanel.track("Unsuccessful password reset", { $error: err.message})
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -172,10 +191,12 @@ export function updateDeliveryTimes(email, deliveryHours) {
 			console.log(email);
 			return apiCall('POST', '/server/main/update-delivery-hours', deliveryHours, { params: { email } })
 				.then(res => {
+					Mixpanel.track("Delivery hours updated successfully")
 					dispatch(updateCurrentUser({ deliveryHours }));
 					resolve('Your new delivery times have been updated!');
 				})
 				.catch(err => {
+					Mixpanel.track("Unsuccessful update for delivery hours", { $error: err.message})
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);

@@ -1,6 +1,7 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
 import { updateCurrentUser } from './auth';
+import { Mixpanel } from '../../config/mixpanel';
 
 export function checkSubscriptionStatus(email) {
 	return dispatch => {
@@ -9,6 +10,9 @@ export function checkSubscriptionStatus(email) {
 			apiCall('POST', '/server/subscription/fetch-stripe-subscription', { email })
 				.then(({ id: subscriptionId, status }) => {
 					console.log(subscriptionId, status)
+					Mixpanel.people.set({
+						subscribed: !!subscriptionId
+					})
 					dispatch(updateCurrentUser({ subscriptionId }));
 					resolve(status === "active");
 				})

@@ -73,7 +73,6 @@ const Subscription = () => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	let [message, setMessage] = useState('');
-
 	let [portalLink, setPortalLink] = useState('');
 
 	useEffect(() => {
