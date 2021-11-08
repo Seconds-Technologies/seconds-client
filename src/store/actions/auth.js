@@ -173,7 +173,7 @@ export function updateDeliveryTimes(email, deliveryHours) {
 			return apiCall('POST', '/server/main/update-delivery-hours', deliveryHours, { params: { email } })
 				.then(res => {
 					dispatch(updateCurrentUser({ deliveryHours }));
-					resolve('New delivery times set!');
+					resolve('Your new delivery times have been updated!');
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

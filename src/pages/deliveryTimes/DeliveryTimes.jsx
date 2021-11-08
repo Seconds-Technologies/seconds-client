@@ -6,6 +6,9 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDeliveryTimes } from '../../store/actions/auth';
 import { addError } from '../../store/actions/errors';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import ToastFade from 'react-bootstrap/Toast';
+import secondsLogo from '../../img/logo.svg';
 
 /*const defaultDeliveryHours = {
 	0: {
@@ -52,27 +55,27 @@ const offIcon = <div className='switch-icon'>Off</div>;
 const DeliveryTimes = () => {
 	const dispatch = useDispatch();
 	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
-	const [message, setMessage] = useState('');
-
-	/*const parsedDeliveryHours = useMemo(() => {
-		let hours = Object.assign({}, deliveryHours);
-		Object.entries(deliveryHours).forEach(([key, value]) => {
-			const { open, close, canDeliver } = value;
-			hours[key] = {
-				canDeliver,
-				open: moment(open).format('HH:mm'),
-				close: moment(close).format('HH:mm'),
-			};
-		});
-		return hours;
-	}, []);*/
+	const [toastMessage, setToast] = useState('');
 
 	useEffect(() => {
 		console.log(deliveryHours);
 	}, []);
 
+	const successToast = (
+		<ToastContainer className='topRight'>
+			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={'true'} delay={3000} autohide>
+				<ToastFade.Header closeButton={false}>
+					<img src={secondsLogo} className='rounded me-2' alt='' />
+					<strong className='me-auto'>Seconds</strong>
+				</ToastFade.Header>
+				<ToastFade.Body>{toastMessage}</ToastFade.Body>
+			</ToastFade>
+		</ToastContainer>
+	);
+
 	return (
 		<div className='bg-light delivery-times py-4 d-flex justify-content-center'>
+			{successToast}
 			<div className='bg-white border border-2 times-wrapper h-100 py-3'>
 				<div className='d-flex flex-column align-items-center mt-2 mb-4'>
 					<h1 className='fs-2'>Set Times</h1>
@@ -84,7 +87,7 @@ const DeliveryTimes = () => {
 					onSubmit={values => {
 						console.log(values);
 						dispatch(updateDeliveryTimes(email, values))
-							.then(message => setMessage(message))
+							.then(message => setToast(message))
 							.catch(err => dispatch(addError(err.message)));
 					}}
 				>
