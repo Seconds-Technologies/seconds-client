@@ -3,10 +3,10 @@ import React, { useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { Mixpanel } from '../../config/mixpanel';
+import moment from 'moment';
 
 export default function Orders() {
 	const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export default function Orders() {
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let date = moment(createdAt).format('DD/MM/YYYY');
 					let time = moment(createdAt).format('HH:mm:ss');
-					return { id: orderNumber, status, customerName, phoneNumber, address, date, time };
+					return { id: orderNumber, status, customerName, phoneNumber, address, date, time, createdAt };
 			  })
 			: [];
 	});
@@ -90,8 +90,13 @@ export default function Orders() {
 		{ field: 'customerName', headerName: 'Customer', width: 150 },
 		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
 		{ field: 'address', headerName: 'Address', width: 200 },
-		{ field: 'date', headerName: 'Date', width: 130 },
+		{ field: 'date', headerName: 'Date', type: 'date', width: 130 },
 		{ field: 'time', headerName: 'Time', width: 130 },
+		{
+			field: 'createdAt',
+			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
+			hide: true,
+		},
 		{
 			field: 'action',
 			headerName: 'Action',
@@ -120,8 +125,8 @@ export default function Orders() {
 				sortingOrder={['desc', 'asc']}
 				sortModel={[
 					{
-						field: 'id',
-						sort: 'desc',
+						field: 'createdAt',
+						sort: 'asc',
 					},
 				]}
 				autoHeight={false}
