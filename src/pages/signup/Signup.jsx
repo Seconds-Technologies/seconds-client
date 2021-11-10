@@ -139,12 +139,11 @@ export default function Signup(props) {
 								try {
 									setLoading(true);
 									console.log(values)
-									const fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`
-									console.log(fullAddress);
-									let addressComponents = await geocodeByAddress(fullAddress);
+									values.fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`
+									let addressComponents = await geocodeByAddress(values.fullAddress);
 									values.address = getParsedAddress(addressComponents);
 									validateAddress(values.address);
-									console.log(values.address);
+									console.table({address: values.address, fullAddress: values.fullAddress});
 									const user = await dispatch(authUser('register', values));
 									Mixpanel.identify(user.id);
 									Mixpanel.track('Successful Registration');
