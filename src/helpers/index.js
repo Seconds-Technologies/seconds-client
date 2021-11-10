@@ -9,13 +9,23 @@ export function parseAddress(data){
 		countryCode: 'GB',
 	};
 	let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
+	components.forEach(comp => console.table(comp))
 	components.forEach(({ long_name, types }) => {
 		switch (types[0]) {
+			case PLACE_TYPES.ESTABLISHMENT:
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
+				break;
 			case PLACE_TYPES.STREET_NUMBER:
-				formattedAddress.street = long_name + ' ';
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
 				break;
 			case PLACE_TYPES.STREET_ADDRESS:
-				formattedAddress.street = formattedAddress.street + long_name;
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
+				break;
+			case PLACE_TYPES.SUB_PREMISE:
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
+				break;
+			case PLACE_TYPES.PREMISE:
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
 				break;
 			case PLACE_TYPES.CITY:
 				formattedAddress.city = long_name;

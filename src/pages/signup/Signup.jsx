@@ -6,7 +6,7 @@ import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { addError, removeError } from '../../store/actions/errors';
 import React, { useCallback, useEffect, useState } from 'react';
-import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
+import { geocodeByAddress } from 'react-google-places-autocomplete';
 import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
 import PasswordField from '../../components/PasswordField';
@@ -27,13 +27,13 @@ export default function Signup(props) {
 		let err;
 		const types = ['street address', 'city', 'postcode'];
 		Object.values(address).forEach((item, index) => {
-			if (!item){
-				err = `Address does not include a '${types[index]}'. Please add all parts of the address and try again`
-				dispatch(addError(err))
+			if (!item) {
+				err = `Address does not include a '${types[index]}'. Please add all parts of the address and try again`;
+				dispatch(addError(err));
 				throw new Error(err);
 			} else if (index === 2 && item.length < 6) {
-				err = `Postcode,' ${item}', is not complete. Please include a full UK postcode in your address`
-				dispatch(addError(err))
+				err = `Postcode,' ${item}', is not complete. Please include a full UK postcode in your address`;
+				dispatch(addError(err));
 				throw new Error(err);
 			}
 		});
@@ -100,6 +100,20 @@ export default function Signup(props) {
 							</div>
 						)}
 						<Formik
+							initialErrors={{
+								firstname: '',
+								lastname: '',
+								email: '',
+								company: '',
+								password: '',
+								phone: '',
+								address: {
+									addressLine1: '',
+									city: '',
+									postcode: '',
+								},
+								terms: false,
+							}}
 							enableReinitialize
 							validationSchema={SignUpSchema}
 							validateOnChange={false}
@@ -113,25 +127,27 @@ export default function Signup(props) {
 								phone: '',
 								fullAddress: '',
 								address: {
-									street: '',
+									addressLine1: '',
+									addressLine2: '',
 									city: '',
 									postcode: '',
-									countryCode: 'GB'
+									countryCode: 'GB',
 								},
-								apiKey: '',
 								terms: false,
 							}}
 							onSubmit={async (values, actions) => {
 								try {
 									setLoading(true);
-									console.log(values.fullAddress)
-									let addressComponents = await geocodeByAddress(values.fullAddress);
+									console.log(values)
+									const fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`
+									console.log(fullAddress);
+									let addressComponents = await geocodeByAddress(fullAddress);
 									values.address = getParsedAddress(addressComponents);
-									validateAddress(values.address)
-									console.log(values.address)
+									validateAddress(values.address);
+									console.log(values.address);
 									const user = await dispatch(authUser('register', values));
 									Mixpanel.identify(user.id);
-									Mixpanel.track('Successful login');
+									Mixpanel.track('Successful Registration');
 									Mixpanel.people.set({
 										$first_name: user.firstname,
 										$last_name: user.lastname,
@@ -230,30 +246,77 @@ export default function Signup(props) {
 											/>
 										</div>
 									</div>
-									<div className='mt-3'>
-										<label className='mb-2' htmlFor='company-address'>
-											<span>
-												{errors['fullAddress'] && <span className='text-danger'>*</span>}Company
-												Address
-											</span>
-										</label>
-										<GooglePlaceAutocomplete
-											autocompletionRequest={{
-												componentRestrictions: {
-													country: ['GB'],
-												},
-												types: ['geocode', 'establishment'],
-											}}
-											apiOptions={{
-												language: 'GB',
-												region: 'GB',
-											}}
-											selectProps={{
-												defaultInputValue: values.fullAddress,
-												onChange: ({ label }) => setFieldValue('fullAddress', label)
-											}}
-											apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
-										/>
+									<div className='row mt-3'>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-2' htmlFor='company-address'>
+												<span>
+													{errors['address'] && errors['address']['addressLine1'] && <span className='text-danger'>*</span>}
+													Address line 1
+												</span>
+											</label>
+											<input
+												autoComplete='address-line1'
+												type='text'
+												id='address-line-1'
+												name='address.addressLine1'
+												className='form-control rounded-3'
+												onBlur={handleBlur}
+												onChange={handleChange}
+											/>
+										</div>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-2' htmlFor='company-address'>
+												<span>
+													{errors['address'] && errors['address']['addressLine2'] && <span className='text-danger'>*</span>}
+													Address line 2
+												</span>
+											</label>
+											<input
+												autoComplete='address-line2'
+												type='text'
+												id='address-line-2'
+												name='address.addressLine2'
+												className='form-control rounded-3'
+												onBlur={handleBlur}
+												onChange={handleChange}
+											/>
+										</div>
+									</div>
+									<div className='row mt-3'>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-2' htmlFor='city'>
+												<span>
+													{errors['address'] && errors['address']['city'] && <span className='text-danger'>*</span>}
+													City
+												</span>
+											</label>
+											<input
+												autoComplete='address-level2'
+												type='text'
+												id='city'
+												name='address.city'
+												className='form-control rounded-3'
+												onBlur={handleBlur}
+												onChange={handleChange}
+											/>
+										</div>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-2' htmlFor='company-address'>
+												<span>
+													{errors['address'] && errors['address']['postcode'] && <span className='text-danger'>*</span>}
+													Postcode
+												</span>
+											</label>
+											<input
+												autoComplete='postal-code'
+												type='text'
+												id='postcode'
+												name='address.postcode'
+												className='form-control rounded-3'
+												onBlur={handleBlur}
+												onChange={handleChange}
+											/>
+										</div>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>

@@ -18,7 +18,7 @@ export const PATHS = {
 	PAYMENT: '/payment',
 	SUBSCRIPTION: '/subscription',
 	COURIERS: '/couriers',
-	DELIVERY_TIMES: '/delivery-times'
+	DELIVERY_TIMES: '/delivery-times',
 };
 
 export const COLOURS = {
@@ -51,6 +51,9 @@ export const STATUS = {
 };
 
 export const PLACE_TYPES = {
+	ESTABLISHMENT: 'establishment',
+	SUB_PREMISE: 'subpremise',
+	PREMISE: 'premise',
 	STREET_NUMBER: 'street_number',
 	STREET_ADDRESS: 'route',
 	CITY: 'postal_town',
@@ -59,9 +62,9 @@ export const PLACE_TYPES = {
 };
 
 export const SUBMISSION_TYPES = {
-	CREATE_JOB: "job",
-	GET_QUOTE: "quote"
-}
+	CREATE_JOB: 'job',
+	GET_QUOTE: 'quote',
+};
 
 export const VEHICLE_TYPES = [
 	{
@@ -94,4 +97,4 @@ export const VEHICLE_TYPES = [
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
 	SAME_DAY: 'SAME_DAY'
-}
+};
