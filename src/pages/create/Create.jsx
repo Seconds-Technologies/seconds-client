@@ -610,7 +610,6 @@ const Create = props => {
 															componentRestrictions: {
 																country: ['GB'],
 															},
-															types: ['address'],
 														}}
 														apiOptions={{
 															language: 'GB',
