@@ -1,8 +1,7 @@
 import { apiCall, setTokenHeader } from '../../api';
-import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER } from '../actionTypes';
+import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER, LOGOUT_USER } from '../actionTypes';
 import { addError, removeError } from './errors';
-import { clearAllOrders, clearAllProducts, setShopify } from './shopify';
-import { clearAllJobs } from './delivery';
+import { setShopify } from './shopify';
 import { Mixpanel } from '../../config/mixpanel';
 
 export const removeUser = () => {
@@ -36,7 +35,10 @@ export const setAuthorizationToken = token => {
 	setTokenHeader(token);
 };
 
-export function logout() {
+export const logout = () => ({
+	type: LOGOUT_USER
+})
+/*export function logout() {
 	return dispatch => {
 		localStorage.removeItem('jwt_token');
 		setAuthorizationToken(false);
@@ -46,7 +48,7 @@ export function logout() {
 		dispatch(clearAllProducts());
 		dispatch(clearAllJobs());
 	};
-}
+}*/
 
 export function authUser(type, userData) {
 	return dispatch => {

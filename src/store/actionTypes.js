@@ -1,3 +1,4 @@
+export const LOGOUT_USER = "LOGOUT_USER";
 export const ADD_ERROR = "ADD_ERROR";
 export const REMOVE_ERROR = "REMOVE_ERROR";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
@@ -22,4 +23,6 @@ export const NEW_DELIVERY_JOB = "NEW_DELIVERY_JOB";
 export const SET_PAYMENT_ID = "SET_PAYMENT_ID";
 export const TIMER_START = "TIMER_START"
 export const TIMER_STOP = "TIMER_STOP"
+export const ADD_DROPOFF = "ADD_DROPOFF";
+export const REMOVE_DROPOFF = "REMOVE_DROPOFF";
 //export const GET_PRODUCT_IMAGE = "GET_PRODUCT_IMAGE"

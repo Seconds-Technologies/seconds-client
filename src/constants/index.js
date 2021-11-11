@@ -6,8 +6,9 @@ export const PATHS = {
 	HOME: '/home',
 	ORDERS: '/orders',
 	VIEW_ORDER: '/view-orders',
-	CREATE: '/new-order',
-	TRACK: '/track-order',
+	CREATE: '/create',
+	MULTI: '/create/multi',
+	TRACK: '/track',
 	INTEGRATE: '/integrate',
 	SHOPIFY: '/integrate/shopify',
 	API_KEY: '/integrate/api',
@@ -96,5 +97,6 @@ export const VEHICLE_TYPES = [
 
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
-	SAME_DAY: 'SAME_DAY'
+	SAME_DAY: 'SAME_DAY',
+	MULTI_DROP: 'MULTI-DROP'
 };

@@ -8,9 +8,21 @@ import {
 	UPDATE_COMPLETED_JOBS,
 	TIMER_START,
 	TIMER_STOP,
+	ADD_DROPOFF,
+	REMOVE_DROPOFF
 } from '../actionTypes';
 import { STATUS } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
+
+export const addDropoff = dropoff => ({
+	type: ADD_DROPOFF,
+	dropoff
+})
+
+export const removeDropoff = index => ({
+	type: REMOVE_DROPOFF,
+	index
+})
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,

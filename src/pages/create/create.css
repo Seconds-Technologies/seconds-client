@@ -19,3 +19,15 @@
     background-color: #FAFAFA;
     min-height: calc(100vh - 70px);
 }
+
+.accordion {
+    background-color: #fff;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    transition: 0.4s;
+}
