@@ -25,8 +25,16 @@ export const CreateOrderSchema = Yup.object().shape({
 	pickupEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
 	pickupPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
 	pickupBusinessName: Yup.string().required('* Required'),
-	pickupAddress: Yup.string().required('* Required'),
-	dropoffAddress: Yup.string().required('* Required'),
+	pickupAddress: Yup.object().shape({
+		addressLine1: Yup.string().required('*Required'),
+		city: Yup.string().required('*Required'),
+		postcode: Yup.string().required('*Required'),
+	}),
+	dropoffAddress: Yup.object().shape({
+		addressLine1: Yup.string().required('*Required'),
+		city: Yup.string().required('*Required'),
+		postcode: Yup.string().required('*Required'),
+	}),
 	dropoffFirstName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
 	dropoffLastName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
 	dropoffEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
