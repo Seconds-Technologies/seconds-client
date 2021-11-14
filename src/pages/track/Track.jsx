@@ -14,10 +14,10 @@ const Track = props => {
 	const orders = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return allJobs.map(
-			({ status, jobSpecification: { orderNumber, packages }, selectedConfiguration: { providerId } }) => {
+			({ status, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId } }) => {
 				let {
 					dropoffLocation: { fullAddress: address, firstName, lastName },
-				} = packages[0];
+				} = deliveries[0];
 				let customerName = `${firstName} ${lastName}`;
 				return { id: orderNumber, status, customerName, address, provider: providerId };
 			}

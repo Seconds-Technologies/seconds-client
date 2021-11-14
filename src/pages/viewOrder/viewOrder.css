@@ -1,6 +1,5 @@
 .viewOrder {
     flex: 7;
-    padding: 20px;
     min-height: calc(100vh - 70px);
 }
 
@@ -22,10 +21,6 @@
     border-radius: 5px;
     color: white;
     font-size: 16px;
-}
-
-.orderContainer {
-    display: flex;
 }
 
 .orderShow {

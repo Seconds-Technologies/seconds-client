@@ -38,7 +38,7 @@ const ViewOrder = props => {
 					({
 						_id,
 						status,
-						jobSpecification: { orderNumber, packages },
+						jobSpecification: { deliveries, pickupStartTime },
 						selectedConfiguration: { providerId, jobReference, trackingURL, deliveryFee },
 						driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
 						createdAt,
@@ -47,9 +47,8 @@ const ViewOrder = props => {
 							description,
 							dropoffLocation: { fullAddress: address, phoneNumber: phone, firstName, lastName, email },
 							dropoffStartTime,
-							pickupStartTime,
 							itemsCount,
-						} = packages[0];
+						} = deliveries[0];
 						let customerName = `${firstName} ${lastName}`;
 						createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
 						return {
@@ -86,11 +85,11 @@ const ViewOrder = props => {
 	}, [props.location]);
 
 	return (
-		<div className='viewOrder bg-light'>
+		<div className='viewOrder bg-light p-3'>
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
-			<div className='d-block flex-grow-1 justify-content-center pt-3'>
+			<div className='d-block justify-content-center pt-3'>
 				{show && (
 					<div className='alert alert-success alert-dismissible fade show' role='alert'>
 						<h2 className='text-center'>Order updated</h2>
@@ -104,28 +103,28 @@ const ViewOrder = props => {
 					</div>
 				)}
 			</div>
-			<div className='orderContainer mt-3'>
+			<div className='d-flex mt-3'>
 				<div className='orderShow pt-4 pb-3 px-5'>
 					<div className='fs-3 d-flex justify-content-center'>
-						<span className='orderShowCustomerName'>{order.customerName}</span>
+						<span className='orderShowCustomerName'>{!!order.customerName ? order.customerName : "Name not specified"}</span>
 					</div>
 					<div className='d-flex flex-column mt-3'>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Address:</span>
-							<span className='orderShowInfoTitle'>{Boolean(order.address) ? order.address : 'N/A'}</span>
+							<span className='orderShowInfoTitle'>{!!order.address ? order.address : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Email:</span>
-							<span className='orderShowInfoTitle'>{Boolean(order.email) ? order.email : 'N/A'}</span>
+							<span className='orderShowInfoTitle'>{!!order.email ? order.email : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Phone Number:</span>
-							<span className='orderShowInfoTitle'>{Boolean(order.phone) ? order.phone : 'N/A'}</span>
+							<span className='orderShowInfoTitle'>{!!order.phone ? order.phone : 'N/A'}</span>
 						</div>
 						<div className='orderShowInfo'>
 							<span className='orderShowLabel'>Items:</span>
 							<span className='orderShowInfoTitle'>
-								{Boolean(order.itemsCount) ? order.itemsCount : 0}
+								{!!order.itemsCount ? order.itemsCount : 0}
 							</span>
 						</div>
 						<div className='orderShowInfo flex-column'>
@@ -204,7 +203,7 @@ const ViewOrder = props => {
 					</div>
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Provider:</span>
-						<span className='orderShowInfoTitle text-capitalize'>{order.providerId}</span>
+						<span className='orderShowInfoTitle text-capitalize'>{!!order.providerId ? order.providerId.replace(/_/g, ' ') : "Unknown"}</span>
 					</div>
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Price:</span>

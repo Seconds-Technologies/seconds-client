@@ -9,7 +9,7 @@ import {
 	TIMER_START,
 	TIMER_STOP,
 	ADD_DROPOFF,
-	REMOVE_DROPOFF
+	REMOVE_DROPOFF, CLEAR_DROPOFFS
 } from '../actionTypes';
 import { STATUS } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
@@ -22,6 +22,10 @@ export const addDropoff = dropoff => ({
 export const removeDropoff = index => ({
 	type: REMOVE_DROPOFF,
 	index
+})
+
+export const clearDropoffs = () => ({
+	type: CLEAR_DROPOFFS
 })
 
 export const setAllJobs = jobs => ({
@@ -65,7 +69,7 @@ export const unsubscribe = () => dispatch => {
 export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('Data:', deliveryParams);
+			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
 				headers: {
 					'X-Seconds-Api-Key': apiKey,
@@ -86,6 +90,32 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 				});
 		});
 	};
+}
+
+export function createMultiDropJob(deliveryParams, apiKey, providerId=undefined){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.table(deliveryParams);
+			return apiCall('POST', `/api/v1/jobs/multi-drop`, deliveryParams, {
+				headers: {
+					'X-Seconds-Api-Key': apiKey,
+					...(providerId && { 'X-Seconds-Provider-Id': providerId }),
+				},
+			})
+				.then(job => {
+					Mixpanel.track('Successful Multi-drop job creation')
+					dispatch(newDeliveryJob(job));
+					dispatch(removeError());
+					resolve(job);
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful Multi-drop job creation')
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	}
 }
 
 export function getAllJobs(apiKey, email) {

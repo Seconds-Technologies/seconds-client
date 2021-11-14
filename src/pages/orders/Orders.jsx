@@ -14,10 +14,10 @@ export default function Orders() {
 	const jobs = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return apiKey
-			? allJobs.map(({ status, jobSpecification: { orderNumber, packages }, createdAt }) => {
+			? allJobs.map(({ status, jobSpecification: { orderNumber, deliveries }, createdAt }) => {
 					let {
 						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName },
-					} = packages[0];
+					} = deliveries[0];
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let date = moment(createdAt).format('DD/MM/YYYY');
