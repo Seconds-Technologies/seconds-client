@@ -70,6 +70,7 @@ const ViewOrder = props => {
 							driverVehicle,
 							pickupDate: pickupStartTime,
 							dropoffDate: dropoffStartTime,
+							deliveries,
 						};
 					}
 				)[0];
@@ -104,106 +105,202 @@ const ViewOrder = props => {
 				)}
 			</div>
 			<div className='d-flex mt-3'>
-				<div className='orderShow pt-4 pb-3 px-5'>
-					<div className='fs-3 d-flex justify-content-center'>
-						<span className='orderShowCustomerName'>{!!order.customerName ? order.customerName : "Name not specified"}</span>
+				<div
+					id='carouselExampleIndicators'
+					className='orderShow pt-4 pb-1 px-5 carousel carousel-dark slide'
+					data-bs-ride='carousel'
+				>
+					<div className='carousel-indicators'>
+						{order.deliveries &&
+							order.deliveries.map((delivery, index) =>
+								index === 0 ? (
+									<button
+										type='button'
+										data-bs-target='#carouselExampleIndicators'
+										data-bs-slide-to={index}
+										className='active'
+										aria-current='true'
+										aria-label={`Slide ${index}`}
+									/>
+								) : (
+									<button
+										type='button'
+										data-bs-target='#carouselExampleIndicators'
+										data-bs-slide-to={index}
+										aria-label={`Slide ${index}`}
+									/>
+								)
+							)}
 					</div>
-					<div className='d-flex flex-column mt-3'>
-						<div className='orderShowInfo'>
-							<span className='orderShowLabel'>Address:</span>
-							<span className='orderShowInfoTitle'>{!!order.address ? order.address : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<span className='orderShowLabel'>Email:</span>
-							<span className='orderShowInfoTitle'>{!!order.email ? order.email : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<span className='orderShowLabel'>Phone Number:</span>
-							<span className='orderShowInfoTitle'>{!!order.phone ? order.phone : 'N/A'}</span>
-						</div>
-						<div className='orderShowInfo'>
-							<span className='orderShowLabel'>Items:</span>
-							<span className='orderShowInfoTitle'>
-								{!!order.itemsCount ? order.itemsCount : 0}
-							</span>
-						</div>
-						<div className='orderShowInfo flex-column'>
-							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-								Products Ordered
-							</span>
-							<textarea
-								className='form-control'
-								name=''
-								id=''
-								cols='30'
-								rows='4'
-								value={order.description}
-							/>
-						</div>
-						<div className='d-flex flex-row align-items-center'>
-							<button className={statusBtn} disabled>
-								<span>{order.status}</span>
-							</button>
-							<div className='d-block w-100'>
-								<Formik
-									enableReinitialize
-									initialValues={{
-										status: order.status.toUpperCase(),
-									}}
-									onSubmit={async values => {
-										//if the order status has not changed
-										console.log('CHOSEN STATUS', values);
-										if (order.status !== values.status) {
-											try {
-												dispatch(updateJobsStatus(apiKey, order.id, values.status, stripeCustomerId));
-												setShow(true);
-											} catch (err) {
-												console.error(err);
-												dispatch(addError(err.message));
-											}
-										}
-									}}
-								>
-									{({ values, handleSubmit, handleBlur, handleChange }) => (
-										<form action='' onSubmit={handleSubmit}>
-											<div className='d-flex flex-row align-items-center py-2'>
-												<select
-													role='button'
-													value={values.status}
-													className='form-select'
-													name='status'
-													onBlur={handleBlur}
-													onChange={event => {
-														handleChange(event);
-														handleSubmit(event);
-													}}
-												>
-													<option value={STATUS.NEW}>New</option>
-													<option value={STATUS.PENDING}>Pending</option>
-													<option value={STATUS.DISPATCHING}>Dispatching</option>
-													<option value={STATUS.EN_ROUTE}>En-route</option>
-													<option value={STATUS.COMPLETED}>Completed</option>
-													<option value={STATUS.CANCELLED}>Cancelled</option>
-												</select>
+					<div className='carousel-inner pb-5'>
+						{order.deliveries &&
+							order.deliveries.map(
+								(
+									{
+										dropoffStartTime,
+										dropoffLocation: { firstName, lastName, fullAddress, phoneNumber, email },
+										orderReference,
+										itemsCount,
+										description,
+									},
+									index
+								) => (
+									<div className={index === 0 ? 'carousel-item active' : 'carousel-item'}>
+										<div className='d-flex flex-column justify-content-center'>
+											<span className='fs-3 groupTitle text-center'>
+												{`${firstName} ${lastName}`}
+											</span>
+											<div className='orderShowInfo'>
+												<span className='orderShowLabel'>Order Reference:</span>
+												<span className='orderShowInfoTitle'>{orderReference}</span>
 											</div>
-										</form>
-									)}
-								</Formik>
-							</div>
-						</div>
+											<div className='orderShowInfo'>
+												<span className='orderShowLabel'>Address:</span>
+												<span className='orderShowInfoTitle'>{fullAddress}</span>
+											</div>
+											<div className='orderShowInfo'>
+												<span className='orderShowLabel'>Email:</span>
+												<span className='orderShowInfoTitle'>{email}</span>
+											</div>
+											<div className='orderShowInfo'>
+												<span className='orderShowLabel'>Phone Number:</span>
+												<span className='orderShowInfoTitle'>{phoneNumber}</span>
+											</div>
+											<div
+												className='d-flex justify-content-center align-items-center my-2'
+												style={{ color: '#444' }}
+											>
+												<div className="mx-3">
+													<span className='orderShowLabel'>Items:</span>
+													<span className='orderShowInfoTitle'>{itemsCount}</span>
+												</div>
+												<div className="mx-2">
+													<span className='orderShowLabel'>ETA:</span>
+													<span className='orderShowInfoTitle'>
+														{!dropoffStartTime
+															? 'Estimating...'
+															: moment(dropoffStartTime).diff(moment(), 'minutes') < 0
+															? `Delivered`
+															: `${moment().to(moment(dropoffStartTime))}`}
+													</span>
+												</div>
+											</div>
+											<div className='orderShowInfo flex-column'>
+												<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
+													Products Ordered
+												</span>
+												<textarea
+													className='form-control'
+													name=''
+													id=''
+													cols='30'
+													rows='4'
+													value={description}
+												/>
+											</div>
+											<div className='d-flex flex-row align-items-center'>
+												<button className={statusBtn} disabled>
+													<span>{order.status}</span>
+												</button>
+												<div className='d-block w-100'>
+													<Formik
+														enableReinitialize
+														initialValues={{
+															status: order.status.toUpperCase(),
+														}}
+														onSubmit={async values => {
+															//if the order status has not changed
+															console.log('CHOSEN STATUS', values);
+															if (order.status !== values.status) {
+																try {
+																	dispatch(
+																		updateJobsStatus(
+																			apiKey,
+																			order.id,
+																			values.status,
+																			stripeCustomerId
+																		)
+																	);
+																	setShow(true);
+																} catch (err) {
+																	console.error(err);
+																	dispatch(addError(err.message));
+																}
+															}
+														}}
+													>
+														{({ values, handleSubmit, handleBlur, handleChange }) => (
+															<form action='' onSubmit={handleSubmit}>
+																<div className='d-flex flex-row align-items-center py-2'>
+																	<select
+																		role='button'
+																		value={values.status}
+																		className='form-select'
+																		name='status'
+																		onBlur={handleBlur}
+																		onChange={event => {
+																			handleChange(event);
+																			handleSubmit(event);
+																		}}
+																	>
+																		<option value={STATUS.NEW}>New</option>
+																		<option value={STATUS.PENDING}>Pending</option>
+																		<option value={STATUS.DISPATCHING}>
+																			Dispatching
+																		</option>
+																		<option value={STATUS.EN_ROUTE}>
+																			En-route
+																		</option>
+																		<option value={STATUS.COMPLETED}>
+																			Completed
+																		</option>
+																		<option value={STATUS.CANCELLED}>
+																			Cancelled
+																		</option>
+																	</select>
+																</div>
+															</form>
+														)}
+													</Formik>
+												</div>
+											</div>
+										</div>
+									</div>
+								)
+							)}
+						<button
+							className='carousel-control-prev'
+							type='button'
+							data-bs-target='#carouselExampleIndicators'
+							data-bs-slide='prev'
+						>
+							<span className='carousel-control-prev-icon' aria-hidden='true' />
+							<span className='visually-hidden'>Previous</span>
+						</button>
+						<button
+							className='carousel-control-next'
+							type='button'
+							data-bs-target='#carouselExampleIndicators'
+							data-bs-slide='next'
+						>
+							<span className='carousel-control-next-icon' aria-hidden='true' />
+							<span className='visually-hidden'>Next</span>
+						</button>
 					</div>
 				</div>
 				<div className='deliveryDetails pt-4 pb-2 px-5'>
 					<div className='d-flex justify-content-center'>
-						<span className='fs-3 orderShowCustomerName'>Delivery Information</span>
+						<span className='fs-3 groupTitle'>Delivery Information</span>
 					</div>
 					<div className='orderShowInfo'>
-						<span className='orderShowLabel'>Order Reference:</span>
+						<span className='orderShowLabel'>Job Reference:</span>
 						<span className='orderShowInfoTitle'>{order.reference}</span>
 					</div>
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Provider:</span>
-						<span className='orderShowInfoTitle text-capitalize'>{!!order.providerId ? order.providerId.replace(/_/g, ' ') : "Unknown"}</span>
+						<span className='orderShowInfoTitle text-capitalize'>
+							{!!order.providerId ? order.providerId.replace(/_/g, ' ') : 'Unknown'}
+						</span>
 					</div>
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Price:</span>
@@ -212,16 +309,6 @@ const ViewOrder = props => {
 					<div className='orderShowInfo'>
 						<span className='orderShowLabel'>Created At:</span>
 						<span className='orderShowInfoTitle'>{order.createdAt}</span>
-					</div>
-					<div className='orderShowInfo'>
-						<span className='orderShowLabel'>ETA:</span>
-						<span className='orderShowInfoTitle'>
-							{!order.dropoffDate
-								? 'Estimating...'
-								: moment(order.dropoffDate).diff(moment(), 'minutes') < 0
-								? `Delivered`
-								: `${moment().to(moment(order.dropoffDate))}`}
-						</span>
 					</div>
 					<div className='orderShowInfo flex-column'>
 						<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>

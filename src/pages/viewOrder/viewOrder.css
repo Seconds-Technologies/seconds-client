@@ -47,7 +47,7 @@
     margin-left: 20px;
 }
 
-.orderShowCustomerName {
+.groupTitle {
     font-weight: 600;
 }
 
@@ -59,8 +59,9 @@
 
 .orderShowInfo {
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin: 15px 0px;
+    margin: 10px 0px;
     color: #444;
 }
 
