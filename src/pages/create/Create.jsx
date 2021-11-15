@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
+import { geocodeByAddress } from 'react-google-places-autocomplete';
 import Select, { components } from 'react-select';
 import moment from 'moment';
 import { Formik } from 'formik';
@@ -1228,7 +1228,7 @@ const Create = props => {
 											value={SUBMISSION_TYPES.CREATE_JOB}
 											disabled={
 												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-												!dropoffs.length
+												dropoffs.length < 5
 											}
 										>
 											Confirm
