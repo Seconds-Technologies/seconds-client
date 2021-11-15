@@ -137,10 +137,12 @@ const Create = props => {
 			const { pickupAddressLine1, pickupAddressLine2, pickupCity, pickupPostcode, drops } = values;
 			for (const drop of drops) {
 				const index = drops.indexOf(drop);
-				console.table(drop)
-				console.log("INDEX", index)
+				console.table(drop);
+				console.log('INDEX', index);
 				values.pickupAddress = `${pickupAddressLine1} ${pickupAddressLine2} ${pickupCity} ${pickupPostcode}`;
-				values.drops[index].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
+				values.drops[
+					index
+				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
 				let pickupAddressComponents = await geocodeByAddress(values.pickupAddress);
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
 				let pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
@@ -1231,6 +1233,11 @@ const Create = props => {
 											disabled={
 												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
 												dropoffs.length < 5
+											}
+											onClick={() =>
+												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+												dropoffs.length < 5 &&
+												alert('Please add at least 5 dropoffs before creating a multi drop')
 											}
 										>
 											Confirm
