@@ -57,9 +57,9 @@ export default function Signup(props) {
 								</p>
 							</div>
 							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Zero percent commission</h1>
+								<h1 className='signup-aside-header'>Low commission</h1>
 								<p className='text-wrap signup-aside-text'>
-									All deliveries through the Seconds API and dashboard are all without commission
+									All deliveries through the Seconds API and dashboard are all with low commission
 									fees.
 								</p>
 							</div>

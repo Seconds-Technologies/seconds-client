@@ -97,10 +97,8 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId=undefined)
 		return new Promise((resolve, reject) => {
 			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/multi-drop`, deliveryParams, {
-				headers: {
-					'X-Seconds-Api-Key': apiKey,
-					...(providerId && { 'X-Seconds-Provider-Id': providerId }),
-				},
+				headers: { 'X-Seconds-Api-Key': apiKey	},
+				...(providerId &&  { params: { 'provider': providerId }})
 			})
 				.then(job => {
 					Mixpanel.track('Successful Multi-drop job creation')

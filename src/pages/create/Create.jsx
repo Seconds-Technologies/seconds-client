@@ -348,10 +348,11 @@ const Create = props => {
 					}}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
-						<form onSubmit={handleSubmit} className='d-flex flex-column'>
+						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
 							<div className='row'>
 								<div className='col'>
 									<input
+										autoComplete='given-name'
 										id='new-drop-firstname'
 										name='dropoffFirstName'
 										type='text'
@@ -377,6 +378,7 @@ const Create = props => {
 							<div className='row'>
 								<div className='col'>
 									<input
+										autoComplete='tel'
 										name='dropoffPhoneNumber'
 										type='tel'
 										className='form-control form-border rounded-3 my-2'
@@ -599,8 +601,8 @@ const Create = props => {
 									};
 									setLoadingModal(false);
 									setJob(newJob);
-									values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-										dispatch(clearDropoffs());
+									// values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+									// 	dispatch(clearDropoffs());
 									handleOpen();
 								} catch (err) {
 									setLoadingModal(false);
