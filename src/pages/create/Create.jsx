@@ -907,7 +907,7 @@ const Create = props => {
 								<div className='col-12 d-flex flex-column'>
 									<h4>
 										{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-											? 'Multi Drop'
+											? 'Multi Drop (min. 5 dropoffs)'
 											: 'Dropoff'}
 									</h4>
 									{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (

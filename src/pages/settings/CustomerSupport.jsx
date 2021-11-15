@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 
 const CustomerSupport = props => {
 	const { id, firstname, lastname, email, subscriptionPlan } = useSelector(state => state['currentUser'].user);
-	const token = String(process.env.REACT_APP_PAPERCUPS_TOKEN)
-	const inbox = String(process.env.REACT_APP_INBOX_ID)
+	const token = "8d14f8d9-7027-4af7-8fb2-14ca0712e633"
+	const inbox = "3793e40e-c090-4412-acd0-7e20a7dc9f8a"
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
