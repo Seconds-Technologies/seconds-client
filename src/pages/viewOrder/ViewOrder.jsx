@@ -80,6 +80,13 @@ const ViewOrder = props => {
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
+	const alertWrapper = classnames({
+		'd-block': true,
+		'justify-content-center': true,
+		'pt-3': true,
+		'd-none': !(show || error.message)
+	})
+
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
 		dispatch(removeError());
@@ -90,7 +97,7 @@ const ViewOrder = props => {
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
-			<div className='d-block justify-content-center pt-3'>
+			<div className={alertWrapper}>
 				{show && (
 					<div className='alert alert-success alert-dismissible fade show' role='alert'>
 						<h2 className='text-center'>Order updated</h2>
@@ -292,25 +299,25 @@ const ViewOrder = props => {
 					<div className='d-flex justify-content-center'>
 						<span className='fs-3 groupTitle'>Delivery Information</span>
 					</div>
-					<div className='orderShowInfo'>
+					<div className='deliveryShowInfo'>
 						<span className='orderShowLabel'>Job Reference:</span>
 						<span className='orderShowInfoTitle'>{order.reference}</span>
 					</div>
-					<div className='orderShowInfo'>
+					<div className='deliveryShowInfo'>
 						<span className='orderShowLabel'>Provider:</span>
 						<span className='orderShowInfoTitle text-capitalize'>
 							{!!order.providerId ? order.providerId.replace(/_/g, ' ') : 'Unknown'}
 						</span>
 					</div>
-					<div className='orderShowInfo'>
+					<div className='deliveryShowInfo'>
 						<span className='orderShowLabel'>Price:</span>
 						<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee}`}</span>
 					</div>
-					<div className='orderShowInfo'>
+					<div className='deliveryShowInfo'>
 						<span className='orderShowLabel'>Created At:</span>
 						<span className='orderShowInfoTitle'>{order.createdAt}</span>
 					</div>
-					<div className='orderShowInfo flex-column'>
+					<div className='deliveryShowInfo flex-column'>
 						<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
 							Driver Assigned
 						</span>

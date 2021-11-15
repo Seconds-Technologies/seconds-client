@@ -65,6 +65,14 @@
     color: #444;
 }
 
+.deliveryShowInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px 0px;
+    color: #444;
+}
+
 .orderShowLabel {
     font-size: 20px;
     font-weight: bold;
