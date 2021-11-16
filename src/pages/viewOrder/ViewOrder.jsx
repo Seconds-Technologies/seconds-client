@@ -141,7 +141,7 @@ const ViewOrder = props => {
 										dropoffStartTime,
 										dropoffLocation: { firstName, lastName, fullAddress, phoneNumber, email },
 										orderReference,
-										itemsCount,
+										trackingURL,
 										description,
 										status
 									},
@@ -173,8 +173,19 @@ const ViewOrder = props => {
 												style={{ color: '#444' }}
 											>
 												<div className='mx-3'>
-													<span className='orderShowLabel'>Items:</span>
-													<span className='orderShowInfoTitle'>{itemsCount}</span>
+
+													{trackingURL ? (
+														<a
+															href={trackingURL}
+															target='_blank'
+															role='button'
+															className='btn btn-primary orderShowInfoTitle trackOrderBtn'
+														>
+															Track Order
+														</a>
+													) : (
+														<span className='orderShowInfoTitle'>Tracking not available</span>
+													)}
 												</div>
 												<div className='mx-2'>
 													<span className='orderShowLabel'>ETA:</span>
@@ -331,20 +342,6 @@ const ViewOrder = props => {
 									</tr>
 								</tbody>
 							</table>
-						</div>
-						<div className='my-3 d-flex align-items-center justify-content-center'>
-							{order.trackingURL ? (
-								<a
-									href={order.trackingURL}
-									target='_blank'
-									role='button'
-									className='btn btn-lg btn-primary orderShowInfoTitle trackOrderBtn'
-								>
-									Track Order
-								</a>
-							) : (
-								<span className='orderShowInfoTitle'>No tracking URL available for this provider</span>
-							)}
 						</div>
 					</div>
 				</div>
