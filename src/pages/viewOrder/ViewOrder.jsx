@@ -1,5 +1,5 @@
 import './viewOrder.css';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import classnames from 'classnames';
@@ -14,19 +14,28 @@ const ViewOrder = props => {
 	const { email, apiKey, stripeCustomerId } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-	const [order, setOrder] = useState({ status: '' });
+	const [order, setOrder] = useState({ });
 	const [show, setShow] = useState(false);
 
-	const statusBtn = classnames({
-		orderAddButton: true,
-		'me-3': true,
-		new: order.status.toLowerCase() === STATUS.NEW.toLowerCase(),
-		pending: order.status.toLowerCase() === STATUS.PENDING.toLowerCase(),
-		dispatching: order.status.toLowerCase() === STATUS.DISPATCHING.toLowerCase(),
-		'en-route': order.status.toLowerCase() === STATUS.EN_ROUTE.toLowerCase(),
-		completed: order.status.toLowerCase() === STATUS.COMPLETED.toLowerCase(),
-		cancelled: order.status.toLowerCase() === STATUS.CANCELLED.toLowerCase(),
-	});
+	const statusBtn = useCallback(activeIndex => {
+		if (order.deliveries) {
+			return classnames({
+				orderAddButton: true,
+				'me-3': true,
+				new: order.deliveries[activeIndex].status.toUpperCase() === STATUS.NEW,
+				pending: order.deliveries[activeIndex].status.toUpperCase() === STATUS.PENDING,
+				dispatching: order.deliveries[activeIndex].status.toUpperCase() === STATUS.DISPATCHING,
+				'en-route': order.deliveries[activeIndex].status.toUpperCase() === STATUS.EN_ROUTE,
+				completed: order.deliveries[activeIndex].status.toUpperCase() === STATUS.COMPLETED,
+				cancelled: order.deliveries[activeIndex].status.toUpperCase() === STATUS.CANCELLED,
+			})
+		}
+		return classnames({
+			orderAddButton: true,
+			'me-3': true,
+			new: true
+		})
+	}, [order]);
 
 	useEffect(() => {
 		(async () => {
@@ -38,38 +47,23 @@ const ViewOrder = props => {
 					({
 						_id,
 						status,
-						jobSpecification: { deliveries, pickupStartTime },
-						selectedConfiguration: { providerId, jobReference, trackingURL, deliveryFee },
+						jobSpecification: { deliveries, pickupStartTime, jobReference },
+						selectedConfiguration: { providerId, deliveryFee },
 						driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
 						createdAt,
 					}) => {
-						let {
-							description,
-							dropoffLocation: { fullAddress: address, phoneNumber: phone, firstName, lastName, email },
-							dropoffStartTime,
-							itemsCount,
-						} = deliveries[0];
-						let customerName = `${firstName} ${lastName}`;
 						createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
 						return {
 							id: _id,
-							itemsCount,
 							reference: jobReference,
 							createdAt,
-							description,
 							status: status[0].toUpperCase() + status.toLowerCase().slice(1),
-							customerName,
-							email,
-							phone,
 							providerId,
-							trackingURL,
 							deliveryFee,
-							address,
 							driverName,
 							driverPhone,
 							driverVehicle,
 							pickupDate: pickupStartTime,
-							dropoffDate: dropoffStartTime,
 							deliveries,
 						};
 					}
@@ -84,8 +78,8 @@ const ViewOrder = props => {
 		'd-block': true,
 		'justify-content-center': true,
 		'pt-3': true,
-		'd-none': !(show || error.message)
-	})
+		'd-none': !(show || error.message),
+	});
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -149,6 +143,7 @@ const ViewOrder = props => {
 										orderReference,
 										itemsCount,
 										description,
+										status
 									},
 									index
 								) => (
@@ -167,21 +162,21 @@ const ViewOrder = props => {
 											</div>
 											<div className='orderShowInfo'>
 												<span className='orderShowLabel'>Email:</span>
-												<span className='orderShowInfoTitle'>{email}</span>
+												<span className='orderShowInfoTitle'>{email ? email : "N/A"}</span>
 											</div>
 											<div className='orderShowInfo'>
 												<span className='orderShowLabel'>Phone Number:</span>
-												<span className='orderShowInfoTitle'>{phoneNumber}</span>
+												<span className='orderShowInfoTitle'>{phoneNumber ? phoneNumber : "N/A"}</span>
 											</div>
 											<div
 												className='d-flex justify-content-center align-items-center my-2'
 												style={{ color: '#444' }}
 											>
-												<div className="mx-3">
+												<div className='mx-3'>
 													<span className='orderShowLabel'>Items:</span>
 													<span className='orderShowInfoTitle'>{itemsCount}</span>
 												</div>
-												<div className="mx-2">
+												<div className='mx-2'>
 													<span className='orderShowLabel'>ETA:</span>
 													<span className='orderShowInfoTitle'>
 														{!dropoffStartTime
@@ -206,14 +201,14 @@ const ViewOrder = props => {
 												/>
 											</div>
 											<div className='d-flex flex-row align-items-center'>
-												<button className={statusBtn} disabled>
-													<span>{order.status}</span>
+												<button className={statusBtn(index)} disabled>
+													<span>{status[0].toUpperCase() + status.toLowerCase().slice(1)}</span>
 												</button>
 												<div className='d-block w-100'>
 													<Formik
 														enableReinitialize
 														initialValues={{
-															status: order.status.toUpperCase(),
+															status: status.toUpperCase(),
 														}}
 														onSubmit={async values => {
 															//if the order status has not changed
@@ -296,61 +291,61 @@ const ViewOrder = props => {
 					</div>
 				</div>
 				<div className='deliveryDetails pt-4 pb-2 px-5'>
-					<div className='d-flex justify-content-center'>
-						<span className='fs-3 groupTitle'>Delivery Information</span>
-					</div>
-					<div className='deliveryShowInfo'>
-						<span className='orderShowLabel'>Job Reference:</span>
-						<span className='orderShowInfoTitle'>{order.reference}</span>
-					</div>
-					<div className='deliveryShowInfo'>
-						<span className='orderShowLabel'>Provider:</span>
-						<span className='orderShowInfoTitle text-capitalize'>
-							{!!order.providerId ? order.providerId.replace(/_/g, ' ') : 'Unknown'}
-						</span>
-					</div>
-					<div className='deliveryShowInfo'>
-						<span className='orderShowLabel'>Price:</span>
-						<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee}`}</span>
-					</div>
-					<div className='deliveryShowInfo'>
-						<span className='orderShowLabel'>Created At:</span>
-						<span className='orderShowInfoTitle'>{order.createdAt}</span>
-					</div>
-					<div className='deliveryShowInfo flex-column'>
-						<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-							Driver Assigned
-						</span>
-						<table className='table d-flex table-borderless'>
-							<tbody>
-								<tr>
-									<td className='fw-bold'>Name</td>
-									<td>{order.driverName}</td>
-								</tr>
-								<tr>
-									<td className='fw-bold'>Phone</td>
-									<td>{order.driverPhone}</td>
-								</tr>
-								<tr>
-									<td className='fw-bold'>Transport</td>
-									<td>{order.driverVehicle}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div className='my-3 d-flex align-items-center justify-content-center'>
-						{order.trackingURL ? (
-							<a
-								href={order.trackingURL}
-								target='_blank'
-								role='button'
-								className='btn btn-lg btn-primary orderShowInfoTitle trackOrderBtn'
-							>
-								Track Order
-							</a>
-						) : (
-							<span className='orderShowInfoTitle'>No tracking URL available for this provider</span>
-						)}
+					<div className='fs-3 groupTitle text-center'>Delivery Information</div>
+					<div className='d-flex flex-grow-1 flex-column justify-content-center'>
+						<div className='deliveryShowInfo'>
+							<span className='orderShowLabel'>Job Reference:</span>
+							<span className='orderShowInfoTitle'>{order.reference}</span>
+						</div>
+						<div className='deliveryShowInfo'>
+							<span className='orderShowLabel'>Provider:</span>
+							<span className='orderShowInfoTitle text-capitalize'>
+								{!!order.providerId ? order.providerId.replace(/_/g, ' ') : 'Unknown'}
+							</span>
+						</div>
+						<div className='deliveryShowInfo'>
+							<span className='orderShowLabel'>Price:</span>
+							<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee}`}</span>
+						</div>
+						<div className='deliveryShowInfo'>
+							<span className='orderShowLabel'>Created At:</span>
+							<span className='orderShowInfoTitle'>{order.createdAt}</span>
+						</div>
+						<div className='deliveryShowInfo flex-column'>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
+								Driver Assigned
+							</span>
+							<table className='table d-flex table-borderless'>
+								<tbody>
+									<tr>
+										<td className='fw-bold'>Name</td>
+										<td>{order.driverName}</td>
+									</tr>
+									<tr>
+										<td className='fw-bold'>Phone</td>
+										<td>{order.driverPhone}</td>
+									</tr>
+									<tr>
+										<td className='fw-bold'>Transport</td>
+										<td>{order.driverVehicle}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div className='my-3 d-flex align-items-center justify-content-center'>
+							{order.trackingURL ? (
+								<a
+									href={order.trackingURL}
+									target='_blank'
+									role='button'
+									className='btn btn-lg btn-primary orderShowInfoTitle trackOrderBtn'
+								>
+									Track Order
+								</a>
+							) : (
+								<span className='orderShowInfoTitle'>No tracking URL available for this provider</span>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
