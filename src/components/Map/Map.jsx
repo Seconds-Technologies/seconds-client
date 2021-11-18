@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
-import marker from '../../img/marker.svg';
+import marker from '../../assets/img/marker.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 

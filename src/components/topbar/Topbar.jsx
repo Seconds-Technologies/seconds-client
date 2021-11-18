@@ -1,6 +1,6 @@
 import 'antd/dist/antd.css';
 import React from 'react';
-import logo from '../../img/secondsapp.svg';
+import logo from '../../assets/img/secondsapp.svg';
 import { Link, useHistory } from 'react-router-dom';
 import { PATHS } from '../../constants';
 import { useSelector } from 'react-redux';

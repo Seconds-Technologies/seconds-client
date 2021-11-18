@@ -24,22 +24,22 @@ import ErrorField from '../../components/ErrorField';
 // assets
 import { jobRequestSchema } from '../../schemas';
 import { CreateOrderSchema } from '../../validation';
-import bicycle from '../../img/bicycle.svg';
-import motorbike from '../../img/motorbike.svg';
-import car from '../../img/car.svg';
-import cargobike from '../../img/cargobike.svg';
-import van from '../../img/van.svg';
-import stuart from '../../img/stuart.svg';
-import gophr from '../../img/gophr.svg';
-import streetStream from '../../img/street-stream.svg';
-import ecofleet from '../../img/ecofleet.svg';
+import bicycle from '../../assets/img/bicycle.svg';
+import motorbike from '../../assets/img/motorbike.svg';
+import car from '../../assets/img/car.svg';
+import cargobike from '../../assets/img/cargobike.svg';
+import van from '../../assets/img/van.svg';
+import stuart from '../../assets/img/stuart.svg';
+import gophr from '../../assets/img/gophr.svg';
+import streetStream from '../../assets/img/street-stream.svg';
+import ecofleet from '../../assets/img/ecofleet.svg';
 // styles
 import './create.css';
 import { Mixpanel } from '../../config/mixpanel';
 import { parseAddress } from '../../helpers';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';
-import secondsLogo from '../../img/logo.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 
 const Create = props => {
 	const [deliveryJob, setJob] = useState({});

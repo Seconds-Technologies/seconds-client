@@ -1,5 +1,5 @@
 import './PaymentMethod.css';
-import secondsLogo from '../../img/logo.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';

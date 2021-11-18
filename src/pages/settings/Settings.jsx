@@ -1,10 +1,10 @@
 import './settings.css';
 import React, { useEffect } from 'react';
 import { PATHS } from '../../constants';
-import support from '../../img/support.svg';
-import profile from '../../img/profile.svg';
-import card from '../../img/bank_card.svg';
-import clock from '../../img/clock.svg';
+import support from '../../assets/img/support.svg';
+import profile from '../../assets/img/profile.svg';
+import card from '../../assets/img/bank_card.svg';
+import clock from '../../assets/img/clock.svg';
 import { Mixpanel } from '../../config/mixpanel';
 
 const Settings = props => {

@@ -1,11 +1,11 @@
 import './integrations.css';
 import React, { useEffect, useState } from 'react';
-import secondsLogo from '../../img/logo.svg';
-import shopifyLogo from '../../img/shopify.svg';
+import secondsLogo from '../../assets/img/logo.svg';
+import shopifyLogo from '../../assets/img/shopify.svg';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import { useSelector } from 'react-redux';
-import plug from '../../img/apikey.svg';
+import plug from '../../assets/img/apikey.svg';
 import { Mixpanel } from '../../config/mixpanel';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';

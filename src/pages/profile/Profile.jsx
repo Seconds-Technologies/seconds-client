@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/actions/auth';
-import camera from '../../img/camera.svg';
+import camera from '../../assets/img/camera.svg';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';

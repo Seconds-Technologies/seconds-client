@@ -1,6 +1,6 @@
 import './subscription.css';
 import React, { useEffect, useState } from 'react';
-import secondsLogo from '../../img/logo.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
 import Modal from 'react-bootstrap/Modal';

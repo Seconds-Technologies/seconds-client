@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import logo from '../../img/seconds-logo-black.svg';
+import logo from '../../assets/img/seconds-logo-black.svg';
 import { removeError } from '../../store/actions/errors';
 import { Formik } from 'formik';
 import { resetPassword } from '../../store/actions/auth';

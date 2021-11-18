@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import telephone from '../../img/telephone.svg';
-import mail from '../../img/mail.svg';
+import telephone from '../../assets/img/telephone.svg';
+import mail from '../../assets/img/mail.svg';
 import { Mixpanel } from '../../config/mixpanel';
 import { ChatWidget } from '@papercups-io/chat-widget';
 import { useSelector } from 'react-redux';

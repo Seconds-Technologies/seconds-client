@@ -8,7 +8,7 @@ import { updateDeliveryTimes } from '../../store/actions/auth';
 import { addError } from '../../store/actions/errors';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';
-import secondsLogo from '../../img/logo.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 
 /*const defaultDeliveryHours = {
 	0: {

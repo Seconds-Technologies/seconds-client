@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { getAllProducts, validateShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
-import shopifyLogo from '../../img/shopify.svg';
+import shopifyLogo from '../../assets/img/shopify.svg';
 import './shopify.css';
 
 const Shopify = props => {

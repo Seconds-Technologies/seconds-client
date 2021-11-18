@@ -1,5 +1,5 @@
 import './Signup.css';
-import logo from '../../img/seconds-logo-black.svg';
+import logo from '../../assets/img/seconds-logo-black.svg';
 import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';

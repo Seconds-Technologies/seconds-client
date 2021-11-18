@@ -3,9 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Overlay, Tooltip } from 'react-bootstrap';
-import copy from '../../img/copy.svg';
+import copy from '../../assets/img/copy.svg';
 import { authorizeAPI } from '../../store/actions/auth';
-import secondsLogo from '../../img/logo.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 import { Mixpanel } from '../../config/mixpanel';
 
 const ApiKey = props => {

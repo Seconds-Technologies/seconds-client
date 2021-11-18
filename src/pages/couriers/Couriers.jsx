@@ -1,9 +1,9 @@
 import React from 'react';
 import './couriers.css';
-import stuart from '../../img/stuart.svg'
-import gophr from '../../img/gophr.svg';
-import streetStream from '../../img/street-stream.svg';
-import ecofleet from '../../img/ecofleet.svg';
+import stuart from '../../assets/img/stuart.svg'
+import gophr from '../../assets/img/gophr.svg';
+import streetStream from '../../assets/img/street-stream.svg';
+import ecofleet from '../../assets/img/ecofleet.svg';
 
 const Couriers = () => {
 	return (

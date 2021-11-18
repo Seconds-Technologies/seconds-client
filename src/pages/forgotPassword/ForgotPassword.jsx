@@ -2,7 +2,7 @@ import './forgotPassword.css';
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import logo from '../../img/seconds-logo-black.svg';
+import logo from '../../assets/img/seconds-logo-black.svg';
 import { removeError } from '../../store/actions/errors';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
