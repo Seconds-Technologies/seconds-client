@@ -9,10 +9,17 @@ import {
 	TIMER_START,
 	TIMER_STOP,
 	ADD_DROPOFF,
-	REMOVE_DROPOFF, CLEAR_DROPOFFS
+	REMOVE_DROPOFF,
+	CLEAR_DROPOFFS,
+	SET_DROPOFFS
 } from '../actionTypes';
 import { STATUS } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
+
+export const setDropoffs = dropoffs => ({
+	type: SET_DROPOFFS,
+	dropoffs
+})
 
 export const addDropoff = dropoff => ({
 	type: ADD_DROPOFF,

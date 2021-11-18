@@ -3,14 +3,14 @@ import * as Yup from 'yup';
 const phoneRegExp2 =
 	/^(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?|\(?0)(?:\d{5}\)?[\s-]?\d{4,5}|\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3})|\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4}|\d{2}\)?[\s-]?\d{4}[\s-]?\d{4})(?:[\s-]?(?:x|ext\.?|#)\d{3,4})?$/;
 
-let dropsSchema = Yup.object().shape({
+export const dropsSchema = Yup.object().shape({
 	dropoffAddressLine1: Yup.string().required('*Required'),
 	dropoffCity: Yup.string().required('*Required'),
 	dropoffPostcode: Yup.string().required('*Required'),
 	dropoffFirstName: Yup.string().max(20, 'Max. 20 characters').required('*Required'),
 	dropoffLastName: Yup.string().max(20, 'Max. 20 characters').required('*Required'),
-	dropoffEmailAddress: Yup.string().email('Invalid email address!'),
-	dropoffPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
+	dropoffEmailAddress: Yup.string().nullable().notRequired().email('Invalid email address!'),
+	dropoffPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required')
 });
 
 export const SignUpSchema = Yup.object().shape({

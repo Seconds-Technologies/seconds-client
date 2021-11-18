@@ -26,4 +26,5 @@ export const TIMER_STOP = "TIMER_STOP"
 export const ADD_DROPOFF = "ADD_DROPOFF";
 export const REMOVE_DROPOFF = "REMOVE_DROPOFF";
 export const CLEAR_DROPOFFS = "CLEAR_DROPOFFS";
+export const SET_DROPOFFS = "SET_DROPOFFS";
 //export const GET_PRODUCT_IMAGE = "GET_PRODUCT_IMAGE"

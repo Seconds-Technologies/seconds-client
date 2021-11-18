@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -7,6 +7,8 @@ import Select, { components } from 'react-select';
 import moment from 'moment';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import { CSVReader } from 'react-papaparse';
+import { Mixpanel } from '../../config/mixpanel';
 // functions
 import {
 	addDropoff,
@@ -14,16 +16,20 @@ import {
 	createDeliveryJob,
 	createMultiDropJob,
 	getAllQuotes,
-	removeDropoff,
+	removeDropoff, setDropoffs
 } from '../../store/actions/delivery';
+import { parseAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
-import { DELIVERY_TYPES, PATHS, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
+import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import ToastFade from 'react-bootstrap/Toast';
 // assets
 import { jobRequestSchema } from '../../schemas';
-import { CreateOrderSchema } from '../../validation';
+import { CreateOrderSchema, dropsSchema } from '../../validation';
+import secondsLogo from '../../assets/img/logo.svg';
 import bicycle from '../../assets/img/bicycle.svg';
 import motorbike from '../../assets/img/motorbike.svg';
 import car from '../../assets/img/car.svg';
@@ -35,13 +41,11 @@ import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 // styles
 import './create.css';
-import { Mixpanel } from '../../config/mixpanel';
-import { parseAddress } from '../../helpers';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import ToastFade from 'react-bootstrap/Toast';
-import secondsLogo from '../../assets/img/logo.svg';
+import CSVUpload from '../../modals/CSVUpload';
+import { Link } from 'react-router-dom';
 
 const Create = props => {
+	const csvUploadRef = useRef(null);
 	const [deliveryJob, setJob] = useState({});
 	const [jobModal, showJobModal] = useState(false);
 	const [isLoading, setLoadingModal] = useState(false);
@@ -56,6 +60,7 @@ const Create = props => {
 	const [loadingText, setLoadingText] = useState('');
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
+	const [uploadCSV, showCSVUpload] = useState(false);
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(
@@ -135,20 +140,20 @@ const Create = props => {
 	const handleAddresses = useCallback(
 		async values => {
 			const { pickupAddressLine1, pickupAddressLine2, pickupCity, pickupPostcode, drops } = values;
+			values.pickupAddress = `${pickupAddressLine1} ${pickupAddressLine2} ${pickupCity} ${pickupPostcode}`;
+			let pickupAddressComponents = await geocodeByAddress(values.pickupAddress);
+			let pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
+			values.pickupAddressLine1 = pickupFormattedAddress.street;
+			values.pickupCity = pickupFormattedAddress.city;
+			values.pickupPostcode = pickupFormattedAddress.postcode;
 			for (const drop of drops) {
 				const index = drops.indexOf(drop);
 				console.table(drop);
 				console.log('INDEX', index);
-				values.pickupAddress = `${pickupAddressLine1} ${pickupAddressLine2} ${pickupCity} ${pickupPostcode}`;
 				values.drops[
 					index
 				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
-				let pickupAddressComponents = await geocodeByAddress(values.pickupAddress);
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
-				let pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-				values.pickupAddressLine1 = pickupFormattedAddress.street;
-				values.pickupCity = pickupFormattedAddress.city;
-				values.pickupPostcode = pickupFormattedAddress.postcode;
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
@@ -332,6 +337,7 @@ const Create = props => {
 			</Modal.Header>
 			<Modal.Body>
 				<Formik
+					validationSchema={dropsSchema}
 					initialValues={{
 						dropoffFirstName: '',
 						dropoffLastName: '',
@@ -353,6 +359,9 @@ const Create = props => {
 						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
 							<div className='row'>
 								<div className='col'>
+									{errors['dropoffCity'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										autoComplete='given-name'
 										id='new-drop-firstname'
@@ -366,6 +375,9 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col'>
+									{errors['dropoffLastName'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										name='dropoffLastName'
 										type='text'
@@ -379,6 +391,9 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col'>
+									{errors['dropoffPhoneNumber'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										autoComplete='tel'
 										name='dropoffPhoneNumber'
@@ -391,6 +406,9 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col'>
+									{errors['dropoffEmailAddress'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										name='dropoffEmailAddress'
 										type='email'
@@ -403,6 +421,9 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col-md-6 col-lg-6'>
+									{errors['dropoffAddressLine1'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										defaultValue={values.dropoffAddressLine1}
 										autoComplete='address-line1'
@@ -431,6 +452,9 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col-md-6 col-lg-6'>
+									{errors['dropoffCity'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										defaultValue={values.dropoffCity}
 										autoComplete='address-level2'
@@ -444,6 +468,9 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col-md-6 col-lg-6'>
+									{errors['dropoffPostcode'] && (
+										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
+									)}
 									<input
 										defaultValue={values.dropoffPostcode}
 										autoComplete='postal-code'
@@ -459,6 +486,9 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col'>
+									{errors['packageDropoffStartTime'] && (
+										<span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>
+									)}
 									<input
 										type='datetime-local'
 										name='packageDropoffStartTime'
@@ -524,6 +554,36 @@ const Create = props => {
 				{confirmModal}
 				{apiKeyToast}
 				{newDropoff}
+				<CSVUpload
+					show={uploadCSV}
+					ref={csvUploadRef}
+					hide={() => showCSVUpload(false)}
+					handleRemoveFile={() => console.log('File removed')}
+					handleOnError={err => console.log(err)}
+					handleOnDrop={drops => {
+						let dropoff = {};
+						let { data: keys } = drops.shift();
+						console.log(keys);
+						keys.forEach(key => (dropoff[key] = ''));
+						console.log(drops);
+						let dropoffs = drops.map(({ data }) => {
+							console.log(data)
+							let dropoff = {};
+							data.forEach((item, index) => {
+								let key = keys[index]
+								if (key === "packageDropoffStartTime"){
+									item = moment(item, "DD/MM/YYYY HH:mm").format()
+									console.log(item)
+								}
+								dropoff[key] = item
+							})
+							return dropoff
+						});
+						console.log(dropoffs)
+						dispatch(setDropoffs(dropoffs))
+					}}
+					handleOpenDialog={res => console.log(res)}
+				/>
 				<Formik
 					enableReinitialize
 					initialValues={{
@@ -960,13 +1020,27 @@ const Create = props => {
 													)
 												)}
 											</ol>
-											<div className='d-flex align-items-start'>
+											<div className='d-flex align-items-center'>
 												<div
 													className='btn btn-outline-primary'
 													onClick={() => showDropoffModal(true)}
 												>
 													Add Dropoff
 												</div>
+												<div
+													className='ms-4 btn btn-outline-success'
+													onClick={() => showCSVUpload(true)}
+												>
+													Upload CSV
+												</div>
+												<Link
+													className='ms-4'
+													to="/example.csv"
+													target="_blank"
+													download="template.csv"
+												>
+													Download CSV template
+												</Link>
 											</div>
 										</div>
 									) : (
