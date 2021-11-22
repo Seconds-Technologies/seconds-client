@@ -243,12 +243,13 @@ const Create = props => {
 									Price
 								</th>
 								<th scope='col'>ETA</th>
+								<th scope='col'>Vehicle</th>
 								<th scope='col' />
 							</tr>
 						</thead>
 						<tbody>
 							{quotes.map(
-								({ providerId, priceExVAT, dropoffEta, createdAt }, index) => (
+								({ providerId, priceExVAT, dropoffEta, transport, createdAt }, index) => (
 										<tr key={index}>
 											<td className='col text-capitalize'>
 												<img
@@ -276,6 +277,7 @@ const Create = props => {
 													? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes`
 													: 'N/A'}
 											</td>
+											<td>{transport}</td>
 											<td className='col'>
 												<button
 													className='d-flex justify-content-center align-items-center OrdersListEdit'
