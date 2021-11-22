@@ -4,12 +4,14 @@ import { getAllProducts, validateShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../assets/img/shopify.svg';
 import './shopify.css';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Shopify = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
 	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
+	const [isLoading, setLoading] = useState(false);
 	return (
 		<div className='shopifyContainer bg-light pb-3'>
 			{!isIntegrated ? (
@@ -35,12 +37,17 @@ const Shopify = props => {
 							password: '',
 						}}
 						onSubmit={values => {
+							setLoading(true)
 							dispatch(validateShopify({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
+									setLoading(false)
 									dispatch(getAllProducts(shop.accessToken, shop.baseURL, email));
 								})
-								.catch(err => setError(err.message));
+								.catch(err => {
+									setLoading(false)
+									setError(err.message)
+								});
 						}}
 					>
 						{({
@@ -112,8 +119,9 @@ const Shopify = props => {
 									<button className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 										Go Back
 									</button>
-									<button type='submit' className='btn btn-primary btn-lg shopifyButton'>
-										Connect
+									<button type='submit' className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'>
+										<span className="me-3">Connect</span>
+										<ClipLoader color='white' loading={isLoading} size={20} />
 									</button>
 								</div>
 							</form>
