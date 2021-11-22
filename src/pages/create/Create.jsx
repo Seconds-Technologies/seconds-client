@@ -585,7 +585,6 @@ const Create = props => {
 							return dropoff
 						});
 						console.log(dropoffs)
-						setToast(`You cannot add more than 8 dropoff locations per multi drop`)
 						dispatch(setDropoffs(dropoffs))
 					}}
 					handleOpenDialog={res => console.log(res)}
