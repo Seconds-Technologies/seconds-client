@@ -360,7 +360,7 @@ const Create = props => {
 						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
 							<div className='row'>
 								<div className='col'>
-									{errors['dropoffCity'] && (
+									{errors['dropoffFirstname'] && (
 										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
 									)}
 									<input
