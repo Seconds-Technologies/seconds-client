@@ -565,6 +565,10 @@ const Create = props => {
 						let dropoff = {};
 						let { data: keys } = drops.shift();
 						console.log(keys);
+						if (drops.length > 8) {
+							drops = drops.slice(0, 8)
+							setToast(`Multi-drop only supports a maximum of 8 dropoffs`)
+						}
 						keys.forEach(key => (dropoff[key] = ''));
 						console.log(drops);
 						let dropoffs = drops.map(({ data }) => {
@@ -581,6 +585,7 @@ const Create = props => {
 							return dropoff
 						});
 						console.log(dropoffs)
+						setToast(`You cannot add more than 8 dropoff locations per multi drop`)
 						dispatch(setDropoffs(dropoffs))
 					}}
 					handleOpenDialog={res => console.log(res)}
@@ -970,7 +975,7 @@ const Create = props => {
 								<div className='col-12 d-flex flex-column'>
 									<h4>
 										{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-											? 'Multi Drop (min. 5 dropoffs)'
+											? 'Multi Drop (min. 5 dropoffs, max 8 dropoffs)'
 											: 'Dropoff'}
 									</h4>
 									{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (
@@ -1024,7 +1029,7 @@ const Create = props => {
 											<div className='d-flex align-items-center'>
 												<div
 													className='btn btn-outline-primary'
-													onClick={() => showDropoffModal(true)}
+													onClick={() => dropoffs.length < 8 ? showDropoffModal(true) : setToast(`You cannot add more than 8 dropoff locations per multi drop`)}
 												>
 													Add Dropoff
 												</div>
