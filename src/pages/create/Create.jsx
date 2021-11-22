@@ -248,8 +248,7 @@ const Create = props => {
 						</thead>
 						<tbody>
 							{quotes.map(
-								({ providerId, priceExVAT, dropoffEta, createdAt }, index) =>
-									providerId !== 'ecofleet' && (
+								({ providerId, priceExVAT, dropoffEta, createdAt }, index) => (
 										<tr key={index}>
 											<td className='col text-capitalize'>
 												<img
