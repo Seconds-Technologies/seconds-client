@@ -16,7 +16,8 @@ import {
 	createDeliveryJob,
 	createMultiDropJob,
 	getAllQuotes,
-	removeDropoff, setDropoffs
+	removeDropoff,
+	setDropoffs,
 } from '../../store/actions/delivery';
 import { parseAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
@@ -61,11 +62,10 @@ const Create = props => {
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
 	const [uploadCSV, showCSVUpload] = useState(false);
+	const [isLocked, setLock] = useState(true);
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
-	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(
-		state => state['currentUser'].user
-	);
+	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { dropoffs } = useSelector(state => state['addressHistory']);
 	const dispatch = useDispatch();
@@ -115,24 +115,14 @@ const Create = props => {
 	const validateAddresses = useCallback((pickup, dropoff) => {
 		const types = ['street address', 'city', 'postcode'];
 		Object.values(pickup).forEach((item, index) => {
-			if (!item)
-				throw new Error(
-					`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`
-				);
+			if (!item) throw new Error(`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`);
 			else if (index === 2 && item.length < 6)
-				throw new Error(
-					`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`
-				);
+				throw new Error(`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`);
 		});
 		Object.values(dropoff).forEach((item, index) => {
-			if (!item)
-				throw new Error(
-					`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`
-				);
+			if (!item) throw new Error(`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`);
 			else if (index === 2 && item.length < 6)
-				throw new Error(
-					`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`
-				);
+				throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`);
 		});
 		return true;
 	}, []);
@@ -248,51 +238,45 @@ const Create = props => {
 							</tr>
 						</thead>
 						<tbody>
-							{quotes.map(
-								({ providerId, priceExVAT, dropoffEta, transport, createdAt }, index) => (
-										<tr key={index}>
-											<td className='col text-capitalize'>
-												<img
-													src={
-														providerId === 'stuart'
-															? stuart
-															: providerId === 'gophr'
-															? gophr
-															: providerId === 'street_stream'
-															? streetStream
-															: ecofleet
-													}
-													alt=''
-													className='me-3'
-													width={25}
-													height={25}
-												/>
-												<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
-											</td>
-											<td className='col' colSpan={2}>
-												{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
-											</td>
-											<td className='col'>
-												{dropoffEta
-													? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes`
-													: 'N/A'}
-											</td>
-											<td>{transport}</td>
-											<td className='col'>
-												<button
-													className='d-flex justify-content-center align-items-center OrdersListEdit'
-													onClick={() => {
-														showQuoteModal(false);
-														selectFleetProvider(providerId);
-														showConfirmDialog(true);
-													}}
-												>
-													<span className='text-decoration-none'>Select</span>
-												</button>
-											</td>
-										</tr>
-									)
-							)}
+							{quotes.map(({ providerId, priceExVAT, dropoffEta, transport, createdAt }, index) => (
+								<tr key={index}>
+									<td className='col text-capitalize'>
+										<img
+											src={
+												providerId === 'stuart'
+													? stuart
+													: providerId === 'gophr'
+													? gophr
+													: providerId === 'street_stream'
+													? streetStream
+													: ecofleet
+											}
+											alt=''
+											className='me-3'
+											width={25}
+											height={25}
+										/>
+										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
+									</td>
+									<td className='col' colSpan={2}>
+										{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
+									</td>
+									<td className='col'>{dropoffEta ? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes` : 'N/A'}</td>
+									<td>{transport}</td>
+									<td className='col'>
+										<button
+											className='d-flex justify-content-center align-items-center OrdersListEdit'
+											onClick={() => {
+												showQuoteModal(false);
+												selectFleetProvider(providerId);
+												showConfirmDialog(true);
+											}}
+										>
+											<span className='text-decoration-none'>Select</span>
+										</button>
+									</td>
+								</tr>
+							))}
 						</tbody>
 					</table>
 				</div>
@@ -360,9 +344,7 @@ const Create = props => {
 						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
 							<div className='row'>
 								<div className='col'>
-									{errors['dropoffFirstname'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffFirstname'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										autoComplete='given-name'
 										id='new-drop-firstname'
@@ -376,9 +358,7 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col'>
-									{errors['dropoffLastName'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffLastName'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										name='dropoffLastName'
 										type='text'
@@ -392,9 +372,7 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col'>
-									{errors['dropoffPhoneNumber'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffPhoneNumber'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										autoComplete='tel'
 										name='dropoffPhoneNumber'
@@ -407,9 +385,7 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col'>
-									{errors['dropoffEmailAddress'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffEmailAddress'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										name='dropoffEmailAddress'
 										type='email'
@@ -422,9 +398,7 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffAddressLine1'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffAddressLine1'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										defaultValue={values.dropoffAddressLine1}
 										autoComplete='address-line1'
@@ -453,9 +427,7 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffCity'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffCity'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										defaultValue={values.dropoffCity}
 										autoComplete='address-level2'
@@ -469,9 +441,7 @@ const Create = props => {
 									/>
 								</div>
 								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffPostcode'] && (
-										<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-									)}
+									{errors['dropoffPostcode'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										defaultValue={values.dropoffPostcode}
 										autoComplete='postal-code'
@@ -487,9 +457,7 @@ const Create = props => {
 							</div>
 							<div className='row'>
 								<div className='col'>
-									{errors['packageDropoffStartTime'] && (
-										<span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>
-									)}
+									{errors['packageDropoffStartTime'] && <span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>}
 									<input
 										type='datetime-local'
 										name='packageDropoffStartTime'
@@ -499,9 +467,7 @@ const Create = props => {
 										onBlur={handleBlur}
 										min={
 											pickupDatetime
-												? moment(pickupDatetime)
-														.subtract(1, 'minute')
-														.format('YYYY-MM-DDTHH:mm')
+												? moment(pickupDatetime).subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
 												: moment().subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
 										}
 										max={
@@ -566,26 +532,26 @@ const Create = props => {
 						let { data: keys } = drops.shift();
 						console.log(keys);
 						if (drops.length > 8) {
-							drops = drops.slice(0, 8)
-							setToast(`Multi-drop only supports a maximum of 8 dropoffs`)
+							drops = drops.slice(0, 8);
+							setToast(`Multi-drop only supports a maximum of 8 dropoffs`);
 						}
 						keys.forEach(key => (dropoff[key] = ''));
 						console.log(drops);
 						let dropoffs = drops.map(({ data }) => {
-							console.log(data)
+							console.log(data);
 							let dropoff = {};
 							data.forEach((item, index) => {
-								let key = keys[index]
-								if (key === "packageDropoffStartTime"){
-									item = moment(item, "DD/MM/YYYY HH:mm").format()
-									console.log(item)
+								let key = keys[index];
+								if (key === 'packageDropoffStartTime') {
+									item = moment(item, 'DD/MM/YYYY HH:mm').format();
+									console.log(item);
 								}
-								dropoff[key] = item
-							})
-							return dropoff
+								dropoff[key] = item;
+							});
+							return dropoff;
 						});
-						console.log(dropoffs)
-						dispatch(setDropoffs(dropoffs))
+						console.log(dropoffs);
+						dispatch(setDropoffs(dropoffs));
 					}}
 					handleOpenDialog={res => console.log(res)}
 				/>
@@ -630,9 +596,7 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.error(err);
-									err
-										? dispatch(addError(err.message))
-										: dispatch(addError('Api endpoint could not be accessed!'));
+									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							} else {
 								setLoadingText('Creating Order');
@@ -674,16 +638,12 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.log(err);
-									err
-										? dispatch(addError(err.message))
-										: dispatch(addError('Api endpoint could not be accessed!'));
+									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							}
 						} else {
 							setLoadingModal(false);
-							setToast(
-								'Your account does not have an API key associated with it. Please generate one from the integrations page'
-							);
+							setToast('Your account does not have an API key associated with it. Please generate one from the integrations page');
 						}
 					}}
 				>
@@ -711,14 +671,9 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-1'
-														checked={
-															values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
-														}
+														checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 														onChange={e => {
-															setFieldValue(
-																'packageDeliveryType',
-																DELIVERY_TYPES.ON_DEMAND
-															);
+															setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
 															setFieldValue('packagePickupStartTime', '');
 															setFieldValue('drops[0].packageDropoffStartTime', '');
 														}}
@@ -735,12 +690,7 @@ const Create = props => {
 														name='deliveryType'
 														id='radio-2'
 														checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
-														onChange={e =>
-															setFieldValue(
-																'packageDeliveryType',
-																DELIVERY_TYPES.SAME_DAY
-															)
-														}
+														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
@@ -753,15 +703,8 @@ const Create = props => {
 														type='radio'
 														name='deliveryType'
 														id='radio-2'
-														checked={
-															values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-														}
-														onChange={e =>
-															setFieldValue(
-																'packageDeliveryType',
-																DELIVERY_TYPES.MULTI_DROP
-															)
-														}
+														checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
+														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
 														onBlur={handleBlur}
 													/>
 													<label className='form-check-label' htmlFor='radio-2'>
@@ -781,9 +724,7 @@ const Create = props => {
 											<div className='col-6'>
 												<label htmlFor='items-count' className='mb-1'>
 													<span>
-														{errors['itemsCount'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['itemsCount'] && <span className='text-danger'>*&nbsp;</span>}
 														Number of items
 													</span>
 												</label>
@@ -803,9 +744,7 @@ const Create = props => {
 											<div className='col-6'>
 												<label htmlFor='vehicle-type' className='mb-1'>
 													<span>
-														{errors['vehicleType'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
 														Vehicle Type
 													</span>
 												</label>
@@ -844,15 +783,24 @@ const Create = props => {
 								</div>
 								<div className='mt-2 mb-2' />
 								<div className='col-12 d-flex flex-column'>
-									<h4>Pickup</h4>
+									<div className='d-flex justify-content-between align-items-center'>
+										<h4>Pickup</h4>
+										<div
+											className='btn btn-sm btn-primary me-1'
+											onClick={() => {
+												setLock(!isLocked);
+												console.log(values);
+											}}
+										>
+											Edit
+										</div>
+									</div>
 									<div className='border border-2 rounded-3 px-4 py-3'>
 										<div className='row'>
 											<div className='col-md-6 col-lg-6 pb-xs-4'>
 												<label className='mb-1' htmlFor='address-line-1'>
 													<span>
-														{errors['pickupAddressLine1'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
 														Address line 1
 													</span>
 												</label>
@@ -865,14 +813,13 @@ const Create = props => {
 													className='form-control rounded-3 mb-2'
 													onBlur={handleBlur}
 													onChange={handleChange}
+													disabled={isLocked}
 												/>
 											</div>
 											<div className='col-md-6 col-lg-6 pb-xs-4'>
 												<label className='mb-1' htmlFor='address-line-2'>
 													<span>
-														{errors['pickupAddressLine2'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
 														Address line 2
 													</span>
 												</label>
@@ -885,6 +832,7 @@ const Create = props => {
 													className='form-control rounded-3 mb-2'
 													onBlur={handleBlur}
 													onChange={handleChange}
+													disabled={isLocked}
 												/>
 											</div>
 										</div>
@@ -892,9 +840,7 @@ const Create = props => {
 											<div className='col-md-6 col-lg-6 pb-xs-4'>
 												<label className='mb-1' htmlFor='city'>
 													<span>
-														{errors['pickupCity'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
 														City
 													</span>
 												</label>
@@ -907,14 +853,13 @@ const Create = props => {
 													className='form-control rounded-3 mb-2'
 													onBlur={handleBlur}
 													onChange={handleChange}
+													disabled={isLocked}
 												/>
 											</div>
 											<div className='col-md-6 col-lg-6 pb-xs-4'>
 												<label className='mb-1' htmlFor='postcode'>
 													<span>
-														{errors['pickupPostcode'] && (
-															<span className='text-danger'>*&nbsp;</span>
-														)}
+														{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
 														Postcode
 													</span>
 												</label>
@@ -927,6 +872,7 @@ const Create = props => {
 													className='form-control rounded-3 mb-2'
 													onBlur={handleBlur}
 													onChange={handleChange}
+													disabled={isLocked}
 												/>
 											</div>
 										</div>
@@ -1000,21 +946,15 @@ const Create = props => {
 																</h5>
 																<span className='fs-6'>
 																	{dropoffFirstName} {dropoffLastName} -&nbsp;
-																	<span className='card-text'>
-																		{dropoffPhoneNumber}
-																	</span>
+																	<span className='card-text'>{dropoffPhoneNumber}</span>
 																</span>
 																<div className='d-flex align-items-center justify-content-between'>
-																	<small className='text-muted'>
-																		{moment(packageDropoffStartTime).calendar()}
-																	</small>
+																	<small className='text-muted'>{moment(packageDropoffStartTime).calendar()}</small>
 																	<div>
 																		<button
 																			type='button'
 																			className='btn btn-sm btn-outline-danger'
-																			onClick={() =>
-																				dispatch(removeDropoff(index))
-																			}
+																			onClick={() => dispatch(removeDropoff(index))}
 																		>
 																			Remove
 																		</button>
@@ -1028,22 +968,18 @@ const Create = props => {
 											<div className='d-flex align-items-center'>
 												<div
 													className='btn btn-outline-primary'
-													onClick={() => dropoffs.length < 8 ? showDropoffModal(true) : setToast(`You cannot add more than 8 dropoff locations per multi drop`)}
+													onClick={() =>
+														dropoffs.length < 8
+															? showDropoffModal(true)
+															: setToast(`You cannot add more than 8 dropoff locations per multi drop`)
+													}
 												>
 													Add Dropoff
 												</div>
-												<div
-													className='ms-4 btn btn-outline-success'
-													onClick={() => showCSVUpload(true)}
-												>
+												<div className='ms-4 btn btn-outline-success' onClick={() => showCSVUpload(true)}>
 													Upload CSV
 												</div>
-												<Link
-													className='ms-4'
-													to="/example.csv"
-													target="_blank"
-													download="template.csv"
-												>
+												<Link className='ms-4' to='/example.csv' target='_blank' download='template.csv'>
 													Download CSV template
 												</Link>
 											</div>
@@ -1054,10 +990,9 @@ const Create = props => {
 												<div className='col-6'>
 													<label htmlFor='dropoff-first-name' className='mb-1'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffFirstName'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffFirstName'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															First Name
 														</span>
 													</label>
@@ -1070,15 +1005,15 @@ const Create = props => {
 														aria-label='dropoff-first-name'
 														onChange={handleChange}
 														onBlur={handleBlur}
+														required
 													/>
 												</div>
 												<div className='col-6'>
 													<label htmlFor='dropoff-last-name' className='mb-1'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffLastName'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffLastName'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Last Name
 														</span>
 													</label>
@@ -1091,6 +1026,7 @@ const Create = props => {
 														aria-label='dropoff-last-name'
 														onChange={handleChange}
 														onBlur={handleBlur}
+														required
 													/>
 												</div>
 											</div>
@@ -1098,10 +1034,9 @@ const Create = props => {
 												<div className='col-6'>
 													<label htmlFor='dropoff-email-address' className='mb-1'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffEmailAddress'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffEmailAddress'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Email Address
 														</span>
 													</label>
@@ -1114,15 +1049,15 @@ const Create = props => {
 														aria-label='dropoff-email-address'
 														onChange={handleChange}
 														onBlur={handleBlur}
+														required
 													/>
 												</div>
 												<div className='col-6'>
 													<label htmlFor='dropoff-phone-number' className='mb-1'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffPhoneNumber'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffPhoneNumber'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Phone Number
 														</span>
 													</label>
@@ -1134,6 +1069,7 @@ const Create = props => {
 														aria-label='dropoff-phone-number'
 														onChange={handleChange}
 														onBlur={handleBlur}
+														required
 													/>
 												</div>
 											</div>
@@ -1141,10 +1077,9 @@ const Create = props => {
 												<div className='col-md-6 col-lg-6 pb-xs-4'>
 													<label className='mb-1' htmlFor='dropoff-address-line-1'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffAddressLine1'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffAddressLine1'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Address line 1
 														</span>
 													</label>
@@ -1157,15 +1092,15 @@ const Create = props => {
 														className='form-control rounded-3 mb-2'
 														onBlur={handleBlur}
 														onChange={handleChange}
+														required
 													/>
 												</div>
 												<div className='col-md-6 col-lg-6 pb-xs-4'>
 													<label className='mb-1' htmlFor='dropoff-address-line-2'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffAddressLine2'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffAddressLine2'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Address line 2
 														</span>
 													</label>
@@ -1200,15 +1135,15 @@ const Create = props => {
 														className='form-control rounded-3 mb-2'
 														onBlur={handleBlur}
 														onChange={handleChange}
+														required
 													/>
 												</div>
 												<div className='col-md-6 col-lg-6 pb-xs-4'>
 													<label className='mb-1' htmlFor='dropoff-postcode'>
 														<span>
-															{errors['drops'] &&
-																errors['drops'][0]['dropoffPostcode'] && (
-																	<span className='text-danger'>*&nbsp;</span>
-																)}
+															{errors['drops'] && errors['drops'][0]['dropoffPostcode'] && (
+																<span className='text-danger'>*&nbsp;</span>
+															)}
 															Postcode
 														</span>
 													</label>
@@ -1221,6 +1156,7 @@ const Create = props => {
 														className='form-control rounded-3 mb-2'
 														onBlur={handleBlur}
 														onChange={handleChange}
+														required
 													/>
 												</div>
 											</div>
@@ -1231,9 +1167,7 @@ const Create = props => {
 													</label>
 													{values.packagePickupStartTime ? (
 														<input
-															disabled={
-																values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
-															}
+															disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 															id='dropoff-datetime'
 															name='drops[0].packageDropoffStartTime'
 															type='datetime-local'
@@ -1245,18 +1179,12 @@ const Create = props => {
 															min={moment(values.packagePickupStartTime)
 																.subtract(1, 'minute')
 																.format('YYYY-MM-DDTHH:mm')}
-															max={moment(values.packagePickupStartTime)
-																.add(1, 'days')
-																.format('YYYY-MM-DDTHH:mm')}
-															required={
-																values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND
-															}
+															max={moment(values.packagePickupStartTime).add(1, 'days').format('YYYY-MM-DDTHH:mm')}
+															required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 														/>
 													) : (
 														<input
-															disabled={
-																values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND
-															}
+															disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 															id='dropoff-datetime'
 															name='drops[0].packageDropoffStartTime'
 															type='datetime-local'
@@ -1285,9 +1213,7 @@ const Create = props => {
 									)}
 								</div>
 								<div className='my-3 d-flex justify-content-center'>
-									{error.message && (
-										<div className='alert alert-danger text-center w-75'>{error.message}</div>
-									)}
+									{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 								</div>
 								<div className='d-flex pt-3 justify-content-end'>
 									<div>
@@ -1309,10 +1235,7 @@ const Create = props => {
 											size='lg'
 											name={SUBMISSION_TYPES.CREATE_JOB}
 											value={SUBMISSION_TYPES.CREATE_JOB}
-											disabled={
-												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-												dropoffs.length < 5
-											}
+											disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
 											onClick={() =>
 												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
 												dropoffs.length < 5 &&
