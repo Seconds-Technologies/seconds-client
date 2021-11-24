@@ -51,6 +51,7 @@ const Create = props => {
 	const [jobModal, showJobModal] = useState(false);
 	const [isLoading, setLoadingModal] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
+	const [multiDropDialog, showMultiDropDialog] = useState(false);
 	const [dropoffModal, showDropoffModal] = useState(false);
 	const [pickupDatetime, setPickupDatetime] = useState('');
 	const [deliveryParams, setDeliveryParams] = useState({
@@ -154,6 +155,50 @@ const Create = props => {
 		},
 		[getParsedAddress, validateAddresses]
 	);
+
+	const confirmMultiDropQuote = () => {
+		showMultiDropDialog(false);
+		setLoadingText('Creating Order');
+		showConfirmDialog(false);
+		setLoadingModal(true);
+		dispatch(createMultiDropJob(deliveryParams, apiKey))
+			.then(
+				({
+					jobSpecification: {
+						deliveries,
+						orderNumber,
+						pickupLocation: { fullAddress: pickupAddress },
+						pickupStartTime,
+					},
+					status,
+					selectedConfiguration: { providerId },
+				}) => {
+					let {
+						description,
+						dropoffLocation: { fullAddress: dropoffAddress },
+						dropoffStartTime,
+					} = deliveries[0];
+					let newJob = {
+						orderNumber,
+						description,
+						pickupAddress,
+						dropoffAddress,
+						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						status,
+						fleetProvider: providerId,
+					};
+					setLoadingModal(false);
+					setJob(newJob);
+					handleOpen();
+				}
+			)
+			.catch(err => {
+				setLoadingModal(false);
+				console.log(err);
+				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+			});
+	};
 
 	const confirmSelection = () => {
 		setLoadingText('Creating Order');
@@ -299,6 +344,37 @@ const Create = props => {
 					Cancel
 				</Button>
 				<Button onClick={confirmSelection}>Confirm</Button>
+			</Modal.Footer>
+		</Modal>
+	);
+
+	const multiDropQuoteModal = (
+		<Modal show={multiDropDialog} onHide={() => showMultiDropDialog(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Confirm Selection</Modal.Title>
+			</Modal.Header>
+			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
+				<div>
+					<table className='table'>
+						<thead>
+							<tr>
+								<th scope='col'>Number of dropoffs</th>
+								<th scope='col'>Price (per drop)</th>
+								<th scope='col'>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td className='col'>{dropoffs.length}</td>
+								<td className='col'>£7</td>
+								<td className='col'>£{7 * dropoffs.length}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</Modal.Body>
+			<Modal.Footer>
+				<Button onClick={confirmMultiDropQuote}>Confirm</Button>
 			</Modal.Footer>
 		</Modal>
 	);
@@ -519,6 +595,7 @@ const Create = props => {
 				{newJobModal}
 				{quotesModal}
 				{confirmModal}
+				{multiDropQuoteModal}
 				{apiKeyToast}
 				{newDropoff}
 				<CSVUpload
@@ -530,21 +607,17 @@ const Create = props => {
 					handleOnDrop={drops => {
 						let dropoff = {};
 						let { data: keys } = drops.shift();
-						console.log(keys);
 						if (drops.length > 8) {
 							drops = drops.slice(0, 8);
 							setToast(`Multi-drop only supports a maximum of 8 dropoffs`);
 						}
 						keys.forEach(key => (dropoff[key] = ''));
-						console.log(drops);
 						let dropoffs = drops.map(({ data }) => {
-							console.log(data);
 							let dropoff = {};
 							data.forEach((item, index) => {
 								let key = keys[index];
 								if (key === 'packageDropoffStartTime') {
 									item = moment(item, 'DD/MM/YYYY HH:mm').format();
-									console.log(item);
 								}
 								dropoff[key] = item;
 							});
@@ -579,20 +652,27 @@ const Create = props => {
 								values.packagePickupStartTime = moment().add('25', 'minutes').format();
 								values.drops[0].packageDropoffStartTime = moment().add('50', 'minutes').format();
 							}
-							if (values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP) values.drops = dropoffs;
 							if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
 								setLoadingText('Getting Quote');
 								setLoadingModal(true);
 								try {
-									values = await handleAddresses(values);
-									const {
-										quotes,
-										bestQuote: { id },
-									} = await dispatch(getAllQuotes(apiKey, values));
-									setDeliveryParams(prevState => ({ ...values }));
-									setQuotes(quotes);
-									setLoadingModal(false);
-									showQuoteModal(true);
+									if (values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP) {
+										values.drops = dropoffs;
+										values = await handleAddresses(values);
+										setDeliveryParams(prevState => ({ ...values }));
+										setLoadingModal(false);
+										showMultiDropDialog(true);
+									} else {
+										values = await handleAddresses(values);
+										setDeliveryParams(prevState => ({ ...values }));
+										const {
+											quotes,
+											bestQuote: { id },
+										} = await dispatch(getAllQuotes(apiKey, values));
+										setQuotes(quotes);
+										setLoadingModal(false);
+										showQuoteModal(true);
+									}
 								} catch (err) {
 									setLoadingModal(false);
 									console.error(err);
@@ -612,9 +692,7 @@ const Create = props => {
 										},
 										status,
 										selectedConfiguration: { providerId },
-									} = values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-										? await dispatch(createMultiDropJob(values, apiKey))
-										: await dispatch(createDeliveryJob(values, apiKey));
+									} = await dispatch(createDeliveryJob(values, apiKey));
 									let {
 										description,
 										dropoffLocation: { fullAddress: dropoffAddress },
@@ -632,8 +710,6 @@ const Create = props => {
 									};
 									setLoadingModal(false);
 									setJob(newJob);
-									// values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-									// 	dispatch(clearDropoffs());
 									handleOpen();
 								} catch (err) {
 									setLoadingModal(false);
@@ -1224,17 +1300,6 @@ const Create = props => {
 											variant='dark'
 											size='lg'
 											className='mx-3'
-											disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
-										>
-											Get Quote
-										</Button>
-										<Button
-											className='text-light'
-											variant='primary'
-											type='submit'
-											size='lg'
-											name={SUBMISSION_TYPES.CREATE_JOB}
-											value={SUBMISSION_TYPES.CREATE_JOB}
 											disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
 											onClick={() =>
 												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
@@ -1242,8 +1307,20 @@ const Create = props => {
 												alert('Please add at least 5 dropoffs before creating a multi drop')
 											}
 										>
-											Confirm
+											Get Quote
 										</Button>
+										{values.packageDeliveryType !== DELIVERY_TYPES.MULTI_DROP && (
+											<Button
+												className='text-light'
+												variant='primary'
+												type='submit'
+												size='lg'
+												name={SUBMISSION_TYPES.CREATE_JOB}
+												value={SUBMISSION_TYPES.CREATE_JOB}
+											>
+												Confirm
+											</Button>
+										)}
 									</div>
 								</div>
 							</div>
