@@ -70,6 +70,10 @@
   background-color: #565656;
 }
 
+.unknown {
+  background-color: #795548
+}
+
 .aside {
   background-color: #EEEEEE;
 }

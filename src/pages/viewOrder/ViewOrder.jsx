@@ -19,6 +19,7 @@ const ViewOrder = props => {
 
 	const statusBtn = useCallback(activeIndex => {
 		if (order.deliveries) {
+			let unknown = Object.values(STATUS).indexOf(order.deliveries[activeIndex].status.toUpperCase()) === -1
 			return classnames({
 				orderAddButton: true,
 				'me-3': true,
@@ -28,6 +29,7 @@ const ViewOrder = props => {
 				'en-route': order.deliveries[activeIndex].status.toUpperCase() === STATUS.EN_ROUTE,
 				completed: order.deliveries[activeIndex].status.toUpperCase() === STATUS.COMPLETED,
 				cancelled: order.deliveries[activeIndex].status.toUpperCase() === STATUS.CANCELLED,
+				unknown
 			})
 		}
 		return classnames({
@@ -106,16 +108,13 @@ const ViewOrder = props => {
 				)}
 			</div>
 			<div className='d-flex mt-3'>
-				<div
-					id='carouselExampleIndicators'
-					className='orderShow pt-4 pb-1 px-5 carousel carousel-dark slide'
-					data-bs-ride='carousel'
-				>
+				<div id='carouselExampleIndicators' className='orderShow pt-4 pb-1 px-5 carousel carousel-dark slide' data-bs-ride='carousel'>
 					<div className='carousel-indicators'>
 						{order.deliveries &&
 							order.deliveries.map((delivery, index) =>
 								index === 0 ? (
 									<button
+										key={index}
 										type='button'
 										data-bs-target='#carouselExampleIndicators'
 										data-bs-slide-to={index}
@@ -125,6 +124,7 @@ const ViewOrder = props => {
 									/>
 								) : (
 									<button
+										key={index}
 										type='button'
 										data-bs-target='#carouselExampleIndicators'
 										data-bs-slide-to={index}
@@ -143,15 +143,13 @@ const ViewOrder = props => {
 										orderReference,
 										trackingURL,
 										description,
-										status
+										status,
 									},
 									index
 								) => (
-									<div className={index === 0 ? 'carousel-item active' : 'carousel-item'}>
+									<div key={index} className={index === 0 ? 'carousel-item active' : 'carousel-item'}>
 										<div className='d-flex flex-column justify-content-center'>
-											<span className='fs-3 groupTitle text-center'>
-												{`${firstName} ${lastName}`}
-											</span>
+											<span className='fs-3 groupTitle text-center'>{`${firstName} ${lastName}`}</span>
 											<div className='orderShowInfo'>
 												<span className='orderShowLabel'>Order Reference:</span>
 												<span className='orderShowInfoTitle'>{orderReference}</span>
@@ -162,18 +160,14 @@ const ViewOrder = props => {
 											</div>
 											<div className='orderShowInfo'>
 												<span className='orderShowLabel'>Email:</span>
-												<span className='orderShowInfoTitle'>{email ? email : "N/A"}</span>
+												<span className='orderShowInfoTitle'>{email ? email : 'N/A'}</span>
 											</div>
 											<div className='orderShowInfo'>
 												<span className='orderShowLabel'>Phone Number:</span>
-												<span className='orderShowInfoTitle'>{phoneNumber ? phoneNumber : "N/A"}</span>
+												<span className='orderShowInfoTitle'>{phoneNumber ? phoneNumber : 'N/A'}</span>
 											</div>
-											<div
-												className='d-flex justify-content-center align-items-center my-2'
-												style={{ color: '#444' }}
-											>
+											<div className='d-flex justify-content-center align-items-center my-2' style={{ color: '#444' }}>
 												<div className='mx-3'>
-
 													{trackingURL ? (
 														<a
 															href={trackingURL}
@@ -199,17 +193,8 @@ const ViewOrder = props => {
 												</div>
 											</div>
 											<div className='orderShowInfo flex-column'>
-												<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-													Products Ordered
-												</span>
-												<textarea
-													className='form-control'
-													name=''
-													id=''
-													cols='30'
-													rows='4'
-													value={description}
-												/>
+												<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Products Ordered</span>
+												<textarea className='form-control' name='' id='' cols='30' rows='4' defaultValue={description} />
 											</div>
 											<div className='d-flex flex-row align-items-center'>
 												<button className={statusBtn(index)} disabled>
@@ -226,14 +211,7 @@ const ViewOrder = props => {
 															console.log('CHOSEN STATUS', values);
 															if (order.status !== values.status) {
 																try {
-																	dispatch(
-																		updateJobsStatus(
-																			apiKey,
-																			order.id,
-																			values.status,
-																			stripeCustomerId
-																		)
-																	);
+																	dispatch(updateJobsStatus(apiKey, order.id, values.status, stripeCustomerId));
 																	setShow(true);
 																} catch (err) {
 																	console.error(err);
@@ -258,18 +236,10 @@ const ViewOrder = props => {
 																	>
 																		<option value={STATUS.NEW}>New</option>
 																		<option value={STATUS.PENDING}>Pending</option>
-																		<option value={STATUS.DISPATCHING}>
-																			Dispatching
-																		</option>
-																		<option value={STATUS.EN_ROUTE}>
-																			En-route
-																		</option>
-																		<option value={STATUS.COMPLETED}>
-																			Completed
-																		</option>
-																		<option value={STATUS.CANCELLED}>
-																			Cancelled
-																		</option>
+																		<option value={STATUS.DISPATCHING}>Dispatching</option>
+																		<option value={STATUS.EN_ROUTE}>En-route</option>
+																		<option value={STATUS.COMPLETED}>Completed</option>
+																		<option value={STATUS.CANCELLED}>Cancelled</option>
 																	</select>
 																</div>
 															</form>
@@ -281,21 +251,11 @@ const ViewOrder = props => {
 									</div>
 								)
 							)}
-						<button
-							className='carousel-control-prev'
-							type='button'
-							data-bs-target='#carouselExampleIndicators'
-							data-bs-slide='prev'
-						>
+						<button className='carousel-control-prev' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide='prev'>
 							<span className='carousel-control-prev-icon' aria-hidden='true' />
 							<span className='visually-hidden'>Previous</span>
 						</button>
-						<button
-							className='carousel-control-next'
-							type='button'
-							data-bs-target='#carouselExampleIndicators'
-							data-bs-slide='next'
-						>
+						<button className='carousel-control-next' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide='next'>
 							<span className='carousel-control-next-icon' aria-hidden='true' />
 							<span className='visually-hidden'>Next</span>
 						</button>
@@ -323,9 +283,7 @@ const ViewOrder = props => {
 							<span className='orderShowInfoTitle'>{order.createdAt}</span>
 						</div>
 						<div className='deliveryShowInfo flex-column'>
-							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>
-								Driver Assigned
-							</span>
+							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Driver Assigned</span>
 							<table className='table d-flex table-borderless'>
 								<tbody>
 									<tr>
