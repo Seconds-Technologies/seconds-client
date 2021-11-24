@@ -10,44 +10,6 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';
 import secondsLogo from '../../assets/img/logo.svg';
 
-/*const defaultDeliveryHours = {
-	0: {
-		open: { h: 10, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 16, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: false,
-	},
-	1: {
-		open: { h: 7, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 18, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-	2: {
-		open: { h: 7, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 18, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-	3: {
-		open: { h: 7, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 18, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-	4: {
-		open: { h: 7, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 18, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-	5: {
-		open: { h: 7, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 18, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-	6: {
-		open: { h: 10, m: 0, _id: "abhdbhsbkdnasnjndka" },
-		close: { h: 17, m: 30, _id: "abhdbhsbkdnasnjndka" },
-		canDeliver: true,
-	},
-};*/
-
 const onIcon = <div className='switch-icon'>On</div>;
 
 const offIcon = <div className='switch-icon'>Off</div>;
