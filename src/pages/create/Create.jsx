@@ -862,7 +862,7 @@ const Create = props => {
 									<div className='d-flex justify-content-between align-items-center'>
 										<h4>Pickup</h4>
 										<div
-											className='btn btn-sm btn-primary me-1'
+											className='btn btn-sm btn-outline-primary me-1'
 											onClick={() => {
 												setLock(!isLocked);
 												console.log(values);
@@ -1125,7 +1125,6 @@ const Create = props => {
 														aria-label='dropoff-email-address'
 														onChange={handleChange}
 														onBlur={handleBlur}
-														required
 													/>
 												</div>
 												<div className='col-6'>
