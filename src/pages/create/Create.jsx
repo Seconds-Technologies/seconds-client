@@ -229,7 +229,7 @@ const Create = props => {
 						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						status,
-						fleetProvider: providerId,
+						fleetProvider: providerId.replace(/_/g, ' '),
 					};
 					setLoadingModal(false);
 					setJob(newJob);
