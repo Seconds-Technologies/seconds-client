@@ -254,7 +254,7 @@ const Create = props => {
 						{Object.entries(deliveryJob).map(([key, value], index) => (
 							<li key={index} className='list-group-item'>
 								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
-								<div className='text-capitalize'>{value.replace(/_/g, ' ')}</div>
+								<div className='text-capitalize'>{value}</div>
 							</li>
 						))}
 					</ul>
@@ -706,7 +706,7 @@ const Create = props => {
 										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 										status,
-										fleetProvider: providerId,
+										fleetProvider: providerId.replace(/_/g, ' '),
 									};
 									setLoadingModal(false);
 									setJob(newJob);
