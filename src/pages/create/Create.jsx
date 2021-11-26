@@ -174,19 +174,19 @@ const Create = props => {
 					selectedConfiguration: { providerId },
 				}) => {
 					let {
-						description,
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
+						orderReference: customerReference
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
-						description,
+						customerReference,
 						pickupAddress,
 						dropoffAddress,
 						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						status,
-						fleetProvider: providerId,
+						fleetProvider: providerId.replace(/_/g, ' '),
 					};
 					setLoadingModal(false);
 					setJob(newJob);
@@ -217,13 +217,13 @@ const Create = props => {
 					selectedConfiguration: { providerId },
 				}) => {
 					let {
-						description,
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
+						orderReference: customerReference
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
-						description,
+						customerReference,
 						pickupAddress,
 						dropoffAddress,
 						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
@@ -412,9 +412,7 @@ const Create = props => {
 						packageDropoffStartTime: '',
 						packageDescription: '',
 					}}
-					onSubmit={values => {
-						dispatch(addDropoff(values));
-					}}
+					onSubmit={values => dispatch(addDropoff(values))}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
 						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
@@ -694,13 +692,13 @@ const Create = props => {
 										selectedConfiguration: { providerId },
 									} = await dispatch(createDeliveryJob(values, apiKey));
 									let {
-										description,
 										dropoffLocation: { fullAddress: dropoffAddress },
 										dropoffStartTime,
+										orderReference: customerReference
 									} = deliveries[0];
 									let newJob = {
 										orderNumber,
-										description,
+										customerReference,
 										pickupAddress,
 										dropoffAddress,
 										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
