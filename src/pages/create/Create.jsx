@@ -303,11 +303,11 @@ const Create = props => {
 										/>
 										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
 									</td>
-									<td className='col' colSpan={2}>
+									<td className='col'>
 										{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
 									</td>
 									<td className='col'>{dropoffEta ? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes` : 'N/A'}</td>
-									<td>{transport}</td>
+									<td className='col text-capitalize'>{transport}</td>
 									<td className='col'>
 										<button
 											className='d-flex justify-content-center align-items-center OrdersListEdit'
