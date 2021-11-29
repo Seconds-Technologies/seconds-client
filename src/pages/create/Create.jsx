@@ -274,7 +274,7 @@ const Create = props => {
 						<thead>
 							<tr>
 								<th scope='col'>Fleet Provider</th>
-								<th scope='col' colSpan={2}>
+								<th scope='col'>
 									Price
 								</th>
 								<th scope='col'>ETA</th>
