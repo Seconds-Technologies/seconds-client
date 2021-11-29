@@ -100,3 +100,9 @@ export const DELIVERY_TYPES = {
 	SAME_DAY: 'SAME_DAY',
 	MULTI_DROP: 'MULTI_DROP'
 };
+
+export const DELIVERY_STRATEGIES = {
+	price: "Lowest Price",
+	eta: "Fastest Delivery Time",
+	rating: "Best Driver Rating"
+}
