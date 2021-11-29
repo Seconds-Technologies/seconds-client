@@ -160,6 +160,7 @@ const ApiKey = props => {
 						<input className='form-control form-control-lg my-4 rounded-0' type='text' value={apiKey} readOnly />
 					</div>
 					<div className='pb-5'>
+						<h1>Delivery Strategy</h1>
 						<Formik
 							enableReinitialize
 							initialValues={{
@@ -173,11 +174,10 @@ const ApiKey = props => {
 						>
 							{({ handleChange, handleBlur, handleSubmit }) => (
 								<form className='d-flex flex-grow-1 flex-column justify-content-center' onSubmit={handleSubmit}>
-									<h1>Your Delivery Strategy</h1>
 									<small>
 										Your delivery strategy reflects which fleet providers we choose for your customers
 									</small>
-									<input className='form-control form-control-lg rounded-0 my-2' type='text' value={DELIVERY_STRATEGIES[selectionStrategy]} readOnly />
+									<input className='form-control form-control-lg rounded-0 my-3' type='text' value={DELIVERY_STRATEGIES[selectionStrategy]} readOnly />
 									</form>
 							)}
 						</Formik>
