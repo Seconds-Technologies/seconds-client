@@ -14,12 +14,10 @@ const Square = props => {
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
-		(async () => {
-			const query = new URLSearchParams(window.location.search);
-			console.table(query)
-			console.table(credentials)
-			query.code && await dispatch(getSquareCredentials({ email, credentials, code: query.code })).then(shop => alert(JSON.stringify(shop)));
-		})()
+		const query = new URLSearchParams(window.location.search);
+		console.table(query)
+		console.table(credentials)
+		query.code && dispatch(getSquareCredentials({ email, credentials, code: query.code })).then(shop => alert(JSON.stringify(shop)));
 	}, []);
 	
 	return (
@@ -70,6 +68,7 @@ const Square = props => {
 						  }) => (
 							<form className='w-50' method="POST" action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/square/authorize`}>
 								<div className='mb-3'>
+									<input type='hidden' name='email' value={email} />
 									<label htmlFor='clientId' className='form-label'>
 										Application ID
 									</label>
