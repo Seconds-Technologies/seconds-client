@@ -66,18 +66,17 @@ export function validateSquare(data) {
 export function getSquareCredentials(data){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log("Credentials:", data);
-			return apiCall("GET", `/server/square`)
+			return apiCall('GET', `/server/square`, null, { params: { ...data } })
 				.then(shop => {
-					Mixpanel.track("Successful Square integration")
-					Mixpanel.people.setOnce({$square: shop})
+					Mixpanel.track('Successful Square integration');
+					Mixpanel.people.setOnce({ $square: shop });
 					dispatch(setSquare(shop));
 					dispatch(removeError());
 					resolve(shop);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
-					else dispatch(addError("Api endpoint could not be accessed!"));
+					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
 				});
 		});
