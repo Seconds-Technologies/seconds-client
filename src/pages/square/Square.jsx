@@ -1,9 +1,9 @@
 import './square.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import squareLogo from '../../assets/img/square.svg';
 import { Formik } from 'formik';
-import { validateSquare } from '../../store/actions/square';
+import { getSquareCredentials, validateSquare } from '../../store/actions/square';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 const Square = props => {
@@ -12,6 +12,15 @@ const Square = props => {
 	const [error, setError] = useState(null);
 	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
 	const [isLoading, setLoading] = useState(false);
+
+	useEffect(() => {
+		(async () => {
+			const query = new URLSearchParams(window.location.search);
+			console.table(query)
+			query.code && await dispatch(getSquareCredentials({ email, code: query.code })).then(shop => alert(JSON.stringify(shop)));
+		})()
+	}, []);
+	
 	return (
 		<div className='square-container bg-light pb-2'>
 			{!isIntegrated ? (
@@ -105,7 +114,7 @@ const Square = props => {
 									</div>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
-									<button className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
+									<button type="button" className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 										Go Back
 									</button>
 									<button type='submit' className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'>

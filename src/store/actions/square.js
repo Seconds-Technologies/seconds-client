@@ -37,12 +37,27 @@ export function validateSquare(data) {
 		return new Promise((resolve, reject) => {
 			console.log("Credentials:", data);
 			return apiCall("POST", `/server/square/authorize`, data)
+				.then(res => console.log(res))
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError("Api endpoint could not be accessed!"));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function getSquareCredentials(data){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log("Credentials:", data);
+			return apiCall("GET", `/server/square`)
 				.then(shop => {
-					Mixpanel.track("Successful Square integration")
-					Mixpanel.people.setOnce({$square: shop})
+					/*Mixpanel.track("Successful Square integration")
+					Mixpanel.people.setOnce({$square: shop})*/
 					/*dispatch(setSquare(shop));
-					dispatch(removeError());
-					resolve(shop);*/
+					dispatch(removeError());*/
+					resolve(shop);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
