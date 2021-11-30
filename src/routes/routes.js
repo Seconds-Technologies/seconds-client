@@ -34,7 +34,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
-		<PrivateRoute exact path={PATHS.SQUARE} component={Square} />
+		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
