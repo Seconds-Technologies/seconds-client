@@ -128,9 +128,9 @@ const Square = props => {
 					</Formik>
 				) : (
 					<div className='text-center pt-4'>
-						<p className='lead'>Shop Owner: {credentials.shopOwner}</p>
-						<p className='lead'>Domain: {credentials.domain}</p>
-						<p className='lead'>Country: {credentials.country}</p>
+						<p className='lead'>Shop Id: Testing</p>
+						<p className='lead'>Domain: Testing</p>
+						<p className='lead'>Country: Testing</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.goBack}>
 							Go Back
 						</button>

@@ -9,6 +9,7 @@ import {
 	UPDATE_COMPLETED_ORDERS,
 	UPDATE_SQUARE
 } from '../actionTypes';
+import { Mixpanel } from '../../config/mixpanel';
 
 export const setSquare = credentials => ({
 	type: SET_SQUARE,
@@ -68,10 +69,10 @@ export function getSquareCredentials(data){
 			console.log("Credentials:", data);
 			return apiCall("GET", `/server/square`)
 				.then(shop => {
-					/*Mixpanel.track("Successful Square integration")
-					Mixpanel.people.setOnce({$square: shop})*/
-					/*dispatch(setSquare(shop));
-					dispatch(removeError());*/
+					Mixpanel.track("Successful Square integration")
+					Mixpanel.people.setOnce({$square: shop})
+					dispatch(setSquare(shop));
+					dispatch(removeError());
 					resolve(shop);
 				})
 				.catch(err => {
