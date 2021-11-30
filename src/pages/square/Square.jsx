@@ -10,17 +10,17 @@ const Square = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
+	const { isIntegrated } = useSelector(state => state['squareStore']);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
-		const query = new URLSearchParams(window.location.search);
+		const query = new URLSearchParams(props.location.search);
 		console.log(query)
 		if (query.get('code')) {
 			let code = query.get("code")
 			dispatch(getSquareCredentials({ email, code })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
 		}
-	}, []);
+	}, [props.location]);
 	
 	return (
 		<div className='square-container bg-light pb-2'>
