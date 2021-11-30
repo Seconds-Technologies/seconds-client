@@ -1,11 +1,23 @@
 import { apiCall } from '../../api';
 import { addError, removeError } from './errors';
-import { CLEAR_ORDERS, REMOVE_COMPLETED_ORDER, SET_ALL_ORDERS, SET_COMPLETED_ORDERS, SET_SQUARE, UPDATE_COMPLETED_ORDERS } from '../actionTypes';
-import { Mixpanel } from '../../config/mixpanel';
+import {
+	CLEAR_ORDERS,
+	REMOVE_COMPLETED_ORDER,
+	SET_ALL_ORDERS,
+	SET_COMPLETED_ORDERS,
+	SET_SQUARE,
+	UPDATE_COMPLETED_ORDERS,
+	UPDATE_SQUARE
+} from '../actionTypes';
 
 export const setSquare = credentials => ({
 	type: SET_SQUARE,
 	credentials,
+});
+
+export const updateSquare = data => ({
+	type: UPDATE_SQUARE,
+	data,
 });
 
 export const setAllOrders = orders => ({
@@ -37,7 +49,10 @@ export function validateSquare(data) {
 		return new Promise((resolve, reject) => {
 			console.log("Credentials:", data);
 			return apiCall("POST", `/server/square/authorize`, data)
-				.then(res => console.log(res))
+				.then(res => {
+					console.log(res)
+					updateSquare(data)
+				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError("Api endpoint could not be accessed!"));

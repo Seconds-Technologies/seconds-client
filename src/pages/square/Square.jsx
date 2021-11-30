@@ -17,7 +17,8 @@ const Square = props => {
 		(async () => {
 			const query = new URLSearchParams(window.location.search);
 			console.table(query)
-			query.code && await dispatch(getSquareCredentials({ email, code: query.code })).then(shop => alert(JSON.stringify(shop)));
+			console.table(credentials)
+			query.code && await dispatch(getSquareCredentials({ email, credentials, code: query.code })).then(shop => alert(JSON.stringify(shop)));
 		})()
 	}, []);
 	
