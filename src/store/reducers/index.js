@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import shopifyProducts from "./shopifyProducts";
 import shopifyOrders from "./shopifyOrders";
 import shopifyStore from "./shopifyStore";
+import squareStore from './squareStore';
 import currentUser from "./currentUser";
 import errors from "./errors";
 import deliveryJobs from './deliveryJobs';
@@ -21,6 +22,7 @@ const appReducer = combineReducers({
     shopifyOrders,
     currentUser,
     shopifyStore,
+    squareStore,
     deliveryJobs,
     addressHistory,
     errors

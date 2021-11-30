@@ -22,6 +22,7 @@ import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Couriers from '../pages/couriers/Couriers';
 import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
 import MultiDrop from '../pages/multiDrop/MultiDrop';
+import Square from '../pages/square/Square';
 
 const routes = (
 	<Switch>
@@ -33,6 +34,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
+		<PrivateRoute exact path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />

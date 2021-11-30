@@ -11,6 +11,7 @@ export const PATHS = {
 	TRACK: '/track',
 	INTEGRATE: '/integrate',
 	SHOPIFY: '/integrate/shopify',
+	SQUARE: '/integrate/square',
 	API_KEY: '/integrate/api',
 	DOCUMENTATION: '/documentation',
 	PROFILE: '/profile',
@@ -19,7 +20,7 @@ export const PATHS = {
 	PAYMENT: '/payment',
 	SUBSCRIPTION: '/subscription',
 	COURIERS: '/couriers',
-	DELIVERY_TIMES: '/delivery-times',
+	DELIVERY_TIMES: '/delivery-times'
 };
 
 export const COLOURS = {

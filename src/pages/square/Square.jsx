@@ -1,26 +1,26 @@
+import './square.css';
 import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { getAllProducts, validateShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
-import shopifyLogo from '../../assets/img/shopify.svg';
-import './shopify.css';
+import squareLogo from '../../assets/img/square.svg';
+import { Formik } from 'formik';
+import { validateSquare } from '../../store/actions/square';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-const Shopify = props => {
+const Square = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
+	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
 	const [isLoading, setLoading] = useState(false);
 	return (
-		<div className='shopify-container bg-light pb-3'>
+		<div className='square-container bg-light pb-2'>
 			{!isIntegrated ? (
-				<h2 className='shopifyConnect'>Connect your Shopify Account</h2>
+				<h2 className='shopifyConnect'>Connect your Square Store</h2>
 			) : (
-				<h2 className='shopifyConnect'>Your shopify account is now connected!</h2>
+				<h2 className='shopifyConnect'>Your Square account is now connected!</h2>
 			)}
-			<img className='img-fluid shopifyLogo' src={shopifyLogo} alt='' />
-			<div className='d-flex justify-content-center pt-2'>
+			<div className='d-flex flex-column align-items-center'>
+				<img className='img-fluid d-block' src={squareLogo} alt='' width={300}/>
 				{error && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
 						<span className='text-center'>{error}</span>
@@ -32,17 +32,15 @@ const Shopify = props => {
 				{!isIntegrated ? (
 					<Formik
 						initialValues={{
-							shopName: '',
-							apiKey: '',
-							password: '',
+							clientId: '',
+							clientSecret: '',
 						}}
 						onSubmit={values => {
 							setLoading(true)
-							dispatch(validateShopify({ ...values, email }))
+							dispatch(validateSquare({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
 									setLoading(false)
-									dispatch(getAllProducts(shop.accessToken, shop.baseURL, email));
 								})
 								.catch(err => {
 									setLoading(false)
@@ -51,43 +49,48 @@ const Shopify = props => {
 						}}
 					>
 						{({
-							values,
-							errors,
-							touched,
-							handleChange,
-							handleBlur,
-							handleSubmit,
-							isSubmitting,
-							/* and other goodies */
-						}) => (
-							<form className='w-50' onSubmit={handleSubmit}>
+							  values,
+							  errors,
+							  touched,
+							  handleChange,
+							  handleBlur,
+							  handleSubmit,
+							  isSubmitting,
+							  /* and other goodies */
+						  }) => (
+							<form className='w-50' method="POST" action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/square/authorize`}>
 								<div className='mb-3'>
-									<label htmlFor='shopName' className='form-label'>
-										Shop Name
+									<label htmlFor='clientId' className='form-label'>
+										Application ID
 									</label>
 									<input
 										type='text'
-										autoComplete='organization'
 										className='form-control rounded-3'
-										id='shopName'
-										name='shopName'
+										id='clientId'
+										name='clientId'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
 									<div id='shopHelp' className='form-text'>
-										Name of you Shopify store
+										The Square-issued ID for your application, available from the OAuth page for your application on the&nbsp;
+										<a
+											href='https://developer.squareup.com/apps'
+											target='_blank'
+										>
+											Developer Dashboard
+										</a>
 									</div>
 								</div>
 								<div className='mb-3'>
 									<label htmlFor='apiKey' className='form-label'>
-										Admin API Key
+										Application Secret
 									</label>
 									<input
-										autoComplete={'new-password'}
+										autoComplete='new-password'
 										type='password'
 										className='form-control rounded-3'
 										id='apiKey'
-										name='apiKey'
+										name='clientSecret'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
@@ -100,20 +103,6 @@ const Shopify = props => {
 											here
 										</a>
 									</div>
-								</div>
-								<div className='mb-3'>
-									<label htmlFor='apiPassword' className='form-label'>
-										Admin API Password
-									</label>
-									<input
-										autoComplete={'new-password'}
-										type='password'
-										className='form-control rounded-3'
-										name='password'
-										id='apiPassword'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
 									<button className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
@@ -142,4 +131,4 @@ const Shopify = props => {
 	);
 };
 
-export default Shopify;
+export default Square;
