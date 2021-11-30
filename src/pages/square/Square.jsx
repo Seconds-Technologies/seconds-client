@@ -15,9 +15,11 @@ const Square = props => {
 
 	useEffect(() => {
 		const query = new URLSearchParams(window.location.search);
-		console.table(query)
-		console.table(credentials)
-		query.code && dispatch(getSquareCredentials({ email, code: query.code })).then(shop => alert(JSON.stringify(shop)));
+		console.log(query)
+		if (query.get('code')) {
+			let code = query.get("code")
+			dispatch(getSquareCredentials({ email, code })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
+		}
 	}, []);
 	
 	return (
