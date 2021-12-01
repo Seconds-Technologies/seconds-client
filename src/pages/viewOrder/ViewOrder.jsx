@@ -14,30 +14,33 @@ const ViewOrder = props => {
 	const { email, apiKey, stripeCustomerId } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-	const [order, setOrder] = useState({ });
+	const [order, setOrder] = useState({});
 	const [show, setShow] = useState(false);
 
-	const statusBtn = useCallback(activeIndex => {
-		if (order.deliveries) {
-			let unknown = Object.values(STATUS).indexOf(order.deliveries[activeIndex].status.toUpperCase()) === -1
+	const statusBtn = useCallback(
+		activeIndex => {
+			if (order.deliveries) {
+				let unknown = Object.values(STATUS).indexOf(order.deliveries[activeIndex].status.toUpperCase()) === -1;
+				return classnames({
+					orderAddButton: true,
+					'me-3': true,
+					new: order.deliveries[activeIndex].status.toUpperCase() === STATUS.NEW,
+					pending: order.deliveries[activeIndex].status.toUpperCase() === STATUS.PENDING,
+					dispatching: order.deliveries[activeIndex].status.toUpperCase() === STATUS.DISPATCHING,
+					'en-route': order.deliveries[activeIndex].status.toUpperCase() === STATUS.EN_ROUTE,
+					completed: order.deliveries[activeIndex].status.toUpperCase() === STATUS.COMPLETED,
+					cancelled: order.deliveries[activeIndex].status.toUpperCase() === STATUS.CANCELLED,
+					unknown,
+				});
+			}
 			return classnames({
 				orderAddButton: true,
 				'me-3': true,
-				new: order.deliveries[activeIndex].status.toUpperCase() === STATUS.NEW,
-				pending: order.deliveries[activeIndex].status.toUpperCase() === STATUS.PENDING,
-				dispatching: order.deliveries[activeIndex].status.toUpperCase() === STATUS.DISPATCHING,
-				'en-route': order.deliveries[activeIndex].status.toUpperCase() === STATUS.EN_ROUTE,
-				completed: order.deliveries[activeIndex].status.toUpperCase() === STATUS.COMPLETED,
-				cancelled: order.deliveries[activeIndex].status.toUpperCase() === STATUS.CANCELLED,
-				unknown
-			})
-		}
-		return classnames({
-			orderAddButton: true,
-			'me-3': true,
-			new: true
-		})
-	}, [order]);
+				new: true,
+			});
+		},
+		[order]
+	);
 
 	useEffect(() => {
 		(async () => {
@@ -182,13 +185,13 @@ const ViewOrder = props => {
 													)}
 												</div>
 												<div className='mx-2'>
-													<span className='orderShowLabel'>ETA:</span>
+													<span className='orderShowLabel'>Delivery ETA:</span>
 													<span className='orderShowInfoTitle'>
 														{!dropoffStartTime
 															? 'Estimating...'
 															: moment(dropoffStartTime).diff(moment(), 'minutes') < 0
-															? `Delivered`
-															: `${moment().to(moment(dropoffStartTime))}`}
+																? `Delivered`
+																: `${moment().to(moment(dropoffStartTime))}`}
 													</span>
 												</div>
 											</div>
@@ -282,6 +285,17 @@ const ViewOrder = props => {
 							<span className='orderShowLabel'>Created At:</span>
 							<span className='orderShowInfoTitle'>{order.createdAt}</span>
 						</div>
+						<div className='deliveryShowInfo'>
+							<span className='orderShowLabel'>Pickup ETA:</span>
+							<span className='orderShowInfoTitle'>
+								{!order.pickupDate
+									? 'Estimating...'
+									: moment(order.pickupDate).diff(moment(), 'minutes') < 0
+									? `Picked Up`
+									: `${moment().to(moment(order.pickupDate))}`}
+							</span>
+						</div>
+						<br/>
 						<div className='deliveryShowInfo flex-column'>
 							<span className='orderShowLabel justify-content-center d-flex flex-grow-1'>Driver Assigned</span>
 							<table className='table d-flex table-borderless'>
