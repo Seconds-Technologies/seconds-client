@@ -10,16 +10,18 @@ const Square = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated } = useSelector(state => state['squareStore']);
+	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
+		console.log("Mounting Square...")
 		const query = new URLSearchParams(props.location.search);
 		console.log(query)
 		if (query.get('code')) {
 			let code = query.get("code")
 			dispatch(getSquareCredentials({ email, code })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
 		}
+		return () => console.log("Unmounting Square")
 	}, [props.location]);
 	
 	return (
@@ -30,7 +32,7 @@ const Square = props => {
 				<h2 className='shopifyConnect'>Your Square account is now connected!</h2>
 			)}
 			<div className='d-flex flex-column align-items-center'>
-				<img className='img-fluid d-block' src={squareLogo} alt='' width={300}/>
+				<img className='img-fluid d-block' src={squareLogo} alt='' width={300} />
 				{error && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
 						<span className='text-center'>{error}</span>
@@ -46,29 +48,29 @@ const Square = props => {
 							clientSecret: '',
 						}}
 						onSubmit={values => {
-							setLoading(true)
+							setLoading(true);
 							dispatch(validateSquare({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
-									setLoading(false)
+									setLoading(false);
 								})
 								.catch(err => {
-									setLoading(false)
-									setError(err.message)
+									setLoading(false);
+									setError(err.message);
 								});
 						}}
 					>
 						{({
-							  values,
-							  errors,
-							  touched,
-							  handleChange,
-							  handleBlur,
-							  handleSubmit,
-							  isSubmitting,
-							  /* and other goodies */
-						  }) => (
-							<form className='w-50' method="POST" action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/square/authorize`}>
+							values,
+							errors,
+							touched,
+							handleChange,
+							handleBlur,
+							handleSubmit,
+							isSubmitting,
+							/* and other goodies */
+						}) => (
+							<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/square/authorize`}>
 								<div className='mb-3'>
 									<input type='hidden' name='email' value={email} />
 									<label htmlFor='clientId' className='form-label'>
@@ -84,10 +86,7 @@ const Square = props => {
 									/>
 									<div id='shopHelp' className='form-text'>
 										The Square-issued ID for your application, available from the OAuth page for your application on the&nbsp;
-										<a
-											href='https://developer.squareup.com/apps'
-											target='_blank'
-										>
+										<a href='https://developer.squareup.com/apps' target='_blank'>
 											Developer Dashboard
 										</a>
 									</div>
@@ -116,11 +115,14 @@ const Square = props => {
 									</div>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
-									<button type="button" className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
+									<button type='button' className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 										Go Back
 									</button>
-									<button type='submit' className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'>
-										<span className="me-3">Connect</span>
+									<button
+										type='submit'
+										className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'
+									>
+										<span className='me-3'>Connect</span>
 										<ClipLoader color='white' loading={isLoading} size={20} />
 									</button>
 								</div>
@@ -129,9 +131,9 @@ const Square = props => {
 					</Formik>
 				) : (
 					<div className='text-center pt-4'>
-						<p className='lead'>Shop Id: Testing</p>
-						<p className='lead'>Domain: Testing</p>
-						<p className='lead'>Country: Testing</p>
+						<p className='lead'>Shop Id: {credentials.shopId}</p>
+						<p className='lead'>Shop Name: {credentials.shopName}</p>
+						<p className='lead'>Domain: {credentials.domain}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.goBack}>
 							Go Back
 						</button>
