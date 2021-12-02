@@ -4,14 +4,6 @@
     --GREEN: #6BFF2C
 }
 
-.sidebar {
-    flex: 1;
-    height: calc(100vh - 70px);
-    background-color: white;
-    position: sticky;
-    top: 50px;
-}
-
 .sidebarListItem {
     padding: 5px;
     cursor: pointer;

@@ -3,12 +3,9 @@ import React, { useEffect, useState } from 'react';
 import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 import Map from '../../components/Map/Map';
 import { useSelector } from 'react-redux';
-import { Mixpanel } from '../../config/mixpanel'
-import {ChatWidget} from "@papercups-io/chat-widget";
+import { Mixpanel } from '../../config/mixpanel';
 
 const Dashboard = props => {
-	const token = "8d14f8d9-7027-4af7-8fb2-14ca0712e633"
-	const inbox = "3793e40e-c090-4412-acd0-7e20a7dc9f8a"
 	const [options] = useState([
 		{
 			id: 'day',
@@ -31,7 +28,6 @@ const Dashboard = props => {
 	const { id, firstname, lastname, email, subscriptionPlan } = useSelector(state => state['currentUser'].user);
 
 	useEffect(() => {
-		console.table({token, inbox})
 		Mixpanel.people.increment("page_views")
 	}, []);
 
@@ -71,41 +67,6 @@ const Dashboard = props => {
 			</div>
 			<FeaturedInfo interval={active.id} />
 			<Map />
-			<ChatWidget
-				// `accountId` is used instead of `token` in older versions
-				// of the @papercups-io/chat-widget package (before v1.2.x).
-				// You can delete this line if you are on the latest version.
-				// accountId="8d14f8d9-7027-4af7-8fb2-14ca0712e633"
-				token={token}
-				inbox={inbox}
-				title="Welcome to Seconds"
-				subtitle="Ask us anything in the chat window below 😊"
-				primaryColor="#9400d3"
-				greeting="Hi there! How can I help you?"
-				newMessagePlaceholder="Start typing..."
-				showAgentAvailability={false}
-				agentAvailableText="We're online right now!"
-				agentUnavailableText="We're away at the moment."
-				requireEmailUpfront={false}
-				iconVariant="outlined"
-				baseUrl="https://app.papercups.io"
-				styles={{
-					toggleButton: {
-						width: 60,
-						height: 60
-					}
-				}}
-				// Optionally include data about your customer here to identify them
-				customer={{
-					name: `${firstname} ${lastname}`,
-					email: email,
-					external_id: id,
-					metadata: {
-						plan: subscriptionPlan
-					},
-					current_url: `https://app.ususeconds.com${props.location.pathname}`
-				}}
-			/>
 		</div>
 	);
 }

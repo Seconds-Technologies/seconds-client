@@ -17,9 +17,8 @@ export default function Sidebar() {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
-	console.log('Location', location);
 	return (
-		<div className='sidebar'>
+		<div className="sidebar">
 			<div className='mb-1 d-flex flex-column flex-shrink-0 ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto'>
 					<Link to={PATHS.HOME} className='link text-black mt-3'>
