@@ -2,6 +2,7 @@ $primary: #9400D3; //#9400d3;
 $edit: #EEEEEE;
 $light: #FAFAFA;
 $grey: #888888;
+$success-light: #d1e7dd;
 
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
@@ -9,7 +10,8 @@ $grey: #888888;
 
 $custom-colors: (
   "edit": $edit,
-  "grey": $grey
+  "grey": $grey,
+  "success-light": $success-light
 );
 
 $theme-colors: map-merge($theme-colors, $custom-colors);
@@ -21,8 +23,8 @@ $utilities-colors: map-merge(
                 (
                         "black": to-rgb($black),
                         "white": to-rgb($white),
-                        "body":  to-rgb($body-color),
                         "edit": to-rgb($edit),
+                        "success-light": to-rgb($success-light)
                 )
 );
 
@@ -82,4 +84,8 @@ $utilities-bg-colors: map-loop($utilities-colors, rgba-css-var, "$key", "bg");
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
+}
+
+.bg-success {
+  background-color: #d1e7dd;
 }

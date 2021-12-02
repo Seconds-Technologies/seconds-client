@@ -69,7 +69,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px 0px;
     color: #444;
 }
 
@@ -114,6 +113,10 @@
 
 .trackOrderBtn {
     border-radius: 10px;
+}
+
+.bg-alert-success {
+    background-color: #000
 }
 
 

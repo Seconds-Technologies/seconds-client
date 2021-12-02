@@ -11,29 +11,29 @@ import {
 	ADD_DROPOFF,
 	REMOVE_DROPOFF,
 	CLEAR_DROPOFFS,
-	SET_DROPOFFS
+	SET_DROPOFFS,
 } from '../actionTypes';
 import { STATUS } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
 
 export const setDropoffs = dropoffs => ({
 	type: SET_DROPOFFS,
-	dropoffs
-})
+	dropoffs,
+});
 
 export const addDropoff = dropoff => ({
 	type: ADD_DROPOFF,
-	dropoff
-})
+	dropoff,
+});
 
 export const removeDropoff = index => ({
 	type: REMOVE_DROPOFF,
-	index
-})
+	index,
+});
 
 export const clearDropoffs = () => ({
-	type: CLEAR_DROPOFFS
-})
+	type: CLEAR_DROPOFFS,
+});
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,
@@ -63,7 +63,7 @@ let timer = null;
 
 export const subscribe = (apiKey, email) => dispatch => {
 	clearInterval(timer);
-	dispatch(getAllJobs(apiKey, email))
+	dispatch(getAllJobs(apiKey, email));
 	timer = setInterval(() => dispatch(getAllJobs(apiKey, email)), 5000);
 	dispatch({ type: TIMER_START, timer });
 };
@@ -84,13 +84,13 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 				},
 			})
 				.then(job => {
-					Mixpanel.track('Successful Delivery job creation')
+					Mixpanel.track('Successful Delivery job creation');
 					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful Delivery job creation')
+					Mixpanel.track('Unsuccessful Delivery job creation');
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -99,28 +99,28 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 	};
 }
 
-export function createMultiDropJob(deliveryParams, apiKey, providerId=undefined){
+export function createMultiDropJob(deliveryParams, apiKey, providerId = undefined) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/multi-drop`, deliveryParams, {
-				headers: { 'X-Seconds-Api-Key': apiKey	},
-				...(providerId &&  { params: { 'provider': providerId }})
+				headers: { 'X-Seconds-Api-Key': apiKey },
+				...(providerId && { params: { provider: providerId } }),
 			})
 				.then(job => {
-					Mixpanel.track('Successful Multi-drop job creation')
+					Mixpanel.track('Successful Multi-drop job creation');
 					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful Multi-drop job creation')
+					Mixpanel.track('Unsuccessful Multi-drop job creation');
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
 				});
 		});
-	}
+	};
 }
 
 export function getAllJobs(apiKey, email) {
@@ -129,7 +129,7 @@ export function getAllJobs(apiKey, email) {
 			setTokenHeader(localStorage.getItem('jwt_token'));
 			return apiCall('GET', `/api/v1/jobs`, null, {
 				headers: { 'X-Seconds-Api-Key': apiKey },
-				params: { email }
+				params: { email },
 			})
 				.then(jobs => {
 					dispatch(setAllJobs(jobs));
@@ -197,12 +197,30 @@ export function getAllQuotes(apiKey, data) {
 			return apiCall('POST', `/api/v1/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
 					console.log(quotes);
-					Mixpanel.track('Successful fetch of delivery quotes')
+					Mixpanel.track('Successful fetch of delivery quotes');
 					dispatch(removeError());
 					resolve({ quotes, bestQuote });
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful fetch of delivery quotes')
+					Mixpanel.track('Unsuccessful fetch of delivery quotes');
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function cancelDelivery(apiKey, jobId) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('DELETE', `/api/v1/jobs/${jobId}`, null, { headers: { 'X-Seconds-Api-Key': apiKey } })
+				.then(({ message }) => {
+					Mixpanel.track('Successful job cancellation');
+					resolve(message);
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful job cancellation');
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
