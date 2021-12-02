@@ -17,9 +17,10 @@ const Square = props => {
 		console.log("Mounting Square...")
 		const query = new URLSearchParams(props.location.search);
 		console.log(query)
-		if (query.get('code')) {
+		if (query.get('code') && query.get('state')) {
 			let code = query.get("code")
-			dispatch(getSquareCredentials({ email, code })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
+			let state = query.get('state')
+			dispatch(getSquareCredentials({ email, code, state })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
 		}
 		return () => console.log("Unmounting Square")
 	}, [props.location]);
