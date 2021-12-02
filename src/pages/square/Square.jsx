@@ -135,7 +135,7 @@ const Square = props => {
 						<p className='lead'>Shop Id: {credentials.shopId}</p>
 						<p className='lead'>Shop Name: {credentials.shopName}</p>
 						<p className='lead'>Domain: {credentials.domain}</p>
-						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.push(PATHS.INTEGRATE)}>
+						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back
 						</button>
 					</div>
