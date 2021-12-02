@@ -85,8 +85,16 @@ const Square = props => {
 										onBlur={handleBlur}
 									/>
 									<div id='shopHelp' className='form-text'>
-										The Square-issued ID for your application, available from the OAuth page for your application on the&nbsp;
-										<a href='https://developer.squareup.com/apps' target='_blank'>
+										To access your Application ID and Secret, create an&nbsp;
+										<a
+											href='https://developer.squareup.com/apps'
+											target='_blank'
+										>application</a>
+										&nbsp;and follow the steps in the OAuth page of your app's&nbsp;
+										<a
+											href='https://developer.squareup.com/apps'
+											target='_blank'
+										>
 											Developer Dashboard
 										</a>
 									</div>
@@ -104,15 +112,6 @@ const Square = props => {
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
-									<div id='shopHelp' className='form-text'>
-										To access your Admin API key and password follow the steps&nbsp;
-										<a
-											href='https://help.shopify.com/en/manual/apps/private-apps?shpxid=06270be5-51B2-4ED0-06D9-B51CAA006983#enable-private-app-development-from-the-shopify-admin'
-											target='_blank'
-										>
-											here
-										</a>
-									</div>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
 									<button type='button' className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>

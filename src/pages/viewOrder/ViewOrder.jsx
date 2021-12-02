@@ -9,6 +9,9 @@ import { subscribe, unsubscribe, updateJobsStatus, cancelDelivery } from '../../
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+import ToastFade from 'react-bootstrap/Toast';
+import secondsLogo from '../../assets/img/logo.svg';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -17,6 +20,7 @@ const ViewOrder = props => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const [order, setOrder] = useState({});
 	const [message, setShow] = useState('');
+	const [toastMessage, setToast] = useState('');
 	const modalRef = useRef(null);
 
 	const statusBtn = useCallback(
@@ -42,6 +46,18 @@ const ViewOrder = props => {
 			});
 		},
 		[order]
+	);
+
+	const comingSoonToast = (
+		<ToastContainer className='topRight'>
+			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={true} delay={3000} autohide>
+				<ToastFade.Header closeButton={false}>
+					<img src={secondsLogo} className='rounded me-2' alt='' />
+					<strong className='me-auto'>Seconds</strong>
+				</ToastFade.Header>
+				<ToastFade.Body className="fs-5">{toastMessage}</ToastFade.Body>
+			</ToastFade>
+		</ToastContainer>
 	);
 
 	const successModal = (
@@ -110,11 +126,12 @@ const ViewOrder = props => {
 
 	return (
 		<div ref={modalRef} className='viewOrder bg-light p-3'>
+			{comingSoonToast}
+			{successModal}
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
 			<div className={alertWrapper}>
-				{successModal}
 				{error.message && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
 						<h2 className='text-center'>{error.message}</h2>
@@ -338,7 +355,7 @@ const ViewOrder = props => {
 						</div>
 						{order.status && order.status.toUpperCase() === STATUS.CANCELLED ? (
 							<div className='d-flex justify-content-center align-items-center mb-3'>
-								<button className='btn btn-info btn-lg' onClick={() => console.log('Attempting re-order!')}>
+								<button className='btn btn-info btn-lg' onClick={() => setToast('This feature is coming soon 😄')}>
 									Re-order
 								</button>
 							</div>
