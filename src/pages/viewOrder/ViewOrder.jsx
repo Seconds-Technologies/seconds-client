@@ -12,6 +12,7 @@ import Modal from 'react-bootstrap/Modal';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';
 import secondsLogo from '../../assets/img/logo.svg';
+import Button from 'react-bootstrap/Button';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const ViewOrder = props => {
 	const [order, setOrder] = useState({});
 	const [message, setShow] = useState('');
 	const [toastMessage, setToast] = useState('');
+	const [confirmDialog, showConfirmDialog] = useState(false);
 	const modalRef = useRef(null);
 
 	const statusBtn = useCallback(
@@ -72,6 +74,28 @@ const ViewOrder = props => {
 			<div className='alert alert-success mb-0'>
 				<h2 className='text-center'>{message}</h2>
 			</div>
+		</Modal>
+	);
+
+	const confirmModal = (
+		<Modal show={confirmDialog} onHide={() => showConfirmDialog(false)}>
+			<Modal.Header closeButton>
+				<Modal.Title>Confirm Selection</Modal.Title>
+			</Modal.Header>
+			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
+				<span className='fs-5'>
+					Are you sure you want to cancel this order?
+				</span>
+			</Modal.Body>
+			<Modal.Footer>
+				<Button variant='secondary' onClick={() => showConfirmDialog(false)}>
+					Cancel
+				</Button>
+				<Button onClick={() => {
+					showConfirmDialog(false)
+					dispatch(cancelDelivery(apiKey, order.id)).then(message => setShow(message))
+				}}>Confirm</Button>
+			</Modal.Footer>
 		</Modal>
 	);
 
@@ -128,6 +152,7 @@ const ViewOrder = props => {
 		<div ref={modalRef} className='viewOrder bg-light p-3'>
 			{comingSoonToast}
 			{successModal}
+			{confirmModal}
 			<div className='orderDetailsTitleContainer'>
 				<h2 className='orderTitle'>Order Details</h2>
 			</div>
@@ -363,7 +388,7 @@ const ViewOrder = props => {
 							<div className='d-flex justify-content-center align-items-center mb-3'>
 								<button
 									className='btn btn-secondary btn-lg'
-									onClick={() => dispatch(cancelDelivery(apiKey, order.id)).then(message => setShow(message))}
+									onClick={() => showConfirmDialog(true)}
 								>
 									Cancel Order
 								</button>

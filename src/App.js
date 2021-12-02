@@ -31,7 +31,7 @@ function App() {
 					{isAuthenticated && <Sidebar />}
 					{routes}
 				</div>
-				<ChatWidget
+				{isAuthenticated && <ChatWidget
 					// `accountId` is used instead of `token` in older versions
 					// of the @papercups-io/chat-widget package (before v1.2.x).
 					// You can delete this line if you are on the latest version.
@@ -75,7 +75,7 @@ function App() {
 						},
 						current_url: `https://app.ususeconds.com${location.pathname}`,
 					}}
-				/>
+				/>}
 			</Router>
 		</GeolocationContextProvider>
 	);
