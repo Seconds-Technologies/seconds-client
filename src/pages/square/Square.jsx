@@ -21,7 +21,7 @@ const Square = props => {
 		if (query.get('code') && query.get('state')) {
 			let code = query.get("code")
 			let state = query.get('state')
-			dispatch(getSquareCredentials({ email, code, state })).then(shop => alert(JSON.stringify(shop))).catch(err => alert(err));
+			dispatch(getSquareCredentials({ email, code, state })).then(shop => console.log(shop)).catch(err => alert(err));
 		}
 		return () => console.log("Unmounting Square")
 	}, [props.location]);
