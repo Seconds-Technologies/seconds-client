@@ -149,7 +149,7 @@ const NewDropoffForm = ({ show, toggleShow, pickupDateTime }) => {
 							</div>
 							<div className='row'>
 								<div className='col'>
-									{errors['packageDropoffStartTime'] && <span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>}
+									{errors['packageDropoffStartTime'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										type='datetime-local'
 										name='packageDropoffStartTime'

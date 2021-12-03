@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
-import { CreateOrderSchema } from '../../../validation';
+import { CreateOrderSchema, ReOrderSchema } from '../../../validation';
 import moment from 'moment';
 import { jobRequestSchema } from '../../../schemas';
 import Select, { components } from 'react-select';
@@ -75,7 +75,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 			</Modal.Header>
 			<Modal.Body>
 				<Formik
-					validationSchema={CreateOrderSchema}
+					validationSchema={ReOrderSchema}
 					initialValues={{
 						...jobRequestSchema,
 						pickupFirstName: prevJob.pickupLocation['firstName'],
@@ -223,7 +223,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									<div className='row'>
 										<div className='col'>
 											{errors['packagePickupStartTime'] && (
-												<span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>
+												<span className='text-danger position-absolute mt-1 ms-1'>*</span>
 											)}
 											<input
 												defaultValue={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
@@ -388,7 +388,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									<div className='row'>
 										<div className='col'>
 											{errors['drops'] && errors['drops'][0]['packageDropoffStartTime'] && (
-												<span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>
+												<span className='text-danger position-absolute mt-1 ms-1'>*</span>
 											)}
 											<input
 												defaultValue={
@@ -424,8 +424,8 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									</div>
 								</div>
 							</div>
-							<div className='row'>
-								<div className='col d-flex flex-column justify-content-center'>
+							<div className='row gy-3'>
+								<div className='col d-flex flex-column'>
 									<h4 className='text-center'>Delivery Type</h4>
 									<div className='form-check mb-2'>
 										<input
@@ -461,11 +461,10 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									</div>
 									<ErrorField name='packageDeliveryType' classNames='mt-2' />
 								</div>
-
 								<div className='col'>
 									<h4 className='text-center'>Package Details</h4>
-									<div className='w-100'>
-										{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
+									<div>
+										{errors['vehicleType'] && <span className='text-danger position-absolute mt-1 ms-1'>*&nbsp;</span>}
 										<Select
 											menuPlacement='top'
 											id='vehicle-type'
