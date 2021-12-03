@@ -44,6 +44,12 @@ import ecofleet from '../../assets/img/ecofleet.svg';
 import './create.css';
 import CSVUpload from '../../modals/CSVUpload';
 import { Link } from 'react-router-dom';
+import Quotes from '../../modals/Quotes';
+import ConfirmProvider from '../../modals/ConfirmProvider';
+import ApiKeyAlert from '../../modals/ApiKeyAlert';
+import DeliveryJob from '../../modals/DeliveryJob';
+import MultiDropQuote from '../../modals/MultiDropQuote';
+import NewDropoffForm from '../../modals/NewDropoffForm';
 
 const Create = props => {
 	const csvUploadRef = useRef(null);
@@ -176,7 +182,7 @@ const Create = props => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
-						orderReference: customerReference
+						orderReference: customerReference,
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
@@ -219,7 +225,7 @@ const Create = props => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
-						orderReference: customerReference
+						orderReference: customerReference,
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
@@ -243,359 +249,26 @@ const Create = props => {
 			});
 	};
 
-	const newJobModal = (
-		<Modal show={jobModal} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title>Your delivery Job!</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<div>
-					<ul className='list-group list-group-flush'>
-						{Object.entries(deliveryJob).map(([key, value], index) => (
-							<li key={index} className='list-group-item'>
-								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
-								<div className='text-capitalize'>{value}</div>
-							</li>
-						))}
-					</ul>
-				</div>
-			</Modal.Body>
-		</Modal>
-	);
-
-	const quotesModal = (
-		<Modal show={quoteModal} onHide={() => showQuoteModal(false)} size='lg'>
-			<Modal.Header closeButton>
-				<Modal.Title>Fleet Provider Quotes</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<div>
-					<table className='table'>
-						<thead>
-							<tr>
-								<th scope='col'>Fleet Provider</th>
-								<th scope='col'>
-									Price
-								</th>
-								<th scope='col'>ETA</th>
-								<th scope='col'>Vehicle</th>
-								<th scope='col' />
-							</tr>
-						</thead>
-						<tbody>
-							{quotes.map(({ providerId, priceExVAT, dropoffEta, transport, createdAt }, index) => (
-								<tr key={index}>
-									<td className='col text-capitalize'>
-										<img
-											src={
-												providerId === 'stuart'
-													? stuart
-													: providerId === 'gophr'
-													? gophr
-													: providerId === 'street_stream'
-													? streetStream
-													: ecofleet
-											}
-											alt=''
-											className='me-3'
-											width={25}
-											height={25}
-										/>
-										<span className='text-capitalize'>{providerId.replace(/_/g, ' ')}</span>
-									</td>
-									<td className='col'>
-										{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
-									</td>
-									<td className='col'>{dropoffEta ? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes` : 'N/A'}</td>
-									<td className='col text-capitalize'>{transport}</td>
-									<td className='col'>
-										<button
-											className='d-flex justify-content-center align-items-center OrdersListEdit'
-											onClick={() => {
-												showQuoteModal(false);
-												selectFleetProvider(providerId);
-												showConfirmDialog(true);
-											}}
-										>
-											<span className='text-decoration-none'>Select</span>
-										</button>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</Modal.Body>
-		</Modal>
-	);
-
-	const confirmModal = (
-		<Modal show={confirmDialog} onHide={() => showConfirmDialog(false)}>
-			<Modal.Header closeButton>
-				<Modal.Title>Confirm Selection</Modal.Title>
-			</Modal.Header>
-			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
-				<span className='fs-4'>
-					You are confirming <span className='fw-bold text-uppercase'>{fleetProvider}</span>!
-				</span>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button variant='secondary' onClick={() => showConfirmDialog(false)}>
-					Cancel
-				</Button>
-				<Button onClick={confirmSelection}>Confirm</Button>
-			</Modal.Footer>
-		</Modal>
-	);
-
-	const multiDropQuoteModal = (
-		<Modal show={multiDropDialog} onHide={() => showMultiDropDialog(false)}>
-			<Modal.Header closeButton>
-				<Modal.Title>Confirm Selection</Modal.Title>
-			</Modal.Header>
-			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
-				<div>
-					<table className='table'>
-						<thead>
-							<tr>
-								<th scope='col'>Number of dropoffs</th>
-								<th scope='col'>Price (per drop)</th>
-								<th scope='col'>Total</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td className='col'>{dropoffs.length}</td>
-								<td className='col'>£7</td>
-								<td className='col'>£{7 * dropoffs.length}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button onClick={confirmMultiDropQuote}>Confirm</Button>
-			</Modal.Footer>
-		</Modal>
-	);
-
-	const apiKeyToast = (
-		<ToastContainer className='bottomRight'>
-			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={'true'} delay={3000} autohide>
-				<ToastFade.Header closeButton={false}>
-					<img src={secondsLogo} className='rounded me-2' alt='' />
-					<strong className='me-auto'>Seconds</strong>
-				</ToastFade.Header>
-				<ToastFade.Body>{toastMessage}</ToastFade.Body>
-			</ToastFade>
-		</ToastContainer>
-	);
-
-	const newDropoff = (
-		<Modal show={dropoffModal} onHide={() => showDropoffModal(false)} size='lg' centered>
-			<Modal.Header closeButton>
-				<Modal.Title>Add New Dropoff</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<Formik
-					validationSchema={dropsSchema}
-					initialValues={{
-						dropoffFirstName: '',
-						dropoffLastName: '',
-						dropoffPhoneNumber: '',
-						dropoffEmailAddress: '',
-						dropoffAddressLine1: '',
-						dropoffAddressLine2: '',
-						dropoffCity: '',
-						dropoffPostcode: '',
-						dropoffInstructions: '',
-						packageDropoffStartTime: '',
-						packageDescription: '',
-					}}
-					onSubmit={values => dispatch(addDropoff(values))}
-				>
-					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
-						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
-							<div className='row'>
-								<div className='col'>
-									{errors['dropoffFirstname'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										autoComplete='given-name'
-										id='new-drop-firstname'
-										name='dropoffFirstName'
-										type='text'
-										className='form-control form-border rounded-3 my-2'
-										placeholder='First Name'
-										required
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-								<div className='col'>
-									{errors['dropoffLastName'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										name='dropoffLastName'
-										type='text'
-										className='form-control form-border rounded-3 my-2'
-										placeholder='Last Name'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										required
-									/>
-								</div>
-							</div>
-							<div className='row'>
-								<div className='col'>
-									{errors['dropoffPhoneNumber'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										autoComplete='tel'
-										name='dropoffPhoneNumber'
-										type='tel'
-										className='form-control form-border rounded-3 my-2'
-										placeholder='Phone Number'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										required
-									/>
-								</div>
-								<div className='col'>
-									{errors['dropoffEmailAddress'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										name='dropoffEmailAddress'
-										type='email'
-										className='form-control form-border rounded-3 my-2'
-										placeholder='Email Address'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-							</div>
-							<div className='row'>
-								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffAddressLine1'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										defaultValue={values.dropoffAddressLine1}
-										autoComplete='address-line1'
-										placeholder='Address Line 1'
-										type='text'
-										id='dropoff-address-line-1'
-										name='dropoffAddressLine1'
-										className='form-control rounded-3 my-2'
-										onBlur={handleBlur}
-										onChange={handleChange}
-									/>
-								</div>
-								<div className='col-md-6 col-lg-6'>
-									<input
-										defaultValue={values.dropoffAddressLine2}
-										autoComplete='address-line2'
-										placeholder='Address Line 2'
-										type='text'
-										id='dropoff-address-line-2'
-										name='dropoffAddressLine2'
-										className='form-control rounded-3 my-2'
-										onBlur={handleBlur}
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='row'>
-								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffCity'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										defaultValue={values.dropoffCity}
-										autoComplete='address-level2'
-										placeholder='City'
-										type='text'
-										id='dropoff-city'
-										name='dropoffCity'
-										className='form-control rounded-3 my-2'
-										onBlur={handleBlur}
-										onChange={handleChange}
-									/>
-								</div>
-								<div className='col-md-6 col-lg-6'>
-									{errors['dropoffPostcode'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
-									<input
-										defaultValue={values.dropoffPostcode}
-										autoComplete='postal-code'
-										placeholder='Postcode'
-										type='text'
-										id='dropoff-postcode'
-										name='dropoffPostcode'
-										className='form-control rounded-3 my-2'
-										onBlur={handleBlur}
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='row'>
-								<div className='col'>
-									{errors['packageDropoffStartTime'] && <span className='text-danger position-absolute mt-1 ms-1 test3'>*</span>}
-									<input
-										type='datetime-local'
-										name='packageDropoffStartTime'
-										id='dropoff-deadline'
-										className='form-control form-border rounded-3 my-2'
-										onChange={handleChange}
-										onBlur={handleBlur}
-										min={
-											pickupDatetime
-												? moment(pickupDatetime).subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
-												: moment().subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
-										}
-										max={
-											pickupDatetime
-												? moment(pickupDatetime).add(1, 'days').format('YYYY-MM-DDTHH:mm')
-												: moment().add(1, 'day').format('YYYY-MM-DDTHH:mm')
-										}
-										required
-									/>
-								</div>
-							</div>
-							<div className='row'>
-								<div className='col'>
-									<textarea
-										placeholder='Dropoff Instructions'
-										name='dropoffInstructions'
-										className='form-control form-border rounded-3 my-2'
-										aria-label='dropoff-instructions'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-								<div className='col'>
-									<textarea
-										placeholder='Package Description'
-										name='packageDescription'
-										className='form-control form-border rounded-3 my-2'
-										aria-label='dropoff-description'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
-								</div>
-							</div>
-							<div className='d-flex justify-content-center mt-4'>
-								<button type='submit' className='btn w-25 btn-primary'>
-									<span className='fs-5'>Add</span>
-								</button>
-							</div>
-						</form>
-					)}
-				</Formik>
-			</Modal.Body>
-		</Modal>
-	);
-
 	return (
 		<LoadingOverlay active={isLoading} spinner text={loadingText}>
 			<div className='create bg-light py-4'>
-				{newJobModal}
-				{quotesModal}
-				{confirmModal}
-				{multiDropQuoteModal}
-				{apiKeyToast}
-				{newDropoff}
+				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
+				<ApiKeyAlert message={toastMessage} onClose={setToast} />
+				<MultiDropQuote
+					show={multiDropDialog}
+					toggleShow={showMultiDropDialog}
+					numDropoffs={dropoffs.length}
+					confirm={confirmMultiDropQuote}
+				/>
+				<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
+				<ConfirmProvider show={confirmDialog} provider={fleetProvider} toggleShow={showConfirmDialog} onConfirm={confirmSelection} />
+				<Quotes
+					show={quoteModal}
+					toggleShow={showQuoteModal}
+					quotes={quotes}
+					selectFleetProvider={selectFleetProvider}
+					showConfirmDialog={showConfirmDialog}
+				/>
 				<CSVUpload
 					show={uploadCSV}
 					ref={csvUploadRef}
@@ -694,7 +367,7 @@ const Create = props => {
 									let {
 										dropoffLocation: { fullAddress: dropoffAddress },
 										dropoffStartTime,
-										orderReference: customerReference
+										orderReference: customerReference,
 									} = deliveries[0];
 									let newJob = {
 										orderNumber,
