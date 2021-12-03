@@ -58,11 +58,11 @@ function App() {
 						},
 						toggleContainer: {
 							zIndex: 1000000,
-							position: 'absolute',
+							position: 'fixed',
 						},
 						chatContainer: {
 							zIndex: 10000000,
-							position: 'absolute',
+							position: 'fixed',
 						},
 					}}
 					// Optionally include data about your customer here to identify them
