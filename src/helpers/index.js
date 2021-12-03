@@ -44,3 +44,18 @@ export function parseAddress(data){
 	console.log(formattedAddress);
 	return formattedAddress;
 }
+
+export function validateAddress(pickup, dropoff) {
+	const types = ['street address', 'city', 'postcode'];
+	Object.values(pickup).forEach((item, index) => {
+		if (!item) throw new Error(`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`);
+		else if (index === 2 && item.length < 6)
+			throw new Error(`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`);
+	});
+	Object.values(dropoff).forEach((item, index) => {
+		if (!item) throw new Error(`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`);
+		else if (index === 2 && item.length < 6)
+			throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`);
+	});
+	return true;
+}

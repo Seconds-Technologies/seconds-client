@@ -1,45 +1,28 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { geocodeByAddress } from 'react-google-places-autocomplete';
 import Select, { components } from 'react-select';
 import moment from 'moment';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { CSVReader } from 'react-papaparse';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
-import {
-	addDropoff,
-	clearDropoffs,
-	createDeliveryJob,
-	createMultiDropJob,
-	getAllQuotes,
-	removeDropoff,
-	setDropoffs,
-} from '../../store/actions/delivery';
-import { parseAddress } from '../../helpers';
+import { createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
+import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
 import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import ToastFade from 'react-bootstrap/Toast';
 // assets
 import { jobRequestSchema } from '../../schemas';
-import { CreateOrderSchema, dropsSchema } from '../../validation';
-import secondsLogo from '../../assets/img/logo.svg';
+import { CreateOrderSchema } from '../../validation';
 import bicycle from '../../assets/img/bicycle.svg';
 import motorbike from '../../assets/img/motorbike.svg';
 import car from '../../assets/img/car.svg';
 import cargobike from '../../assets/img/cargobike.svg';
 import van from '../../assets/img/van.svg';
-import stuart from '../../assets/img/stuart.svg';
-import gophr from '../../assets/img/gophr.svg';
-import streetStream from '../../assets/img/street-stream.svg';
-import ecofleet from '../../assets/img/ecofleet.svg';
 // styles
 import './create.css';
 import CSVUpload from '../../modals/CSVUpload';
@@ -119,20 +102,7 @@ const Create = props => {
 
 	const getParsedAddress = useCallback(parseAddress, []);
 
-	const validateAddresses = useCallback((pickup, dropoff) => {
-		const types = ['street address', 'city', 'postcode'];
-		Object.values(pickup).forEach((item, index) => {
-			if (!item) throw new Error(`Pickup address does not include a '${types[index]}'. Please add all parts of the address and try again`);
-			else if (index === 2 && item.length < 6)
-				throw new Error(`Your Pickup postcode,' ${item}', is not complete. Please include a full UK postcode in your address`);
-		});
-		Object.values(dropoff).forEach((item, index) => {
-			if (!item) throw new Error(`Dropoff address does not include a '${types[index]}'. Please add all parts of the address and try again`);
-			else if (index === 2 && item.length < 6)
-				throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`);
-		});
-		return true;
-	}, []);
+	const validateAddresses = useCallback(validateAddress, [])
 
 	const handleAddresses = useCallback(
 		async values => {
