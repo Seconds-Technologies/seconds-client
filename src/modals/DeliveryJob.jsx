@@ -14,7 +14,7 @@ const DeliveryJob = ({ job, show, onHide }) => {
 						{Object.entries(job).map(([key, value], index) => (
 							<li key={index} className='list-group-item'>
 								<h5 className='mb-1 text-capitalize'>{key.replace(/([A-Z])/g, ' $1').trim()}</h5>
-								<div className='text-capitalize'>{value}</div>
+								<div className='text-capitalize'>{key === "deliveryFee" ? `£${value.toFixed(2)}` : value}</div>
 							</li>
 						))}
 					</ul>

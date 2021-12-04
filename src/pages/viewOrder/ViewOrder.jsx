@@ -203,8 +203,8 @@ const ViewOrder = props => {
 				customerReference,
 				pickupAddress,
 				dropoffAddress,
-				pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-				dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+				pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+				dropoffUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 				status,
 				fleetProvider: providerId.replace(/_/g, ' '),
 			};

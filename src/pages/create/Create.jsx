@@ -146,8 +146,7 @@ const Create = props => {
 						pickupLocation: { fullAddress: pickupAddress },
 						pickupStartTime,
 					},
-					status,
-					selectedConfiguration: { providerId },
+					selectedConfiguration: { deliveryFee, providerId },
 				}) => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
@@ -159,9 +158,9 @@ const Create = props => {
 						customerReference,
 						pickupAddress,
 						dropoffAddress,
-						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						status,
+						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliveryFee,
 						fleetProvider: providerId.replace(/_/g, ' '),
 					};
 					setLoadingModal(false);
@@ -189,8 +188,7 @@ const Create = props => {
 						pickupLocation: { fullAddress: pickupAddress },
 						pickupStartTime,
 					},
-					status,
-					selectedConfiguration: { providerId },
+					selectedConfiguration: { deliveryFee, providerId },
 				}) => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
@@ -202,9 +200,9 @@ const Create = props => {
 						customerReference,
 						pickupAddress,
 						dropoffAddress,
-						pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						status,
+						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliveryFee,
 						fleetProvider: providerId.replace(/_/g, ' '),
 					};
 					setLoadingModal(false);
@@ -331,8 +329,7 @@ const Create = props => {
 											pickupStartTime,
 											orderNumber,
 										},
-										status,
-										selectedConfiguration: { providerId },
+										selectedConfiguration: { deliveryFee, providerId },
 									} = await dispatch(createDeliveryJob(values, apiKey));
 									let {
 										dropoffLocation: { fullAddress: dropoffAddress },
@@ -344,9 +341,9 @@ const Create = props => {
 										customerReference,
 										pickupAddress,
 										dropoffAddress,
-										pickupStartTime: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										dropoffStartTime: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										status,
+										pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										deliveryFee,
 										fleetProvider: providerId.replace(/_/g, ' '),
 									};
 									setLoadingModal(false);
