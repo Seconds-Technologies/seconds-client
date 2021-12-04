@@ -418,7 +418,7 @@ const ViewOrder = props => {
 							</div>
 							<div className='deliveryShowInfo my-2'>
 								<span className='orderShowLabel'>Price:</span>
-								<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee}`}</span>
+								<span className='orderShowInfoTitle text-capitalize'>{`£${order.deliveryFee.toFixed(2)}`}</span>
 							</div>
 							<div className='deliveryShowInfo my-2'>
 								<span className='orderShowLabel'>Created At:</span>
