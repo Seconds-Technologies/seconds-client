@@ -119,7 +119,7 @@
     background-color: #000
 }
 
-input.form-control, textarea.form-control:focus {
+input.modal-form, textarea.modal-form {
     background: transparent;
     border: none;
     border-bottom: 1px solid #000000;

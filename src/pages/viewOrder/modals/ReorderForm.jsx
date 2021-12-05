@@ -78,7 +78,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												id='new-drop-firstname'
 												name='pickupFirstName'
 												type='text'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='First Name'
 												required
 												onChange={handleChange}
@@ -91,7 +91,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.pickupLastName}
 												name='pickupLastName'
 												type='text'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Last Name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -107,7 +107,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												autoComplete='tel'
 												name='pickupPhoneNumber'
 												type='tel'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Phone Number'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -120,7 +120,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.pickupEmailAddress}
 												name='pickupEmailAddress'
 												type='email'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Email Address'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -137,7 +137,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='pickup-address-line-1'
 												name='pickupAddressLine1'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -150,7 +150,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-2'
 												name='pickupAddressLine2'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -166,7 +166,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-city'
 												name='pickupCity'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -180,7 +180,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-postcode'
 												name='pickupPostcode'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -195,7 +195,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='datetime-local'
 												name='packagePickupStartTime'
 												id='dropoff-deadline'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment().format('YYYY-MM-DDTHH:mm')}
@@ -209,7 +209,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 											<textarea
 												placeholder='Pickup Instructions'
 												name='pickupInstructions'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												aria-label='pickup-instructions'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -230,7 +230,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												id='new-drop-firstname'
 												name='drops[0].dropoffFirstName'
 												type='text'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='First Name'
 												required
 												onChange={handleChange}
@@ -245,7 +245,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.drops[0].dropoffLastName}
 												name='drops[0].dropoffLastName'
 												type='text'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Last Name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -263,7 +263,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												autoComplete='tel'
 												name='drops[0].dropoffPhoneNumber'
 												type='tel'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Phone Number'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -278,7 +278,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.drops[0].dropoffEmailAddress}
 												name='drops[0].dropoffEmailAddress'
 												type='email'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												placeholder='Email Address'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -297,7 +297,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-1'
 												name='drops[0].dropoffAddressLine1'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -310,7 +310,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-2'
 												name='drops[0].dropoffAddressLine2'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -328,7 +328,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-city'
 												name='dropoffCity'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -344,7 +344,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-postcode'
 												name='drops[0].dropoffPostcode'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -367,7 +367,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='datetime-local'
 												name='drops[0].packageDropoffStartTime'
 												id='dropoff-deadline'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm')}
@@ -381,7 +381,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 											<textarea
 												placeholder='Dropoff Instructions'
 												name='drops[0].dropoffInstructions'
-												className='form-control border-0 border-bottom my-2'
+												className='form-control border-0 border-bottom my-2 modal-form'
 												aria-label='dropoff-instructions'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -435,7 +435,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 										defaultValue={values.packageDescription}
 										placeholder='Package Description'
 										name='packageDescription'
-										className='form-control border-0 border-bottom my-2'
+										className='form-control border-0 border-bottom my-2 modal-form'
 										aria-label='dropoff-description'
 										onChange={handleChange}
 										onBlur={handleBlur}
