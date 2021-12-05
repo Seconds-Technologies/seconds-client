@@ -2,16 +2,11 @@ import React, { useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
-import { CreateOrderSchema, ReOrderSchema } from '../../../validation';
+import { ReOrderSchema } from '../../../validation';
 import moment from 'moment';
 import { jobRequestSchema } from '../../../schemas';
-import Select, { components } from 'react-select';
+import Select from 'react-select';
 import { DELIVERY_TYPES, VEHICLE_TYPES } from '../../../constants';
-import bicycle from '../../../assets/img/bicycle.svg';
-import motorbike from '../../../assets/img/motorbike.svg';
-import cargobike from '../../../assets/img/cargobike.svg';
-import car from '../../../assets/img/car.svg';
-import van from '../../../assets/img/van.svg';
 import VehicleOptions from '../../../components/VehicleOptions';
 import ErrorField from '../../../components/ErrorField';
 
@@ -20,40 +15,9 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 		console.log(prevJob);
 	}, []);
 
-	const Option = props => {
-		return (
-			<components.Option {...props}>
-				<div className='d-flex align-items-center'>
-					<div className='me-3'>
-						<img
-							src={
-								props.value === 'BIC'
-									? bicycle
-									: props.value === 'MTB'
-									? motorbike
-									: props.value === 'CGB'
-									? cargobike
-									: props.value === 'CAR'
-									? car
-									: van
-							}
-							className='img-fluid'
-							alt=''
-							width={50}
-							height={50}
-						/>
-					</div>
-					<div className='right'>
-						<strong className='title'>{props.data.label}</strong>
-						<div>{props.data.description}</div>
-					</div>
-				</div>
-			</components.Option>
-		);
-	};
 	const PICKUP_LIMIT = useMemo(() => -600, []);
 	const drops = useMemo(() => {
-		return prevJob.deliveries.map(({ dropoffLocation, dropoffStartTime }) => ({
+		return prevJob.deliveries.map(({ description, dropoffLocation, dropoffStartTime }) => ({
 			dropoffAddress: '',
 			dropoffAddressLine1: dropoffLocation['streetAddress'],
 			dropoffAddressLine2: '',
@@ -65,6 +29,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 			dropoffLastName: dropoffLocation['lastName'],
 			dropoffInstructions: dropoffLocation.instructions,
 			packageDropoffStartTime: dropoffStartTime,
+			packageDescription: description,
 		}));
 	}, [prevJob]);
 
@@ -95,6 +60,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 								: moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm'),
 						drops,
 						itemsCount: 0,
+						packageDescription: prevJob.deliveries[0].description,
 					}}
 					onSubmit={onSubmit}
 				>
@@ -112,7 +78,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												id='new-drop-firstname'
 												name='pickupFirstName'
 												type='text'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='First Name'
 												required
 												onChange={handleChange}
@@ -125,7 +91,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.pickupLastName}
 												name='pickupLastName'
 												type='text'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Last Name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -141,7 +107,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												autoComplete='tel'
 												name='pickupPhoneNumber'
 												type='tel'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Phone Number'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -154,7 +120,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.pickupEmailAddress}
 												name='pickupEmailAddress'
 												type='email'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Email Address'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -171,7 +137,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='pickup-address-line-1'
 												name='pickupAddressLine1'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -184,7 +150,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-2'
 												name='pickupAddressLine2'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -200,7 +166,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-city'
 												name='pickupCity'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -214,7 +180,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-postcode'
 												name='pickupPostcode'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -222,15 +188,14 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									</div>
 									<div className='row'>
 										<div className='col'>
-											{errors['packagePickupStartTime'] && (
-												<span className='text-danger position-absolute mt-1 ms-1'>*</span>
-											)}
+											{errors['packagePickupStartTime'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 											<input
+												disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 												defaultValue={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
 												type='datetime-local'
 												name='packagePickupStartTime'
 												id='dropoff-deadline'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment().format('YYYY-MM-DDTHH:mm')}
@@ -244,7 +209,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 											<textarea
 												placeholder='Pickup Instructions'
 												name='pickupInstructions'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												aria-label='pickup-instructions'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -265,7 +230,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												id='new-drop-firstname'
 												name='drops[0].dropoffFirstName'
 												type='text'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='First Name'
 												required
 												onChange={handleChange}
@@ -280,7 +245,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.drops[0].dropoffLastName}
 												name='drops[0].dropoffLastName'
 												type='text'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Last Name'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -298,7 +263,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												autoComplete='tel'
 												name='drops[0].dropoffPhoneNumber'
 												type='tel'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Phone Number'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -313,7 +278,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={values.drops[0].dropoffEmailAddress}
 												name='drops[0].dropoffEmailAddress'
 												type='email'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												placeholder='Email Address'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -332,7 +297,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-1'
 												name='drops[0].dropoffAddressLine1'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -345,7 +310,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-address-line-2'
 												name='drops[0].dropoffAddressLine2'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -363,7 +328,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-city'
 												name='dropoffCity'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -379,7 +344,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												type='text'
 												id='dropoff-postcode'
 												name='drops[0].dropoffPostcode'
-												className='form-control rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -391,6 +356,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												<span className='text-danger position-absolute mt-1 ms-1'>*</span>
 											)}
 											<input
+												disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 												defaultValue={
 													// if currentTime is at least 10 mins before the previous requested pickup time, use that as the default value
 													// if not set the default to be 15 mins after the current time
@@ -399,9 +365,9 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 														: moment(values.packagePickupStartTime).add(60, 'minutes').format('YYYY-MM-DDTHH:mm')
 												}
 												type='datetime-local'
-												name='packageDropoffStartTime'
+												name='drops[0].packageDropoffStartTime'
 												id='dropoff-deadline'
-												className='form-control form-border rounded-3 my-2'
+												className='form-control border-0 border-bottom my-2'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm')}
@@ -413,10 +379,10 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									<div className='row'>
 										<div className='col'>
 											<textarea
-												placeholder='Pickup Instructions'
-												name='pickupInstructions'
-												className='form-control form-border rounded-3 my-2'
-												aria-label='pickup-instructions'
+												placeholder='Dropoff Instructions'
+												name='drops[0].dropoffInstructions'
+												className='form-control border-0 border-bottom my-2'
+												aria-label='dropoff-instructions'
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
@@ -425,46 +391,57 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 								</div>
 							</div>
 							<div className='row gy-3'>
-								<div className='col d-flex flex-column'>
+								<div className='col'>
 									<h4 className='text-center'>Delivery Type</h4>
-									<div className='form-check mb-2'>
-										<input
-											className='form-check-input'
-											type='radio'
-											name='deliveryType'
-											id='radio-1'
-											checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-											onChange={e => {
-												setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
-												setFieldValue('packagePickupStartTime', '');
-												setFieldValue('drops[0].packageDropoffStartTime', '');
-											}}
-											onBlur={handleBlur}
-										/>
-										<label className='form-check-label' htmlFor='radio-1'>
-											On Demand
-										</label>
+									<div className='d-flex flex-grow-1 justify-content-center flex-column mt-4'>
+										<div className='form-check mb-2'>
+											<input
+												className='form-check-input'
+												type='radio'
+												name='deliveryType'
+												id='radio-1'
+												checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+												onChange={e => {
+													setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
+													setFieldValue('packagePickupStartTime', '');
+													setFieldValue('drops[0].packageDropoffStartTime', '');
+												}}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='radio-1'>
+												On Demand
+											</label>
+										</div>
+										<div className='form-check mb-2'>
+											<input
+												className='form-check-input'
+												type='radio'
+												name='deliveryType'
+												id='radio-2'
+												checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
+												onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='radio-2'>
+												Scheduled Same Day
+											</label>
+										</div>
+										<ErrorField name='packageDeliveryType' classNames='mt-2' />
 									</div>
-									<div className='form-check mb-2'>
-										<input
-											className='form-check-input'
-											type='radio'
-											name='deliveryType'
-											id='radio-2'
-											checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
-											onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
-											onBlur={handleBlur}
-										/>
-										<label className='form-check-label' htmlFor='radio-2'>
-											Scheduled Same Day
-										</label>
-									</div>
-									<ErrorField name='packageDeliveryType' classNames='mt-2' />
 								</div>
 								<div className='col'>
 									<h4 className='text-center'>Package Details</h4>
+									<textarea
+										defaultValue={values.packageDescription}
+										placeholder='Package Description'
+										name='packageDescription'
+										className='form-control border-0 border-bottom my-2'
+										aria-label='dropoff-description'
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
 									<div>
-										{errors['vehicleType'] && <span className='text-danger position-absolute mt-1 ms-1'>*&nbsp;</span>}
+										{errors['vehicleType'] && <span className='text-danger position-absolute' style={{zIndex: 1000}}>*&nbsp;</span>}
 										<Select
 											menuPlacement='top'
 											id='vehicle-type'
@@ -477,17 +454,23 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												setFieldValue('vehicleType', value);
 												console.log(value);
 											}}
+											styles={{
+												container: (provided, state) => ({
+													...provided,
+													border: 0,
+													boxShadow: 0,
+												}),
+												control: (provided, state) => ({
+													...provided,
+													border: 0,
+													boxShadow: 'none',
+													borderRadius: 0,
+													borderBottom: '1px solid lightgrey',
+												}),
+											}}
 											aria-label='vehicle type selection'
 										/>
 									</div>
-									<textarea
-										placeholder='Package Description'
-										name='packageDescription'
-										className='form-control form-border rounded-3 my-2'
-										aria-label='dropoff-description'
-										onChange={handleChange}
-										onBlur={handleBlur}
-									/>
 								</div>
 							</div>
 							<div className='d-flex justify-content-center mt-4'>

@@ -119,4 +119,18 @@
     background-color: #000
 }
 
+input.form-control, textarea.form-control:focus {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+input.form-control:focus, textarea.form-control:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
 
