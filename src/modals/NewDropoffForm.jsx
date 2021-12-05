@@ -27,7 +27,7 @@ const NewDropoffForm = ({ show, toggleShow, pickupDateTime }) => {
 						dropoffCity: '',
 						dropoffPostcode: '',
 						dropoffInstructions: '',
-						packageDropoffStartTime: '',
+						packageDropoffEndTime: '',
 						packageDescription: '',
 					}}
 					onSubmit={values => dispatch(addDropoff(values))}
@@ -149,10 +149,10 @@ const NewDropoffForm = ({ show, toggleShow, pickupDateTime }) => {
 							</div>
 							<div className='row'>
 								<div className='col'>
-									{errors['packageDropoffStartTime'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
+									{errors['packageDropoffEndTime'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 									<input
 										type='datetime-local'
-										name='packageDropoffStartTime'
+										name='packageDropoffEndTime'
 										id='dropoff-deadline'
 										className='form-control form-border rounded-3 my-2'
 										onChange={handleChange}

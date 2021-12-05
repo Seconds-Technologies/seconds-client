@@ -199,7 +199,7 @@ export function updateDeliveryTimes(email, deliveryHours) {
 				})
 				.catch(err => {
 					Mixpanel.track("Unsuccessful update for delivery hours", { $error: err.message})
-					if (err) dispatch(addError(err.message));
+					if (err.message) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
 				});

@@ -190,12 +190,11 @@ const ViewOrder = props => {
 					pickupLocation: { fullAddress: pickupAddress },
 					pickupStartTime,
 				},
-				status,
-				selectedConfiguration: { providerId },
+				selectedConfiguration: { deliveryFee, providerId },
 			} = await dispatch(createDeliveryJob(values, apiKey));
 			let {
 				dropoffLocation: { fullAddress: dropoffAddress },
-				dropoffStartTime,
+				dropoffEndTime,
 				orderReference: customerReference,
 			} = deliveries[0];
 			let newJob = {
@@ -204,8 +203,8 @@ const ViewOrder = props => {
 				pickupAddress,
 				dropoffAddress,
 				pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-				dropoffUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-				status,
+				dropoffUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+				deliveryFee,
 				fleetProvider: providerId.replace(/_/g, ' '),
 			};
 			setLoading(false);
@@ -268,7 +267,7 @@ const ViewOrder = props => {
 								order.deliveries.map(
 									(
 										{
-											dropoffStartTime,
+											dropoffEndTime,
 											dropoffLocation: { firstName, lastName, fullAddress, phoneNumber, email },
 											orderReference,
 											trackingURL,
@@ -314,11 +313,11 @@ const ViewOrder = props => {
 													<div className='mx-2'>
 														<span className='orderShowLabel'>Delivery ETA:</span>
 														<span className='orderShowInfoTitle'>
-															{!dropoffStartTime
+															{!dropoffEndTime
 																? 'Estimating...'
-																: moment(dropoffStartTime).diff(moment(), 'minutes') < 0
+																: moment(dropoffEndTime).diff(moment(), 'minutes') < 0
 																? `Delivered`
-																: `${moment().to(moment(dropoffStartTime))}`}
+																: `${moment().to(moment(dropoffEndTime))}`}
 														</span>
 													</div>
 												</div>

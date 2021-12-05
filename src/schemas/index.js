@@ -22,7 +22,7 @@ export const jobRequestSchema = {
 			dropoffEmailAddress: '',
 			dropoffPhoneNumber: '',
 			dropoffInstructions: '',
-			packageDropoffStartTime: '',
+			packageDropoffEndTime: '',
 			packageDescription: '',
 		},
 	],

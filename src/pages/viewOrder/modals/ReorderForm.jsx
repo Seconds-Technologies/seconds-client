@@ -17,7 +17,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 
 	const PICKUP_LIMIT = useMemo(() => -600, []);
 	const drops = useMemo(() => {
-		return prevJob.deliveries.map(({ description, dropoffLocation, dropoffStartTime }) => ({
+		return prevJob.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
 			dropoffAddress: '',
 			dropoffAddressLine1: dropoffLocation['streetAddress'],
 			dropoffAddressLine2: '',
@@ -28,7 +28,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 			dropoffFirstName: dropoffLocation['firstName'],
 			dropoffLastName: dropoffLocation['lastName'],
 			dropoffInstructions: dropoffLocation.instructions,
-			packageDropoffStartTime: dropoffStartTime,
+			packageDropoffEndTime: dropoffEndTime,
 			packageDescription: description,
 		}));
 	}, [prevJob]);
@@ -200,7 +200,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												onBlur={handleBlur}
 												min={moment().format('YYYY-MM-DDTHH:mm')}
 												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
-												required
+												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
 										</div>
 									</div>
@@ -352,7 +352,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 									</div>
 									<div className='row'>
 										<div className='col'>
-											{errors['drops'] && errors['drops'][0]['packageDropoffStartTime'] && (
+											{errors['drops'] && errors['drops'][0]['packageDropoffEndTime'] && (
 												<span className='text-danger position-absolute mt-1 ms-1'>*</span>
 											)}
 											<input
@@ -360,19 +360,19 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={
 													// if currentTime is at least 10 mins before the previous requested pickup time, use that as the default value
 													// if not set the default to be 15 mins after the current time
-													moment().diff(values.drops[0].dropoffStartTime, 'seconds') < PICKUP_LIMIT
-														? moment(values.drops[0].dropoffStartTime).format('YYYY-MM-DDTHH:mm')
+													moment().diff(values.drops[0].packageDropoffEndTime, 'seconds') < PICKUP_LIMIT
+														? moment(values.drops[0].packageDropoffEndTime).format('YYYY-MM-DDTHH:mm')
 														: moment(values.packagePickupStartTime).add(60, 'minutes').format('YYYY-MM-DDTHH:mm')
 												}
 												type='datetime-local'
-												name='drops[0].packageDropoffStartTime'
+												name='drops[0].packageDropoffEndTime'
 												id='dropoff-deadline'
 												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm')}
 												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
-												required
+												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
 										</div>
 									</div>
@@ -404,7 +404,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												onChange={e => {
 													setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
 													setFieldValue('packagePickupStartTime', '');
-													setFieldValue('drops[0].packageDropoffStartTime', '');
+													setFieldValue('drops[0].packageDropoffEndTime', '');
 												}}
 												onBlur={handleBlur}
 											/>

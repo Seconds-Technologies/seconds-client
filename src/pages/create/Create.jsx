@@ -255,7 +255,7 @@ const Create = props => {
 							let dropoff = {};
 							data.forEach((item, index) => {
 								let key = keys[index];
-								if (key === 'packageDropoffStartTime') {
+								if (key === 'packageDropoffEndTime') {
 									item = moment(item, 'DD/MM/YYYY HH:mm').format();
 								}
 								dropoff[key] = item;
@@ -286,11 +286,6 @@ const Create = props => {
 					validateOnBlur={false}
 					onSubmit={async (values, actions) => {
 						if (apiKey) {
-							// check if job is on-demand
-							if (values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND) {
-								values.packagePickupStartTime = moment().add('25', 'minutes').format();
-								values.drops[0].packageDropoffStartTime = moment().add('50', 'minutes').format();
-							}
 							if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
 								setLoadingText('Getting Quote');
 								setLoadingModal(true);
@@ -389,7 +384,7 @@ const Create = props => {
 														onChange={e => {
 															setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
 															setFieldValue('packagePickupStartTime', '');
-															setFieldValue('drops[0].packageDropoffStartTime', '');
+															setFieldValue('drops[0].packageDropoffEndTime', '');
 														}}
 														onBlur={handleBlur}
 													/>
@@ -647,7 +642,7 @@ const Create = props => {
 															dropoffLastName,
 															dropoffAddressLine1,
 															dropoffPostcode,
-															packageDropoffStartTime,
+															packageDropoffEndTime,
 															dropoffPhoneNumber,
 															dropoffPackageDescription,
 														},
@@ -663,7 +658,7 @@ const Create = props => {
 																	<span className='card-text'>{dropoffPhoneNumber}</span>
 																</span>
 																<div className='d-flex align-items-center justify-content-between'>
-																	<small className='text-muted'>{moment(packageDropoffStartTime).calendar()}</small>
+																	<small className='text-muted'>{moment(packageDropoffEndTime).calendar()}</small>
 																	<div>
 																		<button
 																			type='button'
@@ -876,16 +871,16 @@ const Create = props => {
 											<div className='row mt-1'>
 												<div className='col-12'>
 													<label htmlFor='dropoff-datetime' className='mb-1'>
-														Dropoff At
+														Dropoff Until
 													</label>
 													{values.packagePickupStartTime ? (
 														<input
 															disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 															id='dropoff-datetime'
-															name='drops[0].packageDropoffStartTime'
+															name='drops[0].packageDropoffEndTime'
 															type='datetime-local'
 															className='form-control form-border rounded-3 mb-3'
-															placeholder='Dropoff At'
+															placeholder='Dropoff Until'
 															aria-label='dropoff-datetime'
 															onChange={handleChange}
 															onBlur={handleBlur}
@@ -899,7 +894,7 @@ const Create = props => {
 														<input
 															disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 															id='dropoff-datetime'
-															name='drops[0].packageDropoffStartTime'
+															name='drops[0].packageDropoffEndTime'
 															type='datetime-local'
 															className='form-control form-border rounded-3 mb-3'
 															placeholder='Dropoff At'
