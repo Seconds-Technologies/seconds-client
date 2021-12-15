@@ -1,6 +1,6 @@
+import './deliveryTimes.css';
 import React, { useEffect, useMemo, useState } from 'react';
 import Switch from 'react-switch';
-import './deliveryTimes.css';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
@@ -77,9 +77,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('1.canDeliver', !values[1].canDeliver)
-													}
+													onChange={() => setFieldValue('1.canDeliver', !values[1].canDeliver)}
 													handleDiameter={20}
 													checked={values[1].canDeliver}
 												/>
@@ -101,6 +99,8 @@ const DeliveryTimes = () => {
 													})
 												}
 												onBlur={handleBlur}
+												min={"07:30"}
+													max={"23:30"}
 											/>
 										</td>
 										<td>
@@ -129,9 +129,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('2.canDeliver', !values[2].canDeliver)
-													}
+													onChange={() => setFieldValue('2.canDeliver', !values[2].canDeliver)}
 													handleDiameter={20}
 													checked={values[2].canDeliver}
 												/>
@@ -180,9 +178,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('3.canDeliver', !values[3].canDeliver)
-													}
+													onChange={() => setFieldValue('3.canDeliver', !values[3].canDeliver)}
 													handleDiameter={20}
 													checked={values[3].canDeliver}
 												/>
@@ -231,9 +227,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('4.canDeliver', !values[4].canDeliver)
-													}
+													onChange={() => setFieldValue('4.canDeliver', !values[4].canDeliver)}
 													handleDiameter={20}
 													checked={values[4].canDeliver}
 												/>
@@ -282,9 +276,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('5.canDeliver', !values[5].canDeliver)
-													}
+													onChange={() => setFieldValue('5.canDeliver', !values[5].canDeliver)}
 													handleDiameter={20}
 													checked={values[5].canDeliver}
 												/>
@@ -333,9 +325,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('6.canDeliver', !values[6].canDeliver)
-													}
+													onChange={() => setFieldValue('6.canDeliver', !values[6].canDeliver)}
 													handleDiameter={20}
 													checked={values[6].canDeliver}
 												/>
@@ -384,9 +374,7 @@ const DeliveryTimes = () => {
 													onColor={'#9FEA86'}
 													checkedIcon={onIcon}
 													uncheckedIcon={offIcon}
-													onChange={() =>
-														setFieldValue('0.canDeliver', !values[0].canDeliver)
-													}
+													onChange={() => setFieldValue('0.canDeliver', !values[0].canDeliver)}
 													handleDiameter={20}
 													checked={values[0].canDeliver}
 												/>

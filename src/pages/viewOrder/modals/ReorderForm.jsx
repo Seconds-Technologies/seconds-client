@@ -194,11 +194,11 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
 												type='datetime-local'
 												name='packagePickupStartTime'
-												id='dropoff-deadline'
+												id='pickup_start_time'
 												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment().format('YYYY-MM-DDTHH:mm')}
+												min={moment(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')}
 												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
@@ -370,7 +370,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm')}
+												min={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
 												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
