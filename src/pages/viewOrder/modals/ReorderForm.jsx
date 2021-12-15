@@ -28,7 +28,10 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 			dropoffFirstName: dropoffLocation['firstName'],
 			dropoffLastName: dropoffLocation['lastName'],
 			dropoffInstructions: dropoffLocation.instructions,
-			packageDropoffEndTime: dropoffEndTime,
+			packageDropoffEndTime:
+				moment().diff(dropoffEndTime, 'seconds') < PICKUP_LIMIT
+					? moment(dropoffEndTime).format('YYYY-MM-DDTHH:mm')
+					: moment().add(75, 'minutes').format('YYYY-MM-DDTHH:mm'),
 			packageDescription: description,
 		}));
 	}, [prevJob]);
@@ -59,8 +62,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 								? moment(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')
 								: moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm'),
 						drops,
-						itemsCount: 0,
-						packageDescription: prevJob.deliveries[0].description,
+						itemsCount: 0
 					}}
 					onSubmit={onSubmit}
 				>
@@ -401,11 +403,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												name='deliveryType'
 												id='radio-1'
 												checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-												onChange={e => {
-													setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
-													setFieldValue('packagePickupStartTime', '');
-													setFieldValue('drops[0].packageDropoffEndTime', '');
-												}}
+												onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND)}
 												onBlur={handleBlur}
 											/>
 											<label className='form-check-label' htmlFor='radio-1'>
@@ -432,16 +430,20 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 								<div className='col'>
 									<h4 className='text-center'>Package Details</h4>
 									<textarea
-										defaultValue={values.packageDescription}
+										defaultValue={values.drops[0].packageDescription}
 										placeholder='Package Description'
-										name='packageDescription'
+										name='drops[0].packageDescription'
 										className='form-control border-0 border-bottom my-2 modal-form'
 										aria-label='dropoff-description'
 										onChange={handleChange}
 										onBlur={handleBlur}
 									/>
 									<div>
-										{errors['vehicleType'] && <span className='text-danger position-absolute' style={{zIndex: 1000}}>*&nbsp;</span>}
+										{errors['vehicleType'] && (
+											<span className='text-danger position-absolute' style={{ zIndex: 1000 }}>
+												*&nbsp;
+											</span>
+										)}
 										<Select
 											menuPlacement='top'
 											id='vehicle-type'
@@ -490,7 +492,7 @@ ReorderForm.propTypes = {
 	show: PropTypes.bool.isRequired,
 	toggleShow: PropTypes.func.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	prevJob: PropTypes.object.isRequired,
+	prevJob: PropTypes.object.isRequired
 };
 
 export default ReorderForm;
