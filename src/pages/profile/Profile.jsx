@@ -45,7 +45,7 @@ const Profile = props => {
 	};
 
 	const modal1 = (
-		<Modal show={apiModal} onHide={() => handleClose('api')} centered size='sm' style={{ marginLeft: 100 }}>
+		<Modal show={apiModal} onHide={() => handleClose('api')} centered size='md' style={{ marginLeft: 100 }}>
 			<Modal.Header closeButton>
 				<Modal.Title>Your API Key</Modal.Title>
 			</Modal.Header>

@@ -99,7 +99,7 @@ const ApiKey = props => {
 								strategy: 'eta',
 							}}
 							onSubmit={(values, actions) =>
-								dispatch(authorizeAPI(email, values.strategy))
+								dispatch(authorizeAPI(email))
 									.then(key => {
 										setKey(key);
 										console.log('KEY:', key);
