@@ -12,14 +12,16 @@ import {
 	fetchStripeCard,
 	removePaymentMethod,
 	setupIntent,
+	setupStripeCustomer,
 	updatePaymentMethod,
-} from '../../store/actions/payments';
+} from '../../store/actions/stripe';
 import Card from '../../components/card/Card';
 import './CardSetupForm.css';
 import { Mixpanel } from '../../config/mixpanel';
+import classNames from 'classnames';
 
 const ErrorMessage = ({ children }) => (
-	<div className='ErrorMessage ' role='alert'>
+	<div className='text-danger' role='alert'>
 		{children}
 	</div>
 );
@@ -36,13 +38,13 @@ const SubmitButton = ({ processing, error, children, disabled }) => (
             }
           `}
 		</style>
-		<Button className="text-light" variant='submit' type='submit' size='lg' disabled={processing || disabled}>
+		<Button className='text-light' variant='submit' type='submit' size='lg' disabled={processing || disabled}>
 			{processing ? 'Processing...' : children}
 		</Button>
 	</div>
 );
 
-const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, processing, stripe }) => (
+const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, processing, stripe, confirmBtnClass }) => (
 	<form onSubmit={handleSubmit}>
 		<div className='form-group'>
 			<label htmlFor='card-holder-name'>Cardholder Name</label>
@@ -78,7 +80,7 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 			</div>
 		</div>
 		{error && <ErrorMessage>{error.message}</ErrorMessage>}
-		<div className='d-flex pt-5 justify-content-end'>
+		<div className={confirmBtnClass}>
 			<SubmitButton processing={processing} error={error} disabled={!stripe}>
 				Confirm
 			</SubmitButton>
@@ -86,7 +88,7 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 	</form>
 );
 
-const CardSetupForm = ({ showToast }) => {
+const CardSetupForm = ({ isComponent, setCardValid, showToast }) => {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const { user } = useSelector(state => state['currentUser']);
@@ -116,10 +118,20 @@ const CardSetupForm = ({ showToast }) => {
 		year: '',
 	});
 
+	const confirmBtnClass = classNames({
+		'd-flex': true,
+		'pt-5': true,
+		'justify-content-end': true,
+	});
+
+	useEffect(() => {
+		console.log("USER UPDATED:", user)
+	}, [user])
+
 	useEffect(() => {
 		console.log(paymentAdded);
 		if (user.paymentMethodId) {
-			(async function fetchStripeCardPromise() {
+			(async () => {
 				const paymentMethod = await dispatch(fetchStripeCard(user));
 				setPaymentMethod(prevState => ({
 					last4: paymentMethod.card.last4,
@@ -151,36 +163,39 @@ const CardSetupForm = ({ showToast }) => {
 		}
 
 		if (error) {
-			elements.getElement('card').focus();
 			return;
 		}
+
 		if (cardComplete) {
 			setProcessing(true);
 		}
 
-		const intent = await dispatch(setupIntent(user));
-
+		let intent;
+		if (isComponent) {
+			const { id } = await dispatch(setupStripeCustomer(user));
+			intent = await dispatch(setupIntent(id));
+		} else {
+			intent = await dispatch(setupIntent(user));
+		}
 		const result = await stripe.confirmCardSetup(intent.client_secret, {
 			payment_method: {
 				card: elements.getElement(CardNumberElement),
 				billing_details: { name: billingDetails.name, email: user.email },
 			},
 		});
-
 		setProcessing(false);
-
 		if (result.error) {
 			console.log(result.error);
 			setError(result.error);
 			Mixpanel.track('Add payment method', {
-				$type: 'FAILURE'
+				$type: 'FAILURE',
 			});
 		} else {
 			console.log('success', result.setupIntent.payment_method);
 			Mixpanel.track('Add payment method', {
-				$type: 'SUCCESS'
+				$type: 'SUCCESS',
 			});
-			await dispatch(addPaymentMethod(user, result.setupIntent.payment_method));
+			await dispatch(addPaymentMethod(user.email, intent.customer, result.setupIntent.payment_method));
 			showToast('Your payment method has been saved successfully!');
 			setPaymentAdded(1);
 			console.log(paymentAdded);
@@ -238,9 +253,7 @@ const CardSetupForm = ({ showToast }) => {
 											Payment method
 										</label>
 										<div className='mt-2'>
-											<span className='text-capitalize fw-bold'>
-												💳 {paymentMethod.brand}&nbsp;
-											</span>
+											<span className='text-capitalize fw-bold'>💳 {paymentMethod.brand}&nbsp;</span>
 											ending in {paymentMethod.last4}
 										</div>
 									</div>
@@ -309,9 +322,7 @@ const CardSetupForm = ({ showToast }) => {
 													}))
 												}
 											>
-												<option value={moment().format('YYYY')}>
-													{moment().format('YYYY')}
-												</option>
+												<option value={moment().format('YYYY')}>{moment().format('YYYY')}</option>
 												<option value={moment().add(1, 'years').format('YYYY')}>
 													{moment().add(1, 'years').format('YYYY')}
 												</option>
@@ -336,18 +347,10 @@ const CardSetupForm = ({ showToast }) => {
 								</div>
 							</div>
 							<div className='d-flex justify-content-end pt-5'>
-								<button
-									className='btn btn-secondary mx-3 rounded-3'
-									style={{ width: '15%' }}
-									onClick={() => setShowModal(false)}
-								>
+								<button className='btn btn-secondary mx-3 rounded-3' style={{ width: '15%' }} onClick={() => setShowModal(false)}>
 									Cancel
 								</button>
-								<button
-									className='btn btn-primary mx-3 rounded-3'
-									type='submit'
-									style={{ width: '15%' }}
-								>
+								<button className='btn btn-primary mx-3 rounded-3' type='submit' style={{ width: '15%' }}>
 									Save
 								</button>
 							</div>
@@ -364,24 +367,25 @@ const CardSetupForm = ({ showToast }) => {
 				cardCvv='***'
 				brand={`${paymentMethod.brand}`}
 			/>
-			<div className='d-flex justify-content-between mt-5'>
+			{!isComponent && <div className='d-flex justify-content-between mt-5'>
 				<div>
-				<button className="btn btn-edit" onClick={() => history.push(PATHS.SUBSCRIPTION)}>
-					Manage Subscription
-				</button>
+					<button className='btn btn-edit' onClick={() => history.push(PATHS.SUBSCRIPTION)}>
+						Manage Subscription
+					</button>
 				</div>
 				<div>
-				<button className='btn btn-edit mx-2' onClick={edit}>
-					Edit card
-				</button>
-				<button className='btn btn-danger mx-2' onClick={remove}>
-					Remove card
-				</button>
+					<button className='btn btn-edit mx-2' onClick={edit}>
+						Edit card
+					</button>
+					<button className='btn btn-danger mx-2' onClick={remove}>
+						Remove card
+					</button>
 				</div>
-			</div>
+			</div>}
 		</div>
 	) : (
 		<Form
+			confirmBtnClass={confirmBtnClass}
 			stripe={stripe}
 			error={error}
 			processing={processing}

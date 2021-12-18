@@ -23,10 +23,14 @@ import Couriers from '../pages/couriers/Couriers';
 import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
 import MultiDrop from '../pages/multiDrop/MultiDrop';
 import Square from '../pages/square/Square';
+import Signup1 from '../pages/signup/Signup1';
+import Signup2 from '../pages/signup/Signup2';
 
 const routes = (
 	<Switch>
 		<Route exact path={PATHS.SIGNUP} component={Signup} />
+		<Route exact path={PATHS.SIGNUP_1} component={Signup1} />
+		<Route exact path={PATHS.SIGNUP_2} component={Signup2} />
 		<Route exact path={PATHS.LOGIN} component={Login} />
 		<Route exact path={PATHS.FORGOT} component={ForgotPassword} />
 		<Route exact path={PATHS.RESET} component={ResetPassword} />

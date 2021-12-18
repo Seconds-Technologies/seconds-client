@@ -10,7 +10,7 @@ import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import ComingSoon from './modals/ComingSoon';
+import ComingSoon from '../../modals/ComingSoon';
 import ReorderForm from './modals/ReorderForm';
 import DeliveryJob from '../../modals/DeliveryJob';
 import LoadingOverlay from 'react-loading-overlay';

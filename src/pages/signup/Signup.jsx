@@ -2,7 +2,7 @@ import './Signup.css';
 import logo from '../../assets/img/seconds-logo-black.svg';
 import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
-import { authUser } from '../../store/actions/auth';
+import { authUser, validateRegistration } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { addError, removeError } from '../../store/actions/errors';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -43,7 +43,7 @@ export default function Signup(props) {
 	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Hold tight, signing you up...'>
+		<LoadingOverlay active={isLoading} spinner text='Checking your details...'>
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 signup-aside'>
 					<div className='d-flex flex-column h-100'>
@@ -151,11 +151,13 @@ export default function Signup(props) {
 										$first_name: user.firstname,
 										$last_name: user.lastname,
 										$email: user.email,
+										$company: user.company,
+										$address: user.fullAddress,
 										$apiKey: false,
 										$subscribed: false,
 									});
 									setLoading(false);
-									props.history.push('/home');
+									props.history.push('/signup/1');
 								} catch (err) {
 									Mixpanel.track('Unsuccessful registration');
 									setLoading(false);
@@ -355,11 +357,7 @@ export default function Signup(props) {
 												type='checkbox'
 												id='terms'
 												name='terms'
-												onChange={e => {
-													console.log(e.target.value);
-													handleChange(e);
-													console.log(values.terms);
-												}}
+												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
 											<label htmlFor='terms'>

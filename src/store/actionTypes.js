@@ -1,3 +1,5 @@
+export let AUTHENTICATE_USER = "AUTHENTICATE_USER";
+export const SET_USER_DETAILS = "SET_USER_DETAILS";
 export const LOGOUT_USER = "LOGOUT_USER";
 export const ADD_ERROR = "ADD_ERROR";
 export const REMOVE_ERROR = "REMOVE_ERROR";
@@ -22,7 +24,6 @@ export const CLEAR_ORDERS = "CLEAR_ORDERS";
 export const CLEAR_PRODUCTS = "CLEAR_PRODUCTS";
 export const CLEAR_JOBS = "CLEAR_JOBS";
 export const NEW_DELIVERY_JOB = "NEW_DELIVERY_JOB";
-export const SET_PAYMENT_ID = "SET_PAYMENT_ID";
 export const TIMER_START = "TIMER_START"
 export const TIMER_STOP = "TIMER_STOP"
 export const ADD_DROPOFF = "ADD_DROPOFF";

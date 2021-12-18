@@ -1,21 +1,16 @@
 import { apiCall } from '../../api';
-import { SET_PAYMENT_ID } from '../actionTypes';
 import { addError } from './errors';
+import { Mixpanel } from '../../config/mixpanel';
+import { updateCurrentUser } from './auth';
 
-export const setPaymentMethodId = paymentMethodId => {
-	return {
-		type: SET_PAYMENT_ID,
-		paymentMethodId,
-	};
-};
-
-export function setupIntent(user) {
+export function setupStripeCustomer(data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('stripeCustomerId:', user.stripeCustomerId);
-			return apiCall('POST', `/server/payment/setup-intent`, { stripeCustomerId: user.stripeCustomerId })
-				.then(intent => {
-					resolve(intent);
+			console.log(data);
+			return apiCall('POST', '/server/auth/stripe-customer', data)
+				.then(customer => {
+					dispatch(updateCurrentUser({ stripeCustomerId: customer.id }));
+					resolve(customer);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
@@ -26,17 +21,32 @@ export function setupIntent(user) {
 	};
 }
 
-export function addPaymentMethod(user, paymentMethodId) {
+export function setupIntent(id) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log('stripeCustomerId:', id);
+			return apiCall('POST', `/server/payment/setup-intent`, { stripeCustomerId: id })
+				.then(intent => resolve(intent))
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function addPaymentMethod(email, stripeCustomerId, paymentMethodId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/payment/add-payment-method`, {
-				email: user.email,
-				customerId: user.stripeCustomerId,
-				paymentMethodId: paymentMethodId,
+				email,
+				stripeCustomerId,
+				paymentMethodId,
 			})
 				.then(res => {
 					console.log(paymentMethodId);
-					dispatch(setPaymentMethodId(paymentMethodId));
+					dispatch(updateCurrentUser({ paymentMethodId: paymentMethodId }));
 					resolve(null);
 				})
 				.catch(err => {
@@ -76,7 +86,7 @@ export function removePaymentMethod(user) {
 			})
 				.then(({ message }) => {
 					console.log(message);
-					dispatch(setPaymentMethodId(''));
+					dispatch(updateCurrentUser({ paymentMethodId: '' }));
 					resolve(message);
 				})
 				.catch(err => {
@@ -94,6 +104,28 @@ export function fetchStripeCard(user) {
 			return apiCall('POST', `/server/payment/fetch-stripe-card`, { paymentMethodId: user.paymentMethodId })
 				.then(card => {
 					resolve(card);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function checkSubscriptionStatus(email) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log(email);
+			apiCall('POST', '/server/subscription/fetch-stripe-subscription', { email })
+				.then(({ id: subscriptionId, status }) => {
+					console.log(subscriptionId, status);
+					Mixpanel.people.set({
+						subscribed: !!subscriptionId,
+					});
+					dispatch(updateCurrentUser({ subscriptionId }));
+					resolve(status === 'active');
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

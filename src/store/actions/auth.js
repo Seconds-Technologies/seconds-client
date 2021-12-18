@@ -1,54 +1,50 @@
 import { apiCall, setTokenHeader } from '../../api';
-import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, UPDATE_CURRENT_USER, LOGOUT_USER } from '../actionTypes';
+import {
+	REMOVE_CURRENT_USER,
+	SET_USER_DETAILS,
+	SET_API_KEY,
+	SET_CURRENT_USER,
+	UPDATE_CURRENT_USER,
+	LOGOUT_USER,
+	AUTHENTICATE_USER,
+} from '../actionTypes';
 import { addError, removeError } from './errors';
 import { setShopify } from './shopify';
 import { Mixpanel } from '../../config/mixpanel';
 
-export const removeUser = () => {
-	return {
-		type: REMOVE_CURRENT_USER,
-	};
-};
+export const removeUser = () => ({
+	type: REMOVE_CURRENT_USER,
+});
 
-export const setCurrentUser = user => {
-	return {
-		type: SET_CURRENT_USER,
-		user,
-	};
-};
+export const setUserDetails = data => ({
+	type: SET_USER_DETAILS,
+	data,
+});
 
-export const updateCurrentUser = data => {
-	return {
-		type: UPDATE_CURRENT_USER,
-		data,
-	};
-};
+export const setCurrentUser = user => ({
+	type: SET_CURRENT_USER,
+	user,
+});
 
-export const setApiKey = apiKey => {
-	return {
-		type: SET_API_KEY,
-		apiKey,
-	};
-};
+export const authenticateUser = () => ({
+	type: AUTHENTICATE_USER,
+});
 
-export const setAuthorizationToken = token => {
-	setTokenHeader(token);
-};
+export const updateCurrentUser = data => ({
+	type: UPDATE_CURRENT_USER,
+	data,
+});
+
+export const setApiKey = apiKey => ({
+	type: SET_API_KEY,
+	apiKey,
+});
+
+export const setAuthorizationToken = token => setTokenHeader(token);
 
 export const logout = () => ({
-	type: LOGOUT_USER
-})
-/*export function logout() {
-	return dispatch => {
-		localStorage.removeItem('jwt_token');
-		setAuthorizationToken(false);
-		dispatch(removeUser());
-		dispatch(setShopify({}));
-		dispatch(clearAllOrders());
-		dispatch(clearAllProducts());
-		dispatch(clearAllJobs());
-	};
-}*/
+	type: LOGOUT_USER,
+});
 
 export function authUser(type, userData) {
 	return dispatch => {
@@ -61,7 +57,7 @@ export function authUser(type, userData) {
 					console.log('shopify', !!shopify);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
-					dispatch(setCurrentUser(user));
+					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
 					shopify &&
 						apiCall('POST', `/server/shopify`, { email: user.email })
 							.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
@@ -81,21 +77,37 @@ export function authUser(type, userData) {
 	};
 }
 
-export function authorizeAPI(email, strategy) {
+export function validateRegistration(userData) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log('User data:', userData);
+			return apiCall('POST', '/server/auth/validate', userData)
+				.then(({ user }) => {
+					dispatch(setUserDetails(user));
+					resolve(user);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function authorizeAPI(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log('User:', email);
-			return apiCall('POST', `/server/main/token`, { email, strategy })
+			return apiCall('POST', `/server/main/token`, { email })
 				.then(({ apiKey }) => {
 					dispatch(setApiKey(apiKey));
-					Mixpanel.track('Successful Api Key generation', {
-						$strategy: strategy
-					});
+					Mixpanel.track('Successful Api Key generation');
 					resolve(apiKey);
 				})
 				.catch(err => {
 					Mixpanel.track('Unsuccessful Api Key generation', {
-						$error: err.message
+						$error: err.message,
 					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
@@ -112,7 +124,7 @@ export function updateProfile({ img, id, ...data }) {
 			console.log('Data:', data);
 			return apiCall('POST', '/server/main/update-profile', { img, id, data })
 				.then(({ message, ...data }) => {
-					Mixpanel.track("Successful updated profile")
+					Mixpanel.track('Successful updated profile');
 					if (img) {
 						const formData = new FormData();
 						console.log(img);
@@ -125,12 +137,12 @@ export function updateProfile({ img, id, ...data }) {
 						};
 						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
-								Mixpanel.track("Successful profile image upload")
+								Mixpanel.track('Successful profile image upload');
 								console.log(message);
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
 							})
 							.catch(err => {
-								Mixpanel.track("Unsuccessful profile image upload", { $error: err.message})
+								Mixpanel.track('Unsuccessful profile image upload', { $error: err.message });
 								console.error(err);
 								reject(err);
 							});
@@ -140,7 +152,7 @@ export function updateProfile({ img, id, ...data }) {
 					resolve(message);
 				})
 				.catch(err => {
-					Mixpanel.track("Unsuccessful profile update", { $error: err.message})
+					Mixpanel.track('Unsuccessful profile update', { $error: err.message });
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -155,11 +167,11 @@ export function sendPasswordResetEmail(email) {
 			console.log(email);
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
 				.then(res => {
-					Mixpanel.track("Successful request to reset password")
-					resolve(res)
+					Mixpanel.track('Successful request to reset password');
+					resolve(res);
 				})
 				.catch(err => {
-					Mixpanel.track("Unsuccessful request to reset password", { $error: err.message})
+					Mixpanel.track('Unsuccessful request to reset password', { $error: err.message });
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -174,12 +186,32 @@ export function resetPassword({ password }, token) {
 			const config = { params: { token } };
 			return apiCall('PATCH', '/server/auth/reset-password', { password }, config)
 				.then(res => {
-					Mixpanel.track("Successful password reset")
-					resolve(res)
+					Mixpanel.track('Successful password reset');
+					resolve(res);
 				})
 				.catch(err => {
-					Mixpanel.track("Unsuccessful password reset", { $error: err.message})
+					Mixpanel.track('Unsuccessful password reset', { $error: err.message });
 					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function updateDeliveryStrategies(email, strategies) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.table(email, strategies);
+			return apiCall('POST', '/server/main/update-delivery-strategies', strategies, { params: { email } })
+				.then(res => {
+					Mixpanel.track('Delivery strategies updated successfully');
+					dispatch(updateCurrentUser({ deliveryStrategies: strategies }));
+					resolve('Delivery strategies have been saved to your account');
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful update of delivery strategies', { $error: err.message });
+					if (err.message) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
@@ -193,12 +225,12 @@ export function updateDeliveryTimes(email, deliveryHours) {
 			console.log(email);
 			return apiCall('POST', '/server/main/update-delivery-hours', deliveryHours, { params: { email } })
 				.then(res => {
-					Mixpanel.track("Delivery hours updated successfully")
+					Mixpanel.track('Delivery hours updated successfully');
 					dispatch(updateCurrentUser({ deliveryHours }));
 					resolve('Your new delivery times have been updated!');
 				})
 				.catch(err => {
-					Mixpanel.track("Unsuccessful update for delivery hours", { $error: err.message})
+					Mixpanel.track('Unsuccessful update for delivery hours', { $error: err.message });
 					if (err.message) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);

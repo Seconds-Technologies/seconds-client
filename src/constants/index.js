@@ -12,6 +12,7 @@ export const PATHS = {
 	INTEGRATE: '/integrate',
 	SHOPIFY: '/integrate/shopify',
 	SQUARE: '/integrate/square',
+	WOOCOMMERCE: '/integrate/woocommerce',
 	API_KEY: '/integrate/api',
 	DOCUMENTATION: '/documentation',
 	PROFILE: '/profile',
@@ -20,7 +21,9 @@ export const PATHS = {
 	PAYMENT: '/payment',
 	SUBSCRIPTION: '/subscription',
 	COURIERS: '/couriers',
-	DELIVERY_TIMES: '/delivery-times'
+	DELIVERY_TIMES: '/delivery-times',
+	SIGNUP_1: '/signup/1',
+	SIGNUP_2: '/signup/2'
 };
 
 export const COLOURS = {

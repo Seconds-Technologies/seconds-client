@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ToastFade from 'react-bootstrap/Toast';
-import secondsLogo from '../../../assets/img/logo.svg';
+import secondsLogo from '../assets/img/logo.svg';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 
 const ComingSoon = ({ message, toggleMessage }) => {

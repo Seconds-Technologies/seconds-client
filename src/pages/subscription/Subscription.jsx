@@ -2,7 +2,7 @@ import './subscription.css';
 import React, { useEffect, useState } from 'react';
 import secondsLogo from '../../assets/img/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkSubscriptionStatus } from '../../store/actions/subscriptions';
+import { checkSubscriptionStatus } from '../../store/actions/stripe';
 import Modal from 'react-bootstrap/Modal';
 import { Mixpanel } from '../../config/mixpanel';
 
