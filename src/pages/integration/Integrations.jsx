@@ -34,8 +34,8 @@ export default function Integrations(props) {
 						role='button'
 						className={ShopifyLinkBtn}
 					>
-						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-2 api-wrapper'>
-							<img className='img-fluid' width={250} src={shopifyLogo} alt='shopify logo' />
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-4 api-wrapper'>
+							<img className='img-fluid' width={200} height={150} src={shopifyLogo} alt='shopify logo' />
 						</div>
 					</div>
 					<div
@@ -61,7 +61,7 @@ export default function Integrations(props) {
 						role='button'
 						className={ShopifyLinkBtn}
 					>
-						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-2 api-wrapper'>
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 							<img className='img-fluid' width={300} src={squarespaceLogo} alt='square logo' />
 						</div>
 					</div>

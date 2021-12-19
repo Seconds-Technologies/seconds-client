@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PaymentMethod from '../paymentMethod/PaymentMethod';
 import { useDispatch, useSelector } from 'react-redux';
-import { authenticateUser, authUser } from '../../store/actions/auth';
+import { authenticateUser } from '../../store/actions/auth';
 import LoadingOverlay from 'react-loading-overlay';
 import backArrow from '../../assets/img/noun-go-back-vector.svg';
 
@@ -13,7 +13,7 @@ const Signup2 = props => {
 
 	const signup = async () => {
 		try {
-			dispatch(authenticateUser())
+			dispatch(authenticateUser());
 			props.history.push('/home');
 		} catch (err) {
 			console.error(err);
