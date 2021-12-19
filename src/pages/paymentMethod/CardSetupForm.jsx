@@ -12,7 +12,6 @@ import {
 	fetchStripeCard,
 	removePaymentMethod,
 	setupIntent,
-	setupStripeCustomer,
 	updatePaymentMethod,
 } from '../../store/actions/stripe';
 import Card from '../../components/card/Card';
@@ -88,7 +87,7 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 	</form>
 );
 
-const CardSetupForm = ({ isComponent, setCardValid, showToast }) => {
+const CardSetupForm = ({ isComponent, showToast }) => {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const { user } = useSelector(state => state['currentUser']);
@@ -169,14 +168,7 @@ const CardSetupForm = ({ isComponent, setCardValid, showToast }) => {
 		if (cardComplete) {
 			setProcessing(true);
 		}
-
-		let intent;
-		if (isComponent) {
-			const { id } = await dispatch(setupStripeCustomer(user));
-			intent = await dispatch(setupIntent(id));
-		} else {
-			intent = await dispatch(setupIntent(user.stripeCustomerId));
-		}
+		const intent = await dispatch(setupIntent(user.stripeCustomerId));
 		const result = await stripe.confirmCardSetup(intent.client_secret, {
 			payment_method: {
 				card: elements.getElement(CardNumberElement),
