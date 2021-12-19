@@ -175,7 +175,7 @@ const CardSetupForm = ({ isComponent, setCardValid, showToast }) => {
 			const { id } = await dispatch(setupStripeCustomer(user));
 			intent = await dispatch(setupIntent(id));
 		} else {
-			intent = await dispatch(setupIntent(user));
+			intent = await dispatch(setupIntent(user.stripeCustomerId));
 		}
 		const result = await stripe.confirmCardSetup(intent.client_secret, {
 			payment_method: {
