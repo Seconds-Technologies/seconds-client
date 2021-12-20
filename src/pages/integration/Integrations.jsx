@@ -1,7 +1,7 @@
 import './integrations.css';
 import React, { useEffect, useState } from 'react';
 import shopifyLogo from '../../assets/img/shopify.svg';
-import squareLogo from '../../assets/img/square.svg';
+import weeblyLogo from '../../assets/img/weebly-vector-logo.svg';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg'
 import squarespaceLogo from '../../assets/img/squarespace-logo.svg'
 import { PATHS } from '../../constants';
@@ -44,7 +44,7 @@ export default function Integrations(props) {
 						className={ShopifyLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
-							<img className='img-fluid' width={250} src={squareLogo} alt='square logo' />
+							<img className='img-fluid' width={250} src={weeblyLogo} alt='square logo' />
 						</div>
 					</div>
 					<div

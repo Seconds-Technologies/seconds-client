@@ -2,11 +2,10 @@ import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { cancelDelivery, createDeliveryJob, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { createDeliveryJob, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import ReorderForm from './modals/ReorderForm';
 import DeliveryJob from '../../modals/DeliveryJob';
 import LoadingOverlay from 'react-loading-overlay';
@@ -182,8 +181,8 @@ const ViewOrder = props => {
 	};
 
 	return (
-		<LoadingOverlay active={loading} spinner text={'Creating Order'}>
-			<div ref={modalRef} className='viewOrder bg-light p-3 px-5'>
+		<LoadingOverlay active={loading} spinner text='Creating Order'>
+			<div ref={modalRef} className='viewOrder bg-light'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
@@ -192,24 +191,24 @@ const ViewOrder = props => {
 					<div className='col-4'>
 						<div className='row d-flex justify-content-end'>
 							<Card styles>
-								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles="my-2" />
-								<Item label='Address' value={delivery.address} styles="my-2" />
-								<Item label='Email' value={delivery.email} styles="my-2" />
-								<Item label='Phone number' value={delivery.phoneNumber} styles="my-2" />
+								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles='my-2' />
+								<Item label='Address' value={delivery.address} styles='my-2' />
+								<Item label='Email' value={delivery.email} styles='my-2' />
+								<Item label='Phone number' value={delivery.phoneNumber} styles='my-2' />
 							</Card>
 						</div>
 						<div className='row d-flex justify-content-end'>
 							<Card styles='mt-3'>
-								<Item label='Delivery provider' value={order.providerId} type='image' styles="my-2" />
-								<Item label='Driver name' value={order.driverName} styles="my-2" />
-								<Item label='Phone number' value={order.driverPhone} styles="my-2" />
-								<Item label='Transport' value={order.driverVehicle} styles="my-2" />
+								<Item label='Delivery provider' value={order.providerId} type='image' styles='my-2' />
+								<Item label='Driver name' value={order.driverName} styles='my-2' />
+								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
+								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
 							</Card>
 						</div>
 					</div>
 					<div className='col-8'>
 						<Card>
-							<div className="d-flex justify-content-between my-2">
+							<div className='d-flex justify-content-between my-2'>
 								<Item label='Job Reference' value={order.reference} />
 								{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
 									<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
