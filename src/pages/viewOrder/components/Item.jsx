@@ -6,12 +6,7 @@ import streetStream from '../../../assets/img/street-stream.svg';
 import ecofleet from '../../../assets/img/ecofleet.svg';
 import { PROVIDERS } from '../../../constants';
 
-const Item = ({ label, value, type }) => {
-
-	useEffect(() => {
-		console.log(type);
-	}, []);
-
+const Item = ({ label, value, type, styles }) => {
 
 	const courierLogo = useCallback(() => {
 		switch (value) {
@@ -28,7 +23,7 @@ const Item = ({ label, value, type }) => {
 		}
 	}, [type]);
 	return (
-		<div className='d-flex flex-column my-2'>
+		<div className={`${styles} d-flex flex-column`}>
 			<span className='fs-6 fw-bold text-primary'>{label}</span>
 			{type === 'image' ? (
 				<img src={courierLogo()} alt={value} width={50} height={50} />

@@ -16,6 +16,8 @@ import Item from './components/Item';
 import Card from './components/Card';
 import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
+import ConfirmModal from './modals/ConfirmModal';
+import { STATUS } from '../../constants';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -23,7 +25,7 @@ const ViewOrder = props => {
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	// const [order, setOrder] = useState({});
-	const [message, setShow] = useState('');
+	const [message, showMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
 	const [reorderForm, showReOrderForm] = useState(false);
@@ -85,7 +87,7 @@ const ViewOrder = props => {
 		<Modal
 			show={!!message}
 			container={modalRef}
-			onHide={() => setShow('')}
+			onHide={() => showMessage('')}
 			size='lg'
 			aria-labelledby='example-custom-modal-styling-title'
 			// className='alert alert-success' //Add class name here
@@ -93,30 +95,6 @@ const ViewOrder = props => {
 			<div className='alert alert-success mb-0'>
 				<h2 className='text-center'>{message}</h2>
 			</div>
-		</Modal>
-	);
-
-	const confirmModal = (
-		<Modal show={confirmDialog} onHide={() => showConfirmDialog(false)}>
-			<Modal.Header closeButton>
-				<Modal.Title>Confirm Selection</Modal.Title>
-			</Modal.Header>
-			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
-				<span className='fs-5'>Are you sure you want to cancel this order?</span>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button variant='secondary' onClick={() => showConfirmDialog(false)}>
-					Cancel
-				</Button>
-				<Button
-					onClick={() => {
-						showConfirmDialog(false);
-						dispatch(cancelDelivery(apiKey, order.id)).then(message => setShow(message));
-					}}
-				>
-					Confirm
-				</Button>
-			</Modal.Footer>
 		</Modal>
 	);
 
@@ -205,33 +183,44 @@ const ViewOrder = props => {
 
 	return (
 		<LoadingOverlay active={loading} spinner text={'Creating Order'}>
-			<div ref={modalRef} className='viewOrder bg-light p-3'>
+			<div ref={modalRef} className='viewOrder bg-light p-3 px-5'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
-				{confirmModal}
+				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
 				{successModal}
 				<div className='row mx-5'>
 					<div className='col-4'>
 						<div className='row d-flex justify-content-end'>
 							<Card styles>
-								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} />
-								<Item label='Address' value={delivery.address} />
-								<Item label='Email' value={delivery.email} />
-								<Item label='Phone number' value={delivery.phoneNumber} />
+								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles="my-2" />
+								<Item label='Address' value={delivery.address} styles="my-2" />
+								<Item label='Email' value={delivery.email} styles="my-2" />
+								<Item label='Phone number' value={delivery.phoneNumber} styles="my-2" />
 							</Card>
 						</div>
 						<div className='row d-flex justify-content-end'>
 							<Card styles='mt-3'>
-								<Item label='Delivery provider' value={order.providerId} type='image' />
-								<Item label='Driver name' value={order.driverName} />
-								<Item label='Driver phone number' value={order.driverPhone} />
-								<Item label='Transport' value={order.driverVehicle} />
+								<Item label='Delivery provider' value={order.providerId} type='image' styles="my-2" />
+								<Item label='Driver name' value={order.driverName} styles="my-2" />
+								<Item label='Phone number' value={order.driverPhone} styles="my-2" />
+								<Item label='Transport' value={order.driverVehicle} styles="my-2" />
 							</Card>
 						</div>
 					</div>
 					<div className='col-8'>
 						<Card>
-							<Item label='Job Reference' value={order.reference} />
+							<div className="d-flex justify-content-between my-2">
+								<Item label='Job Reference' value={order.reference} />
+								{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
+									<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
+										Re-order
+									</button>
+								) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
+									<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
+										Cancel Order
+									</button>
+								) : null}
+							</div>
 							<div className='d-flex mt-2 mb-3 justify-content-evenly'>
 								<Panel
 									label='Delivery ETA'
