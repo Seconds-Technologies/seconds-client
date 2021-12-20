@@ -1,7 +1,7 @@
 import './square.css';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import squareLogo from '../../assets/img/square.svg';
+import weeblyLogo from '../../assets/img/weebly-vector-logo.svg';
 import { Formik } from 'formik';
 import { getSquareCredentials, validateSquare } from '../../store/actions/square';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -34,7 +34,7 @@ const Square = props => {
 				<h2 className='shopifyConnect'>Your Square account is now connected!</h2>
 			)}
 			<div className='d-flex flex-column align-items-center'>
-				<img className='img-fluid d-block' src={squareLogo} alt='' width={300} />
+				<img className='img-fluid d-block' src={weeblyLogo} alt='' width={300} />
 				{error && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
 						<span className='text-center'>{error}</span>
