@@ -66,7 +66,7 @@ const Dashboard = props => {
 				</div>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map />
+			<Map styles="mt-4" height={320}/>
 		</div>
 	);
 }

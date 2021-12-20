@@ -1,15 +1,15 @@
-import { applyMiddleware, compose, createStore } from "redux";
+import { configureStore } from '@reduxjs/toolkit';
 import { persistStore } from "redux-persist";
 import logger from "redux-logger";
-import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 
-const middlewares = [logger, thunk];
+/*const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;*/
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-export const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
-	applyMiddleware(...middlewares)
-));
+export const store = configureStore({
+	reducer: rootReducer,
+	devTools: process.env.NODE_ENV !== 'production',
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
+});
 
 export const persistor = persistStore(store);
 

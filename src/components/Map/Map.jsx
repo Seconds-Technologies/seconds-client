@@ -4,7 +4,7 @@ import marker from '../../assets/img/marker.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 
-const Map = () => {
+const Map = ({styles, height}) => {
 	const latitude = useMemo(() => Number(localStorage.getItem("latitude")), [])
 	const longitude = useMemo(() => Number(localStorage.getItem("longitude")), [])
 	const Mapbox = useMemo(() => ReactMapboxGl({
@@ -16,11 +16,11 @@ const Map = () => {
 	}
 
 	return (
-		<div className='mt-4 map-container'>
+		<div className={`${styles} map-container`}>
 			<Mapbox
 				zoom={[13]}
 				containerStyle={{
-					height: "calc(100vh - 320px)",
+					height: `calc(100vh - ${height}px)`,
 					width: "100%",
 				}}
 				onStyleLoad={map => onLoaded(map)}

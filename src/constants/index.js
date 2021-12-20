@@ -99,6 +99,13 @@ export const VEHICLE_TYPES = [
 	},
 ];
 
+export const PROVIDERS = {
+	STUART: "stuart",
+	GOPHR: "gophr",
+	STREET_STREAM: "street_stream",
+	ECOFLEET: "ecofleet"
+}
+
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
 	SAME_DAY: 'SAME_DAY',
