@@ -182,7 +182,7 @@ const ViewOrder = props => {
 
 	return (
 		<LoadingOverlay active={loading} spinner text='Creating Order'>
-			<div ref={modalRef} className='viewOrder bg-light'>
+			<div ref={modalRef} className='viewOrder bg-light p-3 px-5'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
