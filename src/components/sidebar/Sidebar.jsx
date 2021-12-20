@@ -105,16 +105,6 @@ export default function Sidebar() {
 							<div className='item-hover'>Couriers</div>
 						</li>
 					</Link>
-					<a
-						href='https://seconds.stoplight.io/docs/seconds-api/ZG9jOjMyNzk0NA-introduction'
-						target='_blank'
-						className='link text-black'
-					>
-						<li className='sidebarListItem'>
-							<img className={`sidebarIcon item-hover`} src={codeIcon} width={25} height={25} alt={''} />
-							<div className='item-hover'>Developers</div>
-						</li>
-					</a>
 					<Link to={PATHS.SETTINGS} className='link text-black mt-4'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.SETTINGS && 'currentLink'}`}>
 							<img
