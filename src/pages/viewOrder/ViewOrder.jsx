@@ -39,13 +39,13 @@ const ViewOrder = props => {
 			.filter(job => job['jobSpecification']['orderNumber'] === orderID)
 			.map(
 				({
-					_id,
-					status,
-					jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
-					selectedConfiguration: { providerId, deliveryFee },
-					driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
-					createdAt
-				}) => {
+					 _id,
+					 status,
+					 jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
+					 selectedConfiguration: { providerId, deliveryFee },
+					 driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
+					 createdAt
+				 }) => {
 					createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
 					return {
 						id: _id,
@@ -68,24 +68,33 @@ const ViewOrder = props => {
 	const delivery = useMemo(() => {
 		return order.deliveries
 			? order.deliveries.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status }) => ({
-					dropoffEndTime: dropoffEndTime,
-					firstName: dropoffLocation.firstName,
-					lastName: dropoffLocation.lastName,
-					email: dropoffLocation.email,
-					phoneNumber: dropoffLocation.phoneNumber,
-					address: dropoffLocation.fullAddress,
-					orderReference,
-					trackingURL,
-					description,
-					status
-			  }))[activeIndex]
+				dropoffEndTime: dropoffEndTime,
+				firstName: dropoffLocation.firstName,
+				lastName: dropoffLocation.lastName,
+				email: dropoffLocation.email,
+				latitude: dropoffLocation.latitude,
+				longitude: dropoffLocation.longitude,
+				phoneNumber: dropoffLocation.phoneNumber,
+				address: dropoffLocation.fullAddress,
+				orderReference,
+				trackingURL,
+				description,
+				status
+			}))[activeIndex]
 			: [];
 	}, [order, activeIndex]);
 
-	const bounds = [
-		[-0.11190104423268182, 51.4623413829225],
-		[-0.027804117242765262, 51.50651789371881]
-	]
+	const bounds = useMemo(() => {
+		if (order && order.deliveries) {
+			let pickupCoords = [order.pickupLocation.longitude, order.pickupLocation.latitude];
+			let deliveryCoords = [delivery.longitude, delivery.latitude];
+			return [pickupCoords, deliveryCoords]
+		}
+		return [
+			[0, 0],
+			[0, 0]
+		];
+	}, [activeIndex, order, delivery]);
 
 	const successModal = (
 		<Modal
@@ -103,6 +112,7 @@ const ViewOrder = props => {
 	);
 
 	useEffect(() => {
+		console.log(bounds)
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
@@ -126,21 +136,21 @@ const ViewOrder = props => {
 			values.pickupCity = pickupFormattedAddress.city;
 			values.pickupPostcode = pickupFormattedAddress.postcode;
 			values.latitude = pickupFormattedAddress.latitude;
-			values.longitude = pickupFormattedAddress.longitude
+			values.longitude = pickupFormattedAddress.longitude;
 			for (const drop of drops) {
 				const index = drops.indexOf(drop);
 				console.table(drop);
 				console.log('INDEX', index);
 				values.drops[
 					index
-				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
+					].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
-				values.drops[index].latitude = dropoffFormattedAddress.latitude
-				values.drops[index].longitude = dropoffFormattedAddress.longitude
+				values.drops[index].latitude = dropoffFormattedAddress.latitude;
+				values.drops[index].longitude = dropoffFormattedAddress.longitude;
 				validateAddresses(pickupFormattedAddress, dropoffFormattedAddress);
 			}
 			return values;
@@ -255,8 +265,8 @@ const ViewOrder = props => {
 										!delivery.dropoffEndTime
 											? 'Estimating...'
 											: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
-											? `Delivered`
-											: `${moment().to(moment(delivery.dropoffEndTime))}`
+												? `Delivered`
+												: `${moment().to(moment(delivery.dropoffEndTime))}`
 									}
 									styles='me-1'
 								/>
