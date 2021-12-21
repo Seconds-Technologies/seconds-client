@@ -20,7 +20,7 @@ import { STATUS } from '../../constants';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const { email, apiKey, stripeCustomerId } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	// const [order, setOrder] = useState({});
@@ -82,6 +82,11 @@ const ViewOrder = props => {
 			: [];
 	}, [order, activeIndex]);
 
+	const bounds = [
+		[-0.11190104423268182, 51.4623413829225],
+		[-0.027804117242765262, 51.50651789371881]
+	]
+
 	const successModal = (
 		<Modal
 			show={!!message}
@@ -99,7 +104,6 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
-		console.table(delivery);
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
@@ -121,6 +125,8 @@ const ViewOrder = props => {
 			values.pickupAddressLine1 = pickupFormattedAddress.street;
 			values.pickupCity = pickupFormattedAddress.city;
 			values.pickupPostcode = pickupFormattedAddress.postcode;
+			values.latitude = pickupFormattedAddress.latitude;
+			values.longitude = pickupFormattedAddress.longitude
 			for (const drop of drops) {
 				const index = drops.indexOf(drop);
 				console.table(drop);
@@ -133,6 +139,8 @@ const ViewOrder = props => {
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
+				values.drops[index].latitude = dropoffFormattedAddress.latitude
+				values.drops[index].longitude = dropoffFormattedAddress.longitude
 				validateAddresses(pickupFormattedAddress, dropoffFormattedAddress);
 			}
 			return values;
@@ -181,7 +189,20 @@ const ViewOrder = props => {
 	};
 
 	return (
-		<LoadingOverlay active={loading} spinner text='Creating Order'>
+		<LoadingOverlay
+			active={loading}
+			spinner
+			styles={{
+				wrapper: {
+					display: 'inherit',
+					'flex-grow': 'inherit',
+					'flex-direction': 'inherit',
+					'margin': 'inherit',
+					'padding:': 'inherit'
+				}
+			}}
+			text='Creating Order'
+		>
 			<div ref={modalRef} className='viewOrder bg-light p-3 px-5'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
@@ -243,7 +264,7 @@ const ViewOrder = props => {
 								<Panel label='Status' value={order.status} styles='ms-1' />
 							</div>
 						</Card>
-						<Map height={340} />
+						<Map height={340} bounds={bounds} />
 					</div>
 				</div>
 			</div>

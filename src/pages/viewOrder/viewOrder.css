@@ -140,12 +140,12 @@ input.form-control:focus, textarea.form-control:focus {
     font-size: 1rem;
 }
 
-._loading_overlay_wrapper{
+/*._loading_overlay_wrapper{
     flex: 7;
     height: calc(100vh - 70px);
     width: 100%;
     padding: 0;
     margin: 0;
-}
+}*/
 
 

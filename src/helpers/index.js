@@ -7,9 +7,10 @@ export function parseAddress(data){
 		city: '',
 		postcode: '',
 		countryCode: 'GB',
+		latitude: data[0].geometry.location.lat(),
+		longitude: data[0].geometry.location.lng(),
 	};
 	let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
-	components.forEach(comp => console.table(comp))
 	components.forEach(({ long_name, types }) => {
 		switch (types[0]) {
 			case PLACE_TYPES.ESTABLISHMENT:

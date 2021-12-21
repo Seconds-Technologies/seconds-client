@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
-import { COLOURS, STATUS } from '../../constants';
+import { STATUS_COLOURS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
@@ -51,7 +51,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.NEW }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.NEW }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -71,7 +71,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.PENDING }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.PENDING }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -91,7 +91,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.DISPATCHING }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.DISPATCHING }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -111,7 +111,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.EN_ROUTE }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.EN_ROUTE }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -131,7 +131,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.COMPLETED }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.COMPLETED }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)
@@ -151,7 +151,7 @@ const Track = props => {
 									role='button'
 									onClick={() => props.history.push(`/view-orders/${id}`)}
 								>
-									<div style={{ height: 4, backgroundColor: COLOURS.CANCELLED }} />
+									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.CANCELLED }} />
 									<Tile id={id} address={address} name={customerName} provider={provider} />
 								</div>
 							)

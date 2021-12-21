@@ -1,34 +1,36 @@
 import './Dashboard.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 import Map from '../../components/Map/Map';
 import { useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 
 const Dashboard = props => {
+	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
+	const longitude = useMemo(() => Number(localStorage.getItem('longitude')), []);
 	const [options] = useState([
 		{
 			id: 'day',
-			name: 'Last 24 hrs',
+			name: 'Last 24 hrs'
 		},
 		{
 			id: 'week',
-			name: 'Last Week',
+			name: 'Last Week'
 		},
 		{
 			id: 'month',
-			name: 'Last Month',
+			name: 'Last Month'
 		},
 		{
 			id: 'year',
-			name: 'Last Year',
-		},
+			name: 'Last Year'
+		}
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const { id, firstname, lastname, email, subscriptionPlan } = useSelector(state => state['currentUser'].user);
+	const { firstname } = useSelector(state => state['currentUser'].user);
 
 	useEffect(() => {
-		Mixpanel.people.increment("page_views")
+		Mixpanel.people.increment('page_views');
 	}, []);
 
 	return (
@@ -54,9 +56,9 @@ const Dashboard = props => {
 						{options.map(
 							({ id, name }, index) =>
 								id !== active.id && (
-									<li key={index} role="button">
+									<li key={index} role='button'>
 										{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-										<div className='dropdown-item' onClick={() => setActive({id,name})}>
+										<div className='dropdown-item' onClick={() => setActive({ id, name })}>
 											{name}
 										</div>
 									</li>
@@ -66,9 +68,9 @@ const Dashboard = props => {
 				</div>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles="mt-4" height={320}/>
+			<Map styles='mt-4' location={[longitude, latitude]} height={320} />
 		</div>
 	);
-}
+};
 
 export default Dashboard;

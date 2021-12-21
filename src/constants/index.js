@@ -26,15 +26,17 @@ export const PATHS = {
 	SIGNUP_2: '/signup/2'
 };
 
-export const COLOURS = {
+export const STATUS_COLOURS = {
 	NEW: '#F44336',
 	PENDING: '#9933CC',
 	DISPATCHING: '#FF7A00',
 	EN_ROUTE: '#4285F4',
 	COMPLETED: '#00FF19',
 	CANCELLED: '#565656',
-	UNKNOWN: '#795548',
+	UNKNOWN: '#795548'
 };
+
+export const MARKER_COLOURS = ['#F44336', '#4285F4'];
 
 export const BACKGROUND = {
 	NEW: 'rgba(244,67, 54, 0.25)',
@@ -43,7 +45,7 @@ export const BACKGROUND = {
 	EN_ROUTE: 'rgba(66, 133, 244, 0.25)',
 	COMPLETED: 'rgba(0, 255, 25, 0.25)',
 	CANCELLED: 'rgba(86, 86, 86, 0.25)',
-	UNKNOWN: 'rgba(121, 85, 72, 0.25)',
+	UNKNOWN: 'rgba(121, 85, 72, 0.25)'
 };
 
 export const STATUS = {
@@ -52,7 +54,7 @@ export const STATUS = {
 	DISPATCHING: 'DISPATCHING',
 	EN_ROUTE: 'EN-ROUTE',
 	COMPLETED: 'COMPLETED',
-	CANCELLED: 'CANCELLED',
+	CANCELLED: 'CANCELLED'
 };
 
 export const PLACE_TYPES = {
@@ -63,48 +65,48 @@ export const PLACE_TYPES = {
 	STREET_ADDRESS: 'route',
 	CITY: 'postal_town',
 	POSTCODE: 'postal_code',
-	POSTCODE_PREFIX: 'postal_code_prefix',
+	POSTCODE_PREFIX: 'postal_code_prefix'
 };
 
 export const SUBMISSION_TYPES = {
 	CREATE_JOB: 'job',
-	GET_QUOTE: 'quote',
+	GET_QUOTE: 'quote'
 };
 
 export const VEHICLE_TYPES = [
 	{
 		value: 'BIC',
 		label: 'Bicycle',
-		description: '40(W) x 20(H) x 15(D) - Up to 8kg',
+		description: '40(W) x 20(H) x 15(D) - Up to 8kg'
 	},
 	{
 		value: 'MTB',
 		label: 'Motorbike',
-		description: '40(W) x 30(H) x 30(D) - Up to 12kg',
+		description: '40(W) x 30(H) x 30(D) - Up to 12kg'
 	},
 	{
 		value: 'CGB',
 		label: 'CargoBike',
-		description: '60(W) x 50(H) x 50(D) - Up to 65kg',
+		description: '60(W) x 50(H) x 50(D) - Up to 65kg'
 	},
 	{
 		value: 'CAR',
 		label: 'Car',
-		description: '60(W) x 40(H) x 40(D) - Up to 25kg',
+		description: '60(W) x 40(H) x 40(D) - Up to 25kg'
 	},
 	{
 		value: 'VAN',
 		label: 'Van',
-		description: '150(W) x 120(H) x 90(D) - Up to 200kg',
-	},
+		description: '150(W) x 120(H) x 90(D) - Up to 200kg'
+	}
 ];
 
 export const PROVIDERS = {
-	STUART: "stuart",
-	GOPHR: "gophr",
-	STREET_STREAM: "street_stream",
-	ECOFLEET: "ecofleet"
-}
+	STUART: 'stuart',
+	GOPHR: 'gophr',
+	STREET_STREAM: 'street_stream',
+	ECOFLEET: 'ecofleet'
+};
 
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
@@ -113,7 +115,7 @@ export const DELIVERY_TYPES = {
 };
 
 export const DELIVERY_STRATEGIES = {
-	price: "Lowest Price",
-	eta: "Fastest Delivery Time",
-	rating: "Best Driver Rating"
-}
+	price: 'Lowest Price',
+	eta: 'Fastest Delivery Time',
+	rating: 'Best Driver Rating'
+};

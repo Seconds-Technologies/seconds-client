@@ -113,8 +113,10 @@ const Create = props => {
 			values.pickupAddressLine1 = pickupFormattedAddress.street;
 			values.pickupCity = pickupFormattedAddress.city;
 			values.pickupPostcode = pickupFormattedAddress.postcode;
+			values.latitude = pickupFormattedAddress.latitude;
+			values.longitude = pickupFormattedAddress.longitude
 			for (const drop of drops) {
-				const index = drops.indexOf(drop);
+				let index = drops.indexOf(drop);
 				console.table(drop);
 				console.log('INDEX', index);
 				values.drops[
@@ -125,6 +127,8 @@ const Create = props => {
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
+				values.drops[index].latitude = dropoffFormattedAddress.latitude
+				values.drops[index].longitude = dropoffFormattedAddress.longitude
 				validateAddresses(pickupFormattedAddress, dropoffFormattedAddress);
 			}
 			return values;

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, COLOURS, PATHS, STATUS } from '../../constants';
+import { BACKGROUND, STATUS_COLOURS, PATHS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
@@ -68,18 +68,18 @@ export default function Orders() {
 							style={{
 								color:
 									params.value === STATUS.NEW
-										? COLOURS.NEW
+										? STATUS_COLOURS.NEW
 										: params.value === STATUS.PENDING
-										? COLOURS.PENDING
+										? STATUS_COLOURS.PENDING
 										: params.value === STATUS.DISPATCHING
-										? COLOURS.DISPATCHING
+										? STATUS_COLOURS.DISPATCHING
 										: params.value === STATUS.EN_ROUTE
-										? COLOURS.EN_ROUTE
+										? STATUS_COLOURS.EN_ROUTE
 										: params.value === STATUS.COMPLETED
-										? COLOURS.COMPLETED
+										? STATUS_COLOURS.COMPLETED
 										: params.value === STATUS.CANCELLED
-										? COLOURS.CANCELLED
-										: COLOURS.UNKNOWN,
+										? STATUS_COLOURS.CANCELLED
+										: STATUS_COLOURS.UNKNOWN,
 							}}
 						>
 							{params.value.toLowerCase()}
