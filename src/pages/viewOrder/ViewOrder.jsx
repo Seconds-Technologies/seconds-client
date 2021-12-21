@@ -210,15 +210,22 @@ const ViewOrder = props => {
 						<Card>
 							<div className='d-flex justify-content-between my-2'>
 								<Item label='Job Reference' value={order.reference} />
-								{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
-									<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
-										Re-order
-									</button>
-								) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
-									<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
-										Cancel Order
-									</button>
-								) : null}
+								<div>
+									{delivery.trackingURL && (
+										<a href={delivery.trackingURL} target='_blank' className='btn btn-outline-primary me-3'>
+											Track
+										</a>
+									)}
+									{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
+										<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
+											Re-order
+										</button>
+									) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
+										<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
+											Cancel Order
+										</button>
+									) : null}
+								</div>
 							</div>
 							<div className='d-flex mt-2 mb-3 justify-content-evenly'>
 								<Panel
