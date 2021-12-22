@@ -30,7 +30,7 @@ const Dashboard = props => {
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
-			.filter(item => item['driverInformation'].location && item['driverInformation'].location.coordinates)
+			.filter(item => item['driverInformation'].location && item['driverInformation'].location.coordinates && item['driverInformation'].location.coordinates.length === 2)
 			.map(({ driverInformation }) => driverInformation)
 	);
 	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
