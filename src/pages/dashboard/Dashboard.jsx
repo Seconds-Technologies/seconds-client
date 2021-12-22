@@ -54,8 +54,7 @@ const Dashboard = props => {
 		<div className='dashboard bg-light'>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
-					<span className='dashboard-header mb-3'>Dashboard</span>
-					<span className='fs-5'>
+					<span className='dashboard-header mb-3'>
 						<span className='bold-text'>{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview
 					</span>
 				</div>
@@ -85,7 +84,7 @@ const Dashboard = props => {
 				</div>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={320} />
+			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={290} />
 		</div>
 	);
 };
