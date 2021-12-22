@@ -4,10 +4,9 @@ import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 import Map from '../../components/Map/Map';
 import { useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
+import { STATUS } from '../../constants';
 
 const Dashboard = props => {
-	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
-	const longitude = useMemo(() => Number(localStorage.getItem('longitude')), []);
 	const [options] = useState([
 		{
 			id: 'day',
@@ -28,9 +27,22 @@ const Dashboard = props => {
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const { firstname } = useSelector(state => state['currentUser'].user);
+	const activeCouriers = useSelector(state => {
+		const allJobs = state['deliveryJobs'].allJobs;
+		return allJobs
+			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
+			.map(({ driverInformation }) => driverInformation);
+	});
+	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
+	const longitude = useMemo(() => Number(localStorage.getItem('longitude')), []);
+
+	const courierLocations = useMemo(() => {
+		return activeCouriers.map(({ location }) => location.coordinates && location.coordinates)
+	}, [activeCouriers]);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
+		console.log(courierLocations);
 	}, []);
 
 	return (
@@ -68,7 +80,7 @@ const Dashboard = props => {
 				</div>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles='mt-4' location={[longitude, latitude]} height={320} />
+			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={320} />
 		</div>
 	);
 };

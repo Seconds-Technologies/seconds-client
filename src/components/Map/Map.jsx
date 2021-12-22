@@ -4,13 +4,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
-import courierMarker from '../../assets/img/courier-location-icon.svg'
+import courierMarker from '../../assets/img/courier-location-icon.svg';
 
-const Map = ({ styles, height, location, bounds }) => {
-	useEffect(() => {
-		console.log(location);
-	}, [location]);
-
+const Map = ({ styles, height, location, bounds, couriers, busy }) => {
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
@@ -25,10 +21,13 @@ const Map = ({ styles, height, location, bounds }) => {
 		map.resize();
 	};
 
+	useEffect(() => {
+		console.log([location])
+	}, [])
+
 	return (
 		<div className={`${styles} map-container`}>
 			<Mapbox
-				zoom={location ? [13] : undefined}
 				containerStyle={{
 					height: `calc(100vh - ${height}px)`,
 					width: '100%'
@@ -36,10 +35,10 @@ const Map = ({ styles, height, location, bounds }) => {
 				onStyleLoad={map => onLoaded(map)}
 				maxZoom={20}
 				minZoom={10}
-				center={location}
-				fitBounds={bounds}
+				center={!busy ? location : undefined}
+				fitBounds={bounds ? bounds : busy ? [location, ...couriers] : undefined}
 				fitBoundsOptions={{
-					padding: 20
+					padding: 50
 				}}
 				style='mapbox://styles/chipzstar/cktenny8g0ez218nx2wue8i08'
 			>
@@ -61,7 +60,7 @@ const Map = ({ styles, height, location, bounds }) => {
 								>
 									<img src={pickupMarker} alt='' width={40} height={40} />
 								</div>
-							) : index === 1 ? (
+							) : (
 								<div
 									className='d-flex flex-column'
 									data-bs-placement='top'
@@ -71,17 +70,15 @@ const Map = ({ styles, height, location, bounds }) => {
 								>
 									<img src={dropoffMarker} alt='' width={40} height={40} />
 								</div>
-							) : (
-								<div
-									className='d-flex flex-column'
-									data-bs-placement='top'
-									data-bs-toggle='tooltip'
-									data-bs-html='true'
-									title='Courier'
-								>
-									<img src={courierMarker} alt='' width={40} height={40} />
-								</div>
 							)}
+						</Marker>
+					))}
+				{couriers &&
+					couriers.map((coords, index) => (
+						<Marker coordinates={coords}>
+							<div className='d-flex flex-column' data-bs-placement='top' data-bs-toggle='tooltip' data-bs-html='true' title='Courier'>
+								<img src={courierMarker} alt='' width={40} height={40} />
+							</div>
 						</Marker>
 					))}
 			</Mapbox>
