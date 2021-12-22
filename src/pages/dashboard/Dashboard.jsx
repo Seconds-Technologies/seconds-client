@@ -84,7 +84,7 @@ const Dashboard = props => {
 				</div>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={290} />
+			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={270} />
 		</div>
 	);
 };
