@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
-// import { ReactComponent as MarkerIcon } from '../../assets/img/marker.svg';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
-import MarkerIcon from './MarkerIcon';
-import { MARKER_COLOURS } from '../../constants';
+import pickupMarker from '../../assets/img/pickup-icon.svg';
+import dropoffMarker from '../../assets/img/dropoff-icon.svg';
+import courierMarker from '../../assets/img/courier-location-icon.svg'
 
 const Map = ({ styles, height, location, bounds }) => {
-
 	useEffect(() => {
 		console.log(location);
 	}, [location]);
@@ -46,13 +45,43 @@ const Map = ({ styles, height, location, bounds }) => {
 			>
 				{location && (
 					<Marker coordinates={location}>
-						<MarkerIcon fillPrimary={MARKER_COLOURS[0]} fillSecondary={MARKER_COLOURS[0]} alt='' width={30} height={30} />
+						<img src={pickupMarker} alt='' width={40} height={40} />
 					</Marker>
 				)}
 				{bounds &&
 					bounds.map((coords, index) => (
 						<Marker coordinates={coords}>
-							<MarkerIcon fillPrimary={MARKER_COLOURS[index]} fillSecondary={MARKER_COLOURS[index]} width={30} height={30} />
+							{index === 0 ? (
+								<div
+									className='d-flex flex-column'
+									data-bs-placement='top'
+									data-bs-toggle='tooltip'
+									data-bs-html='true'
+									title='Pickup'
+								>
+									<img src={pickupMarker} alt='' width={40} height={40} />
+								</div>
+							) : index === 1 ? (
+								<div
+									className='d-flex flex-column'
+									data-bs-placement='top'
+									data-bs-toggle='tooltip'
+									data-bs-html='true'
+									title='Dropoff'
+								>
+									<img src={dropoffMarker} alt='' width={40} height={40} />
+								</div>
+							) : (
+								<div
+									className='d-flex flex-column'
+									data-bs-placement='top'
+									data-bs-toggle='tooltip'
+									data-bs-html='true'
+									title='Courier'
+								>
+									<img src={courierMarker} alt='' width={40} height={40} />
+								</div>
+							)}
 						</Marker>
 					))}
 			</Mapbox>

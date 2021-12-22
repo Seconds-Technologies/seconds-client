@@ -49,7 +49,6 @@ export const logout = () => ({
 export function authUser(type, userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('User data:', userData);
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, ...user }) => {
 					console.log(message);

@@ -43,7 +43,7 @@ const ViewOrder = props => {
 					 status,
 					 jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
 					 selectedConfiguration: { providerId, deliveryFee },
-					 driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle },
+					 driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
 					 createdAt
 				 }) => {
 					createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
@@ -57,6 +57,7 @@ const ViewOrder = props => {
 						driverName,
 						driverPhone,
 						driverVehicle,
+						driverLocation: location,
 						pickupLocation,
 						pickupStartTime,
 						deliveries
@@ -86,15 +87,20 @@ const ViewOrder = props => {
 
 	const bounds = useMemo(() => {
 		if (order && order.deliveries) {
+			let result = []
 			let pickupCoords = [order.pickupLocation.longitude, order.pickupLocation.latitude];
+			result.push(pickupCoords)
 			let deliveryCoords = [delivery.longitude, delivery.latitude];
-			return [pickupCoords, deliveryCoords]
+			result.push(deliveryCoords)
+			/// check if courier coords have been sent
+			if (order.driverLocation && order.driverLocation.coordinates) result.push(order.driverLocation.coordinates)
+			return result
 		}
 		return [
 			[0, 0],
 			[0, 0]
 		];
-	}, [activeIndex, order, delivery]);
+	}, [order, activeIndex]);
 
 	const successModal = (
 		<Modal

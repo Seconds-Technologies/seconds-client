@@ -12,10 +12,6 @@ import ErrorField from '../../../components/ErrorField';
 
 const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 
-	useEffect(() => {
-		console.log(prevJob);
-	}, []);
-
 	const PICKUP_LIMIT = useMemo(() => -600, []);
 	const drops = useMemo(() => {
 		return prevJob.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
