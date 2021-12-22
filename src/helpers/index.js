@@ -1,6 +1,6 @@
 import { PLACE_TYPES } from '../constants';
 
-export function parseAddress(data){
+export function parseAddress(data, requiresGeoJSON = false) {
 	let address = data[0].address_components;
 	let formattedAddress = {
 		street: '',
@@ -9,6 +9,7 @@ export function parseAddress(data){
 		countryCode: 'GB',
 		latitude: data[0].geometry.location.lat(),
 		longitude: data[0].geometry.location.lng(),
+		...(requiresGeoJSON && { geolocation: { type: 'Point', coordinates: [data[0].geometry.location.lng(), data[0].geometry.location.lat()] } })
 	};
 	let components = address.filter(({ types }) => types.some(type => Object.values(PLACE_TYPES).includes(type)));
 	components.forEach(({ long_name, types }) => {
