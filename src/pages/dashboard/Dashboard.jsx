@@ -27,17 +27,17 @@ const Dashboard = props => {
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const { firstname } = useSelector(state => state['currentUser'].user);
-	const activeCouriers = useSelector(state => {
-		const allJobs = state['deliveryJobs'].allJobs;
-		return allJobs
+	const activeCouriers = useSelector(state =>
+		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
-			.map(({ driverInformation }) => driverInformation);
-	});
+			.filter(item => item['driverInformation'].location && item['driverInformation'].location.coordinates)
+			.map(({ driverInformation }) => driverInformation)
+	);
 	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
 	const longitude = useMemo(() => Number(localStorage.getItem('longitude')), []);
 
 	const courierLocations = useMemo(() => {
-		return activeCouriers.map(({ location }) => location.coordinates && location.coordinates)
+		return activeCouriers.map(({ location }) => location.coordinates);
 	}, [activeCouriers]);
 
 	useEffect(() => {
