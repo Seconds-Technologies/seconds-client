@@ -60,7 +60,7 @@ const Map = ({ styles, height, location, bounds, couriers, busy }) => {
 								>
 									<img src={pickupMarker} alt='' width={40} height={40} />
 								</div>
-							) : (
+							) : index === 1 ? (
 								<div
 									className='d-flex flex-column'
 									data-bs-placement='top'
@@ -69,6 +69,16 @@ const Map = ({ styles, height, location, bounds, couriers, busy }) => {
 									title='Dropoff'
 								>
 									<img src={dropoffMarker} alt='' width={40} height={40} />
+								</div>
+							) : (
+								<div
+									className='d-flex flex-column'
+									data-bs-placement='top'
+									data-bs-toggle='tooltip'
+									data-bs-html='true'
+									title='Courier'
+								>
+									<img src={courierMarker} alt='' width={40} height={40} />
 								</div>
 							)}
 						</Marker>
