@@ -222,7 +222,7 @@ const Create = props => {
 	};
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text={loadingText} className="pt-2" classNamePrefix="create_loader_">
+		<LoadingOverlay active={isLoading} spinner text={loadingText} className='pt-2' classNamePrefix='create_loader_'>
 			<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 			<ApiKeyAlert message={toastMessage} onClose={setToast} />
 			<MultiDropQuote show={multiDropDialog} toggleShow={showMultiDropDialog} numDropoffs={dropoffs.length} confirm={confirmMultiDropQuote} />
@@ -369,56 +369,56 @@ const Create = props => {
 					>
 						<div className='row mx-1'>
 							<div className='col-6'>
-								<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
+								<div className='border border-2 rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
 									<h4>Delivery Type</h4>
-									<div className='row'>
-										<div className='col-12'>
-											<div className='form-check mb-2'>
-												<input
-													className='form-check-input'
-													type='radio'
-													name='deliveryType'
-													id='radio-1'
-													checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-													onChange={e => {
-														setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
-														setFieldValue('packagePickupStartTime', '');
-														setFieldValue('drops[0].packageDropoffEndTime', '');
-													}}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='radio-1'>
-													On Demand
-												</label>
-											</div>
-											<div className='form-check mb-2'>
-												<input
-													className='form-check-input'
-													type='radio'
-													name='deliveryType'
-													id='radio-2'
-													checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
-													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='radio-2'>
-													Scheduled Same Day
-												</label>
-											</div>
-											<div className='form-check'>
-												<input
-													className='form-check-input'
-													type='radio'
-													name='deliveryType'
-													id='radio-2'
-													checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
-													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='radio-2'>
-													Multi drop
-												</label>
-											</div>
+									<div className='d-flex mt-2 justify-content-center'>
+										<div className='form-check mb-2'>
+											<input
+												className='form-check-input'
+												type='radio'
+												name='deliveryType'
+												id='radio-1'
+												checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+												onChange={e => {
+													setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
+													setFieldValue('packagePickupStartTime', '');
+													setFieldValue('drops[0].packageDropoffEndTime', '');
+												}}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='radio-1'>
+												On Demand
+											</label>
+										</div>
+
+										<div className='form-check mb-2 mx-4'>
+											<input
+												className='form-check-input'
+												type='radio'
+												name='deliveryType'
+												id='radio-2'
+												checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
+												onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='radio-2'>
+												Scheduled Same Day
+											</label>
+										</div>
+
+										<div className='form-check'>
+											<input
+												className='form-check-input'
+												type='radio'
+												name='deliveryType'
+												id='radio-2'
+												checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
+												onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='radio-2'>
+												Multi drop
+											</label>
 										</div>
 										<ErrorField name='packageDeliveryType' classNames='mt-2' />
 									</div>
@@ -449,7 +449,7 @@ const Create = props => {
 												type='text'
 												id='address-line-1'
 												name='pickupAddressLine1'
-												className='form-control form-control-sm rounded-3 mb-2'
+												className='form-control  rounded-3 mb-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 												disabled={isLocked}
@@ -468,7 +468,7 @@ const Create = props => {
 												type='text'
 												id='pickupAddressLine2'
 												name='pickupAddress.addressLine2'
-												className='form-control form-control-sm rounded-3 mb-2'
+												className='form-control  rounded-3 mb-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 												disabled={isLocked}
@@ -489,7 +489,7 @@ const Create = props => {
 												type='text'
 												id='city'
 												name='pickupCity'
-												className='form-control form-control-sm rounded-3 mb-2'
+												className='form-control  rounded-3 mb-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 												disabled={isLocked}
@@ -508,7 +508,7 @@ const Create = props => {
 												type='text'
 												id='postcode'
 												name='pickupPostcode'
-												className='form-control form-control-sm rounded-3 mb-2'
+												className='form-control  rounded-3 mb-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 												disabled={isLocked}
@@ -525,7 +525,7 @@ const Create = props => {
 												name='packagePickupStartTime'
 												id='pickup-datetime'
 												type='datetime-local'
-												className='form-control form-control-sm form-border rounded-3 mb-3'
+												className='form-control  form-border rounded-3 mb-3'
 												aria-label='pickup-datetime'
 												onChange={e => {
 													handleChange(e);
@@ -544,7 +544,7 @@ const Create = props => {
 											<textarea
 												id='pickup-instructions'
 												name='pickupInstructions'
-												className='form-control form-control-sm form-border rounded-3 mb-3'
+												className='form-control  form-border rounded-3 mb-3'
 												aria-label='pickup-instructions'
 												onChange={handleChange}
 												onBlur={handleBlur}
@@ -566,7 +566,7 @@ const Create = props => {
 												id='items-count'
 												name='itemsCount'
 												type='number'
-												className='form-control form-control-sm form-border rounded-3 my-2'
+												className='form-control  form-border rounded-3 my-2'
 												placeholder='Number of Items'
 												aria-label='items-count'
 												onChange={handleChange}
@@ -594,7 +594,7 @@ const Create = props => {
 													console.log(value);
 												}}
 												aria-label='vehicle type selection'
-												styles={{
+												/*styles={{
 													control: (provided) => ({
 														...provided,
 														minHeight: 32,
@@ -614,7 +614,7 @@ const Create = props => {
 														minHeight: 26,
 														height: 26,
 													}),
-												}}
+												}}*/
 											/>
 										</div>
 									</div>
@@ -626,7 +626,7 @@ const Create = props => {
 											<textarea
 												id='package-description'
 												name='drops[0].packageDescription'
-												className='form-control form-control-sm form-border rounded-3 my-2'
+												className='form-control  form-border rounded-3 my-2'
 												placeholder='Max. 200 characters'
 												maxLength={200}
 												aria-label='package-description'
@@ -929,7 +929,7 @@ const Create = props => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
-											<div className='my-3 d-flex justify-content-center'>
+											<div className='my-2 d-flex justify-content-center'>
 												{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 											</div>
 											<div className='d-flex justify-content-center'>
