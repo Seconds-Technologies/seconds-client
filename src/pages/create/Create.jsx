@@ -599,12 +599,21 @@ const Create = props => {
 														...provided,
 														minHeight: 32,
 														height: 32,
-														fontSize: 14
+														fontSize: 14,
 													}),
 													container: (provided) => ({
 														...provided,
-														borderWidth: "1px"
-													})
+													}),
+													placeholder: (provided) => ({
+														...provided,
+														minHeight: 26,
+														height: 26,
+													}),
+													singleValue: (provided) => ({
+														...provided,
+														minHeight: 26,
+														height: 26,
+													}),
 												}}
 											/>
 										</div>
