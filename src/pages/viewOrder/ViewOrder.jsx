@@ -85,7 +85,7 @@ const ViewOrder = props => {
 			: [];
 	}, [order, activeIndex]);
 
-	const bounds = useMemo(() => {
+	const markers = useMemo(() => {
 		if (order && order.deliveries) {
 			let result = [];
 			let pickupCoords = [order.pickupLocation.longitude, order.pickupLocation.latitude];
@@ -119,7 +119,6 @@ const ViewOrder = props => {
 	);
 
 	useEffect(() => {
-		console.log(bounds);
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
@@ -281,7 +280,7 @@ const ViewOrder = props => {
 								<Panel label='Status' value={order.status} styles='ms-1' />
 							</div>
 						</Card>
-						<Map height={340} bounds={bounds} />
+						<Map height={340} markers={markers} />
 					</div>
 				</div>
 			</div>

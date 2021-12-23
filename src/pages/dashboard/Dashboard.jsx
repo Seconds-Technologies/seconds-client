@@ -26,7 +26,7 @@ const Dashboard = props => {
 		}
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const { firstname } = useSelector(state => state['currentUser'].user);
+	const { firstname, address: {geolocation} } = useSelector(state => state['currentUser'].user);
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
@@ -38,8 +38,8 @@ const Dashboard = props => {
 			)
 			.map(({ driverInformation }) => driverInformation)
 	);
-	const latitude = useMemo(() => Number(localStorage.getItem('latitude')), []);
-	const longitude = useMemo(() => Number(localStorage.getItem('longitude')), []);
+	const latitude = useMemo(() => geolocation.coordinates[1] || Number(localStorage.getItem('latitude')), []);
+	const longitude = useMemo(() => geolocation.coordinates[0] || Number(localStorage.getItem('longitude')), []);
 
 	const courierLocations = useMemo(() => {
 		return activeCouriers.map(({ location }) => location.coordinates);

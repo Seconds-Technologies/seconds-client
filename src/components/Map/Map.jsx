@@ -1,3 +1,4 @@
+import mapboxgl from 'mapbox-gl';
 import React, { useEffect, useMemo } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -6,7 +7,7 @@ import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
 
-const Map = ({ styles, height, location, bounds, couriers, busy }) => {
+const Map = ({ styles, height, location, markers, couriers, busy }) => {
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
@@ -21,22 +22,44 @@ const Map = ({ styles, height, location, bounds, couriers, busy }) => {
 		map.resize();
 	};
 
+	const dashboardBounds = useMemo(() => {
+		let result = [];
+		if (busy) {
+			const coordinates = [location, ...couriers];
+			console.log('COORDINATES', coordinates);
+			const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+			result = Object.values(bounds).map(bound => Object.values(bound));
+		}
+		return result;
+	}, [busy, location, couriers]);
+
+	const orderBounds = useMemo(() => {
+		let result = [];
+		if (markers) {
+			console.log('COORDINATES', markers);
+			const bounds = markers.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(markers[0], markers[0]));
+			result = Object.values(bounds).map(bound => Object.values(bound));
+		}
+		return result;
+	}, [markers]);
+
 	useEffect(() => {
-		console.log([location])
-	}, [])
+		console.log(dashboardBounds);
+	}, [dashboardBounds]);
 
 	return (
 		<div className={`${styles} map-container`}>
 			<Mapbox
+				zoom={location && !busy ? [13] : undefined}
 				containerStyle={{
 					height: `calc(100vh - ${height}px)`,
 					width: '100%'
 				}}
 				onStyleLoad={map => onLoaded(map)}
 				maxZoom={20}
-				minZoom={10}
+				minZoom={5}
 				center={!busy ? location : undefined}
-				fitBounds={bounds ? bounds : busy ? [location, ...couriers] : undefined}
+				fitBounds={markers ? orderBounds : busy ? dashboardBounds : undefined}
 				fitBoundsOptions={{
 					padding: 50
 				}}
@@ -47,8 +70,8 @@ const Map = ({ styles, height, location, bounds, couriers, busy }) => {
 						<img src={pickupMarker} alt='' width={40} height={40} />
 					</Marker>
 				)}
-				{bounds &&
-					bounds.map((coords, index) => (
+				{markers &&
+					markers.map((coords, index) => (
 						<Marker coordinates={coords}>
 							{index === 0 ? (
 								<div
