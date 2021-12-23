@@ -43,7 +43,7 @@ export default function Signup(props) {
 	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Checking your details...'>
+		<LoadingOverlay active={isLoading} spinner text='Checking your details...' classNamePrefix="signup_loader_">
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 signup-aside'>
 					<div className='d-flex flex-column h-100'>

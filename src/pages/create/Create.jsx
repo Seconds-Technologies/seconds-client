@@ -44,7 +44,7 @@ const Create = props => {
 	const [dropoffModal, showDropoffModal] = useState(false);
 	const [pickupDatetime, setPickupDatetime] = useState('');
 	const [deliveryParams, setDeliveryParams] = useState({
-		...jobRequestSchema,
+		...jobRequestSchema
 	});
 	const [toastMessage, setToast] = useState('');
 	const [fleetProvider, selectFleetProvider] = useState('');
@@ -102,7 +102,7 @@ const Create = props => {
 
 	const getParsedAddress = useCallback(parseAddress, []);
 
-	const validateAddresses = useCallback(validateAddress, [])
+	const validateAddresses = useCallback(validateAddress, []);
 
 	const handleAddresses = useCallback(
 		async values => {
@@ -114,7 +114,7 @@ const Create = props => {
 			values.pickupCity = pickupFormattedAddress.city;
 			values.pickupPostcode = pickupFormattedAddress.postcode;
 			values.latitude = pickupFormattedAddress.latitude;
-			values.longitude = pickupFormattedAddress.longitude
+			values.longitude = pickupFormattedAddress.longitude;
 			for (const drop of drops) {
 				let index = drops.indexOf(drop);
 				console.table(drop);
@@ -127,8 +127,8 @@ const Create = props => {
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
-				values.drops[index].latitude = dropoffFormattedAddress.latitude
-				values.drops[index].longitude = dropoffFormattedAddress.longitude
+				values.drops[index].latitude = dropoffFormattedAddress.latitude;
+				values.drops[index].longitude = dropoffFormattedAddress.longitude;
 				validateAddresses(pickupFormattedAddress, dropoffFormattedAddress);
 			}
 			return values;
@@ -148,14 +148,14 @@ const Create = props => {
 						deliveries,
 						orderNumber,
 						pickupLocation: { fullAddress: pickupAddress },
-						pickupStartTime,
+						pickupStartTime
 					},
-					selectedConfiguration: { deliveryFee, providerId },
+					selectedConfiguration: { deliveryFee, providerId }
 				}) => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
-						orderReference: customerReference,
+						orderReference: customerReference
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
@@ -165,7 +165,7 @@ const Create = props => {
 						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliveryFee,
-						fleetProvider: providerId.replace(/_/g, ' '),
+						fleetProvider: providerId.replace(/_/g, ' ')
 					};
 					setLoadingModal(false);
 					setJob(newJob);
@@ -190,14 +190,14 @@ const Create = props => {
 						deliveries,
 						orderNumber,
 						pickupLocation: { fullAddress: pickupAddress },
-						pickupStartTime,
+						pickupStartTime
 					},
-					selectedConfiguration: { deliveryFee, providerId },
+					selectedConfiguration: { deliveryFee, providerId }
 				}) => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
 						dropoffStartTime,
-						orderReference: customerReference,
+						orderReference: customerReference
 					} = deliveries[0];
 					let newJob = {
 						orderNumber,
@@ -207,7 +207,7 @@ const Create = props => {
 						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliveryFee,
-						fleetProvider: providerId.replace(/_/g, ' '),
+						fleetProvider: providerId.replace(/_/g, ' ')
 					};
 					setLoadingModal(false);
 					setJob(newJob);
@@ -222,280 +222,207 @@ const Create = props => {
 	};
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text={loadingText}>
-			<div className='create bg-light py-4'>
-				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
-				<ApiKeyAlert message={toastMessage} onClose={setToast} />
-				<MultiDropQuote
-					show={multiDropDialog}
-					toggleShow={showMultiDropDialog}
-					numDropoffs={dropoffs.length}
-					confirm={confirmMultiDropQuote}
-				/>
-				<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
-				<ConfirmProvider show={confirmDialog} provider={fleetProvider} toggleShow={showConfirmDialog} onConfirm={confirmSelection} />
-				<Quotes
-					show={quoteModal}
-					toggleShow={showQuoteModal}
-					quotes={quotes}
-					selectFleetProvider={selectFleetProvider}
-					showConfirmDialog={showConfirmDialog}
-				/>
-				<CSVUpload
-					show={uploadCSV}
-					ref={csvUploadRef}
-					hide={() => showCSVUpload(false)}
-					handleRemoveFile={() => console.log('File removed')}
-					handleOnError={err => console.log(err)}
-					handleOnDrop={drops => {
+		<LoadingOverlay active={isLoading} spinner text={loadingText} className="pt-2" classNamePrefix="create_loader_">
+			<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
+			<ApiKeyAlert message={toastMessage} onClose={setToast} />
+			<MultiDropQuote show={multiDropDialog} toggleShow={showMultiDropDialog} numDropoffs={dropoffs.length} confirm={confirmMultiDropQuote} />
+			<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
+			<ConfirmProvider show={confirmDialog} provider={fleetProvider} toggleShow={showConfirmDialog} onConfirm={confirmSelection} />
+			<Quotes
+				show={quoteModal}
+				toggleShow={showQuoteModal}
+				quotes={quotes}
+				selectFleetProvider={selectFleetProvider}
+				showConfirmDialog={showConfirmDialog}
+			/>
+			<CSVUpload
+				show={uploadCSV}
+				ref={csvUploadRef}
+				hide={() => showCSVUpload(false)}
+				handleRemoveFile={() => console.log('File removed')}
+				handleOnError={err => console.log(err)}
+				handleOnDrop={drops => {
+					let dropoff = {};
+					let { data: keys } = drops.shift();
+					if (drops.length > 8) {
+						drops = drops.slice(0, 8);
+						setToast(`Multi-drop only supports a maximum of 8 dropoffs`);
+					}
+					keys.forEach(key => (dropoff[key] = ''));
+					let dropoffs = drops.map(({ data }) => {
 						let dropoff = {};
-						let { data: keys } = drops.shift();
-						if (drops.length > 8) {
-							drops = drops.slice(0, 8);
-							setToast(`Multi-drop only supports a maximum of 8 dropoffs`);
-						}
-						keys.forEach(key => (dropoff[key] = ''));
-						let dropoffs = drops.map(({ data }) => {
-							let dropoff = {};
-							data.forEach((item, index) => {
-								let key = keys[index];
-								if (key === 'packageDropoffEndTime') {
-									item = moment(item, 'DD/MM/YYYY HH:mm').format();
-								}
-								dropoff[key] = item;
-							});
-							return dropoff;
+						data.forEach((item, index) => {
+							let key = keys[index];
+							if (key === 'packageDropoffEndTime') {
+								item = moment(item, 'DD/MM/YYYY HH:mm').format();
+							}
+							dropoff[key] = item;
 						});
-						console.log(dropoffs);
-						dispatch(setDropoffs(dropoffs));
-					}}
-					handleOpenDialog={res => console.log(res)}
-				/>
-				<Formik
-					enableReinitialize
-					initialValues={{
-						...jobRequestSchema,
-						pickupFirstName: firstname,
-						pickupLastName: lastname,
-						pickupBusinessName: company,
-						pickupEmailAddress: email,
-						pickupPhoneNumber: phone,
-						pickupAddressLine1: address.street,
-						pickupAddressLine2: '',
-						pickupCity: address.city,
-						pickupPostcode: address.postcode,
-					}}
-					validationSchema={CreateOrderSchema}
-					validateOnChange={false}
-					validateOnBlur={false}
-					onSubmit={async (values, actions) => {
-						if (apiKey) {
-							if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
-								setLoadingText('Getting Quote');
-								setLoadingModal(true);
-								try {
-									if (values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP) {
-										values.drops = dropoffs;
-										values = await handleAddresses(values);
-										setDeliveryParams(prevState => ({ ...values }));
-										setLoadingModal(false);
-										showMultiDropDialog(true);
-									} else {
-										values = await handleAddresses(values);
-										setDeliveryParams(prevState => ({ ...values }));
-										const {
-											quotes,
-											bestQuote: { id },
-										} = await dispatch(getAllQuotes(apiKey, values));
-										setQuotes(quotes);
-										setLoadingModal(false);
-										showQuoteModal(true);
-									}
-								} catch (err) {
-									setLoadingModal(false);
-									console.error(err);
-									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-								}
-							} else {
-								setLoadingText('Creating Order');
-								setLoadingModal(true);
-								try {
+						return dropoff;
+					});
+					console.log(dropoffs);
+					dispatch(setDropoffs(dropoffs));
+				}}
+				handleOpenDialog={res => console.log(res)}
+			/>
+			<Formik
+				enableReinitialize
+				initialValues={{
+					...jobRequestSchema,
+					pickupFirstName: firstname,
+					pickupLastName: lastname,
+					pickupBusinessName: company,
+					pickupEmailAddress: email,
+					pickupPhoneNumber: phone,
+					pickupAddressLine1: address.street,
+					pickupAddressLine2: '',
+					pickupCity: address.city,
+					pickupPostcode: address.postcode
+				}}
+				validationSchema={CreateOrderSchema}
+				validateOnChange={false}
+				validateOnBlur={false}
+				onSubmit={async (values, actions) => {
+					if (apiKey) {
+						if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
+							setLoadingText('Getting Quote');
+							setLoadingModal(true);
+							try {
+								if (values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP) {
+									values.drops = dropoffs;
 									values = await handleAddresses(values);
+									setDeliveryParams(prevState => ({ ...values }));
+									setLoadingModal(false);
+									showMultiDropDialog(true);
+								} else {
+									values = await handleAddresses(values);
+									setDeliveryParams(prevState => ({ ...values }));
 									const {
-										jobSpecification: {
-											deliveries,
-											pickupLocation: { fullAddress: pickupAddress },
-											pickupStartTime,
-											orderNumber,
-										},
-										selectedConfiguration: { deliveryFee, providerId },
-									} = await dispatch(createDeliveryJob(values, apiKey));
-									let {
-										dropoffLocation: { fullAddress: dropoffAddress },
-										dropoffStartTime,
-										orderReference: customerReference,
-									} = deliveries[0];
-									let newJob = {
-										orderNumber,
-										customerReference,
-										pickupAddress,
-										dropoffAddress,
-										pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										deliveryFee,
-										fleetProvider: providerId.replace(/_/g, ' '),
-									};
+										quotes,
+										bestQuote: { id }
+									} = await dispatch(getAllQuotes(apiKey, values));
+									setQuotes(quotes);
 									setLoadingModal(false);
-									setJob(newJob);
-									handleOpen();
-								} catch (err) {
-									setLoadingModal(false);
-									console.log(err);
-									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+									showQuoteModal(true);
 								}
+							} catch (err) {
+								setLoadingModal(false);
+								console.error(err);
+								err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 							}
 						} else {
-							setLoadingModal(false);
-							setToast('Your account does not have an API key associated with it. Please generate one from the integrations page');
+							setLoadingText('Creating Order');
+							setLoadingModal(true);
+							try {
+								values = await handleAddresses(values);
+								const {
+									jobSpecification: {
+										deliveries,
+										pickupLocation: { fullAddress: pickupAddress },
+										pickupStartTime,
+										orderNumber
+									},
+									selectedConfiguration: { deliveryFee, providerId }
+								} = await dispatch(createDeliveryJob(values, apiKey));
+								let {
+									dropoffLocation: { fullAddress: dropoffAddress },
+									dropoffStartTime,
+									orderReference: customerReference
+								} = deliveries[0];
+								let newJob = {
+									orderNumber,
+									customerReference,
+									pickupAddress,
+									dropoffAddress,
+									pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+									deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+									deliveryFee,
+									fleetProvider: providerId.replace(/_/g, ' ')
+								};
+								setLoadingModal(false);
+								setJob(newJob);
+								handleOpen();
+							} catch (err) {
+								setLoadingModal(false);
+								console.log(err);
+								err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+							}
 						}
-					}}
-				>
-					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
-						<form
-							onSubmit={e => {
-								console.table(values);
-								const { name, value } = e.nativeEvent['submitter'];
-								name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE
-									? setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
-									: setFieldValue('type', SUBMISSION_TYPES.CREATE_JOB);
-								handleSubmit(e);
-							}}
-							autoComplete='on'
-						>
-							<div className='row mx-3'>
-								<div className='col-12 d-flex flex-column'>
+					} else {
+						setLoadingModal(false);
+						setToast('Your account does not have an API key associated with it. Please generate one from the integrations page');
+					}
+				}}
+			>
+				{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
+					<form
+						onSubmit={e => {
+							console.table(values);
+							const { name, value } = e.nativeEvent['submitter'];
+							name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE
+								? setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
+								: setFieldValue('type', SUBMISSION_TYPES.CREATE_JOB);
+							handleSubmit(e);
+						}}
+						autoComplete='on'
+						className='container-fluid overflow-hidden '
+					>
+						<div className='row mx-1'>
+							<div className='col-6'>
+								<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
 									<h4>Delivery Type</h4>
-									<div className='border border-2 rounded-3 px-4 py-3'>
-										<div className='row'>
-											<div className='col-12'>
-												<div className='form-check mb-2'>
-													<input
-														className='form-check-input'
-														type='radio'
-														name='deliveryType'
-														id='radio-1'
-														checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-														onChange={e => {
-															setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
-															setFieldValue('packagePickupStartTime', '');
-															setFieldValue('drops[0].packageDropoffEndTime', '');
-														}}
-														onBlur={handleBlur}
-													/>
-													<label className='form-check-label' htmlFor='radio-1'>
-														On Demand
-													</label>
-												</div>
-												<div className='form-check mb-2'>
-													<input
-														className='form-check-input'
-														type='radio'
-														name='deliveryType'
-														id='radio-2'
-														checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
-														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
-														onBlur={handleBlur}
-													/>
-													<label className='form-check-label' htmlFor='radio-2'>
-														Scheduled Same Day
-													</label>
-												</div>
-												<div className='form-check'>
-													<input
-														className='form-check-input'
-														type='radio'
-														name='deliveryType'
-														id='radio-2'
-														checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
-														onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
-														onBlur={handleBlur}
-													/>
-													<label className='form-check-label' htmlFor='radio-2'>
-														Multi drop
-													</label>
-												</div>
-											</div>
-											<ErrorField name='packageDeliveryType' classNames='mt-2' />
-										</div>
-									</div>
-								</div>
-								<div className='mt-2 mb-2' />
-								<div className='col-12 d-flex flex-column'>
-									<h4>Package Details</h4>
-									<div className='border border-2 rounded-3 px-4 py-3'>
-										<div className='row'>
-											<div className='col-6'>
-												<label htmlFor='items-count' className='mb-1'>
-													<span>
-														{errors['itemsCount'] && <span className='text-danger'>*&nbsp;</span>}
-														Number of items
-													</span>
-												</label>
+									<div className='row'>
+										<div className='col-12'>
+											<div className='form-check mb-2'>
 												<input
-													id='items-count'
-													name='itemsCount'
-													type='number'
-													className='form-control form-border rounded-3 my-2'
-													placeholder='Number of Items'
-													aria-label='items-count'
-													onChange={handleChange}
-													onBlur={handleBlur}
-													min={0}
-													max={10}
-												/>
-											</div>
-											<div className='col-6'>
-												<label htmlFor='vehicle-type' className='mb-1'>
-													<span>
-														{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
-														Vehicle Type
-													</span>
-												</label>
-												<Select
-													id='vehicle-type'
-													name='vehicleType'
-													className='my-2'
-													options={VEHICLE_TYPES}
-													components={{ Option }}
-													onChange={({ value }) => {
-														setFieldValue('vehicleType', value);
-														console.log(value);
+													className='form-check-input'
+													type='radio'
+													name='deliveryType'
+													id='radio-1'
+													checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+													onChange={e => {
+														setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
+														setFieldValue('packagePickupStartTime', '');
+														setFieldValue('drops[0].packageDropoffEndTime', '');
 													}}
-													aria-label='vehicle type selection'
-												/>
-											</div>
-										</div>
-										<div className='row'>
-											<div className='col'>
-												<label htmlFor='package-description' className='mb-1'>
-													Package Description
-												</label>
-												<textarea
-													id='package-description'
-													name='drops[0].packageDescription'
-													className='form-control form-border rounded-3 my-2'
-													placeholder='Max. 200 characters'
-													maxLength={200}
-													aria-label='package-description'
-													onChange={handleChange}
 													onBlur={handleBlur}
 												/>
+												<label className='form-check-label' htmlFor='radio-1'>
+													On Demand
+												</label>
+											</div>
+											<div className='form-check mb-2'>
+												<input
+													className='form-check-input'
+													type='radio'
+													name='deliveryType'
+													id='radio-2'
+													checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
+													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='radio-2'>
+													Scheduled Same Day
+												</label>
+											</div>
+											<div className='form-check'>
+												<input
+													className='form-check-input'
+													type='radio'
+													name='deliveryType'
+													id='radio-2'
+													checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
+													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='radio-2'>
+													Multi drop
+												</label>
 											</div>
 										</div>
+										<ErrorField name='packageDeliveryType' classNames='mt-2' />
 									</div>
-								</div>
-								<div className='mt-2 mb-2' />
-								<div className='col-12 d-flex flex-column'>
+									<div className='mt-2 mb-2' />
 									<div className='d-flex justify-content-between align-items-center'>
 										<h4>Pickup</h4>
 										<div
@@ -508,136 +435,208 @@ const Create = props => {
 											Edit
 										</div>
 									</div>
-									<div className='border border-2 rounded-3 px-4 py-3'>
-										<div className='row'>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='address-line-1'>
-													<span>
-														{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
-														Address line 1
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupAddressLine1}
-													autoComplete='address-line1'
-													type='text'
-													id='address-line-1'
-													name='pickupAddressLine1'
-													className='form-control rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='address-line-2'>
-													<span>
-														{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
-														Address line 2
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupAddressLine2}
-													autoComplete='address-line2'
-													type='text'
-													id='pickupAddressLine2'
-													name='pickupAddress.addressLine2'
-													className='form-control rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
+									<div className='row'>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-1' htmlFor='address-line-1'>
+												<span>
+													{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
+													Address line 1
+												</span>
+											</label>
+											<input
+												defaultValue={values.pickupAddressLine1}
+												autoComplete='address-line1'
+												type='text'
+												id='address-line-1'
+												name='pickupAddressLine1'
+												className='form-control form-control-sm rounded-3 mb-2'
+												onBlur={handleBlur}
+												onChange={handleChange}
+												disabled={isLocked}
+											/>
 										</div>
-										<div className='row'>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='city'>
-													<span>
-														{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
-														City
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupCity}
-													autoComplete='address-level2'
-													type='text'
-													id='city'
-													name='pickupCity'
-													className='form-control rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='postcode'>
-													<span>
-														{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
-														Postcode
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupPostcode}
-													autoComplete='postal-code'
-													type='text'
-													id='postcode'
-													name='pickupPostcode'
-													className='form-control rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-1' htmlFor='address-line-2'>
+												<span>
+													{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
+													Address line 2
+												</span>
+											</label>
+											<input
+												defaultValue={values.pickupAddressLine2}
+												autoComplete='address-line2'
+												type='text'
+												id='pickupAddressLine2'
+												name='pickupAddress.addressLine2'
+												className='form-control form-control-sm rounded-3 mb-2'
+												onBlur={handleBlur}
+												onChange={handleChange}
+												disabled={isLocked}
+											/>
 										</div>
-										<div className='row'>
-											<div className='col-12'>
-												<label htmlFor='pickup-datetime' className='mb-1'>
-													Pickup At
-												</label>
-												<input
-													disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-													name='packagePickupStartTime'
-													id='pickup-datetime'
-													type='datetime-local'
-													className='form-control form-border rounded-3 mb-3'
-													aria-label='pickup-datetime'
-													onChange={e => {
-														handleChange(e);
-														setPickupDatetime(e.target.value);
-													}}
-													onBlur={handleBlur}
-													min={moment().format('YYYY-MM-DDTHH:mm')}
-													max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
-													required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
-												/>
-											</div>
+									</div>
+									<div className='row'>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-1' htmlFor='city'>
+												<span>
+													{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
+													City
+												</span>
+											</label>
+											<input
+												defaultValue={values.pickupCity}
+												autoComplete='address-level2'
+												type='text'
+												id='city'
+												name='pickupCity'
+												className='form-control form-control-sm rounded-3 mb-2'
+												onBlur={handleBlur}
+												onChange={handleChange}
+												disabled={isLocked}
+											/>
 										</div>
-										<div className='row'>
-											<div className='col-12'>
-												<label htmlFor='pickup-instructions' className='mb-1'>
-													Pickup Instructions
-												</label>
-												<textarea
-													id='pickup-instructions'
-													name='pickupInstructions'
-													className='form-control form-border rounded-3 mb-3'
-													aria-label='pickup-instructions'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-											</div>
+										<div className='col-md-6 col-lg-6 pb-xs-4'>
+											<label className='mb-1' htmlFor='postcode'>
+												<span>
+													{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
+													Postcode
+												</span>
+											</label>
+											<input
+												defaultValue={values.pickupPostcode}
+												autoComplete='postal-code'
+												type='text'
+												id='postcode'
+												name='pickupPostcode'
+												className='form-control form-control-sm rounded-3 mb-2'
+												onBlur={handleBlur}
+												onChange={handleChange}
+												disabled={isLocked}
+											/>
+										</div>
+									</div>
+									<div className='row'>
+										<div className='col-6'>
+											<label htmlFor='pickup-datetime' className='mb-1'>
+												Pickup At
+											</label>
+											<input
+												disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+												name='packagePickupStartTime'
+												id='pickup-datetime'
+												type='datetime-local'
+												className='form-control form-control-sm form-border rounded-3 mb-3'
+												aria-label='pickup-datetime'
+												onChange={e => {
+													handleChange(e);
+													setPickupDatetime(e.target.value);
+												}}
+												onBlur={handleBlur}
+												min={moment().format('YYYY-MM-DDTHH:mm')}
+												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
+												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
+											/>
+										</div>
+										<div className='col-6'>
+											<label htmlFor='pickup-instructions' className='mb-1'>
+												Pickup Instructions
+											</label>
+											<textarea
+												id='pickup-instructions'
+												name='pickupInstructions'
+												className='form-control form-control-sm form-border rounded-3 mb-3'
+												aria-label='pickup-instructions'
+												onChange={handleChange}
+												onBlur={handleBlur}
+												rows={1}
+											/>
+										</div>
+									</div>
+									<div className='mt-2 mb-2' />
+									<h4>Package Details</h4>
+									<div className='row'>
+										<div className='col-6'>
+											<label htmlFor='items-count' className='mb-1'>
+												<span>
+													{errors['itemsCount'] && <span className='text-danger'>*&nbsp;</span>}
+													Number of items
+												</span>
+											</label>
+											<input
+												id='items-count'
+												name='itemsCount'
+												type='number'
+												className='form-control form-control-sm form-border rounded-3 my-2'
+												placeholder='Number of Items'
+												aria-label='items-count'
+												onChange={handleChange}
+												onBlur={handleBlur}
+												min={0}
+												max={10}
+											/>
+										</div>
+										<div className='col-6'>
+											<label htmlFor='vehicle-type' className='mb-1'>
+												<span>
+													{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
+													Vehicle Type
+												</span>
+											</label>
+											<Select
+												menuPlacement='top'
+												id='vehicle-type'
+												name='vehicleType'
+												className='my-2'
+												options={VEHICLE_TYPES}
+												components={{ Option }}
+												onChange={({ value }) => {
+													setFieldValue('vehicleType', value);
+													console.log(value);
+												}}
+												aria-label='vehicle type selection'
+												styles={{
+													control: (provided) => ({
+														...provided,
+														minHeight: 32,
+														height: 32,
+														fontSize: 14
+													}),
+													container: (provided) => ({
+														...provided,
+														borderWidth: "1px"
+													})
+												}}
+											/>
+										</div>
+									</div>
+									<div className='row'>
+										<div className='col'>
+											<label htmlFor='package-description' className='mb-1'>
+												Package Description
+											</label>
+											<textarea
+												id='package-description'
+												name='drops[0].packageDescription'
+												className='form-control form-control-sm form-border rounded-3 my-2'
+												placeholder='Max. 200 characters'
+												maxLength={200}
+												aria-label='package-description'
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
 										</div>
 									</div>
 								</div>
-								<div className='mt-2 mb-2' />
-								<div className='col-12 d-flex flex-column'>
+							</div>
+							<div className='col-6'>
+								<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
 									<h4>
 										{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
 											? 'Multi Drop (min. 5 dropoffs, max 8 dropoffs)'
 											: 'Dropoff'}
 									</h4>
 									{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (
-										<div className='border border-2 rounded-3 px-4 py-3'>
+										<div>
 											<ol className='list list-unstyled'>
 												{dropoffs.map(
 													(
@@ -648,7 +647,7 @@ const Create = props => {
 															dropoffPostcode,
 															packageDropoffEndTime,
 															dropoffPhoneNumber,
-															dropoffPackageDescription,
+															dropoffPackageDescription
 														},
 														index
 													) => (
@@ -698,7 +697,7 @@ const Create = props => {
 											</div>
 										</div>
 									) : (
-										<div className='border border-2 rounded-3 px-4 py-3'>
+										<div className='my-2'>
 											<div className='row'>
 												<div className='col-6'>
 													<label htmlFor='dropoff-first-name' className='mb-1'>
@@ -921,49 +920,38 @@ const Create = props => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 											/>
+											<div className='my-3 d-flex justify-content-center'>
+												{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
+											</div>
+											<div className='d-flex justify-content-center'>
+												<div>
+													<Button
+														type='submit'
+														name={SUBMISSION_TYPES.GET_QUOTE}
+														value={SUBMISSION_TYPES.GET_QUOTE}
+														variant='primary'
+														size='lg'
+														className='mx-3'
+														disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
+														onClick={() =>
+															values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+															dropoffs.length < 5 &&
+															alert('Please add at least 5 dropoffs before creating a multi drop')
+														}
+														style={{ width: '100%' }}
+													>
+														<span className='btn-text'>Get Quote</span>
+													</Button>
+												</div>
+											</div>
 										</div>
 									)}
 								</div>
-								<div className='my-3 d-flex justify-content-center'>
-									{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
-								</div>
-								<div className='d-flex pt-3 justify-content-end'>
-									<div>
-										<Button
-											type='submit'
-											name={SUBMISSION_TYPES.GET_QUOTE}
-											value={SUBMISSION_TYPES.GET_QUOTE}
-											variant='dark'
-											size='lg'
-											className='mx-3'
-											disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
-											onClick={() =>
-												values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-												dropoffs.length < 5 &&
-												alert('Please add at least 5 dropoffs before creating a multi drop')
-											}
-										>
-											Get Quote
-										</Button>
-										{values.packageDeliveryType !== DELIVERY_TYPES.MULTI_DROP && (
-											<Button
-												className='text-light'
-												variant='primary'
-												type='submit'
-												size='lg'
-												name={SUBMISSION_TYPES.CREATE_JOB}
-												value={SUBMISSION_TYPES.CREATE_JOB}
-											>
-												Confirm
-											</Button>
-										)}
-									</div>
-								</div>
 							</div>
-						</form>
-					)}
-				</Formik>
-			</div>
+						</div>
+					</form>
+				)}
+			</Formik>
 		</LoadingOverlay>
 	);
 };

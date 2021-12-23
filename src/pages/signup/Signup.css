@@ -13,7 +13,7 @@
   width: 15%;
 }
 
-._loading_overlay_wrapper {
+.signup_loader_wrapper {
   min-height: 100vh;
   width: 100vw;
   padding-right: var(--bs-gutter-x, 0.75rem);

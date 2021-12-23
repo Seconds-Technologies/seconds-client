@@ -12,12 +12,17 @@
     border-radius: 40px;
 }
 
-._loading_overlay_overlay {  position: fixed; }
-._loading_overlay_wrapper {
-    margin: 0;
-    padding: 0;
-    background-color: #FAFAFA;
+.btn-text {
+    font-size: 18px;
+}
+
+.create_loader_wrapper {
+    /*height: calc(100vh - 70px);*/
     min-height: calc(100vh - 70px);
+    width: 100vw;
+    background-color: #FAFAFA;
+    margin: 0 auto;
+    padding: 0 var(--bs-gutter-x, 0.75rem);
 }
 
 .accordion {
