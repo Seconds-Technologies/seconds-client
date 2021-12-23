@@ -208,18 +208,10 @@ const ViewOrder = props => {
 		<LoadingOverlay
 			active={loading}
 			spinner
-			styles={{
-				wrapper: {
-					display: 'inherit',
-					'flex-grow': 'inherit',
-					'flex-direction': 'inherit',
-					margin: 'inherit',
-					'padding:': 'inherit'
-				}
-			}}
+			classNamePrefix="view_order_loading_"
 			text='Creating Order'
 		>
-			<div ref={modalRef} className='viewOrder bg-light p-3 px-5'>
+			<div ref={modalRef} className='viewOrder bg-light pt-2 pb-1 px-5'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />

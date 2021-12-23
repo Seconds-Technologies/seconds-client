@@ -140,6 +140,14 @@ input.form-control:focus, textarea.form-control:focus {
     font-size: 1rem;
 }
 
+.view_order_loading_wrapper {
+    min-height: calc(100vh - 70px);
+    width: 100vw;
+    background-color: #FAFAFA;
+    margin: 0 auto;
+    padding: 0 var(--bs-gutter-x, 0.75rem);
+}
+
 /*._loading_overlay_wrapper{
     flex: 7;
     height: calc(100vh - 70px);
