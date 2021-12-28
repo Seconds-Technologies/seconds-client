@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
@@ -43,10 +43,6 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 		return result;
 	}, [markers]);
 
-	useEffect(() => {
-		console.log(dashboardBounds);
-	}, [dashboardBounds]);
-
 	return (
 		<div className={`${styles} map-container`}>
 			<Mapbox
@@ -72,7 +68,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 				)}
 				{markers &&
 					markers.map((coords, index) => (
-						<Marker coordinates={coords}>
+						<Marker key={index} coordinates={coords}>
 							{index === 0 ? (
 								<div
 									className='d-flex flex-column'
@@ -108,7 +104,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 					))}
 				{couriers &&
 					couriers.map((coords, index) => (
-						<Marker coordinates={coords}>
+						<Marker key={index} coordinates={coords}>
 							<div className='d-flex flex-column' data-bs-placement='top' data-bs-toggle='tooltip' data-bs-html='true' title='Courier'>
 								<img src={courierMarker} alt='' width={40} height={40} />
 							</div>

@@ -38,8 +38,13 @@ const Dashboard = props => {
 			)
 			.map(({ driverInformation }) => driverInformation)
 	);
-	const latitude = useMemo(() => geolocation.coordinates[1] || Number(localStorage.getItem('latitude')), []);
-	const longitude = useMemo(() => geolocation.coordinates[0] || Number(localStorage.getItem('longitude')), []);
+
+	const { longitude, latitude } = useMemo(() => {
+		if (geolocation && geolocation.coordinates && geolocation.coordinates.length === 2) {
+			return { longitude: geolocation.coordinates[0], latitude: geolocation.coordinates[1] };
+		}
+		return { longitude: Number(localStorage.getItem('longitude')), latitude: Number(localStorage.getItem('latitude')) };
+	}, []);
 
 	const courierLocations = useMemo(() => {
 		return activeCouriers.map(({ location }) => location.coordinates);
@@ -47,7 +52,6 @@ const Dashboard = props => {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		console.log(courierLocations);
 	}, []);
 
 	return (

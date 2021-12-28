@@ -35,8 +35,8 @@ const FeaturedInfo = ({interval}) => {
         }
     },[interval])
 
-    const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
-    const { email, createdAt, apiKey } = useSelector(state => state['currentUser'].user);
+    const { isIntegrated } = useSelector(state => state['shopifyStore']);
+    const { email, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
         const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
         return { total: filterByInterval(total), completed: filterByInterval(completed) }

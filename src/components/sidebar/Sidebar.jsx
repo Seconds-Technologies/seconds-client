@@ -5,7 +5,6 @@ import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create1.svg';
 import trackIcon from '../../assets/img/track1.svg';
 import logoutIcon from '../../assets/img/logout.svg';
-import codeIcon from '../../assets/img/developer.svg';
 import courierIcon from '../../assets/img/courier.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { logout } from '../../store/actions/auth';

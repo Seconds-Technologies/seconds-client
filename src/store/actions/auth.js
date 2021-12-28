@@ -76,6 +76,24 @@ export function authUser(type, userData) {
 	};
 }
 
+export function syncUser(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email}})
+				.then(({ message, ...user }) => {
+					dispatch(setCurrentUser(user));
+					dispatch(removeError());
+					resolve(message);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
+}
+
 export function validateRegistration(userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
