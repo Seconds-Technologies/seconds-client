@@ -2,9 +2,10 @@ import './Dashboard.css';
 import React, { useEffect, useMemo, useState } from 'react';
 import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 import Map from '../../components/Map/Map';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 import { STATUS } from '../../constants';
+import { removeError } from '../../store/actions/errors';
 
 const Dashboard = props => {
 	const [options] = useState([
@@ -27,6 +28,7 @@ const Dashboard = props => {
 	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const { firstname, address: {geolocation} } = useSelector(state => state['currentUser'].user);
+	const dispatch = useDispatch();
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
@@ -44,7 +46,7 @@ const Dashboard = props => {
 			return { longitude: geolocation.coordinates[0], latitude: geolocation.coordinates[1] };
 		}
 		return { longitude: Number(localStorage.getItem('longitude')), latitude: Number(localStorage.getItem('latitude')) };
-	}, []);
+	}, [geolocation]);
 
 	const courierLocations = useMemo(() => {
 		return activeCouriers.map(({ location }) => location.coordinates);
@@ -52,6 +54,7 @@ const Dashboard = props => {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
+		dispatch(removeError());
 	}, []);
 
 	return (

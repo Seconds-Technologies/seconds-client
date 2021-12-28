@@ -35,7 +35,6 @@ const FeaturedInfo = ({interval}) => {
         }
     },[interval])
 
-    const { isIntegrated } = useSelector(state => state['shopifyStore']);
     const { email, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
         const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -45,7 +44,7 @@ const FeaturedInfo = ({interval}) => {
     useEffect(() => {
         apiKey && dispatch(subscribe(apiKey, email));
         return () => apiKey && dispatch(unsubscribe());
-    }, [isIntegrated, apiKey]);
+    }, [apiKey]);
 
     const deliveryFee = useMemo(() => {
         let totalFee = 0;

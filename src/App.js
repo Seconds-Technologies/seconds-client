@@ -82,7 +82,7 @@ function App() {
 							metadata: {
 								plan: subscriptionPlan
 							},
-							current_url: `https://app.ususeconds.com${location.pathname}`
+							current_url: `https://app.useseconds.com${location.pathname}`
 						}}
 					/>
 				)}
