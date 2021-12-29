@@ -16,7 +16,7 @@ export default function Integrations(props) {
 		'col-sm-12': true,
 		'col-md-6': true,
 		'text-decoration-none': true,
-		'my-3': true,
+		'my-2': true,
 	});
 
 	useEffect(() => {
@@ -25,7 +25,7 @@ export default function Integrations(props) {
 
 	return (
 		<div className='integrations container-fluid bg-light p-4'>
-			<h3 className='integrations-header text-center mb-5'>Integration</h3>
+			<h3 className='integrations-header text-center mb-4'>Integration</h3>
 			<ComingSoon message={toastMessage} toggleMessage={setShowToast}/>
 			<div className='container'>
 				<div className='row d-flex justify-content-center'>
@@ -48,7 +48,7 @@ export default function Integrations(props) {
 						</div>
 					</div>
 					<div
-						onClick={() => setShowToast("This feature is coming soon 😄")}
+						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
 						role='button'
 						className={ShopifyLinkBtn}
 					>

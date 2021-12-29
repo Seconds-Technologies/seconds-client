@@ -11,6 +11,7 @@ import PrivateRoute from '../components/PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Login from '../pages/login/Login';
 import Shopify from '../pages/shopify/Shopify';
+import WooCommerce from '../pages/wooCommerce/WooCommerce'
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
 import Settings from '../pages/settings/Settings';
@@ -39,6 +40,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
+		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />

@@ -1,10 +1,11 @@
+import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 import shopifyProducts from "./shopifyProducts";
 import shopifyOrders from "./shopifyOrders";
 import shopifyStore from "./shopifyStore";
 import squareStore from './squareStore';
+import wooCommerceStore from './wooCommerceStore';
 import currentUser from "./currentUser";
 import errors from "./errors";
 import deliveryJobs from './deliveryJobs';
@@ -23,6 +24,7 @@ const appReducer = combineReducers({
     currentUser,
     shopifyStore,
     squareStore,
+    wooCommerceStore,
     deliveryJobs,
     addressHistory,
     errors
