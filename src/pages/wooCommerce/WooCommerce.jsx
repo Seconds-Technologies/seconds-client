@@ -16,7 +16,6 @@ const WooCommerce = props => {
 	const error = useSelector(state => state['errors']);
 
 	useEffect(() => {
-		dispatch(removeError());
 		const query = new URLSearchParams(props.location.search);
 		console.log(query);
 		if (query.get('success')) {
@@ -31,8 +30,12 @@ const WooCommerce = props => {
 				dispatch(addError(error));
 			}
 		}
+	}, []);
+
+	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-	}, [props.location]);
+		return () => dispatch(removeError());
+	}, [props.location])
 
 	return (
 		<div className='page-container bg-light pb-2'>
