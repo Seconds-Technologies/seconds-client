@@ -1,48 +1,16 @@
 import { apiCall } from '../../api';
 import { addError, removeError } from './errors';
-import {
-	CLEAR_ORDERS,
-	REMOVE_COMPLETED_ORDER,
-	SET_ALL_ORDERS,
-	SET_COMPLETED_ORDERS,
-	SET_SQUARE,
-	UPDATE_COMPLETED_ORDERS,
-	UPDATE_SQUARE
-} from '../actionTypes';
+import { SET_SQUARE, UPDATE_SQUARE } from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
 
 export const setSquare = credentials => ({
 	type: SET_SQUARE,
-	credentials,
+	credentials
 });
 
 export const updateSquare = data => ({
 	type: UPDATE_SQUARE,
 	data,
-});
-
-export const setAllOrders = orders => ({
-	type: SET_ALL_ORDERS,
-	orders,
-});
-
-export const clearAllOrders = () => ({
-	type: CLEAR_ORDERS,
-});
-
-export const setCompletedOrders = orders => ({
-	type: SET_COMPLETED_ORDERS,
-	orders,
-});
-
-export const updateCompletedOrders = id => ({
-	type: UPDATE_COMPLETED_ORDERS,
-	id,
-});
-
-export const removeCompletedOrder = id => ({
-	type: REMOVE_COMPLETED_ORDER,
-	id,
 });
 
 export function validateSquare(data) {

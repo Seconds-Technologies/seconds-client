@@ -15,7 +15,6 @@ const WooCommerce = props => {
 	const error = useSelector(state => state['errors']);
 
 	useEffect(() => {
-		console.log('Mounting WooCommerce...');
 		const query = new URLSearchParams(props.location.search);
 		console.log(query);
 		if (query.get('success')) {
@@ -30,7 +29,8 @@ const WooCommerce = props => {
 				dispatch(addError(error));
 			}
 		}
-		return () => console.log('Unmounting WooCommerce');
+		Mixpanel.people.increment('page_views');
+		dispatch(removeError());
 	}, [props.location]);
 
 	return (
