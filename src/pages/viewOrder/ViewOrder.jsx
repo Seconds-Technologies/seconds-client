@@ -118,8 +118,22 @@ const ViewOrder = props => {
 		</Modal>
 	);
 
+	const errorModal = (
+		<Modal
+			show={!!error.message}
+			container={modalRef}
+			onHide={() => dispatch(removeError())}
+			size='lg'
+			aria-labelledby='example-custom-modal-styling-title'
+		>
+			<div className='alert alert-danger mb-0' role='alert'>
+				<h3 className='text-center'>{error.message}</h3>
+			</div>
+		</Modal>
+	);
+
 	useEffect(() => {
-		apiKey && dispatch(subscribe(apiKey, email));
+		//apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
@@ -152,6 +166,11 @@ const ViewOrder = props => {
 				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+				// check if postcode from geocoding is different to original postcode
+				// if so change back to original postcode
+				if (drop.dropoffPostcode !== dropoffFormattedAddress.postcode){
+					dropoffFormattedAddress.postcode = drop.dropoffPostcode
+				}
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
@@ -216,6 +235,7 @@ const ViewOrder = props => {
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
 				{successModal}
+				{errorModal}
 				<div className='row mx-5'>
 					<div className='col-4'>
 						<div className='row d-flex justify-content-end'>
@@ -268,7 +288,7 @@ const ViewOrder = props => {
 									}
 									styles='me-1'
 								/>
-								<Panel label='Price' value={`£${order.deliveryFee}`} styles='mx-2' />
+								<Panel label='Price' value={`£${order.deliveryFee.toFixed(2)}`} styles='mx-2' />
 								<Panel label='Status' value={order.status} styles='ms-1' />
 							</div>
 						</Card>

@@ -124,6 +124,11 @@ const Create = props => {
 				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
+				// check if postcode from geocoding is different to original postcode
+				// if so change back to original postcode
+				if (drop.dropoffPostcode !== dropoffFormattedAddress.postcode){
+					dropoffFormattedAddress.postcode = drop.dropoffPostcode
+				}
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
 				values.drops[index].dropPostcode = dropoffFormattedAddress.postcode;
