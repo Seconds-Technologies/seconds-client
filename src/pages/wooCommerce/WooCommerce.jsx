@@ -6,13 +6,14 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { setWoo } from '../../store/woocommerce';
 import { syncUser } from '../../store/actions/auth';
+import { addError } from '../../store/actions/errors';
 
 const WooCommerce = props => {
-	const { isIntegrated, credentials } = useSelector(state => state['wooCommerceStore']);
 	const dispatch = useDispatch();
-	const [error, setError] = useState(null);
 	const [isLoading, setLoading] = useState(false);
+	const { isIntegrated, credentials } = useSelector(state => state['wooCommerceStore']);
 	const { email, company } = useSelector(state => state['currentUser'].user);
+	const error = useSelector(state => state['errors']);
 
 	useEffect(() => {
 		console.log('Mounting WooCommerce...');
@@ -27,7 +28,8 @@ const WooCommerce = props => {
 				}).catch((error) => console.error(error))
 			} else {
 				let error = query.get('error')
-				console.log("ERROR", error)
+				console.error("ERROR:", error)
+				dispatch(addError(error))
 			}
 		}
 		return () => console.log('Unmounting WooCommerce');
@@ -42,9 +44,9 @@ const WooCommerce = props => {
 			)}
 			<div className='d-flex flex-column align-items-center'>
 				<img className='img-fluid d-block my-5' src={woocommerceLogo} alt='' width={250} />
-				{error && (
+				{error.message && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
-						<span className='text-center'>{error}</span>
+						<span className='text-center'>{error.message}</span>
 						<button type='button' className='btn btn-close' data-bs-dismiss='alert' aria-label='Close' />
 					</div>
 				)}
@@ -103,7 +105,8 @@ const WooCommerce = props => {
 				) : (
 					<div className='text-center pt-4'>
 						<p className='lead'>Shop Name: {company}</p>
-						<p className='lead'>Domain: {credentials.domain}</p>
+						<p className='lead'>Shop Domain: {credentials.domain}</p>
+						<p className='lead'>Webhook secret key: {credentials.consumerSecret}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back
 						</button>

@@ -3,11 +3,9 @@ import { SET_WOOCOMMERCE } from '../actionTypes';
 const DEFAULT_STATE = {
 	isIntegrated: false,
 	credentials: {
-		accessToken: "",
-		shopId: "",
 		domain: "",
-		clientId: "",
-		clientSecret: ""
+		consumerKey: "",
+		consumerSecret: ""
 	}
 };
 
