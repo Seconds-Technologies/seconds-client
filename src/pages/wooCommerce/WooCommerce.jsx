@@ -8,7 +8,7 @@ import { setWoo } from '../../store/woocommerce';
 import { syncUser } from '../../store/actions/auth';
 
 const WooCommerce = props => {
-	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
+	const { isIntegrated, credentials } = useSelector(state => state['wooCommerceStore']);
 	const dispatch = useDispatch();
 	const [error, setError] = useState(null);
 	const [isLoading, setLoading] = useState(false);
