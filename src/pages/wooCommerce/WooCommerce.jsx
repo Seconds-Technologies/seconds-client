@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
-import { setWoo } from '../../store/woocommerce';
-import { syncUser } from '../../store/actions/auth';
 import { addError } from '../../store/actions/errors';
+import { validateWoocommerce } from '../../store/actions/woocommerce';
 
 const WooCommerce = props => {
 	const dispatch = useDispatch();
@@ -20,16 +19,15 @@ const WooCommerce = props => {
 		const query = new URLSearchParams(props.location.search);
 		console.log(query);
 		if (query.get('success')) {
-			let success = Number(query.get('success'))
+			let success = Number(query.get('success'));
 			if (success) {
-				dispatch(syncUser(email)).then((user) => {
-					console.log(user.woocommerce)
-					dispatch(setWoo(user.woocommerce))
-				}).catch((error) => console.error(error))
+				dispatch(validateWoocommerce(email))
+					.then(res => console.log(res))
+					.catch(error => console.error(error));
 			} else {
-				let error = query.get('error')
-				console.error("ERROR:", error)
-				dispatch(addError(error))
+				let error = query.get('error');
+				console.error('ERROR:', error);
+				dispatch(addError(error));
 			}
 		}
 		return () => console.log('Unmounting WooCommerce');
@@ -55,20 +53,20 @@ const WooCommerce = props => {
 				{!isIntegrated ? (
 					<Formik
 						initialValues={{
-							store_url: ""
+							store_url: ''
 						}}
 						onSubmit={values => console.log(values)}
 					>
 						{({
-							  values,
-							  errors,
-							  touched,
-							  handleChange,
-							  handleBlur,
-							  handleSubmit,
-							  isSubmitting
-							  /* and other goodies */
-						  }) => (
+							values,
+							errors,
+							touched,
+							handleChange,
+							handleBlur,
+							handleSubmit,
+							isSubmitting
+							/* and other goodies */
+						}) => (
 							<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/woocommerce/authorize`}>
 								<div className='mb-3'>
 									<input type='hidden' name='email' value={email} />

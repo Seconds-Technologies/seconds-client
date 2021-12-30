@@ -6,54 +6,55 @@ import {
 	SET_CURRENT_USER,
 	UPDATE_CURRENT_USER,
 	LOGOUT_USER,
-	AUTHENTICATE_USER,
+	AUTHENTICATE_USER
 } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { setShopify } from './shopify';
 import { Mixpanel } from '../../config/mixpanel';
+import { setWoo } from './woocommerce';
 
 export const removeUser = () => ({
-	type: REMOVE_CURRENT_USER,
+	type: REMOVE_CURRENT_USER
 });
 
 export const setUserDetails = data => ({
 	type: SET_USER_DETAILS,
-	data,
+	data
 });
 
 export const setCurrentUser = user => ({
 	type: SET_CURRENT_USER,
-	user,
+	user
 });
 
 export const authenticateUser = () => ({
-	type: AUTHENTICATE_USER,
+	type: AUTHENTICATE_USER
 });
 
 export const updateCurrentUser = data => ({
 	type: UPDATE_CURRENT_USER,
-	data,
+	data
 });
 
 export const setApiKey = apiKey => ({
 	type: SET_API_KEY,
-	apiKey,
+	apiKey
 });
 
 export const setAuthorizationToken = token => setTokenHeader(token);
 
 export const logout = () => ({
-	type: LOGOUT_USER,
+	type: LOGOUT_USER
 });
 
 export function authUser(type, userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
-				.then(({ token, message, shopify, ...user }) => {
+				.then(({ token, message, shopify, woocommerce, ...user }) => {
 					console.log(message);
-					console.log('Auth token', token);
 					console.log('shopify', !!shopify);
+					console.log('woocommerce', !!woocommerce);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
@@ -62,6 +63,13 @@ export function authUser(type, userData) {
 							.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
 								dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));
 								resolve({ baseURL, accessToken, shopId, domain, country, shopOwner });
+							})
+							.catch(err => reject(err));
+					woocommerce &&
+						apiCall('GET', `/server/woocommerce`, null, { params: { email: user.email } })
+							.then(({ domain, consumerKey, consumerSecret }) => {
+								dispatch(setWoo({ domain, consumerKey, consumerSecret }));
+								resolve({ domain, consumerKey, consumerSecret });
 							})
 							.catch(err => reject(err));
 					dispatch(removeError());
@@ -76,10 +84,10 @@ export function authUser(type, userData) {
 	};
 }
 
-export function syncUser(email){
+export function syncUser(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email}})
+			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
 				.then(({ message, ...user }) => {
 					dispatch(setCurrentUser(user));
 					dispatch(removeError());
@@ -124,7 +132,7 @@ export function authorizeAPI(email) {
 				})
 				.catch(err => {
 					Mixpanel.track('Unsuccessful Api Key generation', {
-						$error: err.message,
+						$error: err.message
 					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
@@ -149,8 +157,8 @@ export function updateProfile({ img, id, ...data }) {
 						formData.append('id', id);
 						const config = {
 							headers: {
-								'content-type': 'multipart/form-data',
-							},
+								'content-type': 'multipart/form-data'
+							}
 						};
 						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
