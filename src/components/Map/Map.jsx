@@ -26,7 +26,6 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 		let result = [];
 		if (busy) {
 			const coordinates = [location, ...couriers];
-			console.log('COORDINATES', coordinates);
 			const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 			result = Object.values(bounds).map(bound => Object.values(bound));
 		}
@@ -36,7 +35,6 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 	const orderBounds = useMemo(() => {
 		let result = [];
 		if (markers) {
-			console.log('COORDINATES', markers);
 			const bounds = markers.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(markers[0], markers[0]));
 			result = Object.values(bounds).map(bound => Object.values(bound));
 		}

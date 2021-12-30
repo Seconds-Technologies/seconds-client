@@ -133,7 +133,7 @@ const ViewOrder = props => {
 	);
 
 	useEffect(() => {
-		//apiKey && dispatch(subscribe(apiKey, email));
+		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 

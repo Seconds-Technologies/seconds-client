@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import { validateSquare } from '../../store/actions/square';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
+import { setWoo } from '../../store/woocommerce';
+import { syncUser } from '../../store/actions/auth';
 
 const WooCommerce = props => {
 	const { isIntegrated, credentials } = useSelector(state => state['squareStore']);
 	const dispatch = useDispatch();
 	const [error, setError] = useState(null);
 	const [isLoading, setLoading] = useState(false);
-	const { email } = useSelector(state => state['currentUser'].user);
+	const { email, company } = useSelector(state => state['currentUser'].user);
+
+	useEffect(() => {
+		console.log('Mounting WooCommerce...');
+		const query = new URLSearchParams(props.location.search);
+		console.log(query);
+		if (query.get('success')) {
+			let success = Number(query.get('success'))
+			if (success) {
+				dispatch(syncUser(email)).then((user) => {
+					console.log(user.woocommerce)
+					dispatch(setWoo(user.woocommerce))
+				}).catch((error) => console.error(error))
+			} else {
+				let error = query.get('error')
+				console.log("ERROR", error)
+			}
+		}
+		return () => console.log('Unmounting WooCommerce');
+	}, [props.location]);
 
 	return (
 		<div className='square-container bg-light pb-2'>
@@ -35,18 +55,7 @@ const WooCommerce = props => {
 						initialValues={{
 							store_url: ""
 						}}
-						onSubmit={values => {
-							setLoading(true);
-							dispatch(validateSquare({ ...values, email }))
-								.then(shop => {
-									console.log(shop);
-									setLoading(false);
-								})
-								.catch(err => {
-									setLoading(false);
-									setError(err.message);
-								});
-						}}
+						onSubmit={values => console.log(values)}
 					>
 						{({
 							  values,
@@ -94,7 +103,7 @@ const WooCommerce = props => {
 				) : (
 					<div className='text-center pt-4'>
 						<p className='lead'>Shop Id: {credentials.shopId}</p>
-						<p className='lead'>Shop Name: {credentials.shopName}</p>
+						<p className='lead'>Shop Name: {company}</p>
 						<p className='lead'>Domain: {credentials.domain}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back

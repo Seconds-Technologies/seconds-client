@@ -83,7 +83,7 @@ export function syncUser(email){
 				.then(({ message, ...user }) => {
 					dispatch(setCurrentUser(user));
 					dispatch(removeError());
-					resolve(message);
+					resolve(user);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
