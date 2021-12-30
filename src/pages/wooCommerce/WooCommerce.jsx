@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
-import { addError } from '../../store/actions/errors';
+import { addError, removeError } from '../../store/actions/errors';
 import { validateWoocommerce } from '../../store/actions/woocommerce';
+import { Mixpanel } from '../../config/mixpanel';
 
 const WooCommerce = props => {
 	const dispatch = useDispatch();
