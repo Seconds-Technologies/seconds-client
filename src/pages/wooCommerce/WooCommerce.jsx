@@ -34,7 +34,6 @@ const WooCommerce = props => {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		return () => dispatch(removeError());
 	}, [props.location])
 
 	return (
