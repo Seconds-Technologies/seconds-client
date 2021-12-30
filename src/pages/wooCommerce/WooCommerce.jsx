@@ -34,11 +34,11 @@ const WooCommerce = props => {
 	}, [props.location]);
 
 	return (
-		<div className='square-container bg-light pb-2'>
+		<div className='page-container bg-light pb-2'>
 			{!isIntegrated ? (
 				<h2 className='shopifyConnect'>Connect your Woocommerce Store</h2>
 			) : (
-				<h2 className='shopifyConnect'>Your Square account is now connected!</h2>
+				<h2 className='shopifyConnect'>Your WooCommerce account is now connected!</h2>
 			)}
 			<div className='d-flex flex-column align-items-center'>
 				<img className='img-fluid d-block my-5' src={woocommerceLogo} alt='' width={250} />
@@ -102,7 +102,6 @@ const WooCommerce = props => {
 					</Formik>
 				) : (
 					<div className='text-center pt-4'>
-						<p className='lead'>Shop Id: {credentials.shopId}</p>
 						<p className='lead'>Shop Name: {company}</p>
 						<p className='lead'>Domain: {credentials.domain}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>

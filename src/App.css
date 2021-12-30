@@ -31,7 +31,7 @@
   border: pink solid 4px;
 }
 
-.help {
+.page-container {
   flex: 7;
   background-color: #f2f2f2;
 }

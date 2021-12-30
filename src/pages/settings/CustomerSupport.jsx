@@ -9,7 +9,7 @@ const CustomerSupport = props => {
 	}, [props.location]);
 
 	return (
-		<div className='help py-lg-5 py-md-5 py-4'>
+		<div className='page-container py-lg-5 py-md-5 py-4'>
 			<div className='container-fluid py-5'>
 				<div className='row pb-3 text-center'>
 					<div className='col'>
