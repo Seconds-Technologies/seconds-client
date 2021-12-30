@@ -5,7 +5,7 @@ import rootReducer from './reducers';
 
 export const store = configureStore({
 	reducer: rootReducer,
-	devTools: process.env.NODE_ENV !== 'production',
+	devTools: process.env.REACT_APP_ENV_MODE !== 'production',
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({
 			serializableCheck: {
