@@ -17,7 +17,6 @@ const WooCommerce = props => {
 
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
-		console.log(query);
 		if (query.get('success')) {
 			let success = Number(query.get('success'));
 			if (success) {
@@ -34,6 +33,7 @@ const WooCommerce = props => {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
+		dispatch(removeError())
 	}, [props.location])
 
 	return (

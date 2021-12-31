@@ -90,7 +90,6 @@ export function syncUser(email) {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
 				.then(({ message, ...user }) => {
 					dispatch(setCurrentUser(user));
-					dispatch(removeError());
 					resolve(user);
 				})
 				.catch(err => {
