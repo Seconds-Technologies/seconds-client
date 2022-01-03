@@ -8,6 +8,13 @@ import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
 
 const Map = ({ styles, height, location, markers, couriers, busy }) => {
+	/*const directions = new MapboxDirections({
+		accessToken: process.env.REACT_APP_MAPBOX_TOKEN ||
+			'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA',
+		unit: 'metric',
+		profile: 'mapbox/driving-traffic'
+	});*/
+
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
@@ -20,6 +27,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 
 	const onLoaded = map => {
 		map.resize();
+		/*map.addControl(directions, 'top-left');*/
 	};
 
 	const dashboardBounds = useMemo(() => {

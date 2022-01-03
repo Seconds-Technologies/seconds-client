@@ -95,12 +95,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('1.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
-												min={"07:30"}
-													max={"23:30"}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -114,10 +114,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('1.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -146,10 +148,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('2.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -163,10 +167,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('2.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -195,10 +201,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('3.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -212,10 +220,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('3.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -244,10 +254,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('4.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -261,10 +273,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('4.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -293,10 +307,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('5.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -310,10 +326,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('5.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -342,10 +360,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('6.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -359,10 +379,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('6.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
@@ -391,10 +413,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('0.open', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 										<td>
@@ -409,10 +433,12 @@ const DeliveryTimes = () => {
 												onChange={({ target: { value } }) =>
 													setFieldValue('0.close', {
 														h: Number(value.split(':')[0]),
-														m: Number(value.split(':')[1]),
+														m: Number(value.split(':')[1])
 													})
 												}
 												onBlur={handleBlur}
+												min={'07:30'}
+												max={'21:00'}
 											/>
 										</td>
 									</tr>
