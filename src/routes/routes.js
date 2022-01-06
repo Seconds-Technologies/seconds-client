@@ -26,6 +26,7 @@ import MultiDrop from '../pages/multiDrop/MultiDrop';
 import Square from '../pages/square/Square';
 import Signup1 from '../pages/signup/Signup1';
 import Signup2 from '../pages/signup/Signup2';
+import SquareSpace from '../pages/squarespace/SquareSpace';
 
 const routes = (
 	<Switch>
@@ -41,6 +42,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
+		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />

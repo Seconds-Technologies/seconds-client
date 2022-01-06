@@ -8,8 +8,11 @@ import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import { Mixpanel } from '../../config/mixpanel';
 import ComingSoon from '../../modals/ComingSoon';
+import { removeError } from '../../store/actions/errors';
+import { useDispatch } from 'react-redux';
 
 export default function Integrations(props) {
+	const dispatch = useDispatch()
 	const [toastMessage, setShowToast] = useState('');
 
 	const ShopifyLinkBtn = classnames({
@@ -21,7 +24,8 @@ export default function Integrations(props) {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-	}, []);
+		/*dispatch(removeError())*/
+	}, [props.location]);
 
 	return (
 		<div className='integrations container-fluid bg-light p-4'>
@@ -57,7 +61,7 @@ export default function Integrations(props) {
 						</div>
 					</div>
 					<div
-						onClick={() => setShowToast("This feature is coming soon 😄")}
+						onClick={() => props.history.push(PATHS.SQUARESPACE)}
 						role='button'
 						className={ShopifyLinkBtn}
 					>

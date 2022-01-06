@@ -13,6 +13,7 @@ export const PATHS = {
 	SHOPIFY: '/integrate/shopify',
 	SQUARE: '/integrate/square',
 	WOOCOMMERCE: '/integrate/woocommerce',
+	SQUARESPACE: '/integrate/squarespace',
 	API_KEY: '/integrate/api',
 	DOCUMENTATION: '/documentation',
 	PROFILE: '/profile',

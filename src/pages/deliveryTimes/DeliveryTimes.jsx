@@ -1,5 +1,5 @@
 import './deliveryTimes.css';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Switch from 'react-switch';
 import { Formik } from 'formik';
 import moment from 'moment';
@@ -25,7 +25,7 @@ const DeliveryTimes = () => {
 
 	const successToast = (
 		<ToastContainer className='topRight'>
-			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={'true'} delay={3000} autohide>
+			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={true} delay={3000} autohide>
 				<ToastFade.Header closeButton={false}>
 					<img src={secondsLogo} className='rounded me-2' alt='' />
 					<strong className='me-auto'>Seconds</strong>
