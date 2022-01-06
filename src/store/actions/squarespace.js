@@ -34,7 +34,7 @@ export function getSquarespaceCredentials(data){
 				.then(shop => {
 					Mixpanel.track('Successful Squarespace integration');
 					Mixpanel.people.setOnce({ $squarespace: shop });
-					//dispatch(setSquareSpace(shop));
+					dispatch(setSquareSpace(shop));
 					dispatch(removeError());
 					resolve(shop);
 				})

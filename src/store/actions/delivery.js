@@ -155,41 +155,6 @@ export function getAllJobs(apiKey, email) {
 	};
 }
 
-export function updateJobsStatus(apiKey, jobId, status, stripeCustomerId) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			setTokenHeader(localStorage.getItem('jwt_token'));
-			return apiCall(
-				'POST',
-				`/api/v1/jobs/${jobId}`,
-				{
-					stripeCustomerId,
-					status,
-				},
-				{ headers: { 'X-Seconds-Api-Key': apiKey } }
-			)
-				.then(({ updatedJobs, message }) => {
-					console.log(message);
-					dispatch(setAllJobs(updatedJobs));
-					const {
-						_id: id,
-						createdAt,
-						selectedConfiguration: { deliveryFee },
-						status,
-					} = updatedJobs.find(item => item._id === jobId);
-					status === STATUS.COMPLETED && dispatch(addCompletedJob({ id, createdAt, deliveryFee, status }));
-					dispatch(removeError());
-					resolve(updatedJobs);
-				})
-				.catch(err => {
-					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
-					reject(err);
-				});
-		});
-	};
-}
-
 export function getAllQuotes(apiKey, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
