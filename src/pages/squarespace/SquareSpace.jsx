@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import squarespaceLogo from '../../assets/img/squarespace-logo.png';
 import { Formik } from 'formik';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { authorizeSquarespace } from '../../store/actions/squarespace';
+import { getSquarespaceCredentials } from '../../store/actions/squarespace';
 
 const SquareSpace = props => {
 	const dispatch = useDispatch();
@@ -12,6 +12,20 @@ const SquareSpace = props => {
 	const error = useSelector(state => state['errors']);
 	const { isIntegrated, credentials } = useSelector(state => state['squarespaceStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
+
+	useEffect(() => {
+		const query = new URLSearchParams(props.location.search);
+		console.log(query);
+		if (query.get('code') && query.get('state')) {
+			let code = query.get('code');
+			let state = query.get('state');
+			dispatch(getSquarespaceCredentials({ email, code, state }))
+				.then(shop => console.log(shop))
+				.catch(err => alert(err));
+		}
+		return () => console.log('Unmounting Square');
+	}, [props.location]);
+
 	return (
 		<div className='page-container bg-light pb-2'>
 			{!isIntegrated ? (
@@ -34,10 +48,7 @@ const SquareSpace = props => {
 						initialValues={{
 							privateKey: ""
 						}}
-						onSubmit={values => {
-							console.log(values);
-							dispatch(authorizeSquarespace(email, values)).then(res => console.log(res))
-						}}
+						onSubmit={values => console.log(values)}
 					>
 						{({
 							values,
