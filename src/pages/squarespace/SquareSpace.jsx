@@ -101,7 +101,7 @@ const SquareSpace = props => {
 					<div className='text-center pt-4'>
 						<p className='lead'>Shop Name: {credentials.storeName}</p>
 						<p className='lead'>Shop Domain: {credentials.domain}</p>
-						<p className='lead'>Secret key: {credentials.secretKey}</p>
+						<p className='lead'>Access Token: {credentials.accessToken}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back
 						</button>
