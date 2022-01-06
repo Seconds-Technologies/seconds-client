@@ -30,7 +30,7 @@ export const setSquareSpace = credentials => ({
 export function getSquarespaceCredentials(data){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall('GET', `/server/squarespace`, null, { params: { ...data } })
+			return apiCall('GET', `/server/squarespace/connect`, null, { params: { ...data } })
 				.then(shop => {
 					Mixpanel.track('Successful Squarespace integration');
 					Mixpanel.people.setOnce({ $squarespace: shop });

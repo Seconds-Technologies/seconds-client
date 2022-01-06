@@ -24,7 +24,7 @@ export default function Integrations(props) {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		/*dispatch(removeError())*/
+		dispatch(removeError())
 	}, [props.location]);
 
 	return (

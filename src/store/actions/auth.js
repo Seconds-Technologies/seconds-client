@@ -12,6 +12,7 @@ import { addError, removeError } from './errors';
 import { setShopify } from './shopify';
 import { Mixpanel } from '../../config/mixpanel';
 import { setWoo } from './woocommerce';
+import { setSquareSpace } from './squarespace';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -51,7 +52,7 @@ export function authUser(type, userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
-				.then(({ token, message, shopify, woocommerce, ...user }) => {
+				.then(({ token, message, shopify, woocommerce, squarespace, ...user }) => {
 					console.log(message);
 					console.log('shopify', !!shopify);
 					console.log('woocommerce', !!woocommerce);
@@ -67,11 +68,17 @@ export function authUser(type, userData) {
 							.catch(err => reject(err));
 					woocommerce &&
 						apiCall('GET', `/server/woocommerce`, null, { params: { email: user.email } })
-							.then(({ domain, consumerKey, consumerSecret }) => {
-								dispatch(setWoo({ domain, consumerKey, consumerSecret }));
-								resolve({ domain, consumerKey, consumerSecret });
+							.then(storeDetails => {
+								dispatch(setWoo(storeDetails));
+								resolve(storeDetails);
 							})
 							.catch(err => reject(err));
+					squarespace &&
+						apiCall('GET', '/server/squarespace', null, { params: { email: user.email } })
+							.then(storeDetails => {
+								dispatch(setSquareSpace(storeDetails));
+								resolve(storeDetails)
+							}).catch(err => reject(err));
 					dispatch(removeError());
 					resolve(user);
 				})
