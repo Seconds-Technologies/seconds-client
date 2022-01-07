@@ -4,17 +4,13 @@ import settingsIcon from '../../assets/img/settings.svg';
 import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create1.svg';
 import trackIcon from '../../assets/img/track1.svg';
-import logoutIcon from '../../assets/img/logout.svg';
 import courierIcon from '../../assets/img/courier.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { logout } from '../../store/actions/auth';
 import { useDispatch } from 'react-redux';
 import { PATHS } from '../../constants';
 import './Sidebar.css';
 
 export default function Sidebar() {
-	const dispatch = useDispatch();
-	const history = useHistory();
 	const location = useLocation();
 	return (
 		<div className="sidebar">
@@ -118,18 +114,6 @@ export default function Sidebar() {
 							<div className='item-hover'>Settings</div>
 						</li>
 					</Link>
-					<a
-						onClick={() => {
-							dispatch(logout());
-							history.push('/login');
-						}}
-						className='link'
-					>
-						<div className='sidebarListItem'>
-							<img className='sidebarIcon item-hover' src={logoutIcon} alt=''width={25} height={25} />
-							<div className='item-hover'>Log Out</div>
-						</div>
-					</a>
 				</ul>
 			</div>
 		</div>
