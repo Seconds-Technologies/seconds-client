@@ -18,23 +18,17 @@ const WooCommerce = props => {
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
 		if (query.get('success')) {
-			let success = Number(query.get('success'));
-			if (success) {
-				dispatch(validateWoocommerce(email))
-					.then(res => console.log(res))
-					.catch(error => console.error(error));
-			} else {
-				let error = query.get('error');
-				console.error('ERROR:', error);
-				dispatch(addError(error));
-			}
+			dispatch(validateWoocommerce(email))
+				.then(res => console.log(res))
+				.catch(error => console.error(error));
+		} else if (query.get('error')) {
+			dispatch(addError(query.get('error')));
 		}
 	}, []);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		dispatch(removeError())
-	}, [props.location])
+	}, [props.location]);
 
 	return (
 		<div className='page-container bg-light pb-2'>
