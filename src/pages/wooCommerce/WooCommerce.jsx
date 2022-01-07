@@ -17,7 +17,7 @@ const WooCommerce = props => {
 
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
-		if (query.get('success')) {
+		if (query.get('success') && Number(query.get('success'))) {
 			dispatch(validateWoocommerce(email))
 				.then(res => console.log(res))
 				.catch(error => console.error(error));
