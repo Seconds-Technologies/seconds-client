@@ -27,7 +27,7 @@ export const setSquareSpace = credentials => ({
 	};
 }*/
 
-export function getSquarespaceCredentials(data){
+export function connectSquarespace(data){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/squarespace/connect`, null, { params: { ...data } })

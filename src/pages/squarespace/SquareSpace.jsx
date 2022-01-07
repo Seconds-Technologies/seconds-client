@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSquarespaceCredentials } from '../../store/actions/squarespace';
+import { connectSquarespace } from '../../store/actions/squarespace';
 
 const SquareSpace = props => {
 	const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const SquareSpace = props => {
 		if (query.get('code') && query.get('state')) {
 			let code = query.get('code');
 			let state = query.get('state');
-			dispatch(getSquarespaceCredentials({ email, code, state }))
+			dispatch(connectSquarespace({ email, code, state }))
 				.then(shop => console.log(shop))
 				.catch(err => alert(err));
 		}
