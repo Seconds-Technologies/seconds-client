@@ -5,6 +5,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { connectSquarespace } from '../../store/actions/squarespace';
+import { addError } from '../../store/actions/errors';
 
 const SquareSpace = props => {
 	const dispatch = useDispatch();
@@ -22,8 +23,9 @@ const SquareSpace = props => {
 			dispatch(connectSquarespace({ email, code, state }))
 				.then(shop => console.log(shop))
 				.catch(err => alert(err));
+		} else if (query.get('error')){
+			dispatch(addError(query.get('error')))
 		}
-		return () => console.log('Unmounting Square');
 	}, [props.location]);
 
 	return (
