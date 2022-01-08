@@ -101,7 +101,6 @@ const WooCommerce = props => {
 					<div className='text-center pt-4'>
 						<p className='lead'>Shop Name: {company}</p>
 						<p className='lead'>Shop Domain: {credentials.domain}</p>
-						<p className='lead'>Webhook secret key: {credentials.consumerSecret}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back
 						</button>

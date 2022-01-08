@@ -26,7 +26,7 @@ export function apiCall(method, path, data = null, config = {}) {
 					})
 					.catch(err => {
 						process.env.REACT_APP_ENV_MODE !== "production" && console.error(err);
-						reject(err.response.data.error);
+						err.response.data.error ? reject(err.response.data.error) : reject(err.response.data);
 					})
 			: axios[method.toLowerCase()](path, data, config)
 					.then(res => {
@@ -35,7 +35,7 @@ export function apiCall(method, path, data = null, config = {}) {
 					})
 					.catch(err => {
 						process.env.REACT_APP_ENV_MODE !== "production" && console.error(err);
-						reject(err.response.data.error);
+						err.response.data.error ? reject(err.response.data.error) : reject(err.response.data);
 					});
 	});
 }
