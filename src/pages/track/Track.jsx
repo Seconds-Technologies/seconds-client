@@ -1,5 +1,5 @@
 import './Track.css';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
@@ -7,13 +7,17 @@ import { STATUS_COLOURS, STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
+import { dateFilter } from '../../helpers';
+import TimeFilter from '../../components/TimeFilter';
 
 const Track = props => {
 	const dispatch = useDispatch();
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
+	const filterByInterval = useCallback(dateFilter,[active.id])
 	const orders = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
-		return allJobs.map(
+		return filterByInterval(allJobs, active.id).map(
 			({ status, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId } }) => {
 				let {
 					dropoffLocation: { fullAddress: address, firstName, lastName },
@@ -35,7 +39,10 @@ const Track = props => {
 	}, [props.location]);
 
 	return (
-		<div className='trackContainer container-fluid bg-light py-4'>
+		<div className='trackContainer container-fluid bg-light pb-4'>
+			<div className="d-flex justify-content-end py-3 px-3">
+				<TimeFilter current={active} onSelect={setActive}/>
+			</div>
 			<div className='row'>
 				<div className='col-sm-4 col-md-2 border-end'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>

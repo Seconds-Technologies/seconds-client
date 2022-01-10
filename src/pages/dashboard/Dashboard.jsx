@@ -6,26 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 import { STATUS } from '../../constants';
 import { removeError } from '../../store/actions/errors';
+import TimeFilter from '../../components/TimeFilter';
 
 const Dashboard = props => {
-	const [options] = useState([
-		{
-			id: 'day',
-			name: 'Last 24 hrs'
-		},
-		{
-			id: 'week',
-			name: 'Last Week'
-		},
-		{
-			id: 'month',
-			name: 'Last Month'
-		},
-		{
-			id: 'year',
-			name: 'Last Year'
-		}
-	]);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const { firstname, address: {geolocation} } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
@@ -65,30 +48,7 @@ const Dashboard = props => {
 						<span className='bold-text'>{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview
 					</span>
 				</div>
-				<div className='dropdown'>
-					<button
-						className='btn bg-white dropdown-toggle border border-1 border-grey'
-						type='button'
-						id='dropdownMenuButton1'
-						data-bs-toggle='dropdown'
-						aria-expanded='false'
-					>
-						{active.name}
-					</button>
-					<ul className='dropdown-menu' aria-labelledby='dropdownMenuButton1'>
-						{options.map(
-							({ id, name }, index) =>
-								id !== active.id && (
-									<li key={index} role='button'>
-										{/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-										<div className='dropdown-item' onClick={() => setActive({ id, name })}>
-											{name}
-										</div>
-									</li>
-								)
-						)}
-					</ul>
-				</div>
+				<TimeFilter current={active} onSelect={setActive}/>
 			</div>
 			<FeaturedInfo interval={active.id} />
 			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={270} />

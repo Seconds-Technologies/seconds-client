@@ -4,41 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo } from 'react';
 import { STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
-import moment from 'moment';
+import { dateFilter } from '../../helpers';
 
 const FeaturedInfo = ({interval}) => {
     const dispatch = useDispatch();
-    const filterByInterval = useCallback((data) => {
-        switch(interval){
-            case "day":
-                return data.filter(({createdAt}) => {
-                    let duration = moment.duration(moment().diff(moment(createdAt))).as("day")
-                    return duration < 1
-                })
-            case "week":
-                return data.filter(({createdAt}) => {
-                    let duration = moment.duration(moment().diff(moment(createdAt))).as("week")
-                    return duration < 1
-                })
-            case "month":
-                return data.filter(({createdAt}) => {
-                    let duration = moment.duration(moment().diff(moment(createdAt))).as("month")
-                    return duration < 1
-                })
-            case "year":
-                return data.filter(({createdAt}) => {
-                    let duration = moment.duration(moment().diff(moment(createdAt))).as("year")
-                    return duration < 1
-                })
-            default:
-                return data
-        }
-    },[interval])
+    const filterByInterval = useCallback(dateFilter,[interval])
 
     const { email, apiKey } = useSelector(state => state['currentUser'].user);
     const { total, completed } = useSelector(state => {
         const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-        return { total: filterByInterval(total), completed: filterByInterval(completed) }
+        return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) }
     });
 
     useEffect(() => {

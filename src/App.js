@@ -28,7 +28,7 @@ function App() {
 		console.log('isAuthenticated:', isAuthenticated);
 		isAuthenticated &&
 			dispatch(syncUser(email))
-				.then(user => console.log('USER SYNCED', user))
+				.then(() => console.log('USER SYNCED'))
 				.catch(err => console.error('USER SYNC FAILED!', err));
 	}, [isAuthenticated]);
 	return (

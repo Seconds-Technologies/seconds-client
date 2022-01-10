@@ -1,4 +1,5 @@
 import { PLACE_TYPES } from '../constants';
+import moment from 'moment';
 
 export function parseAddress(data, requiresGeoJSON = false) {
 	let address = data[0].address_components;
@@ -60,4 +61,32 @@ export function validateAddress(pickup, dropoff) {
 			throw new Error(`Your Dropoff postcode '${item}', is not complete. Please include a full UK postcode in your address`);
 	});
 	return true;
+}
+
+export function dateFilter(data, interval) {
+	console.log(data, interval)
+	switch (interval) {
+		case 'day':
+			return data.filter(({ createdAt }) => {
+				let duration = moment.duration(moment().diff(moment(createdAt))).as('day');
+				return duration < 1;
+			});
+		case 'week':
+			return data.filter(({ createdAt }) => {
+				let duration = moment.duration(moment().diff(moment(createdAt))).as('week');
+				return duration < 1;
+			});
+		case 'month':
+			return data.filter(({ createdAt }) => {
+				let duration = moment.duration(moment().diff(moment(createdAt))).as('month');
+				return duration < 1;
+			});
+		case 'year':
+			return data.filter(({ createdAt }) => {
+				let duration = moment.duration(moment().diff(moment(createdAt))).as('year');
+				return duration < 1;
+			});
+		default:
+			return data;
+	}
 }

@@ -1,5 +1,5 @@
 import './deliveryTimes.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from 'react-switch';
 import { Formik } from 'formik';
 import moment from 'moment';
@@ -18,10 +18,6 @@ const DeliveryTimes = () => {
 	const dispatch = useDispatch();
 	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const [toastMessage, setToast] = useState('');
-
-	useEffect(() => {
-		console.log(deliveryHours);
-	}, []);
 
 	const successToast = (
 		<ToastContainer className='topRight'>

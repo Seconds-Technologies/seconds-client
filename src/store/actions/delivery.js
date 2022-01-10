@@ -1,62 +1,61 @@
 import { addError, removeError } from './errors';
 import { apiCall, setTokenHeader } from '../../api';
 import {
+	ADD_DROPOFF,
+	CLEAR_DROPOFFS,
 	CLEAR_JOBS,
 	NEW_DELIVERY_JOB,
+	REMOVE_DROPOFF,
 	SET_ALL_JOBS,
 	SET_COMPLETED_JOBS,
-	UPDATE_COMPLETED_JOBS,
+	SET_DROPOFFS,
 	TIMER_START,
 	TIMER_STOP,
-	ADD_DROPOFF,
-	REMOVE_DROPOFF,
-	CLEAR_DROPOFFS,
-	SET_DROPOFFS,
+	UPDATE_COMPLETED_JOBS
 } from '../actionTypes';
-import { STATUS } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
 
 export const setDropoffs = dropoffs => ({
 	type: SET_DROPOFFS,
-	dropoffs,
+	dropoffs
 });
 
 export const addDropoff = dropoff => ({
 	type: ADD_DROPOFF,
-	dropoff,
+	dropoff
 });
 
 export const removeDropoff = index => ({
 	type: REMOVE_DROPOFF,
-	index,
+	index
 });
 
 export const clearDropoffs = () => ({
-	type: CLEAR_DROPOFFS,
+	type: CLEAR_DROPOFFS
 });
 
 export const setAllJobs = jobs => ({
 	type: SET_ALL_JOBS,
-	jobs,
+	jobs
 });
 
 export const setCompletedJobs = jobs => ({
 	type: SET_COMPLETED_JOBS,
-	jobs,
+	jobs
 });
 
 export const addCompletedJob = job => ({
 	type: UPDATE_COMPLETED_JOBS,
-	job,
+	job
 });
 
 export const newDeliveryJob = job => ({
 	type: NEW_DELIVERY_JOB,
-	job,
+	job
 });
 
 export const clearAllJobs = () => ({
-	type: CLEAR_JOBS,
+	type: CLEAR_JOBS
 });
 
 let timer = null;
@@ -80,8 +79,8 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
 				headers: {
 					'X-Seconds-Api-Key': apiKey,
-					...(providerId && { 'X-Seconds-Provider-Id': providerId }),
-				},
+					...(providerId && { 'X-Seconds-Provider-Id': providerId })
+				}
 			})
 				.then(job => {
 					Mixpanel.track('Successful Delivery job creation');
@@ -105,7 +104,7 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId = undefine
 			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/multi-drop`, deliveryParams, {
 				headers: { 'X-Seconds-Api-Key': apiKey },
-				...(providerId && { params: { provider: providerId } }),
+				...(providerId && { params: { provider: providerId } })
 			})
 				.then(job => {
 					Mixpanel.track('Successful Multi-drop job creation');
@@ -128,8 +127,11 @@ export function getAllJobs(apiKey, email) {
 		return new Promise((resolve, reject) => {
 			setTokenHeader(localStorage.getItem('jwt_token'));
 			return apiCall('GET', `/api/v1/jobs`, null, {
-				headers: { 'X-Seconds-Api-Key': apiKey },
-				params: { email },
+				headers: {
+					'Cache-Control': "private",
+					'X-Seconds-Api-Key': apiKey
+				},
+				params: { email }
 			})
 				.then(jobs => {
 					dispatch(setAllJobs(jobs));
@@ -139,7 +141,7 @@ export function getAllJobs(apiKey, email) {
 								id,
 								createdAt,
 								deliveryFee,
-								status,
+								status
 							}))
 						)
 					);

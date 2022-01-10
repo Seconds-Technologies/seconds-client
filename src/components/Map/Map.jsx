@@ -1,33 +1,39 @@
-import mapboxgl from 'mapbox-gl';
-import React, { useMemo } from 'react';
-import ReactMapboxGl, { Marker } from 'react-mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css';
+import * as mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import mbxClient from '@mapbox/mapbox-sdk';
+import React, { useEffect, useMemo, useState } from 'react';
+import ReactMapboxGl, { Marker, GeoJSONLayer } from 'react-mapbox-gl';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
 
 const Map = ({ styles, height, location, markers, couriers, busy }) => {
-	/*const directions = new MapboxDirections({
-		accessToken: process.env.REACT_APP_MAPBOX_TOKEN ||
-			'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA',
-		unit: 'metric',
-		profile: 'mapbox/driving-traffic'
-	});*/
+	const baseClient = mbxClient({
+		accessToken:
+			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+	});
 
-	const Mapbox = useMemo(
-		() =>
-			ReactMapboxGl({
-				accessToken:
-					process.env.REACT_APP_MAPBOX_TOKEN ||
-					'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
-			}),
-		[]
-	);
+	const Mapbox = useMemo(() => ReactMapboxGl({
+		accessToken:
+			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+	}), []);
+
+	const [geoJSON, setGeoJSON] = useState({
+		type: 'FeatureCollection',
+		features: [
+			{
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: []
+				}
+			}
+		]
+	})
 
 	const onLoaded = map => {
 		map.resize();
-		/*map.addControl(directions, 'top-left');*/
 	};
 
 	const dashboardBounds = useMemo(() => {
@@ -48,6 +54,36 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 		}
 		return result;
 	}, [markers]);
+
+	useEffect(() => {
+		(async () => {
+			const profile = 'mapbox/driving-traffic';
+			const coordinates = orderBounds.join(';');
+			const request = await baseClient.createRequest({
+				method: 'GET',
+				path: `/directions/v5/${profile}/${coordinates}?geometries=geojson`
+			});
+			const response = await request.send();
+			const geojson = {
+				'type': 'FeatureCollection',
+				'features': [
+					{
+						'type': 'Feature',
+						'geometry': {
+							...response.body.routes[0].geometry
+						}
+					}
+				]
+			};
+			console.log(geojson)
+			setGeoJSON(geojson);
+		})();
+	}, []);
+
+	const linePaint = {
+		'line-color': 'orange',
+		'line-width': 3
+	};
 
 	return (
 		<div className={`${styles} map-container`}>
@@ -116,6 +152,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 							</div>
 						</Marker>
 					))}
+				{geoJSON.features[0].geometry.coordinates.length && <GeoJSONLayer data={geoJSON} linePaint={linePaint}/>}
 			</Mapbox>
 		</div>
 	);
