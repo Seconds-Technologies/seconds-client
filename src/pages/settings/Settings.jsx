@@ -52,7 +52,7 @@ const Settings = props => {
 				</div>
 			</div>
 			<a
-				href='https://seconds.stoplight.io/docs/seconds-api/ZG9jOjMyNzk0NA-introduction'
+				href='https://docs.useseconds.com'
 				target='_blank'
 				className='row bg-white mt-3 mb-3 option-container border text-decoration-none text-dark'
 			>
