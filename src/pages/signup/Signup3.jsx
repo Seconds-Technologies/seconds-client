@@ -25,7 +25,7 @@ const Signup3 = props => {
 				<div className='top-0 w-md' role='button' onClick={() => props.history.goBack()}>
 					<img src={backArrow} alt='Go back button' width={40} height={40} />
 				</div>
-				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
+				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column mb-3'>
 					<h2 className='signup-header pb-2'>Choose a subscription plan</h2>
 					<span className='text-muted'>You must be <strong>subscribed</strong> before you can create orders</span>
 				</div>
