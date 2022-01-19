@@ -9,9 +9,12 @@ import ViewOrder from '../pages/viewOrder/ViewOrder';
 import Integrations from '../pages/integration/Integrations';
 import PrivateRoute from '../components/PrivateRoute';
 import Signup from '../pages/signup/Signup';
+import Signup1 from '../pages/signup/Signup1';
+import Signup2 from '../pages/signup/Signup2';
+import Signup3 from '../pages/signup/Signup3';
 import Login from '../pages/login/Login';
 import Shopify from '../pages/shopify/Shopify';
-import WooCommerce from '../pages/wooCommerce/WooCommerce'
+import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
 import Settings from '../pages/settings/Settings';
@@ -22,17 +25,15 @@ import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Couriers from '../pages/couriers/Couriers';
 import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
-import MultiDrop from '../pages/multiDrop/MultiDrop';
 import Square from '../pages/square/Square';
-import Signup1 from '../pages/signup/Signup1';
-import Signup2 from '../pages/signup/Signup2';
 import SquareSpace from '../pages/squarespace/SquareSpace';
 
 const routes = (
 	<Switch>
 		<Route exact path={PATHS.SIGNUP} component={Signup} />
-		<Route exact path={PATHS.SIGNUP_1} component={Signup1} />
-		<Route exact path={PATHS.SIGNUP_2} component={Signup2} />
+		<Route path={PATHS.SIGNUP_1} component={Signup1} />
+		<Route path={PATHS.SIGNUP_2} component={Signup2} />
+		<Route path={PATHS.SIGNUP_3} component={Signup3} />
 		<Route exact path={PATHS.LOGIN} component={Login} />
 		<Route exact path={PATHS.FORGOT} component={ForgotPassword} />
 		<Route exact path={PATHS.RESET} component={ResetPassword} />
@@ -46,7 +47,6 @@ const routes = (
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
-		<PrivateRoute exact path={PATHS.MULTI} component={MultiDrop} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
 		<PrivateRoute path={PATHS.COURIERS} component={Couriers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />

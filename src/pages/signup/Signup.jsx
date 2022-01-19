@@ -363,7 +363,7 @@ export default function Signup(props) {
 											<label htmlFor='terms'>
 												I agree to the&nbsp;
 												<a
-													href='https://aerial-rook-d63.notion.site/Terms-of-Use-a0c41b327ae54d118185a11d939ffc0a'
+													href={process.env.REACT_APP_TERMS_OF_SERVICE_URL}
 													target='_blank'
 												>
 													terms of service
