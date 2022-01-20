@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Mixpanel } from '../../config/mixpanel';
 import classnames from 'classnames';
 
-const ProductDisplay = ({ isComponent, plan, price, description, email, customerId, lookupKey, numUsers, checkoutText, commission }) => {
+const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
 		'd-flex': true,
 		'flex-column': true, 
@@ -143,7 +143,6 @@ const Subscription = props => {
 						lookupKey={'growth'}
 						plan={'Growth'}
 						price={25}
-						email={user.email}
 						customerId={user.stripeCustomerId}
 						numUsers={1}
 						checkoutText={'Checkout'}

@@ -91,12 +91,12 @@ export function authUser(type, userData) {
 	};
 }
 
-export function syncUser(email) {
+export function syncUser(email, authenticated=true) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
 				.then(({ message, ...user }) => {
-					dispatch(setCurrentUser(user));
+					authenticated ? dispatch(setCurrentUser(user)) : dispatch(setUserDetails(user));
 					resolve(user);
 				})
 				.catch(err => {
