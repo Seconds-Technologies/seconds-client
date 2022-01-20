@@ -87,40 +87,12 @@ const Subscription = props => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	let [message, setMessage] = useState('');
+	let [isSubscribed, setSubscribed] = useState(false)
 	let [portalLink, setPortalLink] = useState('');
 
 	useEffect(() => {
-		(async function fetchSubscription(){
-			await dispatch(checkSubscriptionStatus(user.email))
-		})()
+		dispatch(checkSubscriptionStatus(user.email)).then(() => setSubscribed(true))
 		Mixpanel.people.increment("page_views")
-		return () => {
-			const query = new URLSearchParams(window.location.search);
-			window.fetch(`${process.env.REACT_APP_SERVER_HOST}/server/subscription/create-portal-session`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						stripe_customer_id: user.stripeCustomerId,
-					}),
-				})
-				.then(res => {
-					console.log(res);
-					return res.json();
-				})
-				.then(data => {
-					if (data.portal_url) {
-						setPortalLink(data.portal_url);
-					}
-				})
-				.catch(error => {
-					setMessage(`Error occurred ${error}`);
-				});
-			if (query.get('canceled')) {
-				setMessage('Order canceled');
-			}
-		};
 	}, [portalLink]);
 
 	const containerClass = classnames({
@@ -136,7 +108,7 @@ const Subscription = props => {
 	return (
 		<div className={containerClass}>
 			<Message message={message} onHide={() => setMessage('')} />
-			{!user.subscriptionId ? (
+			{!user.subscriptionId || !isSubscribed ? (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>
 					<ProductDisplay
 						isComponent={props.isComponent}

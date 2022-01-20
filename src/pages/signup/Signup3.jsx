@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { authenticateUser, syncUser } from '../../store/actions/auth';
+import React, { useState } from 'react';
+import { authenticateUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingOverlay from 'react-loading-overlay';
 import Subscription from '../subscription/Subscription';
@@ -18,12 +18,6 @@ const Signup3 = props => {
 			console.error(err);
 		}
 	};
-
-	useEffect(() => {
-		dispatch(syncUser(user.email, false))
-			.then(() => console.log('USER SYNCED'))
-			.catch(err => console.error('USER SYNC FAILED!', err));
-	}, [])
 
 	return (
 		<LoadingOverlay active={isLoading} spinner text='Hold tight, signing you up...'>
