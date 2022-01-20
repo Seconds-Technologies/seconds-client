@@ -10,7 +10,7 @@ import classnames from 'classnames';
 const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
 		'd-flex': true,
-		'flex-column': true, 
+		'flex-column': true,
 		'mx-4': true,
 		'px-5': true,
 		'py-5': !isComponent,
@@ -18,7 +18,7 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 		'h-100': true,
 		'w-100': true,
 		'plan-wrapper': true
-	})
+	});
 	return (
 		<section className={container}>
 			<span className='text-uppercase text-muted mb-4 plan-text'>{`${plan} account`}</span>
@@ -49,21 +49,18 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 			</div>
 		</section>
 	);
-}
+};
 
 const SuccessDisplay = ({ isComponent, stripeCustomerId }) => {
 	return (
 		<section className='d-flex flex-column align-items-center success-wrapper py-5'>
-			<div className="d-flex flex-column">
+			<div className='d-flex flex-column'>
 				<img className='img-fluid seconds-logo' src={secondsLogo} alt='' />
 				<div className='description Box-root'>
 					<h3>You are subscribed!</h3>
 				</div>
 			</div>
-			<form
-				action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-portal-session`}
-				method='POST'
-			>
+			<form action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-portal-session`} method='POST'>
 				<input type='hidden' name='onboarding' value={isComponent} />
 				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
 				<button id='checkout-and-portal-button' className='btn btn-primary btn-lg text-white mt-4' type='submit'>
@@ -75,7 +72,7 @@ const SuccessDisplay = ({ isComponent, stripeCustomerId }) => {
 };
 
 const Message = ({ message, onHide }) => (
-	<Modal show={message} onHide={onHide} className="alert alert-danger" centered>
+	<Modal show={message} onHide={onHide} className='alert alert-danger' centered>
 		<Modal.Header className='alert' closeButton>
 			<Modal.Title>Error</Modal.Title>
 		</Modal.Header>
@@ -87,28 +84,32 @@ const Subscription = props => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	let [message, setMessage] = useState('');
-	let [isSubscribed, setSubscribed] = useState(false)
+	let [isSubscribed, setSubscribed] = useState(false);
 	let [portalLink, setPortalLink] = useState('');
 
 	useEffect(() => {
-		dispatch(checkSubscriptionStatus(user.email)).then(() => setSubscribed(true))
-		Mixpanel.people.increment("page_views")
+		dispatch(checkSubscriptionStatus(user.email)).then(() => setSubscribed(true));
+		Mixpanel.people.increment('page_views');
 	}, [portalLink]);
 
 	const containerClass = classnames({
-		'subscription': !props.isComponent,
+		subscription: !props.isComponent,
 		'd-flex': true,
 		'pt-5': !props.isComponent,
 		'pt-2': true,
 		'justify-content-center': true,
 		'align-items-center': true,
-		'bg-light': !props.isComponent,
+		'bg-light': !props.isComponent
 	});
 
 	return (
 		<div className={containerClass}>
 			<Message message={message} onHide={() => setMessage('')} />
-			{!user.subscriptionId || !isSubscribed ? (
+			{user.subscriptionId || isSubscribed ? (
+				<div className='d-flex flex-grow-1 flex-column align-items-center justify-content-center h-75 m-1'>
+					<SuccessDisplay isComponent={props.isComponent} stripeCustomerId={user.stripeCustomerId} />
+				</div>
+			) : (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>
 					<ProductDisplay
 						isComponent={props.isComponent}
@@ -119,12 +120,8 @@ const Subscription = props => {
 						numUsers={1}
 						checkoutText={'Checkout'}
 						description={'For developers and small businesses doing small or medium order volume'}
-						commission={{price: 0.49, orders: 20}}
+						commission={{ price: 0.49, orders: 20 }}
 					/>
-				</div>
-			) : (
-				<div className="d-flex flex-grow-1 flex-column align-items-center justify-content-center h-75 m-1">
-					<SuccessDisplay isComponent={props.isComponent} stripeCustomerId={user.stripeCustomerId} />
 				</div>
 			)}
 		</div>
