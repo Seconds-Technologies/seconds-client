@@ -8,7 +8,7 @@ import backArrow from '../../assets/img/noun-go-back-vector.svg';
 const Signup3 = props => {
 	const dispatch = useDispatch();
 	const [isLoading, setLoading] = useState(false);
-	const { subscriptionId } = useSelector(state => state['currentUser'].user);
+	const { user } = useSelector(state => state['currentUser']);
 
 	const signup = async () => {
 		try {
@@ -31,7 +31,7 @@ const Signup3 = props => {
 				</div>
 				<Subscription isComponent />
 				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
-					<button disabled={!subscriptionId} onClick={signup} className='btn btn-dark btn-lg w-sm mt-4'>
+					<button disabled={!user.subscriptionId} onClick={signup} className='btn btn-dark btn-lg w-sm mt-4'>
 						Show My Dashboard
 					</button>
 				</div>

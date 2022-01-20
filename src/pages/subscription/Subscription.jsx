@@ -150,20 +150,6 @@ const Subscription = props => {
 						description={'For developers and small businesses doing small or medium order volume'}
 						commission={{price: 0.49, orders: 20}}
 					/>
-					<ProductDisplay
-						isComponent={props.isComponent}
-						lookupKey={'enterprise'}
-						plan={'Enterprise'}
-						price={49}
-						email={user.email}
-						customerId={user.stripeCustomerId}
-						numUsers={5}
-						description={
-							'For medium, large and fast-growing businesses \n' + 'doing medium to large order volume'
-						}
-						checkoutText={'Upgrade'}
-						commission={{price: 0.99, orders: 50}}
-					/>
 				</div>
 			) : (
 				<div className="d-flex flex-grow-1 flex-column align-items-center justify-content-center h-75 m-1">

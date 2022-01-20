@@ -120,12 +120,12 @@ export function checkSubscriptionStatus(email) {
 			console.log(email);
 			apiCall('POST', '/server/subscription/fetch-stripe-subscription', { email })
 				.then(({ id: subscriptionId, status }) => {
-					console.log(subscriptionId, status);
+					console.table({subscriptionId, status});
 					Mixpanel.people.set({
 						subscribed: !!subscriptionId,
 					});
 					dispatch(updateCurrentUser({ subscriptionId }));
-					resolve(status === 'active');
+					resolve(status === 'active' || status === "trialing");
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
