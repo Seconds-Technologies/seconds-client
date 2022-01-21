@@ -11,14 +11,14 @@ const Quotes = ({quotes, show, toggleShow, selectFleetProvider, showConfirmDialo
 	return (
 		<Modal show={show} onHide={() => toggleShow(false)} size='lg'>
 			<Modal.Header closeButton>
-				<Modal.Title>Fleet Provider Quotes</Modal.Title>
+				<Modal.Title>Courier Quotes</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div>
 					<table className='table'>
 						<thead>
 						<tr>
-							<th scope='col'>Fleet Provider</th>
+							<th scope='col'>Courier</th>
 							<th scope='col'>
 								Price
 							</th>
