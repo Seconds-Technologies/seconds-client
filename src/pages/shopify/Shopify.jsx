@@ -45,11 +45,7 @@ const Shopify = props => {
 						onSubmit={values => {
 							setLoading(true)
 							dispatch(connectShopify({ ...values, email }))
-								.then(shop => {
-									console.log(shop);
-									setLoading(false)
-									dispatch(getAllProducts(shop.accessToken, shop.baseURL, email));
-								})
+								.then(() => setLoading(false))
 								.catch(err => {
 									setLoading(false)
 									setError(err.message)
