@@ -61,9 +61,9 @@ export function authUser(type, userData) {
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
 					shopify &&
 						apiCall('POST', `/server/shopify`, { email: user.email })
-							.then(({ baseURL, accessToken, shopId, domain, country, shopOwner }) => {
-								dispatch(setShopify({ baseURL, accessToken, shopId, domain, country, shopOwner }));
-								resolve({ baseURL, accessToken, shopId, domain, country, shopOwner });
+							.then(shop => {
+								dispatch(setShopify(shop));
+								resolve(shop);
 							})
 							.catch(err => reject(err));
 					woocommerce &&

@@ -4,7 +4,6 @@ const DEFAULT_STATE = {
 	isIntegrated: false,
 	credentials: {
 		accessToken: "",
-		baseURL: "",
 		shopId: "",
 		domain: "",
 		country: "",

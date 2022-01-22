@@ -21,11 +21,11 @@ export const setAllProducts = products => ({
 	products,
 });
 
-export function validateShopify(data) {
+export function connectShopify(data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.log("Credentials:", data);
-			return apiCall("POST", `/server/shopify/validate`, data)
+			return apiCall("POST", `/server/shopify/connect`, data)
 				.then(shop => {
 					Mixpanel.track("Successful Shopify integration")
 					Mixpanel.people.setOnce({$shopify: shop})

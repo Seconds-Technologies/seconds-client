@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
-import { getAllProducts, validateShopify } from '../../store/actions/shopify';
+import { getAllProducts, connectShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../assets/img/shopify.svg';
 import './shopify.css';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { removeError } from '../../store/actions/errors';
 
 const Shopify = props => {
 	const dispatch = useDispatch();
@@ -12,6 +13,11 @@ const Shopify = props => {
 	const [error, setError] = useState(null);
 	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
 	const [isLoading, setLoading] = useState(false);
+
+	useEffect(() => {
+		dispatch(removeError())
+	}, [props.location])
+
 	return (
 		<div className='shopify-container bg-light pb-3'>
 			{!isIntegrated ? (
@@ -38,7 +44,7 @@ const Shopify = props => {
 						}}
 						onSubmit={values => {
 							setLoading(true)
-							dispatch(validateShopify({ ...values, email }))
+							dispatch(connectShopify({ ...values, email }))
 								.then(shop => {
 									console.log(shop);
 									setLoading(false)
