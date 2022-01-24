@@ -21,7 +21,7 @@ import { useIntercom } from 'react-use-intercom';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, company, phone, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	// const [order, setOrder] = useState({});
@@ -111,6 +111,7 @@ const ViewOrder = props => {
 			name: `${firstname} ${lastname}`,
 			email: email,
 			company: company,
+			phone: phone,
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
 		})
