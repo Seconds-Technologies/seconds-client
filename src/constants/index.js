@@ -38,8 +38,6 @@ export const STATUS_COLOURS = {
 	UNKNOWN: '#795548'
 };
 
-export const MARKER_COLOURS = ['#F44336', '#4285F4'];
-
 export const BACKGROUND = {
 	NEW: 'rgba(244,67, 54, 0.25)',
 	PENDING: 'rgba(153, 51, 204, 0.25)',

@@ -116,11 +116,11 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		console.table({ COURIER: order.providerId });
-		stuartWidget();
 	}, [order]);
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
+		stuartWidget();
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
