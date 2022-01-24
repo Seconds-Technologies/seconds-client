@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
-import { getAllProducts, connectShopify } from '../../store/actions/shopify';
+import { connectShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../assets/img/shopify.svg';
 import './shopify.css';

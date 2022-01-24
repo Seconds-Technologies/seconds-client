@@ -17,6 +17,7 @@ import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
 import ConfirmModal from './modals/ConfirmModal';
 import { STATUS } from '../../constants';
+import { useIntercom } from 'react-use-intercom';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const ViewOrder = props => {
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const modalRef = useRef(null);
+	const { boot } = useIntercom()
 
 	const order = useMemo(() => {
 		const orderID = props.location['pathname'].split('/').reverse()[0];
@@ -103,6 +105,26 @@ const ViewOrder = props => {
 		];
 	}, [order, activeIndex]);
 
+	const stuartWidget = useCallback(() => {
+		console.log("booting intercom widget....")
+		return boot({
+			email: "secondsdelivery@gmail.com",
+			userId: process.env.REACT_APP_STUART_USER_ID,
+			userHash: process.env.REACT_APP_STUART_USER_HASH
+		})
+	}, [boot])
+
+	useEffect(() => {
+		apiKey && dispatch(subscribe(apiKey, email));
+		stuartWidget()
+		return () => apiKey && dispatch(unsubscribe());
+	}, []);
+
+	useEffect(() => {
+		Mixpanel.people.increment('page_views');
+		dispatch(removeError());
+	}, [props.location]);
+
 	const successModal = (
 		<Modal
 			show={!!message}
@@ -131,16 +153,6 @@ const ViewOrder = props => {
 			</div>
 		</Modal>
 	);
-
-	useEffect(() => {
-		apiKey && dispatch(subscribe(apiKey, email));
-		return () => apiKey && dispatch(unsubscribe());
-	}, []);
-
-	useEffect(() => {
-		Mixpanel.people.increment('page_views');
-		dispatch(removeError());
-	}, [props.location]);
 
 	const getParsedAddress = useCallback(parseAddress, []);
 

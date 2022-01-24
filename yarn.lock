@@ -12008,6 +12008,11 @@ react-transition-group@^4.3.0, react-transition-group@^4.4.0, react-transition-g
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-intercom@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-use-intercom/-/react-use-intercom-1.4.1.tgz#b8a34222112380ad8d74026b3f148d8bb26f9172"
+  integrity sha512-OJ8s1CqyAvFkuHpbLOcFUhkIfD2vj7o2NzNYL6NBFmsFnGX/hRrDswNNSoJ+zxxFAMFTye7VxAQyrJ2qkgYRNw==
+
 react@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"

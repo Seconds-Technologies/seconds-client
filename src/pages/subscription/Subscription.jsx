@@ -85,12 +85,11 @@ const Subscription = props => {
 	const dispatch = useDispatch();
 	let [message, setMessage] = useState('');
 	let [isSubscribed, setSubscribed] = useState(false);
-	let [portalLink, setPortalLink] = useState('');
 
 	useEffect(() => {
 		dispatch(checkSubscriptionStatus(user.email)).then(() => setSubscribed(true));
 		Mixpanel.people.increment('page_views');
-	}, [portalLink]);
+	}, []);
 
 	const containerClass = classnames({
 		subscription: !props.isComponent,
