@@ -21,7 +21,7 @@ import { useIntercom } from 'react-use-intercom';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const { firstname, lastname, email, apiKey } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, company, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	// const [order, setOrder] = useState({});
@@ -109,7 +109,8 @@ const ViewOrder = props => {
 		console.log("booting intercom widget....")
 		return boot({
 			name: `${firstname} ${lastname}`,
-			email: "secondsdelivery@gmail.com",
+			email: email,
+			company: company,
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
 		})
