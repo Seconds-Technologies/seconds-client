@@ -64,7 +64,6 @@ export function validateAddress(pickup, dropoff) {
 }
 
 export function dateFilter(data, interval) {
-	console.log(data, interval);
 	switch (interval) {
 		case 'day':
 			return data.filter(({ createdAt }) => {
