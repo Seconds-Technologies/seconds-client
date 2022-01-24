@@ -17,7 +17,7 @@ import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
 import ConfirmModal from './modals/ConfirmModal';
 import { PROVIDERS, STATUS } from '../../constants';
-import { IntercomProvider, useIntercom } from 'react-use-intercom';
+import { useIntercom } from 'react-use-intercom';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -33,8 +33,7 @@ const ViewOrder = props => {
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const modalRef = useRef(null);
-	const { boot, hide } = useIntercom();
-	const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
+	const { boot, shutdown } = useIntercom();
 
 	const order = useMemo(() => {
 		const orderID = props.location['pathname'].split('/').reverse()[0];
@@ -107,26 +106,28 @@ const ViewOrder = props => {
 	}, [order, activeIndex]);
 
 	const stuartWidget = useCallback(() => {
-		console.log('booting intercom widget....');
+		console.log("booting intercom widget....")
 		return boot({
-			email: 'secondsdelivery@gmail.com',
+			name: `${firstname} ${lastname}`,
+			email: "secondsdelivery@gmail.com",
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
-		});
-	}, [boot]);
-
-	useEffect(() => {
-		console.table({ COURIER: order.providerId });
-		order && order.providerId === PROVIDERS.STUART && stuartWidget();
-	}, [order.providerId, stuartWidget]);
+		})
+	}, [boot])
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => {
 			apiKey && dispatch(unsubscribe());
-			hide();
-		};
+			console.log("shutting down intercom widget....")
+			shutdown()
+		}
 	}, []);
+
+	useEffect(() => {
+		console.table({ COURIER: order.providerId });
+		order && order.providerId === PROVIDERS.STUART && stuartWidget();
+	}, [order.providerId, stuartWidget]);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -244,76 +245,74 @@ const ViewOrder = props => {
 	};
 
 	return (
-		<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.NODE_ENV === 'production'}>
-			<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text='Creating Order'>
-				<div ref={modalRef} className='viewOrder bg-light pt-2 pb-1 px-5'>
-					<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
-					<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
-					<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
-					{successModal}
-					{errorModal}
-					<div className='row mx-5'>
-						<div className='col-4'>
-							<div className='row d-flex justify-content-end'>
-								<Card styles>
-									<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles='my-2' />
-									<Item label='Address' value={delivery.address} styles='my-2' />
-									<Item label='Email' value={delivery.email} styles='my-2' />
-									<Item label='Phone number' value={delivery.phoneNumber} styles='my-2' />
-								</Card>
-							</div>
-							<div className='row d-flex justify-content-end'>
-								<Card styles='mt-3'>
-									<Item label='Delivery provider' value={order.providerId} type='image' styles='my-2' />
-									<Item label='Driver name' value={order.driverName} styles='my-2' />
-									<Item label='Phone number' value={order.driverPhone} styles='my-2' />
-									<Item label='Transport' value={order.driverVehicle} styles='my-2' />
-								</Card>
-							</div>
-						</div>
-						<div className='col-8'>
-							<Card>
-								<div className='d-flex justify-content-between my-2'>
-									<Item label='Job Reference' value={order.reference} />
-									<div>
-										{delivery.trackingURL && (
-											<a href={delivery.trackingURL} target='_blank' className='btn btn-outline-primary me-3'>
-												Track
-											</a>
-										)}
-										{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
-											<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
-												Re-order
-											</button>
-										) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
-											<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
-												Cancel Order
-											</button>
-										) : null}
-									</div>
-								</div>
-								<div className='d-flex mt-2 mb-3 justify-content-evenly'>
-									<Panel
-										label='Delivery ETA'
-										value={
-											!delivery.dropoffEndTime
-												? 'Estimating...'
-												: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
-												? `Delivered`
-												: `${moment().to(moment(delivery.dropoffEndTime))}`
-										}
-										styles='me-1'
-									/>
-									<Panel label='Price' value={`£${order.deliveryFee.toFixed(2)}`} styles='mx-2' />
-									<Panel label='Status' value={order.status} styles='ms-1' />
-								</div>
+		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text='Creating Order'>
+			<div ref={modalRef} className='viewOrder bg-light pt-2 pb-1 px-5'>
+				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
+				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
+				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
+				{successModal}
+				{errorModal}
+				<div className='row mx-5'>
+					<div className='col-4'>
+						<div className='row d-flex justify-content-end'>
+							<Card styles>
+								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles='my-2' />
+								<Item label='Address' value={delivery.address} styles='my-2' />
+								<Item label='Email' value={delivery.email} styles='my-2' />
+								<Item label='Phone number' value={delivery.phoneNumber} styles='my-2' />
 							</Card>
-							<Map height={340} markers={markers} />
+						</div>
+						<div className='row d-flex justify-content-end'>
+							<Card styles='mt-3'>
+								<Item label='Delivery provider' value={order.providerId} type='image' styles='my-2' />
+								<Item label='Driver name' value={order.driverName} styles='my-2' />
+								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
+								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
+							</Card>
 						</div>
 					</div>
+					<div className='col-8'>
+						<Card>
+							<div className='d-flex justify-content-between my-2'>
+								<Item label='Job Reference' value={order.reference} />
+								<div>
+									{delivery.trackingURL && (
+										<a href={delivery.trackingURL} target='_blank' className='btn btn-outline-primary me-3'>
+											Track
+										</a>
+									)}
+									{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
+										<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
+											Re-order
+										</button>
+									) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
+										<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
+											Cancel Order
+										</button>
+									) : null}
+								</div>
+							</div>
+							<div className='d-flex mt-2 mb-3 justify-content-evenly'>
+								<Panel
+									label='Delivery ETA'
+									value={
+										!delivery.dropoffEndTime
+											? 'Estimating...'
+											: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
+											? `Delivered`
+											: `${moment().to(moment(delivery.dropoffEndTime))}`
+									}
+									styles='me-1'
+								/>
+								<Panel label='Price' value={`£${order.deliveryFee.toFixed(2)}`} styles='mx-2' />
+								<Panel label='Status' value={order.status} styles='ms-1' />
+							</div>
+						</Card>
+						<Map height={340} markers={markers} />
+					</div>
 				</div>
-			</LoadingOverlay>
-		</IntercomProvider>
+			</div>
+		</LoadingOverlay>
 	);
 };
 
