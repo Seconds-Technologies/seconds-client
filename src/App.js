@@ -65,8 +65,7 @@ function App() {
 							styles={{
 								toggleButton: {
 									width: 60,
-									height: 60,
-									marginLeft: 40
+									height: 60
 								},
 								toggleContainer: {
 									zIndex: 1000000,
