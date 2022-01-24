@@ -105,20 +105,19 @@ const ViewOrder = props => {
 		];
 	}, [order, activeIndex]);
 
-	const stuartWidget = useCallback(
-		() =>
-			boot({
-				email: 'secondsdelivery@gmail.com',
-				userId: process.env.REACT_APP_STUART_USER_ID,
-				userHash: process.env.REACT_APP_STUART_USER_HASH
-			}),
-		[boot]
-	);
+	const stuartWidget = useCallback(() => {
+		console.log('booting stuart widget...');
+		return boot({
+			email: 'secondsdelivery@gmail.com',
+			userId: process.env.REACT_APP_STUART_USER_ID,
+			userHash: process.env.REACT_APP_STUART_USER_HASH
+		});
+	}, [boot]);
 
 	useEffect(() => {
-		console.table({COURIER: order.providerId})
-		order && order.providerId === PROVIDERS.STUART && stuartWidget();
-	}, [order.providerId]);
+		console.table({ COURIER: order.providerId });
+		stuartWidget();
+	}, [order]);
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
