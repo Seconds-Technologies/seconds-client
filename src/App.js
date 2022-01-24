@@ -35,7 +35,7 @@ function App() {
 	}, [isAuthenticated]);
 	return (
 		<GeolocationContextProvider>
-			<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.REACT_APP_ENV_MODE === 'production'}>
+			<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.REACT_APP_NODE_ENV === 'production'}>
 				<Router>
 					{isAuthenticated && <Topbar />}
 					<div className='app-container'>
