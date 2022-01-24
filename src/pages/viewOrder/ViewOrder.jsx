@@ -106,21 +106,21 @@ const ViewOrder = props => {
 	}, [order, activeIndex]);
 
 	const stuartWidget = useCallback(() => {
-		console.log('booting stuart widget...');
+		console.log("booting intercom widget....")
 		return boot({
-			email: 'secondsdelivery@gmail.com',
+			email: "secondsdelivery@gmail.com",
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
-		});
-	}, [boot]);
+		})
+	}, [boot])
 
 	useEffect(() => {
 		console.table({ COURIER: order.providerId });
-	}, [order]);
+		order && order.providerId === PROVIDERS.STUART && stuartWidget();
+	}, [order.providerId, stuartWidget]);
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
-		stuartWidget();
 		return () => {
 			apiKey && dispatch(unsubscribe());
 			hide()
