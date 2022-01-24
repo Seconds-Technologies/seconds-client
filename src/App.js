@@ -24,7 +24,7 @@ function App() {
 	} = useSelector(state => state['currentUser']);
 	const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
 	const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
-	const stuartAppId = process.env.REACT_APP_STUART_APP_ID
+	const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
 
 	useEffect(() => {
 		console.log('isAuthenticated:', isAuthenticated);
@@ -35,8 +35,8 @@ function App() {
 	}, [isAuthenticated]);
 	return (
 		<GeolocationContextProvider>
-			<Router>
-				<IntercomProvider appId={stuartAppId}>
+			<IntercomProvider appId={stuartAppId}>
+				<Router>
 					{isAuthenticated && <Topbar />}
 					<div className='app-container'>
 						{isAuthenticated && <Sidebar />}
@@ -89,8 +89,8 @@ function App() {
 							}}
 						/>
 					)}
-				</IntercomProvider>
-			</Router>
+				</Router>
+			</IntercomProvider>
 		</GeolocationContextProvider>
 	);
 }

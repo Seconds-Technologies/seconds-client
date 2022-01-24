@@ -91,7 +91,7 @@ export function dateFilter(data, interval) {
 }
 
 /*
-export function stuartWidget() {
+export function stuartWidget(intercomSettings) {
 	let w = window;
 	let ic = w.Intercom;
 	if (typeof ic === 'function') {
