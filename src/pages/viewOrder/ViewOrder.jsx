@@ -33,7 +33,7 @@ const ViewOrder = props => {
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const modalRef = useRef(null);
-	const { boot } = useIntercom()
+	const { boot } = useIntercom();
 
 	const order = useMemo(() => {
 		const orderID = props.location['pathname'].split('/').reverse()[0];
@@ -105,18 +105,23 @@ const ViewOrder = props => {
 		];
 	}, [order, activeIndex]);
 
-	const stuartWidget = useCallback(() => {
-		return order && order.providerId === PROVIDERS.STUART && boot({
-			name: `${firstname} ${lastname}`,
-			email: "secondsdelivery@gmail.com",
-			userId: process.env.REACT_APP_STUART_USER_ID,
-			userHash: process.env.REACT_APP_STUART_USER_HASH
-		})
-	}, [boot, order.providerId])
+	const stuartWidget = useCallback(
+		() =>
+			boot({
+				email: 'secondsdelivery@gmail.com',
+				userId: process.env.REACT_APP_STUART_USER_ID,
+				userHash: process.env.REACT_APP_STUART_USER_HASH
+			}),
+		[boot]
+	);
+
+	useEffect(() => {
+		console.table({COURIER: order.providerId})
+		order && order.providerId === PROVIDERS.STUART && stuartWidget();
+	}, [order.providerId]);
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
-		stuartWidget()
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
@@ -180,8 +185,8 @@ const ViewOrder = props => {
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 				// check if postcode from geocoding is different to original postcode
 				// if so change back to original postcode
-				if (drop.dropoffPostcode !== dropoffFormattedAddress.postcode){
-					dropoffFormattedAddress.postcode = drop.dropoffPostcode
+				if (drop.dropoffPostcode !== dropoffFormattedAddress.postcode) {
+					dropoffFormattedAddress.postcode = drop.dropoffPostcode;
 				}
 				values.drops[index].dropoffAddressLine1 = dropoffFormattedAddress.street;
 				values.drops[index].dropoffCity = dropoffFormattedAddress.city;
@@ -236,12 +241,7 @@ const ViewOrder = props => {
 	};
 
 	return (
-		<LoadingOverlay
-			active={loading}
-			spinner
-			classNamePrefix="view_order_loading_"
-			text='Creating Order'
-		>
+		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text='Creating Order'>
 			<div ref={modalRef} className='viewOrder bg-light pt-2 pb-1 px-5'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
