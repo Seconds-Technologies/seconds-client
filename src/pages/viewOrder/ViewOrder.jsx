@@ -16,12 +16,12 @@ import Card from './components/Card';
 import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
 import ConfirmModal from './modals/ConfirmModal';
-import { STATUS } from '../../constants';
+import { PROVIDERS, STATUS } from '../../constants';
 import { useIntercom } from 'react-use-intercom';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
-	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const { firstname, lastname, email, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	// const [order, setOrder] = useState({});
@@ -106,13 +106,13 @@ const ViewOrder = props => {
 	}, [order, activeIndex]);
 
 	const stuartWidget = useCallback(() => {
-		console.log("booting intercom widget....")
-		return boot({
+		return order && order.providerId === PROVIDERS.STUART && boot({
+			name: `${firstname} ${lastname}`,
 			email: "secondsdelivery@gmail.com",
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
 		})
-	}, [boot])
+	}, [boot, order.providerId])
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));

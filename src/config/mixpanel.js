@@ -4,7 +4,7 @@ mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
 	ignore_dnt: true
 });
 
-let env_check = process.env.REACT_APP_MIXPANEL_ENV === 'production' || process.env.REACT_APP_MIXPANEL_ENV === 'staging';
+let env_check = process.env.NODE_ENV === 'production';
 console.log(env_check)
 
 let actions = {
