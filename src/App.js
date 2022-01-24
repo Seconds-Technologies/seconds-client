@@ -64,8 +64,8 @@ function App() {
 							baseUrl='https://app.papercups.io'
 							styles={{
 								toggleButton: {
-									width: 75,
-									height: 75,
+									width: 60,
+									height: 60,
 									marginLeft: 40
 								},
 								toggleContainer: {

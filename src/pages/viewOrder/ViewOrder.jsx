@@ -33,7 +33,7 @@ const ViewOrder = props => {
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const modalRef = useRef(null);
-	const { boot } = useIntercom();
+	const { boot, hide } = useIntercom();
 
 	const order = useMemo(() => {
 		const orderID = props.location['pathname'].split('/').reverse()[0];
@@ -121,7 +121,10 @@ const ViewOrder = props => {
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
 		stuartWidget();
-		return () => apiKey && dispatch(unsubscribe());
+		return () => {
+			apiKey && dispatch(unsubscribe());
+			hide()
+		}
 	}, []);
 
 	useEffect(() => {
