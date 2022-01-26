@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
-import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { addError, removeError } from '../../store/actions/errors';
 import { validateWoocommerce } from '../../store/actions/woocommerce';
@@ -10,7 +9,6 @@ import { Mixpanel } from '../../config/mixpanel';
 
 const WooCommerce = props => {
 	const dispatch = useDispatch();
-	const [isLoading, setLoading] = useState(false);
 	const { isIntegrated, credentials } = useSelector(state => state['wooCommerceStore']);
 	const { email, company } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
@@ -91,7 +89,6 @@ const WooCommerce = props => {
 										className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'
 									>
 										<span className='me-3'>Connect</span>
-										<ClipLoader color='white' loading={isLoading} size={20} />
 									</button>
 								</div>
 							</form>

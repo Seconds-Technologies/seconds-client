@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import squarespaceLogo from '../../assets/img/squarespace-logo.png';
 import { Formik } from 'formik';
-import ClipLoader from 'react-spinners/ClipLoader';
 import { PATHS } from '../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { connectSquarespace } from '../../store/actions/squarespace';
@@ -9,7 +8,6 @@ import { addError } from '../../store/actions/errors';
 
 const SquareSpace = props => {
 	const dispatch = useDispatch();
-	const [isLoading, setLoading] = useState(false);
 	const error = useSelector(state => state['errors']);
 	const { isIntegrated, credentials } = useSelector(state => state['squarespaceStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
@@ -93,7 +91,6 @@ const SquareSpace = props => {
 										className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'
 									>
 										<span className='me-3'>Connect</span>
-										<ClipLoader color='white' loading={isLoading} size={20} />
 									</button>
 								</div>
 							</form>

@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
-import ClipLoader from 'react-spinners/ClipLoader';
 import { useDispatch, useSelector } from 'react-redux';
 import { connectHubrise } from '../../store/actions/hubrise';
 import { addError } from '../../store/actions/errors';
+import { PATHS } from '../../constants';
 
 const HubRise = props => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors'])
-	const [isLoading, setLoading] = useState(false);
 	const { isIntegrated, credentials } = useSelector(state => state['hubRiseStore']);
 
 	useEffect(() => {
@@ -23,7 +22,7 @@ const HubRise = props => {
 				.then(account => console.log(account))
 				.catch(err => dispatch(addError(err.message)));
 		} else if (query.get('error')){
-			dispatch(addError(query.get('error')))
+			dispatch(addError(query.get('error').replace(/_/g, ' ')))
 		}
 	}, [props.location]);
 
@@ -109,7 +108,6 @@ const HubRise = props => {
 										className='btn btn-primary btn-lg d-flex justify-content-center align-items-center shopifyButton'
 									>
 										<span className='me-3'>Connect</span>
-										<ClipLoader color='white' loading={isLoading} size={20} />
 									</button>
 								</div>
 							</form>
@@ -120,7 +118,7 @@ const HubRise = props => {
 						<p className='lead'>Client Id: {credentials.clientId}</p>
 						<p className='lead'>Account: {credentials.accountName}</p>
 						<p className='lead'>Location: {credentials.locationName}</p>
-						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.goBack}>
+						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							Go Back
 						</button>
 					</div>
