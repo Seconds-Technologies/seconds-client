@@ -4,6 +4,7 @@ import shopifyLogo from '../../assets/img/shopify.svg';
 import weeblyLogo from '../../assets/img/weebly-vector-logo.svg';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg'
 import squarespaceLogo from '../../assets/img/squarespace-logo.svg'
+import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { PATHS } from '../../constants';
 import classnames from 'classnames';
 import { Mixpanel } from '../../config/mixpanel';
@@ -15,9 +16,9 @@ export default function Integrations(props) {
 	const dispatch = useDispatch()
 	const [toastMessage, setShowToast] = useState('');
 
-	const ShopifyLinkBtn = classnames({
+	const IntegrationLinkBtn = classnames({
 		'col-sm-12': true,
-		'col-md-6': true,
+		'col-md-4': true,
 		'text-decoration-none': true,
 		'my-2': true,
 	});
@@ -36,7 +37,7 @@ export default function Integrations(props) {
 					<div
 						onClick={() => props.history.push(PATHS.SHOPIFY)}
 						role='button'
-						className={ShopifyLinkBtn}
+						className={IntegrationLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-4 api-wrapper'>
 							<img className='img-fluid' width={200} height={150} src={shopifyLogo} alt='shopify logo' />
@@ -45,7 +46,7 @@ export default function Integrations(props) {
 					<div
 						onClick={() => setShowToast("This feature is coming soon 😄")}
 						role='button'
-						className={ShopifyLinkBtn}
+						className={IntegrationLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 							<img className='img-fluid' width={250} src={weeblyLogo} alt='square logo' />
@@ -54,7 +55,7 @@ export default function Integrations(props) {
 					<div
 						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
 						role='button'
-						className={ShopifyLinkBtn}
+						className={IntegrationLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 							<img className='img-fluid' width={200} src={woocommerceLogo} alt='square logo' />
@@ -63,10 +64,19 @@ export default function Integrations(props) {
 					<div
 						onClick={() => props.history.push(PATHS.SQUARESPACE)}
 						role='button'
-						className={ShopifyLinkBtn}
+						className={IntegrationLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 							<img className='img-fluid' width={300} src={squarespaceLogo} alt='square logo' />
+						</div>
+					</div>
+					<div
+						onClick={() => props.history.push(PATHS.HUBRISE)}
+						role='button'
+						className={IntegrationLinkBtn}
+					>
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-5 api-wrapper'>
+							<img className='img-fluid' width={300} src={hubriseLogo} alt='square logo' />
 						</div>
 					</div>
 				</div>

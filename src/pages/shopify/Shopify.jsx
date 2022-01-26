@@ -1,9 +1,9 @@
+import './shopify.css';
 import React, { useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { connectShopify } from '../../store/actions/shopify';
 import { useDispatch, useSelector } from 'react-redux';
 import shopifyLogo from '../../assets/img/shopify.svg';
-import './shopify.css';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { removeError } from '../../store/actions/errors';
 
@@ -11,8 +11,8 @@ const Shopify = props => {
 	const dispatch = useDispatch();
 	const { email, createdAt } = useSelector(state => state['currentUser'].user);
 	const [error, setError] = useState(null);
-	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
 	const [isLoading, setLoading] = useState(false);
+	const { isIntegrated, credentials } = useSelector(state => state['shopifyStore']);
 
 	useEffect(() => {
 		dispatch(removeError())

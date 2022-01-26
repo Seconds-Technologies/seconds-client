@@ -13,8 +13,6 @@ import Signup1 from '../pages/signup/Signup1';
 import Signup2 from '../pages/signup/Signup2';
 import Signup3 from '../pages/signup/Signup3';
 import Login from '../pages/login/Login';
-import Shopify from '../pages/shopify/Shopify';
-import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
 import Settings from '../pages/settings/Settings';
@@ -25,8 +23,11 @@ import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Couriers from '../pages/couriers/Couriers';
 import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
+import Shopify from '../pages/shopify/Shopify';
+import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import Square from '../pages/square/Square';
 import SquareSpace from '../pages/squarespace/SquareSpace';
+import HubRise from '../pages/hubrise/HubRise';
 
 const routes = (
 	<Switch>
@@ -44,6 +45,7 @@ const routes = (
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
 		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />
+		<PrivateRoute path={PATHS.HUBRISE} component={HubRise} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
