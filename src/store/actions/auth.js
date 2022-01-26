@@ -13,6 +13,7 @@ import { setShopify } from './shopify';
 import { Mixpanel } from '../../config/mixpanel';
 import { setWoo } from './woocommerce';
 import { setSquareSpace } from './squarespace';
+import { setHubrise } from './hubrise';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -52,10 +53,11 @@ export function authUser(type, userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
-				.then(({ token, message, shopify, woocommerce, squarespace, ...user }) => {
+				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, ...user }) => {
 					console.log(message);
 					console.log('shopify', !!shopify);
 					console.log('woocommerce', !!woocommerce);
+					console.log('hubrise', !!hubrise);
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
@@ -77,8 +79,16 @@ export function authUser(type, userData) {
 						apiCall('GET', '/server/squarespace', null, { params: { email: user.email } })
 							.then(storeDetails => {
 								dispatch(setSquareSpace(storeDetails));
-								resolve(storeDetails)
-							}).catch(err => reject(err));
+								resolve(storeDetails);
+							})
+							.catch(err => reject(err));
+					hubrise &&
+						apiCall('GET', '/server/hubrise', null, { params: { email: user.email } })
+							.then(account => {
+								dispatch(setHubrise(account));
+								resolve(account);
+							})
+							.catch(err => reject(err));
 					dispatch(removeError());
 					resolve(user);
 				})
@@ -91,7 +101,7 @@ export function authUser(type, userData) {
 	};
 }
 
-export function syncUser(email, authenticated=true) {
+export function syncUser(email, authenticated = true) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })

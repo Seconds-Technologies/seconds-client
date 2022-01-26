@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { useDispatch, useSelector } from 'react-redux';
+import { connectHubrise } from '../../store/actions/hubrise';
+import { addError } from '../../store/actions/errors';
 
 const HubRise = props => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
-	const [error, setError] = useState(null);
+	const error = useSelector(state => state['errors'])
 	const [isLoading, setLoading] = useState(false);
 	const { isIntegrated, credentials } = useSelector(state => state['hubRiseStore']);
+
+	useEffect(() => {
+		const query = new URLSearchParams(props.location.search);
+		console.log(query);
+		if (query.get('code')) {
+			let code = query.get('code');
+			dispatch(connectHubrise({ email, code }))
+				.then(account => console.log(account))
+				.catch(err => dispatch(addError(err.message)));
+		} else if (query.get('error')){
+			dispatch(addError(query.get('error')))
+		}
+	}, [props.location]);
+
 	return (
 		<div className='page-container bg-light container-fluid p-4'>
 			{!isIntegrated ? (
@@ -18,16 +34,16 @@ const HubRise = props => {
 			) : (
 				<h2 className='shopifyConnect'>Your HubRise account is now connected!</h2>
 			)}
-			<div className='d-flex flex-column justify-content-between mx-auto text-center py-3'>
+			<div className='d-flex flex-column justify-content-between mx-auto text-center py-4'>
 				<img className='img-fluid d-block mx-auto w-25 mb-3' src={hubriseLogo} alt='' />
-				<span>
+				{!isIntegrated && <span>
 					<a href='https://manager.hubrise.com/signup?locale=en-GB' target='_blank'>No account yet</a>
-				</span>
+				</span>}
 			</div>
 			<div className='d-flex justify-content-center pt-2'>
-				{error && (
+				{error.message && (
 					<div className='alert alert-danger alert-dismissible fade show' role='alert'>
-						<span className='text-center'>{error}</span>
+						<span className='text-center'>{error.message}</span>
 						<button type='button' className='btn btn-close' data-bs-dismiss='alert' aria-label='Close' />
 					</div>
 				)}
@@ -101,9 +117,9 @@ const HubRise = props => {
 					</Formik>
 				) : (
 					<div className='text-center pt-4'>
-						<p className='lead'>Shop Owner: {credentials.shopOwner}</p>
-						<p className='lead'>Domain: {credentials.domain}</p>
-						<p className='lead'>Country: {credentials.country}</p>
+						<p className='lead'>Client Id: {credentials.clientId}</p>
+						<p className='lead'>Account: {credentials.accountName}</p>
+						<p className='lead'>Location: {credentials.locationName}</p>
 						<button className='mt-5 btn btn-lg btn-secondary shopifyButton' onClick={props.history.goBack}>
 							Go Back
 						</button>

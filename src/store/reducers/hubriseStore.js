@@ -6,7 +6,8 @@ const DEFAULT_STATE = {
 		clientSecret: "",
 		clientId: "",
 		accessToken: "",
-		shopId: "",
+		accountName: "",
+		locationName: "",
 		domain: "",
 	}
 };
