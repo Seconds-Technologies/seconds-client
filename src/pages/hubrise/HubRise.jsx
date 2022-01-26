@@ -100,7 +100,7 @@ const HubRise = props => {
 									/>
 								</div>
 								<div className='text-center d-flex justify-content-around pt-3'>
-									<button className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
+									<button type='button' className='btn btn-secondary btn-lg shopifyButton' onClick={props.history.goBack}>
 										Go Back
 									</button>
 									<button
