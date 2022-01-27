@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
@@ -36,7 +36,7 @@ const HubRise = props => {
 			<div className='d-flex flex-column justify-content-between mx-auto text-center py-4'>
 				<img className='img-fluid d-block mx-auto w-25 mb-3' src={hubriseLogo} alt='' />
 				{!isIntegrated && <span>
-					<a href='https://manager.hubrise.com/signup?locale=en-GB' target='_blank'>No account yet</a>
+					<a href='https://manager.hubrise.com/signup?locale=en-GB' target='_blank'>No account yet?</a>
 				</span>}
 			</div>
 			<div className='d-flex justify-content-center pt-2'>
