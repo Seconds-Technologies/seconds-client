@@ -3,12 +3,14 @@ import { SET_HUBRISE } from '../actionTypes';
 const DEFAULT_STATE = {
 	isIntegrated: false,
 	credentials: {
-		clientSecret: "",
-		clientId: "",
 		accessToken: "",
 		accountName: "",
+		locationId: "",
 		locationName: "",
-		domain: "",
+		customerListId: "",
+		customerListName: "",
+		catalogId: "",
+		catalogName: ""
 	}
 };
 
