@@ -30,7 +30,7 @@ const HubRise = props => {
 
 	const disconnect = useCallback(() => {
 		setShow(false)
-		dispatch(disconnectHubrise(email)).then(message => alert(message));
+		dispatch(disconnectHubrise(email)).then(message => console.log(message));
 	}, [isIntegrated]);
 
 	return (
@@ -77,7 +77,7 @@ const HubRise = props => {
 								<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/hubrise/authorize`}>
 									<input type='hidden' name='email' value={email} />
 									<div className='text-center d-flex justify-content-around pt-3'>
-										<button type='submit' className='btn btn-outline-primary btn-lg connectButton'>
+										<button type='submit' className='btn btn-primary btn-lg connectButton'>
 											<span>Connect</span>
 										</button>
 									</div>
