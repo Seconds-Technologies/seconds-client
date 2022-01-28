@@ -27,3 +27,23 @@ export function connectHubrise(data){
 		});
 	};
 }
+
+export function disconnectHubrise(email) {
+	console.log("disconnecting hubrise")
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', `/server/hubrise/disconnect`, { email })
+				.then(({ message, ...hubrise }) => {
+					Mixpanel.people.setOnce({ $hubrise: null });
+					dispatch(setHubrise(hubrise));
+					dispatch(removeError());
+					resolve(message);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}

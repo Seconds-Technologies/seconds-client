@@ -1,9 +1,9 @@
-import './hubrise.css'
-import React, { useEffect, useState } from 'react';
+import './hubrise.css';
+import React, { useCallback, useEffect, useState } from 'react';
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { connectHubrise } from '../../store/actions/hubrise';
+import { connectHubrise, disconnectHubrise } from '../../store/actions/hubrise';
 import { addError } from '../../store/actions/errors';
 import { PATHS } from '../../constants';
 import Confirm from './modals/Confirm';
@@ -28,9 +28,14 @@ const HubRise = props => {
 		}
 	}, [props.location]);
 
+	const disconnect = useCallback(() => {
+		setShow(false)
+		dispatch(disconnectHubrise(email)).then(message => alert(message));
+	}, [isIntegrated]);
+
 	return (
 		<div className='page-container bg-light container-fluid p-4 d-flex h-100'>
-			<Confirm onConfirm={() => alert('DISCONNECTED')} show={show} toggleShow={setShow} />
+			<Confirm onConfirm={disconnect} show={show} toggleShow={setShow} />
 			<div className='my-auto mx-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
@@ -100,12 +105,16 @@ const HubRise = props => {
 								{credentials.customerListName} - {credentials.customerListId}
 							</span>
 						</p>
-						<div className="mb-3">
-							<button className="btn btn-outline-success">View catalog</button>
+						<div className='mb-3'>
+							<button className='btn btn-outline-success'>View catalog</button>
 						</div>
 						<div className='d-flex justify-content-evenly'>
-							<a href="https://manager.hubrise.com/dashboard" target="_blank" className="text-hubrise">Go to Hubrise</a>
-							<span role="button" className="text-hubrise text-secondary text-decoration-underline" onClick={() => setShow(true)}>Disconnect</span>
+							<a href='https://manager.hubrise.com/dashboard' target='_blank' className='text-hubrise'>
+								Go to Hubrise
+							</a>
+							<span role='button' className='text-hubrise text-secondary text-decoration-underline' onClick={() => setShow(true)}>
+								Disconnect
+							</span>
 						</div>
 						<button type='button' className='mt-4 btn btn-secondary btn-lg connectButton' onClick={props.history.goBack}>
 							<span>Go Back</span>
