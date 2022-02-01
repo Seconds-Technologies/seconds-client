@@ -1,6 +1,6 @@
 import './Orders.css';
 import React, { useEffect } from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BACKGROUND, STATUS_COLOURS, PATHS, STATUS } from '../../constants';

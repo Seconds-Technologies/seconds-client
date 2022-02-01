@@ -8,7 +8,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { persistor, store } from "./store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider, createMuiTheme, makeStyles } from '@mui/material';
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 import './style.scss';

@@ -1,9 +1,9 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCatalog } from '../../store/actions/hubrise';
 import SuccessToast from '../../modals/SuccessToast';
-import { debounce } from "lodash"
+import debounce from "lodash.debounce";
 
 const Catalog = () => {
 	const dispatch = useDispatch()
@@ -56,11 +56,9 @@ const Catalog = () => {
 			width: 200,
 			editable: true,
 			preProcessEditCellProps: (params) => {
-				console.log("validating ....")
 				const MIN = 0
-				const MAX = 100
+				const MAX = 9999
 				const hasError = params.props.value > MAX || params.props.value < MIN;
-				console.table({hasError})
 				return { ...params.props, error: hasError };
 			}
 		}
