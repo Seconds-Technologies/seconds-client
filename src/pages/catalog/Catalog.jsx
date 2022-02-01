@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCatalog } from '../../store/actions/hubrise';
@@ -23,7 +23,7 @@ const Catalog = () => {
 					id: variant.ref,
 					variantName: variant.name ? variant.name : "N/A",
 					variantPrice: variant.price ? variant.price : "N/A",
-					weight: variant.weight ? variant.weight : "NO WEIGHT ASSIGNED",
+					weight: variant.weight ? variant.weight : "CLICK TO ASSIGN WEIGHT",
 					productName: product.name ? product.name : "N/A",
 					description: product.description ? product.description : "N/A",
 					category: categories.find(item => item.categoryId === product.categoryId).name
@@ -53,7 +53,7 @@ const Catalog = () => {
 			field: 'weight',
 			headerName: 'Weight (kg)',
 			type: 'number',
-			width: 150,
+			width: 200,
 			editable: true,
 			preProcessEditCellProps: (params) => {
 				console.log("validating ....")
@@ -66,16 +66,14 @@ const Catalog = () => {
 		}
 	];
 
-	React.useEffect(() => {
-		return () => {
-			debounceSave.cancel();
-		};
+	useEffect(() => {
+		return () => debounceSave.cancel();
 	}, [debounceSave]);
 
 	return (
 		<div className='page-container d-flex flex-column bg-light px-2 py-4'>
 			<SuccessToast message={successMessage} toggleShow={setSuccess}/>
-			<h3 className='ms-3'>Your Products</h3>
+			<h3 className='ms-3'>Your Hubrise Catalog</h3>
 			{credentials.catalog && (
 				<DataGrid
 					sortingOrder={['desc', 'asc']}

@@ -8,6 +8,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { persistor, store } from "./store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 
 //import "bootstrap/dist/css/bootstrap.min.css";
 import './style.scss';
@@ -15,13 +16,17 @@ import "bootstrap/dist/js/bootstrap.min";
 import moment from 'moment-timezone';
 moment.tz.setDefault('Europe/London');
 
+const theme = createMuiTheme();
+
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<PersistGate loading={null} persistor={persistor}>
+				<ThemeProvider theme={theme}>
 				<Router>
 					<App />
 				</Router>
+				</ThemeProvider>
 			</PersistGate>
 		</Provider>
 	</React.StrictMode>,
