@@ -15,6 +15,7 @@ export const PATHS = {
 	WOOCOMMERCE: '/integrate/woocommerce',
 	SQUARESPACE: '/integrate/squarespace',
 	HUBRISE: '/integrate/hubrise',
+	HUBRISE_CATALOG: '/integrate/hubrise/catalog',
 	API_KEY: '/integrate/api',
 	PROFILE: '/profile',
 	SETTINGS: '/settings',

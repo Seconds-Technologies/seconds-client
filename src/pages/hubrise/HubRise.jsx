@@ -3,21 +3,24 @@ import React, { useCallback, useEffect, useState } from 'react';
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { connectHubrise, disconnectHubrise } from '../../store/actions/hubrise';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { connectHubrise, disconnectHubrise, pullCatalog } from '../../store/actions/hubrise';
 import { addError } from '../../store/actions/errors';
 import { PATHS } from '../../constants';
 import Confirm from './modals/Confirm';
+import SuccessToast from '../../modals/SuccessToast';
 
 const HubRise = props => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
-	const { isIntegrated, credentials } = useSelector(state => state['hubRiseStore']);
-	const [show, setShow] = useState(false);
+	const { isIntegrated, credentials } = useSelector(state => state['hubriseStore']);
+	const [confirm, setConfirm] = useState(false);
+	const [successMessage, setSuccess] = useState("");
+	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
-		console.log(query);
 		if (query.get('code')) {
 			let code = query.get('code');
 			dispatch(connectHubrise({ email, code }))
@@ -29,13 +32,14 @@ const HubRise = props => {
 	}, [props.location]);
 
 	const disconnect = useCallback(() => {
-		setShow(false)
+		setConfirm(false)
 		dispatch(disconnectHubrise(email)).then(message => console.log(message));
 	}, [isIntegrated]);
 
 	return (
 		<div className='page-container bg-light container-fluid p-4 d-flex h-100'>
-			<Confirm onConfirm={disconnect} show={show} toggleShow={setShow} />
+			<Confirm onConfirm={disconnect} show={confirm} toggleShow={setConfirm} />
+			<SuccessToast toggleShow={setSuccess} message={successMessage}/>
 			<div className='my-auto mx-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
@@ -64,8 +68,7 @@ const HubRise = props => {
 					<div className='d-flex justify-content-center'>
 						<Formik
 							initialValues={{
-								clientId: '',
-								clientSecret: ''
+								email: ''
 							}}
 							onSubmit={values => console.log(values)}
 						>
@@ -105,14 +108,25 @@ const HubRise = props => {
 								{credentials.customerListName} - {credentials.customerListId}
 							</span>
 						</p>
-						<div className='mb-3'>
-							<button className='btn btn-outline-success'>View catalog</button>
+						<div className='mb-3 d-flex justify-content-evenly'>
+							<button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
+								setLoading(true)
+								dispatch(pullCatalog(email)).then(message => {
+									setLoading(false)
+									console.log(message)
+									setSuccess(message)
+								})
+							}}>
+								<span className={isLoading ? 'me-2' : ""}>Pull catalog</span>
+								<ClipLoader color='grey' loading={isLoading} size={16} />
+							</button>
+							{credentials.catalog && <button className='btn btn-outline-success' onClick={() => props.history.push(PATHS.HUBRISE_CATALOG)}>View catalog</button>}
 						</div>
 						<div className='d-flex justify-content-evenly'>
 							<a href='https://manager.hubrise.com/dashboard' target='_blank' className='text-hubrise'>
 								Go to Hubrise
 							</a>
-							<span role='button' className='text-hubrise text-secondary text-decoration-underline' onClick={() => setShow(true)}>
+							<span role='button' className='text-hubrise text-secondary text-decoration-underline' onClick={() => setConfirm(true)}>
 								Disconnect
 							</span>
 						</div>

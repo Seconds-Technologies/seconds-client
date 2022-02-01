@@ -28,6 +28,7 @@ import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import Square from '../pages/square/Square';
 import SquareSpace from '../pages/squarespace/SquareSpace';
 import HubRise from '../pages/hubrise/HubRise';
+import Catalog from '../pages/catalog/Catalog';
 
 const routes = (
 	<Switch>
@@ -45,7 +46,8 @@ const routes = (
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
 		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />
-		<PrivateRoute path={PATHS.HUBRISE} component={HubRise} />
+		<PrivateRoute exact path={PATHS.HUBRISE} component={HubRise} />
+		<PrivateRoute exact path={PATHS.HUBRISE_CATALOG} component={Catalog} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />

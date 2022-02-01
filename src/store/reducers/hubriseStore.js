@@ -1,16 +1,20 @@
-import { SET_HUBRISE } from '../actionTypes';
+import { SET_HUBRISE, UPDATE_HUBRISE } from '../actionTypes';
 
 const DEFAULT_STATE = {
 	isIntegrated: false,
 	credentials: {
-		accessToken: "",
 		accountName: "",
 		locationId: "",
 		locationName: "",
 		customerListId: "",
 		customerListName: "",
 		catalogId: "",
-		catalogName: ""
+		catalogName: "",
+		catalog: {
+			clientId: "",
+			products: [],
+			categories: []
+		}
 	}
 };
 
@@ -20,6 +24,11 @@ export default (state = DEFAULT_STATE, action) => {
 			return {
 				isIntegrated: Object.keys(action.credentials).length > 0,
 				credentials: action.credentials
+			};
+		case UPDATE_HUBRISE:
+			return {
+				...state,
+				credentials: { ...state.credentials, catalog: action.catalog }
 			};
 		default:
 			return state;

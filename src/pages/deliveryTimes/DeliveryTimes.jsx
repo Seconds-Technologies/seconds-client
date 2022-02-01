@@ -6,9 +6,7 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDeliveryTimes } from '../../store/actions/auth';
 import { addError } from '../../store/actions/errors';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import ToastFade from 'react-bootstrap/Toast';
-import secondsLogo from '../../assets/img/logo.svg';
+import SuccessToast from '../../modals/SuccessToast';
 
 const onIcon = <div className='switch-icon'>On</div>;
 
@@ -19,21 +17,9 @@ const DeliveryTimes = () => {
 	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const [toastMessage, setToast] = useState('');
 
-	const successToast = (
-		<ToastContainer className='topRight'>
-			<ToastFade onClose={() => setToast('')} show={!!toastMessage} animation={true} delay={3000} autohide>
-				<ToastFade.Header closeButton={false}>
-					<img src={secondsLogo} className='rounded me-2' alt='' />
-					<strong className='me-auto'>Seconds</strong>
-				</ToastFade.Header>
-				<ToastFade.Body>{toastMessage}</ToastFade.Body>
-			</ToastFade>
-		</ToastContainer>
-	);
-
 	return (
 		<div className='bg-light delivery-times py-4 d-flex justify-content-center'>
-			{successToast}
+			<SuccessToast message={toastMessage} toggleShow={setToast}/>
 			<div className='bg-white border border-2 times-wrapper h-100 py-3'>
 				<div className='d-flex flex-column align-items-center mt-2 mb-4'>
 					<h1 className='fs-2'>Set Times</h1>

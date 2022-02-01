@@ -6,7 +6,7 @@ import shopifyStore from "./shopifyStore";
 import squareStore from './squareStore';
 import wooCommerceStore from './wooCommerceStore';
 import squarespaceStore from './squarespaceStore';
-import hubRiseStore from './hubriseStore';
+import hubriseStore from './hubriseStore';
 import currentUser from "./currentUser";
 import errors from "./errors";
 import deliveryJobs from './deliveryJobs';
@@ -26,7 +26,7 @@ const appReducer = combineReducers({
     squareStore,
     wooCommerceStore,
     squarespaceStore,
-    hubRiseStore,
+    hubriseStore,
     deliveryJobs,
     addressHistory,
     errors
