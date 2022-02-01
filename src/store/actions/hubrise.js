@@ -94,10 +94,10 @@ export function updateCatalog(email, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', '/server/hubrise/update-catalog', { data }, { params: { email } })
-				.then(({ message, catalog }) => {
+				.then(({ catalog }) => {
 					dispatch(updateHubrise(catalog));
 					dispatch(removeError());
-					resolve(message);
+					resolve(catalog);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

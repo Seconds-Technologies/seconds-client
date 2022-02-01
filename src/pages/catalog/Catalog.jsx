@@ -9,10 +9,15 @@ const Catalog = () => {
 	const dispatch = useDispatch()
 	const [editCellsCommit, setEditCellsCommit] = useState({});
 	const [successMessage, setSuccess] = useState("");
+	const [newWeights, mergeWeights] = useState([])
 	const { credentials } = useSelector(state => state['hubriseStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
 
-	const debounceSave = useRef(debounce((email, model) => dispatch(updateCatalog(email, model)).then(() => setSuccess("Catalog updated!")), 5000)).current;
+	const debounceSave = useRef(debounce((email, data) => dispatch(updateCatalog(email, data)).then((catalog) => {
+		setSuccess("Catalog updated!")
+		mergeWeights([])
+		catalog.products.forEach(prod => prod.variants.forEach(({ref, weight}) => console.table({ ref, weight})))
+	}), 5000)).current;
 
 	const products = useMemo(() => {
 		let result = [];
@@ -23,7 +28,7 @@ const Catalog = () => {
 					id: variant.ref,
 					variantName: variant.name ? variant.name : "N/A",
 					variantPrice: variant.price ? variant.price : "N/A",
-					weight: variant.weight ? variant.weight : "CLICK TO ASSIGN WEIGHT",
+					weight: variant.weight !== undefined ? variant.weight : 0.5,
 					productName: product.name ? product.name : "N/A",
 					description: product.description ? product.description : "N/A",
 					category: categories.find(item => item.categoryId === product.categoryId).name
@@ -34,14 +39,20 @@ const Catalog = () => {
 		return result;
 	}, []);
 
-	const handleCellEditCommit = React.useCallback(async (params) => {
-		debounceSave.cancel()
-		console.log(params)
-		const { id, field, value } = params;
+	const handleCellEditCommit = React.useCallback(async ({ id, field, value }) => {
+		debounceSave.cancel();
+		mergeWeights(prevState => {
+			console.log(prevState)
+			let index = prevState.findIndex(item => item.id === id);
+			console.table({INDEX: index})
+			index === -1 ? prevState.push({ id, field, value }) : prevState.splice(index, 1, { id, field, value })
+			return [...prevState];
+		});
+		console.log(newWeights)
 		// update the data in the database
-		debounceSave(email, { id, field, value })
+		debounceSave(email, newWeights);
 		setEditCellsCommit({ id, field, value });
-	}, []);
+	}, [newWeights]);
 
 	const columns = [
 		{ field: 'id', headerName: 'SKU Ref', width: 150 },
@@ -52,8 +63,9 @@ const Catalog = () => {
 		{
 			field: 'weight',
 			headerName: 'Weight (kg)',
+			description: "Click the cell to assign a new weight",
 			type: 'number',
-			width: 200,
+			width: 150,
 			editable: true,
 			preProcessEditCellProps: (params) => {
 				const MIN = 0
