@@ -85,7 +85,8 @@ export function authUser(type, userData) {
 					hubrise &&
 						apiCall('GET', '/server/hubrise', null, { params: { email: user.email } })
 							.then(account => {
-								dispatch(setHubrise(account));
+								console.log("HUBRISE", account)
+								dispatch(setHubrise({ credentials: account, authCode: null }));
 								resolve(account);
 							})
 							.catch(err => reject(err));

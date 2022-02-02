@@ -130,7 +130,7 @@ const HubRise = props => {
 								Disconnect
 							</span>
 						</div>
-						<button type='button' className='mt-4 btn btn-secondary btn-lg connectButton' onClick={props.history.goBack}>
+						<button type='button' className='mt-4 btn btn-secondary btn-lg connectButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
 							<span>Go Back</span>
 						</button>
 					</div>
