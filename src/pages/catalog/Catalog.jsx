@@ -3,21 +3,27 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateCatalog } from '../../store/actions/hubrise';
 import SuccessToast from '../../modals/SuccessToast';
-import debounce from "lodash.debounce";
+import debounce from 'lodash.debounce';
 
 const Catalog = () => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const [editCellsCommit, setEditCellsCommit] = useState({});
-	const [successMessage, setSuccess] = useState("");
-	const [newWeights, mergeWeights] = useState([])
+	const [successMessage, setSuccess] = useState('');
+	const [newWeights, mergeWeights] = useState([]);
 	const { credentials } = useSelector(state => state['hubriseStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
 
-	const debounceSave = useRef(debounce((email, data) => dispatch(updateCatalog(email, data)).then((catalog) => {
-		setSuccess("Catalog updated!")
-		mergeWeights([])
-		catalog.products.forEach(prod => prod.variants.forEach(({ref, weight}) => console.table({ ref, weight})))
-	}), 5000)).current;
+	const debounceSave = useRef(
+		debounce(
+			(email, data) =>
+				dispatch(updateCatalog(email, data)).then(catalog => {
+					setSuccess('Catalog updated!');
+					mergeWeights([]);
+					catalog.products.forEach(prod => prod.variants.forEach(({ ref, weight }) => console.table({ ref, weight })));
+				}),
+			5000
+		)
+	).current;
 
 	const products = useMemo(() => {
 		let result = [];
@@ -26,11 +32,11 @@ const Catalog = () => {
 			product.variants.forEach(variant => {
 				let record = {
 					id: variant.ref,
-					variantName: variant.name ? variant.name : "N/A",
-					variantPrice: variant.price ? variant.price : "N/A",
+					variantName: variant.name ? variant.name : 'N/A',
+					variantPrice: variant.price ? variant.price : 'N/A',
 					weight: variant.weight !== undefined ? variant.weight : 0.5,
-					productName: product.name ? product.name : "N/A",
-					description: product.description ? product.description : "N/A",
+					productName: product.name ? product.name : 'N/A',
+					description: product.description ? product.description : 'N/A',
 					category: categories.find(item => item.categoryId === product.categoryId).name
 				};
 				result.push(record);
@@ -39,20 +45,23 @@ const Catalog = () => {
 		return result;
 	}, []);
 
-	const handleCellEditCommit = React.useCallback(async ({ id, field, value }) => {
-		debounceSave.cancel();
-		mergeWeights(prevState => {
-			console.log(prevState)
-			let index = prevState.findIndex(item => item.id === id);
-			console.table({INDEX: index})
-			index === -1 ? prevState.push({ id, field, value }) : prevState.splice(index, 1, { id, field, value })
-			return [...prevState];
-		});
-		console.log(newWeights)
-		// update the data in the database
-		debounceSave(email, newWeights);
-		setEditCellsCommit({ id, field, value });
-	}, [newWeights]);
+	const handleCellEditCommit = React.useCallback(
+		async ({ id, field, value }) => {
+			debounceSave.cancel();
+			mergeWeights(prevState => {
+				console.log(prevState);
+				let index = prevState.findIndex(item => item.id === id);
+				console.table({ INDEX: index });
+				index === -1 ? prevState.push({ id, field, value }) : prevState.splice(index, 1, { id, field, value });
+				return [...prevState];
+			});
+			console.log(newWeights);
+			// update the data in the database
+			debounceSave(email, newWeights);
+			setEditCellsCommit({ id, field, value });
+		},
+		[newWeights]
+	);
 
 	const columns = [
 		{ field: 'id', headerName: 'SKU Ref', width: 150 },
@@ -63,13 +72,13 @@ const Catalog = () => {
 		{
 			field: 'weight',
 			headerName: 'Weight (kg)',
-			description: "Click the cell to assign a new weight",
+			description: 'Click the cell to assign a new weight',
 			type: 'number',
 			width: 150,
 			editable: true,
-			preProcessEditCellProps: (params) => {
-				const MIN = 0
-				const MAX = 9999
+			preProcessEditCellProps: params => {
+				const MIN = 0;
+				const MAX = 9999;
 				const hasError = params.props.value > MAX || params.props.value < MIN;
 				return { ...params.props, error: hasError };
 			}
@@ -82,8 +91,25 @@ const Catalog = () => {
 
 	return (
 		<div className='page-container d-flex flex-column bg-light px-2 py-4'>
-			<SuccessToast message={successMessage} toggleShow={setSuccess}/>
-			<h3 className='ms-3'>Your Hubrise Catalog</h3>
+			<SuccessToast message={successMessage} toggleShow={setSuccess} />
+			<div className='d-flex mx-3 justify-content-between'>
+				<h3>Your Hubrise Catalog</h3>
+				<button
+					className='btn btn-primary'
+					disabled={!newWeights.length}
+					style={{ width: 100 }}
+					onClick={() => {
+						debounceSave.cancel();
+						dispatch(updateCatalog(email, newWeights)).then(catalog => {
+							setSuccess('Catalog updated!');
+							mergeWeights([]);
+							catalog.products.forEach(prod => prod.variants.forEach(({ ref, weight }) => console.table({ ref, weight })));
+						});
+					}}
+				>
+					<span className='btn-text'>Save</span>
+				</button>
+			</div>
 			{credentials.catalog && (
 				<DataGrid
 					sortingOrder={['desc', 'asc']}
@@ -98,7 +124,7 @@ const Catalog = () => {
 					rows={products}
 					columns={columns}
 					components={{
-						Toolbar: GridToolbar,
+						Toolbar: GridToolbar
 					}}
 					disableSelectionOnClick
 					checkboxSelection
