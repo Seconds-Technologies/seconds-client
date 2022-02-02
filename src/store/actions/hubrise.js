@@ -1,17 +1,21 @@
 import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError, removeError } from './errors';
-import { SET_HUBRISE, UPDATE_HUBRISE } from '../actionTypes';
+import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE } from '../actionTypes';
 
-export const updateHubrise = catalog => ({
+export const updateHubrise = data => ({
 	type: UPDATE_HUBRISE,
-	catalog
+	data
 });
 
-export const setHubrise = credentials => ({
+export const setHubrise = hubrise => ({
 	type: SET_HUBRISE,
-	credentials
+	hubrise
 });
+
+export const clearHubrise = () => ({
+	type: CLEAR_HUBRISE,
+})
 
 export function connectHubrise(data) {
 	return dispatch => {
@@ -20,7 +24,7 @@ export function connectHubrise(data) {
 				.then(hubrise => {
 					Mixpanel.track('Successful Hubrise integration');
 					Mixpanel.people.setOnce({ $hubrise: hubrise });
-					dispatch(setHubrise(hubrise));
+					dispatch(setHubrise({ credentials: hubrise, authCode: data.code }));
 					dispatch(removeError());
 					resolve(hubrise);
 				})
@@ -38,9 +42,9 @@ export function disconnectHubrise(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('PATCH', `/server/hubrise/disconnect`, { email })
-				.then(({ message, ...hubrise }) => {
+				.then(({ message }) => {
 					Mixpanel.people.setOnce({ $hubrise: null });
-					dispatch(setHubrise(hubrise));
+					dispatch(clearHubrise());
 					dispatch(removeError());
 					resolve(message);
 				})
@@ -57,9 +61,9 @@ export function pullCatalog(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', '/server/hubrise/pull-catalog', null, { params: { email } })
-				.then(({ message, catalog }) => {
+				.then(({ message, catalog, catalogName, catalogId }) => {
 					console.table(catalog)
-					dispatch(updateHubrise(catalog));
+					dispatch(updateHubrise({ catalogName, catalogId, catalog }));
 					dispatch(removeError());
 					resolve(message);
 				})

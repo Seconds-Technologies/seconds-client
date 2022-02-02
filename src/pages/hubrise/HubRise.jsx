@@ -14,14 +14,14 @@ const HubRise = props => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
-	const { isIntegrated, credentials } = useSelector(state => state['hubriseStore']);
+	const { isIntegrated, credentials, authCode } = useSelector(state => state['hubriseStore']);
 	const [confirm, setConfirm] = useState(false);
 	const [successMessage, setSuccess] = useState("");
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
-		if (query.get('code')) {
+		if (query.get('code') && authCode !== query.get('code')) {
 			let code = query.get('code');
 			dispatch(connectHubrise({ email, code }))
 				.then(account => console.log(account))
@@ -109,7 +109,7 @@ const HubRise = props => {
 							</span>
 						</p>
 						<div className='mb-3 d-flex justify-content-evenly'>
-							{!isIntegrated && <button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
+							{!credentials.catalog && <button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
 								setLoading(true)
 								dispatch(pullCatalog(email)).then(message => {
 									setLoading(false)
