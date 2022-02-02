@@ -109,7 +109,7 @@ const HubRise = props => {
 							</span>
 						</p>
 						<div className='mb-3 d-flex justify-content-evenly'>
-							<button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
+							{!isIntegrated && <button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
 								setLoading(true)
 								dispatch(pullCatalog(email)).then(message => {
 									setLoading(false)
@@ -119,7 +119,7 @@ const HubRise = props => {
 							}}>
 								<span className={isLoading ? 'me-2' : ""}>Pull catalog</span>
 								<ClipLoader color='grey' loading={isLoading} size={16} />
-							</button>
+							</button>}
 							{credentials.catalog && <button className='btn btn-outline-success' onClick={() => props.history.push(PATHS.HUBRISE_CATALOG)}>View catalog</button>}
 						</div>
 						<div className='d-flex justify-content-evenly'>
