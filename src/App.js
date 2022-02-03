@@ -37,7 +37,6 @@ function App() {
 		<GeolocationContextProvider>
 			<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.NODE_ENV === 'production'}>
 				<Router>
-					{isAuthenticated && <Topbar />}
 					<div className='app-container'>
 						{isAuthenticated && <Sidebar />}
 						{routes}

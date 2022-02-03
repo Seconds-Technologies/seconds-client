@@ -39,129 +39,49 @@ const Track = props => {
 	}, [props.location]);
 
 	return (
-		<div className='trackContainer container-fluid bg-light pb-4'>
+		<div className='page-container container px-5 pb-4'>
 			<div className="d-flex justify-content-end py-3 px-3">
 				<TimeFilter current={active} onSelect={setActive}/>
 			</div>
 			<div className='row'>
-				<div className='col-sm-4 col-md-2 border-end'>
+				<div className='col-sm-4 col-md-3 border-end'>
 					<div className='d-flex flex-column align-items-center justify-content-center'>
 						<h1>New</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.NEW).length} />
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.NEW && (
-								<div
-									key={index}
-									className='my-4 ps-2'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.NEW }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
+							status === STATUS.NEW && <Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.NEW} />
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
+				<div className='col-sm-4 col-md-3 border-end border-start'>
 					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
-						<h1>Pending</h1>
-						<Counter value={orders.filter(({ status }) => status === STATUS.PENDING).length} />
-					</div>
-					{orders.map(
-						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.PENDING && (
-								<div
-									key={index}
-									className='my-4'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.PENDING }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
-					)}
-				</div>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
-					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
-						<h1>Dispatching</h1>
+						<h1>Ready for Dispatch</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.DISPATCHING).length} />
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.DISPATCHING && (
-								<div
-									key={index}
-									className='my-4'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.DISPATCHING }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
+							status === STATUS.DISPATCHING && <Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.DISPATCHING} />
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
+				<div className='col-sm-4 col-md-3 border-end border-start'>
 					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>En-route</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.EN_ROUTE).length} />
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.EN_ROUTE && (
-								<div
-									key={index}
-									className='my-4'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.EN_ROUTE }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
+							status === STATUS.EN_ROUTE && <Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.EN_ROUTE} />
 					)}
 				</div>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
+				<div className='col-sm-4 col-md-3 border-start'>
 					<div className='d-flex flex-column align-items-center justify-content-center border-dark'>
 						<h1>Completed</h1>
 						<Counter value={orders.filter(({ status }) => status === STATUS.COMPLETED).length} />
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.COMPLETED && (
-								<div
-									key={index}
-									className='my-4'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.COMPLETED }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
-					)}
-				</div>
-				<div className='col-sm-4 col-md-2 border-end border-start'>
-					<div className='d-flex flex-column align-items-center justify-content-center'>
-						<h1>Cancelled</h1>
-						<Counter value={orders.filter(({ status }) => status === STATUS.CANCELLED).length} />
-					</div>
-					{orders.map(
-						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.CANCELLED && (
-								<div
-									key={index}
-									className='my-4'
-									role='button'
-									onClick={() => props.history.push(`/view-orders/${id}`)}
-								>
-									<div style={{ height: 4, backgroundColor: STATUS_COLOURS.CANCELLED }} />
-									<Tile id={id} address={address} name={customerName} provider={provider} />
-								</div>
-							)
+							status === STATUS.COMPLETED && 	<Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.COMPLETED} />
 					)}
 				</div>
 			</div>

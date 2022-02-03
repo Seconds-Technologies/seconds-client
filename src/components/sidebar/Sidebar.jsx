@@ -1,3 +1,4 @@
+import './Sidebar.css';
 import orderIcon from '../../assets/img/orders1.svg';
 import integrateIcon from '../../assets/img/integrate.svg';
 import settingsIcon from '../../assets/img/settings.svg';
@@ -6,22 +7,33 @@ import createIcon from '../../assets/img/create1.svg';
 import trackIcon from '../../assets/img/track1.svg';
 import courierIcon from '../../assets/img/courier.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
-import './Sidebar.css';
+import logo from '../../assets/img/secondsapp.svg';
+import React from 'react';
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { logout } from '../../store/actions/auth';
 
 export default function Sidebar() {
+	const { profileImageData } = useSelector(state => state['currentUser'].user);
+	const dispatch = useDispatch();
+	const history = useHistory();
 	const location = useLocation();
+
 	return (
-		<div className="sidebar">
+		<div className='sidebar bg-light'>
 			<div className='mb-1 d-flex flex-column flex-shrink-0 ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto'>
+					<Link to='/' className='navbar-brand' href=''>
+						<span className='logo'>
+							<img src={logo} alt='' width={150} />
+						</span>
+					</Link>
 					<Link to={PATHS.HOME} className='link text-black mt-3'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.HOME && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.HOME && 'currentIcon'}`}
 								src={dashboardIcon}
 								alt={''}
 								width={25}
@@ -33,9 +45,7 @@ export default function Sidebar() {
 					<Link to={PATHS.ORDERS} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.ORDERS && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.ORDERS && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.ORDERS && 'currentIcon'}`}
 								src={orderIcon}
 								alt={''}
 								width={25}
@@ -47,9 +57,7 @@ export default function Sidebar() {
 					<Link to={PATHS.CREATE} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.CREATE && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.CREATE && 'currentIcon'}`}
 								src={createIcon}
 								alt={''}
 								width={25}
@@ -61,9 +69,7 @@ export default function Sidebar() {
 					<Link to={PATHS.TRACK} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.TRACK && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.TRACK && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.TRACK && 'currentIcon'}`}
 								src={trackIcon}
 								alt={''}
 								width={25}
@@ -75,9 +81,7 @@ export default function Sidebar() {
 					<Link to={PATHS.INTEGRATE} className='link text-black mt-4'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.INTEGRATE && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.INTEGRATE && 'currentIcon'}`}
 								src={integrateIcon}
 								alt={''}
 								width={25}
@@ -89,9 +93,7 @@ export default function Sidebar() {
 					<Link to={PATHS.COURIERS} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.COURIERS && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.COURIERS && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.COURIERS && 'currentIcon'}`}
 								src={courierIcon}
 								alt={''}
 								width={25}
@@ -103,9 +105,7 @@ export default function Sidebar() {
 					<Link to={PATHS.SETTINGS} className='link text-black mt-4'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.SETTINGS && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${
-									location['pathname'] === PATHS.SETTINGS && 'currentIcon'
-								}`}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.SETTINGS && 'currentIcon'}`}
 								src={settingsIcon}
 								alt={''}
 								width={25}
@@ -114,6 +114,45 @@ export default function Sidebar() {
 							<div className='item-hover'>Settings</div>
 						</li>
 					</Link>
+					<div className='navbar-text mt-4 me-5 dropdown'>
+						<div className='d-flex align-items-center' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
+							{profileImageData ? (
+								<img
+									className='border rounded-circle me-3'
+									src={`data:image/jpeg;base64,${profileImageData}`}
+									alt=''
+									width={50}
+									height={50}
+								/>
+							) : (
+								<Avatar className='me-3' size='large' icon={<UserOutlined />} />
+							)}
+							<span className='fs-6 text-dark'>Profile</span>
+						</div>
+						<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
+							<li>
+								<div
+									role="button"
+									className='dropdown-item'
+									onClick={() => history.push(PATHS.PROFILE)}
+								>
+									Profile
+								</div>
+							</li>
+							<li>
+								<div
+									role="button"
+									className='dropdown-item'
+									onClick={() => {
+										dispatch(logout());
+										history.push(PATHS.LOGIN);
+									}}
+								>
+									Logout
+								</div>
+							</li>
+						</ul>
+					</div>
 				</ul>
 			</div>
 		</div>

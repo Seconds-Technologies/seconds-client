@@ -37,10 +37,10 @@ const HubRise = props => {
 	}, [isIntegrated]);
 
 	return (
-		<div className='page-container bg-light container-fluid p-4 d-flex h-100'>
+		<div className='page-container container-fluid p-4 d-flex'>
 			<Confirm onConfirm={disconnect} show={confirm} toggleShow={setConfirm} />
 			<SuccessToast toggleShow={setSuccess} message={successMessage}/>
-			<div className='my-auto mx-auto'>
+			<div className='m-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
 				) : (

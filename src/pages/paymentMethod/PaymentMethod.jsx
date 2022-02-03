@@ -21,9 +21,8 @@ const PaymentMethod = props => {
 	}, []);
 
 	const containerClass = classnames({
-		'payment-method-container': !props.isComponent,
+		'page-container': !props.isComponent,
 		'pt-5': true,
-		'bg-light': !props.isComponent,
 	});
 
 	const confirmToast = (

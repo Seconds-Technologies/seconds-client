@@ -1,8 +1,3 @@
-.trackContainer {
-    flex: 7;
-    min-height: calc(100vh - 70px);
-}
-
 h1 {
     font-size: 125% !important;
 }

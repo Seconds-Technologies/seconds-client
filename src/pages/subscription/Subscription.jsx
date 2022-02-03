@@ -92,13 +92,12 @@ const Subscription = props => {
 	}, []);
 
 	const containerClass = classnames({
-		subscription: !props.isComponent,
+		'page-container': !props.isComponent,
 		'd-flex': true,
 		'pt-5': !props.isComponent,
 		'pt-2': true,
 		'justify-content-center': true,
-		'align-items-center': true,
-		'bg-light': !props.isComponent
+		'align-items-center': true
 	});
 
 	return (

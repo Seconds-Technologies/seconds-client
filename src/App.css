@@ -4,10 +4,8 @@
 
 .sidebar {
   flex: 1;
-  height: calc(100vh - 70px);
-  background-color: white;
+  min-height: 100vh;
   position: sticky;
-  top: 70px;
 }
 
 .link {
@@ -33,7 +31,7 @@
 
 .page-container {
   flex: 7;
-  min-height: calc(100vh - 70px);
+  min-height: 100vh
 }
 
 .help-text {
@@ -47,7 +45,7 @@
 }
 
 .tile-wrapper {
-  background-color: #ffffff;
+  background-color: #F3F3F3;
 }
 
 .counter-text {

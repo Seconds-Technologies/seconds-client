@@ -29,7 +29,7 @@ export default function Integrations(props) {
 	}, [props.location]);
 
 	return (
-		<div className='integrations container-fluid bg-light p-4'>
+		<div className='page-container container-fluid p-4'>
 			<h3 className='integrations-header text-center mb-4'>Integration</h3>
 			<ComingSoon message={toastMessage} toggleMessage={setShowToast}/>
 			<div className='container'>

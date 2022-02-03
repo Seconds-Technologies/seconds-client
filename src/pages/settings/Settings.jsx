@@ -14,7 +14,7 @@ const Settings = props => {
 	}, []);
 
 	return (
-		<div className='settings bg-light d-flex flex-column justify-content-center align-items-center py-3'>
+		<div className='page-container bg-light d-flex flex-column justify-content-center align-items-center py-3'>
 			<div
 				className='row bg-white mt-3 mb-3 option-container border'
 				onClick={() => props.history.push(PATHS.HELP)}

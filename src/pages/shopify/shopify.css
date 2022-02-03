@@ -1,8 +1,3 @@
-.shopify-container {
-    flex: 7;
-    min-height: calc(100vh - 70px);
-}
-
 .shopifyConnect {
     text-align: center;
     margin-top: 40px;

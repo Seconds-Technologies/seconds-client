@@ -7,7 +7,7 @@ import ecofleet from '../../assets/img/ecofleet.svg';
 
 const Couriers = () => {
 	return (
-		<div className='container-fluid bg-light couriers p-5'>
+		<div className='page-container container-fluid p-5'>
 			<div>
 				<h3>Couriers</h3>
 				<p className="mt-3">Use your existing contracts or discounted Seconds rate.</p>

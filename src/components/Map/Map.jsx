@@ -82,7 +82,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 
 	const linePaint = {
 		'line-color': 'orange',
-		'line-width': 3
+		'line-width': 4
 	};
 
 	return (

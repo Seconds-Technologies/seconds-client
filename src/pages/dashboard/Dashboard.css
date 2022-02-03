@@ -1,8 +1,3 @@
-.dashboard {
-  flex: 7;
-  min-height: calc(100vh - 70);
-}
-
 .dashboard-header {
   font-size: 25px;
 }

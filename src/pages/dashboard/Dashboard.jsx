@@ -41,7 +41,7 @@ const Dashboard = props => {
 	}, []);
 
 	return (
-		<div className='dashboard bg-light'>
+		<div className='page-container'>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>
@@ -51,7 +51,7 @@ const Dashboard = props => {
 				<TimeFilter current={active} onSelect={setActive}/>
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={270} />
+			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={200} />
 		</div>
 	);
 };
