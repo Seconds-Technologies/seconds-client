@@ -87,7 +87,7 @@ const Subscription = props => {
 	let [isSubscribed, setSubscribed] = useState(false);
 
 	useEffect(() => {
-		dispatch(checkSubscriptionStatus(user.email)).then(() => setSubscribed(true));
+		dispatch(checkSubscriptionStatus(user.email)).then((status) => setSubscribed(status));
 		Mixpanel.people.increment('page_views');
 	}, []);
 
