@@ -10,7 +10,7 @@ import TimeFilter from '../../components/TimeFilter';
 
 const Dashboard = props => {
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const { firstname, address: {geolocation} } = useSelector(state => state['currentUser'].user);
+	const { company, address: {geolocation} } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
@@ -45,7 +45,7 @@ const Dashboard = props => {
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>
-						<span className='bold-text'>{`Hey ${firstname},`}</span>&nbsp;here is your delivery overview
+						<span className='bold-text'>{`Hey ${company},`}</span>&nbsp;here is your delivery overview
 					</span>
 				</div>
 				<TimeFilter current={active} onSelect={setActive}/>

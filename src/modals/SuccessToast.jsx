@@ -4,10 +4,10 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 import ToastFade from 'react-bootstrap/Toast';
 import secondsLogo from '../assets/img/logo.svg';
 
-const SuccessToast = ({message, toggleShow})  => {
+const SuccessToast = ({message, toggleShow, delay=3000, position="topRight"})  => {
 	return (
-		<ToastContainer className='topRight'>
-			<ToastFade onClose={() => toggleShow('')} show={!!message} animation={true} delay={3000} autohide>
+		<ToastContainer className={position}>
+			<ToastFade onClose={() => toggleShow('')} show={!!message} animation={true} delay={delay} autohide>
 				<ToastFade.Header closeButton={false}>
 					<img src={secondsLogo} className='rounded me-2' alt='' />
 					<strong className='me-auto'>Seconds</strong>
@@ -20,7 +20,8 @@ const SuccessToast = ({message, toggleShow})  => {
 
 SuccessToast.propTypes = {
 	toggleShow: PropTypes.func.isRequired,
-	message: PropTypes.string.isRequired
+	message: PropTypes.string.isRequired,
+	delay: PropTypes.number
 };
 
 export default SuccessToast;

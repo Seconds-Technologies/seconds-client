@@ -11,6 +11,7 @@ import currentUser from "./currentUser";
 import errors from "./errors";
 import deliveryJobs from './deliveryJobs';
 import addressHistory from './addressHistory';
+import driversStore from './driversStore';
 import { setAuthorizationToken } from '../actions/auth';
 import { LOGOUT_USER } from '../actionTypes';
 
@@ -29,6 +30,7 @@ const appReducer = combineReducers({
     hubriseStore,
     deliveryJobs,
     addressHistory,
+    driversStore,
     errors
 });
 

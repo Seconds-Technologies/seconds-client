@@ -1,0 +1,29 @@
+/* HIDE RADIO */
+[type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* IMAGE STYLES */
+[type=radio] + img {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* CHECKED STYLES */
+[type=radio]:checked + img {
+    background-color: rgba(0, 255, 71, 0.5)
+}
+
+.switch-icon {
+    display: flex;;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-transform: uppercase;
+    font-size: 11px;
+    padding: 1.2em;
+}

@@ -9,7 +9,6 @@ import { addError } from '../../store/actions/errors';
 import SuccessToast from '../../modals/SuccessToast';
 
 const onIcon = <div className='switch-icon'>On</div>;
-
 const offIcon = <div className='switch-icon'>Off</div>;
 
 const DeliveryTimes = () => {

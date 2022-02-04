@@ -26,7 +26,8 @@ export const PATHS = {
 	DELIVERY_TIMES: '/delivery-times',
 	SIGNUP_1: '/signup/1',
 	SIGNUP_2: '/signup/2',
-	SIGNUP_3: '/signup/3'
+	SIGNUP_3: '/signup/3',
+	DRIVERS: '/drivers'
 };
 
 export const STATUS_COLOURS = {
@@ -57,6 +58,13 @@ export const STATUS = {
 	COMPLETED: 'COMPLETED',
 	CANCELLED: 'CANCELLED'
 };
+
+export const DRIVER_STATUS = {
+	AVAILABLE: 'AVAILABLE',
+	BUSY: 'BUSY',
+	ASSIGNED: 'ASSIGNED',
+	OFFLINE: 'OFFLINE',
+}
 
 export const PLACE_TYPES = {
 	ESTABLISHMENT: 'establishment',

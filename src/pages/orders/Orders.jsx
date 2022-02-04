@@ -91,9 +91,9 @@ export default function Orders() {
 				</div>
 			)
 		},
-		{ field: 'customerName', headerName: 'Customer', width: 150 },
+		{ field: 'customerName', headerName: 'Customer', flex: 0.4, width: 150 },
 		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
-		{ field: 'address', headerName: 'Address', width: 250 },
+		{ field: 'address', headerName: 'Address', flex: 0.6, width: 250 },
 		{
 			field: 'driver',
 			headerName: 'Driver',
@@ -135,7 +135,7 @@ export default function Orders() {
 						}}
 						className='text-decoration-none'
 					>
-						<button className='d-flex justify-content-center align-items-center OrdersListEdit'>
+						<button className='d-flex justify-content-center align-items-center table-edit-btn'>
 							<span className='text-decoration-none'>View</span>
 						</button>
 					</Link>

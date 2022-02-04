@@ -6,6 +6,7 @@ import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create1.svg';
 import trackIcon from '../../assets/img/track1.svg';
 import courierIcon from '../../assets/img/courier.svg';
+import driversIcon from '../../assets/img/driver.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
@@ -78,16 +79,16 @@ export default function Sidebar() {
 							<div className='item-hover'>Track</div>
 						</li>
 					</Link>
-					<Link to={PATHS.INTEGRATE} className='link text-black mt-4'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
+					<Link to={PATHS.DRIVERS} className='link text-black mt-4'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.INTEGRATE && 'currentIcon'}`}
-								src={integrateIcon}
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
+								src={driversIcon}
 								alt={''}
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Integrations</div>
+							<div className='item-hover'>Drivers</div>
 						</li>
 					</Link>
 					<Link to={PATHS.COURIERS} className='link text-black'>
@@ -100,6 +101,18 @@ export default function Sidebar() {
 								height={25}
 							/>
 							<div className='item-hover'>Couriers</div>
+						</li>
+					</Link>
+					<Link to={PATHS.INTEGRATE} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.INTEGRATE && 'currentIcon'}`}
+								src={integrateIcon}
+								alt={''}
+								width={25}
+								height={25}
+							/>
+							<div className='item-hover'>Integrations</div>
 						</li>
 					</Link>
 					<Link to={PATHS.SETTINGS} className='link text-black mt-4'>

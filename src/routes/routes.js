@@ -13,7 +13,6 @@ import Signup1 from '../pages/signup/Signup1';
 import Signup2 from '../pages/signup/Signup2';
 import Signup3 from '../pages/signup/Signup3';
 import Login from '../pages/login/Login';
-import ApiKey from '../pages/apiKey/ApiKey';
 import Profile from '../pages/profile/Profile';
 import Settings from '../pages/settings/Settings';
 import CustomerSupport from '../pages/settings/CustomerSupport';
@@ -29,6 +28,7 @@ import Square from '../pages/square/Square';
 import SquareSpace from '../pages/squarespace/SquareSpace';
 import HubRise from '../pages/hubrise/HubRise';
 import Catalog from '../pages/catalog/Catalog';
+import Drivers from '../pages/drivers/Drivers';
 
 const routes = (
 	<Switch>
@@ -41,7 +41,6 @@ const routes = (
 		<Route exact path={PATHS.RESET} component={ResetPassword} />
 		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
-		<PrivateRoute exact path={PATHS.API_KEY} component={ApiKey} />
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
@@ -53,6 +52,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
 		<PrivateRoute path={PATHS.COURIERS} component={Couriers} />
+		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
