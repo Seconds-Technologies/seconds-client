@@ -127,20 +127,20 @@ export default function Sidebar() {
 							<div className='item-hover'>Settings</div>
 						</li>
 					</Link>
-					<div className='navbar-text mt-4 me-5 dropdown'>
+					<div className='link mt-4 me-5 dropdown'>
 						<div className='d-flex align-items-center' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
 							{profileImageData ? (
 								<img
 									className='border rounded-circle me-3'
 									src={`data:image/jpeg;base64,${profileImageData}`}
 									alt=''
-									width={50}
-									height={50}
+									width={30}
+									height={30}
 								/>
 							) : (
 								<Avatar className='me-3' size='large' icon={<UserOutlined />} />
 							)}
-							<span className='fs-6 text-dark'>Profile</span>
+							<span className='item-hover'>Profile</span>
 						</div>
 						<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 							<li>
