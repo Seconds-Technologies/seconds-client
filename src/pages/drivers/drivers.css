@@ -1,5 +1,5 @@
 /* HIDE RADIO */
-[type=radio] {
+.vehicle-radio [type=radio] {
     position: absolute;
     opacity: 0;
     width: 0;
@@ -7,14 +7,14 @@
 }
 
 /* IMAGE STYLES */
-[type=radio] + img {
+.vehicle-radio [type=radio] + img {
     cursor: pointer;
     padding: 5px;
     border-radius: 5px;
 }
 
 /* CHECKED STYLES */
-[type=radio]:checked + img {
+.vehicle-radio [type=radio]:checked + img {
     background-color: rgba(0, 255, 71, 0.5)
 }
 

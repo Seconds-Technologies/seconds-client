@@ -114,7 +114,7 @@ const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
 									<label htmlFor='staticEmail' className='col-sm-4 col-form-label'>
 										Vehicle Type
 									</label>
-									<div className='col-sm-8 d-flex justify-content-around'>
+									<div className='col-sm-8 d-flex justify-content-around vehicle-radio'>
 										<label className='d-flex align-items-center'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[0].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[0].value)} onBlur={handleBlur} />
