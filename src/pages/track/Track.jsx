@@ -39,7 +39,7 @@ const Track = props => {
 	}, [props.location]);
 
 	return (
-		<div className='page-container container px-5 pb-4'>
+		<div className='page-container container-fluid px-5 pb-4'>
 			<div className="d-flex justify-content-end py-3 px-3">
 				<TimeFilter current={active} onSelect={setActive}/>
 			</div>
