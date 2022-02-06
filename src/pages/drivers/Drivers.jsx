@@ -7,32 +7,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeDriver, createDriver } from '../../store/actions/drivers';
 import SuccessToast from '../../modals/SuccessToast';
 import Switch from 'react-switch';
-import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS } from '../../constants';
+import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
 
 const Drivers = props => {
 	const dispatch = useDispatch();
 	const [driverFormType, showDriverForm] = useState('');
 	const [successMessage, setSuccess] = useState('');
 	const [selectedDriver, selectDriver] = useState({
-		firstname: "",
-		lastname: "",
-		email: "",
-		phone: "",
-		vehicle: "",
-	})
+		firstname: '',
+		lastname: '',
+		email: '',
+		phone: '',
+		vehicle: ''
+	});
 	const { email } = useSelector(state => state['currentUser'].user);
 
 	const drivers = useSelector(state => {
-		return state['driversStore'].map(driver => ({
-			id: driver.id,
-			firstname: driver.firstname,
-			lastname: driver.lastname,
-			phone: driver.phone,
-			email: driver.email,
-			vehicle: driver.vehicle,
-			status: driver.status,
-			isOnline: driver.isOnline
-		}));
+		return state['driversStore'].map(driver => {
+			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);
+			return {
+				id: driver.id,
+				firstname: driver.firstname,
+				lastname: driver.lastname,
+				phone: driver.phone,
+				email: driver.email,
+				vehicle: vehicleType ? vehicleType.label : driver.vehicle,
+				status: driver.status,
+				isOnline: driver.isOnline
+			};
+		});
 	});
 
 	const saveDriver = useCallback(values => {
@@ -54,9 +57,9 @@ const Drivers = props => {
 	const offIcon = <div className='switch-icon'>Off</div>;
 
 	const columns = [
-		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true, flex: 0.5 },
+		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
 		{ field: 'firstname', headerName: 'First Name', width: 150, flex: 0.5 },
-		{ field: 'lastname', headerName: 'Last Name', width: 150 },
+		{ field: 'lastname', headerName: 'Last Name', width: 150, flex: 0.5 },
 		{ field: 'phone', headerName: 'Phone Number', width: 150 },
 		{ field: 'vehicle', headerName: 'Vehicle', width: 150 },
 		{
@@ -135,7 +138,7 @@ const Drivers = props => {
 					<button
 						className='d-flex justify-content-center align-items-center table-edit-btn'
 						onClick={() => {
-							selectDriver(params.row)
+							selectDriver(params.row);
 							showDriverForm('update');
 						}}
 					>
@@ -153,16 +156,20 @@ const Drivers = props => {
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<div className='d-flex mx-3 justify-content-between '>
 				<h3>Your Drivers</h3>
-				<button className='btn btn-primary btn-lg' style={{ width: 150 }} onClick={() => {
-					selectDriver({
-						firstname: "",
-						lastname: "",
-						email: "",
-						phone: "",
-						vehicle: "",
-					})
-					showDriverForm('create')
-				}}>
+				<button
+					className='btn btn-primary btn-lg'
+					style={{ width: 150 }}
+					onClick={() => {
+						selectDriver({
+							firstname: '',
+							lastname: '',
+							email: '',
+							phone: '',
+							vehicle: ''
+						});
+						showDriverForm('create');
+					}}
+				>
 					<span className='btn-text'>+ New Driver</span>
 				</button>
 			</div>
