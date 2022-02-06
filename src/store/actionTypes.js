@@ -33,4 +33,5 @@ export const SET_DROPOFFS = "SET_DROPOFFS";
 export const VERIFY_DRIVER = "VERIFY_DRIVER";
 export const ADD_DRIVER = "ADD_DRIVER";
 export const UPDATE_DRIVER = "UPDATE_DRIVER";
+export const SET_DRIVERS = "SET_DRIVERS";
 //export const GET_PRODUCT_IMAGE = "GET_PRODUCT_IMAGE"

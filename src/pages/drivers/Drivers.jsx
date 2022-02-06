@@ -1,8 +1,7 @@
 import './drivers.css';
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
-import NewDriver from './modals/NewDriver';
+import DriverModal from './modals/DriverModal';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeDriver, createDriver } from '../../store/actions/drivers';
@@ -14,6 +13,13 @@ const Drivers = props => {
 	const dispatch = useDispatch();
 	const [driverFormType, showDriverForm] = useState('');
 	const [successMessage, setSuccess] = useState('');
+	const [selectedDriver, selectDriver] = useState({
+		firstname: "",
+		lastname: "",
+		email: "",
+		phone: "",
+		vehicle: "",
+	})
 	const { email } = useSelector(state => state['currentUser'].user);
 
 	const drivers = useSelector(state => {
@@ -129,7 +135,7 @@ const Drivers = props => {
 					<button
 						className='d-flex justify-content-center align-items-center table-edit-btn'
 						onClick={() => {
-							console.log(params);
+							selectDriver(params.row)
 							showDriverForm('update');
 						}}
 					>
@@ -143,11 +149,20 @@ const Drivers = props => {
 
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
-			<NewDriver type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} />
+			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<div className='d-flex mx-3 justify-content-between '>
 				<h3>Your Drivers</h3>
-				<button className='btn btn-primary btn-lg' style={{ width: 150 }} onClick={() => showDriverForm('create')}>
+				<button className='btn btn-primary btn-lg' style={{ width: 150 }} onClick={() => {
+					selectDriver({
+						firstname: "",
+						lastname: "",
+						email: "",
+						phone: "",
+						vehicle: "",
+					})
+					showDriverForm('create')
+				}}>
 					<span className='btn-text'>+ New Driver</span>
 				</button>
 			</div>
@@ -171,7 +186,5 @@ const Drivers = props => {
 		</div>
 	);
 };
-
-Drivers.propTypes = {};
 
 export default Drivers;

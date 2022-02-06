@@ -1,6 +1,11 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
-import { ADD_DRIVER, UPDATE_DRIVER } from '../actionTypes';
+import { SET_DRIVERS, ADD_DRIVER, UPDATE_DRIVER } from '../actionTypes';
+
+export const setDrivers = drivers => ({
+	type: SET_DRIVERS,
+	drivers,
+})
 
 const addDriver = (driver) => ({
 	type: ADD_DRIVER,
