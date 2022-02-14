@@ -78,7 +78,7 @@ export const PLACE_TYPES = {
 };
 
 export const SUBMISSION_TYPES = {
-	CREATE_JOB: 'job',
+	ASSIGN_DRIVER: 'assign',
 	GET_QUOTE: 'quote'
 };
 

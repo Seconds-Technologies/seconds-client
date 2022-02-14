@@ -2,7 +2,6 @@ import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useEffect } from 'react';
 import routes from './routes/routes';
-import Topbar from './components/topbar/Topbar';
 import Sidebar from './components/sidebar/Sidebar';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

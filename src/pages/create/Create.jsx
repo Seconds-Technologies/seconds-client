@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
 import { createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
+import { getAllDrivers } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
@@ -33,6 +34,7 @@ import ApiKeyAlert from '../../modals/ApiKeyAlert';
 import DeliveryJob from '../../modals/DeliveryJob';
 import MultiDropQuote from '../../modals/MultiDropQuote';
 import NewDropoffForm from '../../modals/NewDropoffForm';
+import Drivers from '../../modals/Drivers';
 
 const Create = props => {
 	const csvUploadRef = useRef(null);
@@ -50,7 +52,9 @@ const Create = props => {
 	const [fleetProvider, selectFleetProvider] = useState('');
 	const [loadingText, setLoadingText] = useState('');
 	const [quoteModal, showQuoteModal] = useState(false);
+	const [driversModal, showDriversModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
+	const [drivers, setDrivers] = useState([]);
 	const [uploadCSV, showCSVUpload] = useState(false);
 	const [isLocked, setLock] = useState(true);
 	const handleClose = () => showJobModal(false);
@@ -240,6 +244,13 @@ const Create = props => {
 				selectFleetProvider={selectFleetProvider}
 				showConfirmDialog={showConfirmDialog}
 			/>
+			<Drivers
+				show={driversModal}
+				toggleShow={showDriversModal}
+				drivers={drivers}
+				selectDriver={selectFleetProvider}
+				showConfirmDialog={showConfirmDialog}
+			/>
 			<CSVUpload
 				show={uploadCSV}
 				ref={csvUploadRef}
@@ -314,44 +325,20 @@ const Create = props => {
 								} catch (err) {
 									setLoadingModal(false);
 									console.error(err);
-									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							} else {
-								setLoadingText('Creating Order');
+								setLoadingText('Checking available drivers...');
 								setLoadingModal(true);
 								try {
 									values = await handleAddresses(values);
-									const {
-										jobSpecification: {
-											deliveries,
-											pickupLocation: { fullAddress: pickupAddress },
-											pickupStartTime,
-											orderNumber
-										},
-										selectedConfiguration: { deliveryFee, providerId }
-									} = await dispatch(createDeliveryJob(values, apiKey));
-									let {
-										dropoffLocation: { fullAddress: dropoffAddress },
-										dropoffStartTime,
-										orderReference: customerReference
-									} = deliveries[0];
-									let newJob = {
-										orderNumber,
-										customerReference,
-										pickupAddress,
-										dropoffAddress,
-										pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										deliveryFee,
-										fleetProvider: providerId.replace(/_/g, ' ')
-									};
+									setDeliveryParams(prevState => ({ ...values }));
+									const drivers = await dispatch(getAllDrivers(email));
+									setDrivers(drivers);
 									setLoadingModal(false);
-									setJob(newJob);
-									handleOpen();
+									showDriversModal(true);
 								} catch (err) {
 									setLoadingModal(false);
 									console.log(err);
-									err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 								}
 							}
 						} else {
@@ -600,27 +587,6 @@ const Create = props => {
 														console.log(value);
 													}}
 													aria-label='vehicle type selection'
-													/*styles={{
-														control: (provided) => ({
-															...provided,
-															minHeight: 32,
-															height: 32,
-															fontSize: 14,
-														}),
-														container: (provided) => ({
-															...provided,
-														}),
-														placeholder: (provided) => ({
-															...provided,
-															minHeight: 26,
-															height: 26,
-														}),
-														singleValue: (provided) => ({
-															...provided,
-															minHeight: 26,
-															height: 26,
-														}),
-													}}*/
 												/>
 											</div>
 										</div>
@@ -711,6 +677,25 @@ const Create = props => {
 													<Link className='ms-4' to='/example.csv' target='_blank' download='template.csv'>
 														Download CSV template
 													</Link>
+												</div>
+												<div className='d-flex pt-3 justify-content-center'>
+													<Button
+														type='submit'
+														name={SUBMISSION_TYPES.GET_QUOTE}
+														value={SUBMISSION_TYPES.GET_QUOTE}
+														variant='primary'
+														size='lg'
+														className='mx-3'
+														disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
+														onClick={() =>
+															values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+															dropoffs.length < 5 &&
+															alert('Please add at least 5 dropoffs before creating a multi drop')
+														}
+														style={{ width: '100%' }}
+													>
+														<span className='btn-text'>Outsource</span>
+													</Button>
 												</div>
 											</div>
 										) : (
@@ -940,7 +925,26 @@ const Create = props => {
 												<div className='my-2 d-flex justify-content-center'>
 													{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 												</div>
-												<div className='d-flex justify-content-center'>
+												<div className='d-flex justify-content-evenly'>
+													<div>
+														<Button
+															type='submit'
+															name={SUBMISSION_TYPES.ASSIGN_DRIVER}
+															value={SUBMISSION_TYPES.ASSIGN_DRIVER}
+															variant='primary'
+															size='lg'
+															className='mx-3'
+															disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
+															onClick={() =>
+																values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+																dropoffs.length < 5 &&
+																alert('Please add at least 5 dropoffs before creating a multi drop')
+															}
+															style={{ width: 150 }}
+														>
+															<span className='btn-text'>Assign</span>
+														</Button>
+													</div>
 													<div>
 														<Button
 															type='submit'
@@ -955,9 +959,9 @@ const Create = props => {
 																dropoffs.length < 5 &&
 																alert('Please add at least 5 dropoffs before creating a multi drop')
 															}
-															style={{ width: '100%' }}
+															style={{ width: 150 }}
 														>
-															<span className='btn-text'>Get Quote</span>
+															<span className='btn-text'>Outsource</span>
 														</Button>
 													</div>
 												</div>

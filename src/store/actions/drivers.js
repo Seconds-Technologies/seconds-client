@@ -50,3 +50,20 @@ export function changeDriver(data, email){
 		})
 	}
 }
+
+export function getAllDrivers(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('GET', `/server/main/drivers`, null, { params: { email }})
+				.then(drivers => {
+					dispatch(setDrivers(drivers))
+					resolve(drivers)
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				})
+		})
+	}
+}
