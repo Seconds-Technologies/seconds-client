@@ -176,12 +176,16 @@ const Drivers = props => {
 			</div>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
-				sortModel={[
-					{
-						field: 'createdAt',
-						sort: 'asc'
+				initialState={{
+					sorting: {
+						sortModel: [
+							{
+								field: 'createdAt',
+								sort: 'asc'
+							}
+						]
 					}
-				]}
+				}}
 				autoHeight={false}
 				className='mt-3 mx-3'
 				rows={drivers}

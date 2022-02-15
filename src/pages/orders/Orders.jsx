@@ -1,6 +1,6 @@
 import './Orders.css';
 import React, { useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BACKGROUND, STATUS_COLOURS, PATHS, STATUS, PROVIDERS } from '../../constants';
@@ -106,11 +106,12 @@ export default function Orders() {
 							params.value === PROVIDERS.STUART
 								? stuart
 								: params.value === PROVIDERS.GOPHR
-									? gophr
-									: params.value === PROVIDERS.STREET_STREAM
-										? streetStream
-										: params.value === PROVIDERS.ECOFLEET ?
-										ecofleet : privateCourier
+								? gophr
+								: params.value === PROVIDERS.STREET_STREAM
+								? streetStream
+								: params.value === PROVIDERS.ECOFLEET
+								? ecofleet
+								: privateCourier
 						}
 						alt=''
 						className='me-3'
@@ -151,12 +152,16 @@ export default function Orders() {
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
-				sortModel={[
-					{
-						field: 'createdAt',
-						sort: 'asc'
+				initialState={{
+					sorting: {
+						sortModel: [
+							{
+								field: 'createdAt',
+								sort: 'asc'
+							}
+						]
 					}
-				]}
+				}}
 				autoHeight={false}
 				className='mt-3 mx-3'
 				rows={jobs}
@@ -165,6 +170,7 @@ export default function Orders() {
 				checkboxSelection
 				autoPageSize
 				pagination
+				components={{ Toolbar: GridToolbar }}
 			/>
 		</div>
 	);

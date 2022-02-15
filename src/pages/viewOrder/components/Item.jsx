@@ -22,6 +22,7 @@ const Item = ({ label, value, type, styles }) => {
 				return null;
 		}
 	}, [type]);
+
 	return (
 		<div className={`${styles} d-flex flex-column`}>
 			<span className='fs-6 fw-bold text-primary'>{label}</span>
