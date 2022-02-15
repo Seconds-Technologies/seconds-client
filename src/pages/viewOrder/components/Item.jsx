@@ -29,7 +29,7 @@ const Item = ({ label, value, type, styles }) => {
 			{type === 'image' ? (
 				<img src={courierLogo()} alt={value} width={50} height={50} />
 			) : (
-				<span className='text-capitalize' style={{ fontSize: 18 }}>
+				<span style={{ fontSize: 18 }}>
 					{value}
 				</span>
 			)}
