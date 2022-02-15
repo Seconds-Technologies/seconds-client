@@ -11,7 +11,7 @@ import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../
 
 const Drivers = props => {
 	const dispatch = useDispatch();
-	const [driverFormType, showDriverForm] = useState('');
+	const [driverFormType, showDriverForm] = useState('create');
 	const [successMessage, setSuccess] = useState('');
 	const [selectedDriver, selectDriver] = useState({
 		firstname: '',
@@ -33,7 +33,8 @@ const Drivers = props => {
 				email: driver.email,
 				vehicle: vehicleType ? vehicleType.label : driver.vehicle,
 				status: driver.status,
-				isOnline: driver.isOnline
+				isOnline: driver.isOnline,
+				verified: driver.verified
 			};
 		});
 	});

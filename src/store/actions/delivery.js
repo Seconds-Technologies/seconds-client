@@ -72,10 +72,33 @@ export const unsubscribe = () => dispatch => {
 	dispatch({ type: TIMER_STOP });
 };
 
-export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined) {
+export function assignDriver(deliveryParams, apiKey, driverId){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.table(deliveryParams);
+			return apiCall('POST', `/api/v1/jobs/assign`, deliveryParams, {
+				headers: { 'X-Seconds-Api-Key': apiKey	},
+				params: { driverId }
+			})
+				.then(job => {
+					Mixpanel.track('Successful Job Assignment');
+					dispatch(newDeliveryJob(job));
+					dispatch(removeError());
+					resolve(job);
+				})
+				.catch(err => {
+					Mixpanel.track('Successful job assignment');
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/api/v1/jobs/create`, deliveryParams, {
 				headers: {
 					'X-Seconds-Api-Key': apiKey,

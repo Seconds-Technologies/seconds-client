@@ -10,12 +10,12 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
-import { createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
 import { getAllDrivers } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
-import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
+import { DELIVERY_TYPES, PROVIDER_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../constants';
 // components
 import ErrorField from '../../components/ErrorField';
 // assets
@@ -49,7 +49,7 @@ const Create = props => {
 		...jobRequestSchema
 	});
 	const [toastMessage, setToast] = useState('');
-	const [fleetProvider, selectFleetProvider] = useState('');
+	const [provider, selectProvider] = useState({ type: '', id: '', name: '' });
 	const [loadingText, setLoadingText] = useState('');
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [driversModal, showDriversModal] = useState(false);
@@ -174,7 +174,7 @@ const Create = props => {
 						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliveryFee,
-						fleetProvider: providerId.replace(/_/g, ' ')
+						courier: providerId.replace(/_/g, ' ')
 					};
 					setLoadingModal(false);
 					setJob(newJob);
@@ -188,46 +188,84 @@ const Create = props => {
 			});
 	};
 
-	const confirmSelection = () => {
+	const confirmProvider = () => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
 		setLoadingModal(true);
-		dispatch(createDeliveryJob(deliveryParams, apiKey, fleetProvider))
-			.then(
-				({
-					jobSpecification: {
-						deliveries,
-						orderNumber,
-						pickupLocation: { fullAddress: pickupAddress },
-						pickupStartTime
-					},
-					selectedConfiguration: { deliveryFee, providerId }
-				}) => {
-					let {
-						dropoffLocation: { fullAddress: dropoffAddress },
-						dropoffStartTime,
-						orderReference: customerReference
-					} = deliveries[0];
-					let newJob = {
-						orderNumber,
-						customerReference,
-						pickupAddress,
-						dropoffAddress,
-						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliveryFee,
-						fleetProvider: providerId.replace(/_/g, ' ')
-					};
-					setLoadingModal(false);
-					setJob(newJob);
-					handleOpen();
-				}
-			)
-			.catch(err => {
-				setLoadingModal(false);
-				console.log(err);
-				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-			});
+		provider.type === PROVIDER_TYPES.COURIER
+			? dispatch(createDeliveryJob(deliveryParams, apiKey, provider.id))
+					.then(
+						({
+							jobSpecification: {
+								deliveries,
+								orderNumber,
+								pickupLocation: { fullAddress: pickupAddress },
+								pickupStartTime
+							},
+							selectedConfiguration: { deliveryFee, providerId }
+						}) => {
+							let {
+								dropoffLocation: { fullAddress: dropoffAddress },
+								dropoffStartTime,
+								orderReference: customerReference
+							} = deliveries[0];
+							let newJob = {
+								orderNumber,
+								customerReference,
+								pickupAddress,
+								dropoffAddress,
+								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliveryFee,
+								courier: providerId.replace(/_/g, ' ')
+							};
+							setLoadingModal(false);
+							setJob(newJob);
+							handleOpen();
+						}
+					)
+					.catch(err => {
+						setLoadingModal(false);
+						console.log(err);
+						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+					})
+			: dispatch(assignDriver(deliveryParams, apiKey, provider.id))
+					.then(
+						({
+							jobSpecification: {
+								deliveries,
+								orderNumber,
+								pickupLocation: { fullAddress: pickupAddress },
+								pickupStartTime
+							},
+							selectedConfiguration: { deliveryFee },
+							driverInformation: { name }
+						}) => {
+							let {
+								dropoffLocation: { fullAddress: dropoffAddress },
+								dropoffStartTime,
+								orderReference: customerReference
+							} = deliveries[0];
+							let newJob = {
+								orderNumber,
+								customerReference,
+								pickupAddress,
+								dropoffAddress,
+								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliveryFee,
+								courier: name.replace(/_/g, ' ')
+							};
+							setLoadingModal(false);
+							setJob(newJob);
+							handleOpen();
+						}
+					)
+					.catch(err => {
+						setLoadingModal(false);
+						console.log(err);
+						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+					});
 	};
 
 	return (
@@ -236,19 +274,19 @@ const Create = props => {
 			<ApiKeyAlert message={toastMessage} onClose={setToast} />
 			<MultiDropQuote show={multiDropDialog} toggleShow={showMultiDropDialog} numDropoffs={dropoffs.length} confirm={confirmMultiDropQuote} />
 			<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
-			<ConfirmProvider show={confirmDialog} provider={fleetProvider} toggleShow={showConfirmDialog} onConfirm={confirmSelection} />
+			<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 			<Quotes
 				show={quoteModal}
 				toggleShow={showQuoteModal}
 				quotes={quotes}
-				selectFleetProvider={selectFleetProvider}
+				selectCourier={selectProvider}
 				showConfirmDialog={showConfirmDialog}
 			/>
 			<Drivers
 				show={driversModal}
 				toggleShow={showDriversModal}
 				drivers={drivers}
-				selectDriver={selectFleetProvider}
+				selectDriver={selectProvider}
 				showConfirmDialog={showConfirmDialog}
 			/>
 			<CSVUpload

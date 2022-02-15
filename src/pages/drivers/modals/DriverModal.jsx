@@ -32,7 +32,7 @@ const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
 					}} onSubmit={onSubmit}>
 					{({ errors, values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
 						<div className='row mx-auto w-75'>
-							<h2 className='text-center mb-3'>{type === 'create' ? 'New Driver' : 'Update Driver'}</h2>
+							<h2 className='text-center mb-3'>{type === 'update' ? 'Update Driver' : 'New Driver'}</h2>
 							<form
 								onSubmit={handleSubmit}
 								className='row my-4 d-flex flex-column justify-content-center align-items-center'

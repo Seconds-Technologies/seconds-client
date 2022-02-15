@@ -11,6 +11,7 @@ import stuart from '../../assets/img/stuart.svg';
 import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
+import privateCourier from '../../assets/img/courier.svg';
 
 export default function Orders() {
 	const dispatch = useDispatch();
@@ -104,11 +105,12 @@ export default function Orders() {
 						src={
 							params.value === PROVIDERS.STUART
 								? stuart
-								: params.value === 'gophr'
+								: params.value === PROVIDERS.GOPHR
 									? gophr
-									: params.value === 'street_stream'
+									: params.value === PROVIDERS.STREET_STREAM
 										? streetStream
-										: ecofleet
+										: params.value === PROVIDERS.ECOFLEET ?
+										ecofleet : privateCourier
 						}
 						alt=''
 						className='me-3'

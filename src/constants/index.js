@@ -82,6 +82,11 @@ export const SUBMISSION_TYPES = {
 	GET_QUOTE: 'quote'
 };
 
+export const PROVIDER_TYPES = {
+	COURIER: 'courier',
+	DRIVER: 'driver'
+}
+
 export const VEHICLE_TYPES = [
 	{
 		value: 'BIC',

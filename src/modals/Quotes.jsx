@@ -6,8 +6,9 @@ import gophr from '../assets/img/gophr.svg';
 import streetStream from '../assets/img/street-stream.svg';
 import ecofleet from '../assets/img/ecofleet.svg';
 import moment from 'moment';
+import { PROVIDER_TYPES } from '../constants';
 
-const Quotes = ({quotes, show, toggleShow, selectFleetProvider, showConfirmDialog}) => {
+const Quotes = ({quotes, show, toggleShow, selectCourier, showConfirmDialog}) => {
 	return (
 		<Modal show={show} onHide={() => toggleShow(false)} size='lg'>
 			<Modal.Header closeButton>
@@ -58,7 +59,7 @@ const Quotes = ({quotes, show, toggleShow, selectFleetProvider, showConfirmDialo
 										className='d-flex justify-content-center align-items-center OrdersListEdit'
 										onClick={() => {
 											toggleShow(false);
-											selectFleetProvider(providerId);
+											selectCourier(prevState => ({type: PROVIDER_TYPES.COURIER, id: providerId, name: providerId.toUpperCase()}));
 											showConfirmDialog(true);
 										}}
 									>
@@ -79,7 +80,7 @@ Quotes.propTypes = {
 	quotes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
 	toggleShow: PropTypes.func.isRequired,
-	selectFleetProvider: PropTypes.func.isRequired,
+	selectCourier: PropTypes.func.isRequired,
 	showConfirmDialog: PropTypes.func.isRequired
 };
 

@@ -24,7 +24,6 @@ const ViewOrder = props => {
 	const { firstname, lastname, email, company, phone, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-	// const [order, setOrder] = useState({});
 	const [message, showMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
@@ -248,7 +247,7 @@ const ViewOrder = props => {
 
 	return (
 		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text='Creating Order'>
-			<div ref={modalRef} className='viewOrder bg-light pt-2 pb-1 px-5'>
+			<div ref={modalRef} className='container-fluid my-auto'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
@@ -266,7 +265,7 @@ const ViewOrder = props => {
 						</div>
 						<div className='row d-flex justify-content-end'>
 							<Card styles='mt-3'>
-								<Item label='Delivery provider' value={order.providerId} type='image' styles='my-2' />
+								<Item label='Delivery provider' value={order.providerId} type={order.providerId === 'private' ? undefined : 'image'} styles='my-2' />
 								<Item label='Driver name' value={order.driverName} styles='my-2' />
 								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
 								<Item label='Transport' value={order.driverVehicle} styles='my-2' />

@@ -11,7 +11,7 @@ const ConfirmProvider = ({ show, toggleShow, onConfirm, provider }) => {
 			</Modal.Header>
 			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
 				<span className='fs-4'>
-					You are confirming <span className='fw-bold text-uppercase'>{provider}</span>!
+					You are confirming <span className='fw-bold'>{provider.name}</span>!
 				</span>
 			</Modal.Body>
 			<Modal.Footer>
@@ -26,7 +26,7 @@ const ConfirmProvider = ({ show, toggleShow, onConfirm, provider }) => {
 
 ConfirmProvider.propTypes = {
 	show: PropTypes.bool.isRequired,
-	provider: PropTypes.string.isRequired,
+	provider: PropTypes.object.isRequired,
 	toggleShow: PropTypes.func.isRequired,
 	onConfirm: PropTypes.func.isRequired
 };
