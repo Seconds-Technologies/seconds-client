@@ -11,7 +11,7 @@ import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../
 
 const Drivers = props => {
 	const dispatch = useDispatch();
-	const [driverFormType, showDriverForm] = useState('create');
+	const [driverFormType, showDriverForm] = useState('');
 	const [successMessage, setSuccess] = useState('');
 	const [selectedDriver, selectDriver] = useState({
 		firstname: '',
