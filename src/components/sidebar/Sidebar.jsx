@@ -128,7 +128,7 @@ export default function Sidebar() {
 						</li>
 					</Link>
 					<div className='link dropdown'>
-						<div className={`sidebarProfileItem`} role='button' id='main-dropdown' data-bs-toggle='dropdown'>
+						<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
 							{profileImageData ? (
 								<img
 									className={`border rounded-circle me-3`}
