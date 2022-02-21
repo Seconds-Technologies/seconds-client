@@ -119,7 +119,8 @@ export const PROVIDERS = {
 	STUART: 'stuart',
 	GOPHR: 'gophr',
 	STREET_STREAM: 'street_stream',
-	ECOFLEET: 'ecofleet'
+	ECOFLEET: 'ecofleet',
+	PRIVATE: 'private'
 };
 
 export const DELIVERY_TYPES = {

@@ -43,6 +43,8 @@ export default function Orders() {
 		{
 			field: 'status',
 			headerName: 'Status',
+			type: 'singleSelect',
+			valueOptions: Object.values(STATUS),
 			width: 150,
 			renderCell: params => (
 				<div className='h-75 d-flex align-items-center'>
@@ -99,6 +101,8 @@ export default function Orders() {
 			field: 'driver',
 			headerName: 'Driver',
 			width: 150,
+			type: 'singleSelect',
+			valueOptions: Object.values(PROVIDERS),
 			renderCell: params => (
 				<div className='h-75 d-flex align-items-center'>
 					<img
