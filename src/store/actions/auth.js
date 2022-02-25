@@ -105,8 +105,13 @@ export function syncUser(email, authenticated = true) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
-				.then(({ message, ...user }) => {
-					authenticated ? dispatch(setCurrentUser(user)) : dispatch(setUserDetails(user));
+				.then(({ message, drivers, ...user }) => {
+					if (authenticated) {
+						dispatch(setCurrentUser(user));
+						dispatch(setDrivers(drivers))
+					} else {
+						dispatch(setUserDetails(user));
+					}
 					resolve(user);
 				})
 				.catch(err => {
