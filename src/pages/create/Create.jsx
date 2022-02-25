@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
 import { assignDriver, createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
-import { getAllDrivers } from '../../store/actions/drivers';
+import { getAllDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
@@ -66,6 +66,8 @@ const Create = props => {
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
+		dispatch(subscribe(email))
+		return () => dispatch(unsubscribe())
 	}, []);
 
 	useEffect(() => {

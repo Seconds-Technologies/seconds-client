@@ -1,6 +1,6 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
-import { SET_DRIVERS, ADD_DRIVER, UPDATE_DRIVER } from '../actionTypes';
+import { SET_DRIVERS, ADD_DRIVER, UPDATE_DRIVER, TIMER_START, TIMER_STOP } from '../actionTypes';
 
 export const setDrivers = drivers => ({
 	type: SET_DRIVERS,
@@ -16,6 +16,19 @@ const updateDriver = driver => ({
 	type: UPDATE_DRIVER,
 	driver
 })
+
+let timer;
+export const subscribe = (email) => dispatch => {
+	clearInterval(timer);
+	dispatch(getAllDrivers(email));
+	timer = setInterval(() => dispatch(getAllDrivers(email)), 5000);
+	dispatch({ type: TIMER_START, timer });
+};
+
+export const unsubscribe = () => dispatch => {
+	clearInterval(timer);
+	dispatch({ type: TIMER_STOP });
+};
 
 export function createDriver(data, email){
 	return dispatch => {

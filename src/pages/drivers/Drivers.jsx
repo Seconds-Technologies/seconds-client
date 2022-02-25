@@ -1,13 +1,14 @@
 import './drivers.css';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import DriverModal from './modals/DriverModal';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeDriver, createDriver } from '../../store/actions/drivers';
+import { changeDriver, createDriver, subscribe, unsubscribe } from '../../store/actions/drivers';
 import SuccessToast from '../../modals/SuccessToast';
 import Switch from 'react-switch';
 import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
+import { Mixpanel } from '../../config/mixpanel';
 
 const Drivers = props => {
 	const dispatch = useDispatch();
@@ -150,6 +151,12 @@ const Drivers = props => {
 		},
 		{ field: 'verified', headerName: 'Verified', type: 'boolean', width: 150 }
 	];
+
+	useEffect(() => {
+		Mixpanel.people.increment('page_views');
+		dispatch(subscribe(email))
+		return () => dispatch(unsubscribe())
+	}, [])
 
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>

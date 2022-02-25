@@ -108,7 +108,7 @@ export function syncUser(email, authenticated = true) {
 				.then(({ message, drivers, ...user }) => {
 					if (authenticated) {
 						dispatch(setCurrentUser(user));
-						dispatch(setDrivers(drivers))
+						dispatch(setDrivers(drivers));
 					} else {
 						dispatch(setUserDetails(user));
 					}

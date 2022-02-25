@@ -12,8 +12,9 @@ import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
+import { removeError } from '../../store/actions/errors';
 
-export default function Orders() {
+export default function Orders(props) {
 	const dispatch = useDispatch();
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 
@@ -37,6 +38,11 @@ export default function Orders() {
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
+
+	useEffect(() => {
+		dispatch(removeError())
+	}, [props.location]);
+
 
 	const columns = [
 		{ field: 'id', headerName: 'Order No.', width: 150 },
