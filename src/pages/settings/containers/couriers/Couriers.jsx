@@ -4,7 +4,7 @@ import stuart from '../../../../assets/img/stuart.svg';
 import gophr from '../../../../assets/img/gophr.svg';
 import streetStream from '../../../../assets/img/street-stream.svg';
 import ecofleet from '../../../../assets/img/ecofleet.svg';
-import addisonLee from '../../../../assets/img/addison_lee_logo.svg';
+import addisonLee from '../../../../assets/img/addison_lee_logo_resized.svg';
 import classnames from 'classnames';
 
 const Couriers = () => {
@@ -45,7 +45,7 @@ const Couriers = () => {
 					</a>
 					<a href='https://www.addisonlee.com/' target='_blank' role='button' className={courierLinkBtn}>
 						<div className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile test3'>
-							<img src={addisonLee} alt='' width={120} height={120} />
+							<img src={addisonLee} alt='' width={200} height={120} />
 							<span className='display-6 text-dark'>Addison Lee</span>
 						</div>
 					</a>
