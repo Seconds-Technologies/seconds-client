@@ -29,8 +29,7 @@ export default function Integrations(props) {
 	}, [props.location]);
 
 	return (
-		<div className='page-container container-fluid p-4'>
-			<h3 className='integrations-header text-center mb-4'>Integration</h3>
+		<div className='integrations container-fluid p-4'>
 			<ComingSoon message={toastMessage} toggleMessage={setShowToast}/>
 			<div className='container'>
 				<div className='row d-flex justify-content-center'>

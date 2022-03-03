@@ -7,7 +7,7 @@ import Track from '../pages/track/Track';
 import Create from '../pages/create/Create';
 import ViewOrder from '../pages/viewOrder/ViewOrder';
 import Integrations from '../pages/integration/Integrations';
-import PrivateRoute from '../components/PrivateRoute';
+import PrivateRoute from './PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Signup1 from '../pages/signup/Signup1';
 import Signup2 from '../pages/signup/Signup2';

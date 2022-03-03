@@ -13,6 +13,7 @@ import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
 import { removeError } from '../../store/actions/errors';
+import CustomToolbar from '../../components/CustomToolbar';
 
 export default function Orders(props) {
 	const dispatch = useDispatch();
@@ -180,7 +181,7 @@ export default function Orders(props) {
 				checkboxSelection
 				autoPageSize
 				pagination
-				components={{ Toolbar: GridToolbar }}
+				components={{ Toolbar: CustomToolbar }}
 			/>
 		</div>
 	);

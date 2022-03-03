@@ -96,7 +96,7 @@ const Profile = props => {
 	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
-		<div className='profile bg-light d-flex justify-content-center align-items-center px-5'>
+		<div className='profile d-flex justify-content-center align-items-center px-5'>
 			{modal1}
 			{modal2}
 			<div className='profile-wrapper bg-white'>

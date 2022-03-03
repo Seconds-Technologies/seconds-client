@@ -67,19 +67,7 @@ export default function Sidebar() {
 							<div className='item-hover'>Create</div>
 						</li>
 					</Link>
-					<Link to={PATHS.TRACK} className='link text-black'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.TRACK && 'currentLink'}`}>
-							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.TRACK && 'currentIcon'}`}
-								src={trackIcon}
-								alt={''}
-								width={25}
-								height={25}
-							/>
-							<div className='item-hover'>Track</div>
-						</li>
-					</Link>
-					<Link to={PATHS.DRIVERS} className='link text-black mt-4'>
+					<Link to={PATHS.DRIVERS} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
 							<img
 								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
@@ -89,30 +77,6 @@ export default function Sidebar() {
 								height={25}
 							/>
 							<div className='item-hover'>Drivers</div>
-						</li>
-					</Link>
-					<Link to={PATHS.COURIERS} className='link text-black'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.COURIERS && 'currentLink'}`}>
-							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.COURIERS && 'currentIcon'}`}
-								src={courierIcon}
-								alt={''}
-								width={25}
-								height={25}
-							/>
-							<div className='item-hover'>Couriers</div>
-						</li>
-					</Link>
-					<Link to={PATHS.INTEGRATE} className='link text-black'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.INTEGRATE && 'currentLink'}`}>
-							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.INTEGRATE && 'currentIcon'}`}
-								src={integrateIcon}
-								alt={''}
-								width={25}
-								height={25}
-							/>
-							<div className='item-hover'>Integrations</div>
 						</li>
 					</Link>
 					<Link to={PATHS.SETTINGS} className='link text-black mt-4'>

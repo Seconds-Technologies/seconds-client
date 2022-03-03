@@ -3,12 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
-import { STATUS_COLOURS, STATUS } from '../../constants';
+import { STATUS_COLOURS, STATUS, PATHS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import { dateFilter } from '../../helpers';
 import TimeFilter from '../../components/TimeFilter';
+import { BsTable } from 'react-icons/bs';
+import Button from '@mui/material/Button';
 
 const Track = props => {
 	const dispatch = useDispatch();
@@ -41,6 +43,9 @@ const Track = props => {
 	return (
 		<div className='page-container container-fluid px-5 pb-4'>
 			<div className="d-flex justify-content-end py-3 px-3">
+				<Button className="me-3" onClick={() => props.history.push(PATHS.ORDERS)} startIcon={<BsTable />}>
+					<span>Table View</span>
+				</Button>
 				<TimeFilter current={active} onSelect={setActive}/>
 			</div>
 			<div className='row'>

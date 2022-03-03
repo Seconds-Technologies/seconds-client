@@ -92,7 +92,6 @@ const Subscription = props => {
 	}, []);
 
 	const containerClass = classnames({
-		'page-container': !props.isComponent,
 		'd-flex': true,
 		'pt-5': !props.isComponent,
 		'pt-2': true,
