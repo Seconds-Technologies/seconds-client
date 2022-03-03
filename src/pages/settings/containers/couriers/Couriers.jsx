@@ -1,13 +1,13 @@
-import React from 'react';
 import './couriers.css';
-import stuart from '../../assets/img/stuart.svg'
-import gophr from '../../assets/img/gophr.svg';
-import streetStream from '../../assets/img/street-stream.svg';
-import ecofleet from '../../assets/img/ecofleet.svg';
+import React from 'react';
+import stuart from '../../../../assets/img/stuart.svg'
+import gophr from '../../../../assets/img/gophr.svg';
+import streetStream from '../../../../assets/img/street-stream.svg';
+import ecofleet from '../../../../assets/img/ecofleet.svg';
 
 const Couriers = () => {
 	return (
-		<div className='couriers container-fluid p-5'>
+		<div className='tab-container container-fluid p-5'>
 			<div>
 				<h3>Couriers</h3>
 				<p className="mt-3">Use your existing contracts or discounted Seconds rate.</p>

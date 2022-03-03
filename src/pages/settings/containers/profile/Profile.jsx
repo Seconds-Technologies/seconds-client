@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateProfile } from '../../store/actions/auth';
-import camera from '../../assets/img/camera.svg';
+import { updateProfile } from '../../../../store/actions/auth';
+import camera from '../../../../assets/img/camera.svg';
 import classnames from 'classnames';
 import GooglePlaceAutocomplete, { geocodeByAddress } from 'react-google-places-autocomplete';
-import { addError, removeError } from '../../store/actions/errors';
-import { Mixpanel } from '../../config/mixpanel';
-import { parseAddress } from '../../helpers';
+import { addError, removeError } from '../../../../store/actions/errors';
+import { Mixpanel } from '../../../../config/mixpanel';
+import { parseAddress } from '../../../../helpers';
 import SuccessMessage from './modals/SuccessMessage';
 
 const Profile = props => {
@@ -72,7 +72,7 @@ const Profile = props => {
 	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
-		<div ref={modalRef} className='profile d-flex flex-column justify-content-center px-5 '>
+		<div ref={modalRef} className='tab-container d-flex flex-column justify-content-center px-5 '>
 			<SuccessMessage ref={modalRef} show={successModal} onHide={() => handleClose('profile')} />
 			<div>
 				<h1 className='fs-3 fw-bold'>Account Information</h1>

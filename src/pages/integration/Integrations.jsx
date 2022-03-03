@@ -24,12 +24,13 @@ export default function Integrations(props) {
 	});
 
 	useEffect(() => {
+		console.log(props)
 		Mixpanel.people.increment('page_views');
 		dispatch(removeError())
 	}, [props.location]);
 
 	return (
-		<div className='integrations container-fluid p-4'>
+		<div className='tab-container container-fluid p-4'>
 			<ComingSoon message={toastMessage} toggleMessage={setShowToast}/>
 			<div className='container'>
 				<div className='row d-flex justify-content-center'>

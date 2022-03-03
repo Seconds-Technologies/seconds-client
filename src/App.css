@@ -34,6 +34,10 @@
   min-height: 100vh
 }
 
+.tab-container {
+  flex: 7;
+}
+
 .help-text {
   color: #777777;
 }

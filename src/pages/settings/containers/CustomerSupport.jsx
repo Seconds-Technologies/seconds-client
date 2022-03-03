@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import telephone from '../../assets/img/telephone.svg';
-import mail from '../../assets/img/mail.svg';
-import { Mixpanel } from '../../config/mixpanel';
+import telephone from '../../../assets/img/telephone.svg';
+import mail from '../../../assets/img/mail.svg';
+import { Mixpanel } from '../../../config/mixpanel';
 
 const CustomerSupport = props => {
 	useEffect(() => {
