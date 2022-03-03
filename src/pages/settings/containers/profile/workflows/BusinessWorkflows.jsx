@@ -104,7 +104,7 @@ const BusinessWorkflows = props => {
 			<div className='row pb-4'>
 				<h1 className='workflow-header fs-4'>Drivers response time</h1>
 				<p className='text-muted'>This is the maximum time allowed for a driver to accept the order</p>
-				<div className='input-group' style={{width: 200}}>
+				<div className='input-group' style={{ width: 200 }}>
 					<input type='number' min={0} max={60} className='form-control' aria-label='drivers response time' />
 					<span className='input-group-text'>mins</span>
 				</div>
@@ -132,17 +132,23 @@ const BusinessWorkflows = props => {
 						</label>
 					</div>
 				</div>
-				<div className="mt-3">
-				<label htmlFor="customRange2" className="form-label">Price</label>
-				<input type="range" className="form-range" min={5} max={15} id="customRange2"/>
-				</div>
 			</div>
 			<div className='row pb-4'>
 				<h1 className='workflow-header fs-4'>Delivery fee</h1>
 				<p className='text-muted'>How much do you charge your customers for delivery</p>
-				<div className="input-group mb-3" style={{width: 200}}>
-					<span className="input-group-text">£</span>
-					<input type="number" className="form-control" aria-label="Amount in pounds (with dot and two decimal places)"/>
+				<div>
+					<label htmlFor='customRange2' className='form-label'>
+						Price Range
+					</label>
+					<div className="d-flex w-50">
+						<span className="px-4">£5</span>
+						<input type='range' className='form-range' min={5} max={15} id='customRange2' />
+						<span className="px-4">£15</span>
+					</div>
+				</div>
+				<div className='input-group mt-4' style={{ width: 200 }}>
+					<span className='input-group-text'>£</span>
+					<input type='number' min={5} max={15} className='form-control' aria-label='Amount in pounds (with dot and two decimal places)' />
 				</div>
 			</div>
 		</div>
