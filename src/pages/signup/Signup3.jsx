@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { authenticateUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingOverlay from 'react-loading-overlay';
-import Subscription from '../subscription/Subscription';
+import Subscription from '../settings/containers/subscription/Subscription';
 import backArrow from '../../assets/img/noun-go-back-vector.svg';
 
 const Signup3 = props => {

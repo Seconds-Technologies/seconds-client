@@ -15,7 +15,7 @@
     font-weight: 600;
 }
 
-.price-text{
+.price-text {
     font-weight: bold;
 }
 
@@ -30,6 +30,5 @@
 }
 
 .success-wrapper {
-    width: 60%;
     box-shadow: 0 0 30px rgba(156,156,156, 0.3);
 }

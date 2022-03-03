@@ -1,11 +1,11 @@
 import './subscription.css';
 import React, { useEffect, useState } from 'react';
-import secondsLogo from '../../assets/img/logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkSubscriptionStatus } from '../../store/actions/stripe';
+import { checkSubscriptionStatus, fetchInvoices } from '../../../../store/actions/stripe';
 import Modal from 'react-bootstrap/Modal';
-import { Mixpanel } from '../../config/mixpanel';
+import { Mixpanel } from '../../../../config/mixpanel';
 import classnames from 'classnames';
+import moment from 'moment';
 
 const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
@@ -25,7 +25,9 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 			<span className='h1 price-text'>{`£${price} / month`}</span>
 			<div className='d-flex flex-column mt-4'>
 				<span className='text-uppercase text-muted mb-4 account-text'>User Accounts</span>
-				<div className='border border-2 border-grey py-2 ps-3 w-75'>{numUsers}</div>
+				<div className='border border-2 border-grey py-2 ps-3' style={{ width: 300 }}>
+					{numUsers}
+				</div>
 				<div className='mt-3 text-muted'>{description}</div>
 			</div>
 			<form action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-checkout-session`} method='POST'>
@@ -51,23 +53,29 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 	);
 };
 
-const SuccessDisplay = ({ isComponent, stripeCustomerId }) => {
+const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price }) => {
 	return (
-		<section className='d-flex flex-column align-items-center success-wrapper py-5'>
-			<div className='d-flex flex-column'>
-				<img className='img-fluid seconds-logo' src={secondsLogo} alt='' />
-				<div className='description Box-root'>
-					<h3>You are subscribed!</h3>
+		<div>
+			<h1 className='fs-3 py-2'>Plans</h1>
+			<div className='d-flex flex-column border p-3'>
+				<div className='d-flex justify-content-between py-2'>
+					<span className='display-5 text-capitalize plan-text'>{subscriptionPlan}</span>
+					<span className='display-6 price-text'>{`£${price}/mo`}</span>
 				</div>
+				<p>Ideal for small businesses with less than 350 orders per month. The platform will not accept anymore than 350 orders.</p>
+				<form action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-portal-session`} method='POST'>
+					<input type='hidden' name='onboarding' value={isComponent} />
+					<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
+					<button id='checkout-and-portal-button' className='btn btn-primary text-white mt-4' type='submit'>
+						Change Plan
+					</button>
+					<button id='checkout-and-portal-button' className='ms-4 btn btn-outline-dark mt-4' type='button'>
+						Cancel Subscription
+					</button>
+				</form>
 			</div>
-			<form action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-portal-session`} method='POST'>
-				<input type='hidden' name='onboarding' value={isComponent} />
-				<input type='hidden' id='stripe-customer-id' name='stripe_customer_id' value={stripeCustomerId} />
-				<button id='checkout-and-portal-button' className='btn btn-primary btn-lg text-white mt-4' type='submit'>
-					Manage your billing information
-				</button>
-			</form>
-		</section>
+
+		</div>
 	);
 };
 
@@ -80,21 +88,44 @@ const Message = ({ message, onHide }) => (
 	</Modal>
 );
 
+const InvoiceHistory = ({ invoices }) => (
+	<div>
+		<h1 className='fs-3 py-2'>Invoice History</h1>
+		<div className='d-flex flex-grow-1 flex-column border p-3 w-100'>
+			{invoices.map(({ created, total, status, hosted_invoice_url }) => (
+				<a href={hosted_invoice_url} target="_blank" role="button" className='d-flex justify-content-evenly p-3 my-2 border rounded-3 text-decoration-none text-dark'>
+					<span>{moment.unix(created).format("DD MMM YYYY")}</span>
+					<span>£{total / 100}</span>
+					<span className="text-capitalize">{status}</span>
+					<span>Growth Commission</span>
+				</a>
+			))}
+		</div>
+	</div>
+);
+
 const Subscription = props => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	let [message, setMessage] = useState('');
 	let [isSubscribed, setSubscribed] = useState(false);
+	let [invoiceHistory, setInvoices] = useState([]);
+	let [currentPlan, setCurrentPlan] = useState({
+		amount: 2500
+	});
 
 	useEffect(() => {
-		dispatch(checkSubscriptionStatus(user.email)).then((status) => setSubscribed(status));
+		dispatch(checkSubscriptionStatus(user.email)).then(({ status, items }) => {
+			items.length && setCurrentPlan(prevState => items[0].plan);
+			setSubscribed(status === 'active' || status === 'trialing');
+		});
+		dispatch(fetchInvoices(user.email)).then(invoices => setInvoices(invoices))
 		Mixpanel.people.increment('page_views');
 	}, []);
 
 	const containerClass = classnames({
-		'd-flex': true,
-		'pt-5': !props.isComponent,
-		'pt-2': true,
+		'container-fluid': !props.isComponent,
+		'pt-2': props.isComponent,
 		'justify-content-center': true,
 		'align-items-center': true
 	});
@@ -103,8 +134,18 @@ const Subscription = props => {
 		<div className={containerClass}>
 			<Message message={message} onHide={() => setMessage('')} />
 			{user.subscriptionId || isSubscribed ? (
-				<div className='d-flex flex-grow-1 flex-column align-items-center justify-content-center h-75 m-1'>
-					<SuccessDisplay isComponent={props.isComponent} stripeCustomerId={user.stripeCustomerId} />
+				<div className='row'>
+					<div className='col-md-6 col-sm-12'>
+						<Plans
+							isComponent={props.isComponent}
+							stripeCustomerId={user.stripeCustomerId}
+							subscriptionPlan={user.subscriptionPlan}
+							price={currentPlan.amount / 100}
+						/>
+					</div>
+					<div className='col-md-6 col-sm-12'>
+						<InvoiceHistory invoices={invoiceHistory}/>
+					</div>
 				</div>
 			) : (
 				<div className='d-flex px-5 h-100 w-100 align-items-center justify-content-center'>

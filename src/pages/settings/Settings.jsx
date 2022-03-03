@@ -1,5 +1,5 @@
 import './settings.css';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Mixpanel } from '../../config/mixpanel';
 import Box from '@mui/material/Box';
@@ -8,14 +8,17 @@ import Tabs from '@mui/material/Tabs';
 import Profile from './containers/profile/Profile';
 import Couriers from './containers/couriers/Couriers';
 import Integrations from '../integration/Integrations';
-import Subscription from '../subscription/Subscription';
+import Subscription from './containers/subscription/Subscription';
 import TabPanel from './components/TabPanel';
 import BusinessWorkflows from './containers/profile/workflows/BusinessWorkflows';
+import Developers from './containers/developers/Developers';
+import TabContext from '../../context/TabContext';
 
 const Settings = props => {
-	const [value, setValue] = React.useState(0);
+	const { index, dispatch } = useContext(TabContext);
+
 	const handleChange = (event, newValue) => {
-		setValue(newValue);
+		dispatch({type: 'setIndex', index: newValue})
 	};
 
 	useEffect(() => {
@@ -68,37 +71,40 @@ const Settings = props => {
 		<div className='page-container d-flex py-3'>
 			<Box sx={{ width: '100%' }}>
 				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-					<Tabs indicatorColor='secondary' value={value} onChange={handleChange} aria-label='basic tabs example' variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
+					<Tabs
+						indicatorColor='secondary'
+						value={index}
+						onChange={handleChange}
+						aria-label='basic tabs example'
+						variant='scrollable'
+						scrollButtons='auto'
+						allowScrollButtonsMobile
+					>
 						<AntTab label='Account Settings' {...a11yProps(0)} />
 						<AntTab label='Billing' {...a11yProps(1)} />
 						<AntTab label='Business Workflows' {...a11yProps(2)} />
 						<AntTab label='Third Party Providers' {...a11yProps(3)} />
 						<AntTab label='Integrations' {...a11yProps(4)} />
-						<AntTab
-							label={
-								<React.Fragment>
-									<a href='https://docs.useseconds.com/' target='_blank' className='text-decoration-none'>
-										Developers
-									</a>
-								</React.Fragment>
-							}
-						/>
+						<AntTab label='Developers' {...a11yProps(5)} />
 					</Tabs>
 				</Box>
-				<TabPanel value={value} index={0}>
+				<TabPanel value={index} index={0}>
 					<Profile />
 				</TabPanel>
-				<TabPanel value={value} index={1}>
+				<TabPanel value={index} index={1}>
 					<Subscription {...props} />
 				</TabPanel>
-				<TabPanel value={value} index={2}>
-					<BusinessWorkflows {...props}/>
+				<TabPanel value={index} index={2}>
+					<BusinessWorkflows {...props} />
 				</TabPanel>
-				<TabPanel value={value} index={3}>
+				<TabPanel value={index} index={3}>
 					<Couriers />
 				</TabPanel>
-				<TabPanel value={value} index={4}>
+				<TabPanel value={index} index={4}>
 					<Integrations {...props} />
+				</TabPanel>
+				<TabPanel value={index} index={5}>
+					<Developers {...props} />
 				</TabPanel>
 			</Box>
 		</div>

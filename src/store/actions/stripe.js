@@ -119,14 +119,29 @@ export function checkSubscriptionStatus(email) {
 		return new Promise((resolve, reject) => {
 			console.log(email);
 			apiCall('GET', '/server/subscription/fetch-stripe-subscription', null, { params: { email }})
-				.then(({ id: subscriptionId, status }) => {
+				.then(({ id: subscriptionId, status, items }) => {
 					console.table({subscriptionId, status});
 					Mixpanel.people.set({
 						subscribed: !!subscriptionId,
 					});
 					dispatch(updateCurrentUser({ subscriptionId }));
-					resolve(status === 'active' || status === "trialing");
+					resolve({status, items });
 				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function fetchInvoices(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log(email);
+			apiCall('GET', '/server/subscription/fetch-invoices', null, { params: { email } })
+				.then(invoices => resolve(invoices))
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
