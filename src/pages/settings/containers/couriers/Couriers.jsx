@@ -1,43 +1,55 @@
 import './couriers.css';
 import React from 'react';
-import stuart from '../../../../assets/img/stuart.svg'
+import stuart from '../../../../assets/img/stuart.svg';
 import gophr from '../../../../assets/img/gophr.svg';
 import streetStream from '../../../../assets/img/street-stream.svg';
 import ecofleet from '../../../../assets/img/ecofleet.svg';
+import addisonLee from '../../../../assets/img/addison_lee_logo.svg';
+import classnames from 'classnames';
 
 const Couriers = () => {
+	const courierLinkBtn = classnames({
+		'col-sm-12': true,
+		'col-md-4': true,
+		'text-decoration-none': true,
+		'my-2': true,
+	});
+
 	return (
 		<div className='tab-container container-fluid p-5'>
-			<div>
-				<h3>Couriers</h3>
-				<p className="mt-3">Use your existing contracts or discounted Seconds rate.</p>
-			</div>
-			<hr className="mt-4 mb-5"/>
-			<div className='row gy-5 gx-4'>
-				<a href="https://stuart.com/" target="_blank" role="button" className='col-sm-12 col-md-6 text-decoration-none'>
-					<div role="button" className="d-flex h-100 align-items-center border border-dark rounded-3 p-3 me-md-4 courier-tile">
-						<img src={stuart} alt='' width={120} height={120} />
-						<span className="display-6 ms-5 text-dark">Stuart</span>
-					</div>
-				</a>
-				<a href="https://uk.gophr.com/" target="_blank" role="button" className='col-sm-12 col-md-6 text-decoration-none'>
-					<div role="button"  className="d-flex h-100 align-items-center border border-dark rounded-3 p-3 ms-md-4 courier-tile">
-						<img src={gophr} alt=''  width={120} height={120} />
-						<span className="display-6 ms-5 text-dark">Gophr</span>
-					</div>
-				</a>
-				<a href="https://www.streetstream.co.uk/" target="_blank" role="button" className='col-sm-12 col-md-6 text-decoration-none'>
-					<div role="button" className="d-flex h-100 align-items-center border border-dark rounded-3 p-3 me-md-4 courier-tile">
-						<img src={streetStream} alt=''  width={120} height={120} />
-						<span className="display-6 ms-5 text-dark">Street Stream</span>
-					</div>
-				</a>
-				<a href="https://ecofleet.co.uk/" target="_blank" role="button" className='col-sm-12 col-md-6 text-decoration-none'>
-					<div className="d-flex h-100 align-items-center border border-dark rounded-3 p-3 ms-md-4 courier-tile">
-						<img src={ecofleet} alt=''  width={120} height={120} />
-						<span className="display-6 ms-5 text-dark">Ecofleet</span>
-					</div>
-				</a>
+			<div className='container'>
+				<div className='row gy-5 gx-4 d-flex justify-content-center'>
+					<a href='https://stuart.com/' target='_blank' role='button' className={courierLinkBtn}>
+						<div className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile'>
+							<img src={stuart} alt='' width={120} height={120} />
+							<span className='display-6 text-dark'>Stuart</span>
+						</div>
+					</a>
+					<a href='https://uk.gophr.com/' target='_blank' role='button' className={courierLinkBtn}>
+						<div role='button' className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile'>
+							<img src={gophr} alt='' width={120} height={120} />
+							<span className='display-6 text-dark'>Gophr</span>
+						</div>
+					</a>
+					<a href='https://www.streetstream.co.uk/' target='_blank' role='button' className={courierLinkBtn}>
+						<div role='button' className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile'>
+							<img src={streetStream} alt='' width={120} height={120} />
+							<span className='display-6 text-dark'>Street Stream</span>
+						</div>
+					</a>
+					<a href='https://ecofleet.co.uk/' target='_blank' role='button' className={courierLinkBtn}>
+						<div className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile'>
+							<img src={ecofleet} alt='' width={120} height={120} />
+							<span className='display-6 text-dark'>Ecofleet</span>
+						</div>
+					</a>
+					<a href='https://www.addisonlee.com/' target='_blank' role='button' className={courierLinkBtn}>
+						<div className='d-flex flex-column h-100 align-items-center border rounded-3 p-3 courier-tile test3'>
+							<img src={addisonLee} alt='' width={120} height={120} />
+							<span className='display-6 text-dark'>Addison Lee</span>
+						</div>
+					</a>
+				</div>
 			</div>
 		</div>
 	);

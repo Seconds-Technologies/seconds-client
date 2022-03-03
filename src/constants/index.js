@@ -14,6 +14,7 @@ export const PATHS = {
 	SQUARE: '/integrate/square',
 	WOOCOMMERCE: '/integrate/woocommerce',
 	SQUARESPACE: '/integrate/squarespace',
+	MAGENTO: '/integrate/magento',
 	HUBRISE: '/integrate/hubrise',
 	HUBRISE_CATALOG: '/integrate/hubrise/catalog',
 	API_KEY: '/integrate/api',

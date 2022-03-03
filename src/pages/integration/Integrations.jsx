@@ -1,7 +1,7 @@
 import './integrations.css';
 import React, { useEffect, useState } from 'react';
 import shopifyLogo from '../../assets/img/shopify.svg';
-import weeblyLogo from '../../assets/img/weebly-vector-logo.svg';
+import magentoLogo from '../../assets/img/magento-vector-logo.svg';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg'
 import squarespaceLogo from '../../assets/img/squarespace-logo.svg'
 import hubriseLogo from '../../assets/img/hubrise-logo.png';
@@ -49,11 +49,11 @@ export default function Integrations(props) {
 						className={IntegrationLinkBtn}
 					>
 						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
-							<img className='img-fluid' width={250} src={weeblyLogo} alt='square logo' />
+							<img className='img-fluid' width={250} src={magentoLogo} alt='magento logo' />
 						</div>
 					</div>
 					<div
-						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
+						onClick={() => props.history.push(PATHS.MAGENTO)}
 						role='button'
 						className={IntegrationLinkBtn}
 					>
@@ -62,7 +62,7 @@ export default function Integrations(props) {
 						</div>
 					</div>
 					<div
-						onClick={() => props.history.push(PATHS.SQUARESPACE)}
+						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
 						role='button'
 						className={IntegrationLinkBtn}
 					>
