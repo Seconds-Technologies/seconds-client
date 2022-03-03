@@ -111,7 +111,7 @@ export default function Sidebar() {
 								<div
 									role="button"
 									className='dropdown-item'
-									onClick={() => history.push(PATHS.PROFILE)}
+									onClick={() => history.push(PATHS.SETTINGS)}
 								>
 									Profile
 								</div>

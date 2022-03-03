@@ -19,7 +19,7 @@ const CustomToolbar = () => {
 			<GridToolbarFilterButton />
 			<GridToolbarDensitySelector />
 			<GridToolbarExport />
-			<Button size="small" onClick={() => history.push(PATHS.TRACK)} startIcon={<BsKanban />}>
+			<Button size="small" onClick={() => history.push(PATHS.TRACK)} startIcon={<BsKanban size={16} />}>
 				<span>Kanban View</span>
 			</Button>
 		</GridToolbarContainer>

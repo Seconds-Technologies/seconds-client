@@ -1,5 +1,6 @@
 import './settings.css';
 import React, { useEffect } from 'react';
+import { styled } from '@mui/material/styles';
 import { Mixpanel } from '../../config/mixpanel';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -10,6 +11,7 @@ import Profile from '../profile/Profile';
 import Couriers from '../couriers/Couriers';
 import Integrations from '../integration/Integrations';
 import Subscription from '../subscription/Subscription';
+import TabPanel from './components/TabPanel';
 
 const Settings = props => {
 	const [value, setValue] = React.useState(0);
@@ -21,24 +23,7 @@ const Settings = props => {
 		Mixpanel.people.increment('page_views');
 	}, []);
 
-	function TabPanel(props) {
-		const { children, value, index, ...other } = props;
-		return (
-			<div role='tabpanel' hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-				{value === index && (
-					<Box sx={{ p: 3 }}>
-						<Typography>{children}</Typography>
-					</Box>
-				)}
-			</div>
-		);
-	}
 
-	TabPanel.propTypes = {
-		children: PropTypes.node,
-		index: PropTypes.number.isRequired,
-		value: PropTypes.number.isRequired
-	};
 
 	function a11yProps(index) {
 		return {
@@ -47,7 +32,7 @@ const Settings = props => {
 		};
 	}
 
-	/*const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
+	const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 		({ theme }) => ({
 			textTransform: 'none',
 			fontWeight: theme.typography.fontWeightRegular,
@@ -61,7 +46,7 @@ const Settings = props => {
 				backgroundColor: 'rgba(100, 95, 228, 0.32)',
 			},
 		}),
-	);*/
+	);
 
 	return (
 		<div className='page-container d-flex py-3'>
@@ -100,11 +85,6 @@ const Settings = props => {
 			</Box>
 		</div>
 	);
-	/*return (
-		<div className='page-container bg-light d-flex flex-column justify-content-center align-items-center py-3'>
-
-		</div>
-	);*/
 };
 
 export default Settings;
