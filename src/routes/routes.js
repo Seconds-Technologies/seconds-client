@@ -21,7 +21,7 @@ import Subscription from '../pages/subscription/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Couriers from '../pages/settings/containers/couriers/Couriers';
-import DeliveryTimes from '../pages/deliveryTimes/DeliveryTimes';
+import DeliveryTimes from '../pages/settings/containers/deliveryTimes/DeliveryTimes';
 import Shopify from '../pages/shopify/Shopify';
 import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import Square from '../pages/square/Square';
@@ -51,12 +51,10 @@ const routes = (
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
-		<PrivateRoute path={PATHS.COURIERS} component={Couriers} />
 		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
 		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
-		<PrivateRoute path={PATHS.DELIVERY_TIMES} component={DeliveryTimes} />
 		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
 		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
 	</Switch>

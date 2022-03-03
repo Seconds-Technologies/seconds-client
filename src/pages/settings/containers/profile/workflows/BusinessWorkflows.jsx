@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { PATHS } from '../../../../../constants';
 import Switch from 'react-switch';
+import Slider from '@mui/material/Slider';
+import DeliveryTimes from '../../deliveryTimes/DeliveryTimes';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
@@ -11,9 +13,11 @@ const BusinessWorkflows = props => {
 	const [sms, setSMS] = useState(false);
 	const [autoDispatch, setAutoDispatch] = useState(false);
 	const [onlineDispatch, setOnlineDispatch] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 
 	return (
 		<div className='tab-container container-fluid px-3'>
+			<DeliveryTimes show={showModal} onHide={() => setShowModal(false)}/>
 			<div className='row pb-4'>
 				<div>
 					<h1 className='workflow-header fs-4'>Set Delivery Time</h1>
@@ -23,7 +27,7 @@ const BusinessWorkflows = props => {
 							type='button'
 							className='btn btn-outline-secondary btn-sm'
 							style={{ width: 130 }}
-							onClick={() => props.history.push(PATHS.DELIVERY_TIMES)}
+							onClick={() => setShowModal(true)}
 						>
 							Change
 						</button>
@@ -70,7 +74,6 @@ const BusinessWorkflows = props => {
 									Driver with
 								</label>
 								<select className='form-select' id='inputGroupSelect01'>
-									<option selected>Choose...</option>
 									<option value={1}>1 maximum order</option>
 									<option value={2}>2 maximum orders</option>
 									<option value={3}>3 maximum orders</option>
@@ -110,7 +113,7 @@ const BusinessWorkflows = props => {
 				</div>
 			</div>
 			<div className='row pb-4'>
-				<h1 className='workflow-header fs-4'>Delivery Provider Preferences</h1>
+				<h1 className='workflow-header fs-4'>Third Party Provider Preferences</h1>
 				<p className='text-muted'>Communicate your selection criteria</p>
 				<div>
 					<div className='form-check'>
@@ -132,23 +135,49 @@ const BusinessWorkflows = props => {
 						</label>
 					</div>
 				</div>
+				<div className='mt-4'>
+					<label htmlFor='customRange2' className='form-label'>
+						Price Range
+					</label>
+					<div className='d-flex w-50'>
+						<span className='px-4'>£5</span>
+						<Slider
+							aria-label='Max delivery fee'
+							defaultValue={5}
+							getAriaValueText={''}
+							valueLabelDisplay='auto'
+							step={1}
+							marks
+							min={5}
+							max={15}
+							color="secondary"
+						/>
+						<span className='px-4'>£15</span>
+					</div>
+
+					{/*<div className='d-flex w-50'>
+						<span className='px-4'>£5</span>
+						<input type='range' className='form-range' min={5} max={15} id='customRange2' />
+						<span className='px-4'>£15</span>
+					</div>*/}
+				</div>
 			</div>
 			<div className='row pb-4'>
 				<h1 className='workflow-header fs-4'>Delivery fee</h1>
 				<p className='text-muted'>How much do you charge your customers for delivery</p>
-				<div>
-					<label htmlFor='customRange2' className='form-label'>
-						Price Range
-					</label>
-					<div className="d-flex w-50">
-						<span className="px-4">£5</span>
-						<input type='range' className='form-range' min={5} max={15} id='customRange2' />
-						<span className="px-4">£15</span>
-					</div>
-				</div>
-				<div className='input-group mt-4' style={{ width: 200 }}>
+				<div className='input-group' style={{ width: 200 }}>
 					<span className='input-group-text'>£</span>
 					<input type='number' min={5} max={15} className='form-control' aria-label='Amount in pounds (with dot and two decimal places)' />
+				</div>
+			</div>
+			<div className='row py-4'>
+				<div className='d-flex'>
+					<button className='btn btn-dark me-5' style={{ height: 45, width: 150 }}>
+						Cancel
+					</button>
+					<button className='btn btn-primary' style={{ height: 45, width: 150 }}>
+						Save
+					</button>
 				</div>
 			</div>
 		</div>

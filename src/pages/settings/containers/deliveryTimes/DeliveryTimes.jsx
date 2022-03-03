@@ -4,26 +4,26 @@ import Switch from 'react-switch';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDeliveryTimes } from '../../store/actions/auth';
-import { addError } from '../../store/actions/errors';
-import SuccessToast from '../../modals/SuccessToast';
+import { updateDeliveryTimes } from '../../../../store/actions/auth';
+import { addError } from '../../../../store/actions/errors';
+import SuccessToast from '../../../../modals/SuccessToast';
+import Modal from 'react-bootstrap/Modal';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
 
-const DeliveryTimes = () => {
+const DeliveryTimes = ({ show, onHide }) => {
 	const dispatch = useDispatch();
 	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const [toastMessage, setToast] = useState('');
 
 	return (
-		<div className='bg-light delivery-times py-4 d-flex justify-content-center'>
-			<SuccessToast message={toastMessage} toggleShow={setToast}/>
-			<div className='bg-white border border-2 times-wrapper h-100 py-3'>
-				<div className='d-flex flex-column align-items-center mt-2 mb-4'>
-					<h1 className='fs-2'>Set Times</h1>
-					<span>Let us know the times you want to provide Same Day Delivery</span>
-				</div>
+		<Modal show={show} onHide={onHide} className='delivery-times' centered size='xl'>
+			<SuccessToast message={toastMessage} toggleShow={setToast} />
+			<div className='d-flex p-3 justify-content-end'>
+				<button type='button' className='btn-close shadow-none' aria-label='Close' onClick={onHide} />
+			</div>
+			<div className='bg-white times-wrapper w-100 h-100 pb-3'>
 				<Formik
 					enableReinitialize
 					initialValues={deliveryHours}
@@ -434,7 +434,7 @@ const DeliveryTimes = () => {
 					)}
 				</Formik>
 			</div>
-		</div>
+		</Modal>
 	);
 };
 

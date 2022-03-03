@@ -1,11 +1,8 @@
 import './Sidebar.css';
 import orderIcon from '../../assets/img/orders1.svg';
-import integrateIcon from '../../assets/img/integrate.svg';
 import settingsIcon from '../../assets/img/settings.svg';
 import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create1.svg';
-import trackIcon from '../../assets/img/track1.svg';
-import courierIcon from '../../assets/img/courier.svg';
 import driversIcon from '../../assets/img/driver.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
