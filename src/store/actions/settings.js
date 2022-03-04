@@ -2,15 +2,10 @@ import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError } from './errors';
 import { updateCurrentUser } from './auth';
-import { UPDATE_BUSINESS_WORKFLOW, SET_BUSINESS_WORKFLOW } from '../actionTypes';
+import { SET_BUSINESS_WORKFLOW } from '../actionTypes';
 
 export const setSettings = settings => ({
 	type: SET_BUSINESS_WORKFLOW,
-	settings
-})
-
-const updateSettings = settings => ({
-	type: UPDATE_BUSINESS_WORKFLOW,
 	settings
 })
 
@@ -21,7 +16,7 @@ export function updateBusinessWorkflow(email, data) {
 				.then(({ message, ...settings }) => {
 					console.log(settings)
 					Mixpanel.track('Business workflow updated successfully');
-					dispatch(updateSettings(settings))
+					dispatch(setSettings(settings))
 					resolve(message);
 				})
 				.catch(err => {

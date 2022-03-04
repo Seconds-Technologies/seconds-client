@@ -90,7 +90,7 @@ export function authUser(type, userData) {
 							})
 							.catch(err => reject(err));
 					drivers && dispatch(setDrivers(drivers))
-					settings && dispatch(setSettings({ settings }));
+					settings && dispatch(setSettings(settings));
 					dispatch(removeError());
 					resolve(user);
 				})
