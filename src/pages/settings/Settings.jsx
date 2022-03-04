@@ -1,5 +1,5 @@
 import './settings.css';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Mixpanel } from '../../config/mixpanel';
 import Box from '@mui/material/Box';
@@ -13,6 +13,7 @@ import TabPanel from './components/TabPanel';
 import BusinessWorkflows from './containers/profile/workflows/BusinessWorkflows';
 import Developers from './containers/developers/Developers';
 import TabContext from '../../context/TabContext';
+import AppBar from '@mui/material/AppBar';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
@@ -70,7 +71,7 @@ const Settings = props => {
 	return (
 		<div className='page-container pb-3'>
 			<Box sx={{ width: '100%'}}>
-				<Box sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: 0 }}>
+				<AppBar sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: 0, backgroundColor: 'white', boxShadow: 'none' }} >
 					<Tabs
 						indicatorColor='secondary'
 						value={index}
@@ -87,7 +88,7 @@ const Settings = props => {
 						<AntTab label='Integrations' {...a11yProps(4)} />
 						<AntTab label='Developers' {...a11yProps(5)} />
 					</Tabs>
-				</Box>
+				</AppBar>
 				<TabPanel value={index} index={0}>
 					<Profile />
 				</TabPanel>
