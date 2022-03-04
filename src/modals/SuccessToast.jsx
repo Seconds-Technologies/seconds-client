@@ -6,7 +6,7 @@ import secondsLogo from '../assets/img/logo.svg';
 
 const SuccessToast = ({message, toggleShow, delay=3000, position="topRight"})  => {
 	return (
-		<ToastContainer className={position}>
+		<ToastContainer className={`${position} position-fixed`}>
 			<ToastFade onClose={() => toggleShow('')} show={!!message} animation={true} delay={delay} autohide>
 				<ToastFade.Header closeButton={false}>
 					<img src={secondsLogo} className='rounded me-2' alt='' />

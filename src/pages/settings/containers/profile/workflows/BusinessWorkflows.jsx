@@ -8,6 +8,7 @@ import { BsInfoCircle } from 'react-icons/bs';
 import { DELIVERY_STRATEGIES, DISPATCH_TYPES } from '../../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBusinessWorkflow } from '../../../../../store/actions/settings';
+import SuccessToast from '../../../../../modals/SuccessToast';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
@@ -15,11 +16,13 @@ const offIcon = <div className='switch-icon'>Off</div>;
 const BusinessWorkflows = props => {
 	const dispatch = useDispatch();
 	const [showModal, setShowModal] = useState(false);
+	const [message, setMessage] = useState("");
 	const { email } = useSelector(state => state['currentUser'].user);
 	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } = useSelector(state => state['settingsStore']);
 
 	return (
 		<div className='tab-container px-3'>
+			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={"bottomRight"}/>
 			<DeliveryTimes show={showModal} onHide={() => setShowModal(false)} />
 			<Formik
 				enableReinitialize
@@ -34,7 +37,7 @@ const BusinessWorkflows = props => {
 				}}
 				onSubmit={values => {
 					console.log(values)
-					dispatch(updateBusinessWorkflow(email, values)).then(message => alert(message))
+					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message))
 				}}
 			>
 				{({ values, handleSubmit, handleChange, handleBlur, handleReset, setFieldValue }) => (

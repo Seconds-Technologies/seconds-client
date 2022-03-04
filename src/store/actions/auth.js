@@ -56,7 +56,7 @@ export function authUser(type, userData) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, drivers, settings, ...user }) => {
-					console.table({message, shopify, woocommerce, hubrise, drivers: drivers})
+					console.table({message, shopify, woocommerce, hubrise, drivers: drivers, settings})
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
