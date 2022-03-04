@@ -4,10 +4,10 @@ import Switch from 'react-switch';
 import { Formik } from 'formik';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateDeliveryTimes } from '../../../../store/actions/auth';
 import { addError } from '../../../../store/actions/errors';
 import SuccessToast from '../../../../modals/SuccessToast';
 import Modal from 'react-bootstrap/Modal';
+import { updateDeliveryTimes } from '../../../../store/actions/settings';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;

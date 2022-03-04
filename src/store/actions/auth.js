@@ -1,12 +1,12 @@
 import { apiCall, setTokenHeader } from '../../api';
 import {
+	AUTHENTICATE_USER,
+	LOGOUT_USER,
 	REMOVE_CURRENT_USER,
-	SET_USER_DETAILS,
 	SET_API_KEY,
 	SET_CURRENT_USER,
-	UPDATE_CURRENT_USER,
-	LOGOUT_USER,
-	AUTHENTICATE_USER
+	SET_USER_DETAILS,
+	UPDATE_CURRENT_USER
 } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { setShopify } from './shopify';
@@ -15,6 +15,7 @@ import { setWoo } from './woocommerce';
 import { setSquareSpace } from './squarespace';
 import { setHubrise } from './hubrise';
 import { setDrivers } from './drivers';
+import { setSettings } from './settings';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -54,7 +55,7 @@ export function authUser(type, userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
-				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, drivers, ...user }) => {
+				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, drivers, settings, ...user }) => {
 					console.table({message, shopify, woocommerce, hubrise, drivers: drivers})
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
@@ -89,6 +90,7 @@ export function authUser(type, userData) {
 							})
 							.catch(err => reject(err));
 					drivers && dispatch(setDrivers(drivers))
+					settings && dispatch(setSettings({ settings }));
 					dispatch(removeError());
 					resolve(user);
 				})
@@ -135,28 +137,6 @@ export function validateRegistration(userData) {
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
-					reject(err);
-				});
-		});
-	};
-}
-
-export function authorizeAPI(email) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			console.log('User:', email);
-			return apiCall('POST', `/server/main/token`, { email })
-				.then(({ apiKey }) => {
-					dispatch(setApiKey(apiKey));
-					Mixpanel.track('Successful Api Key generation');
-					resolve(apiKey);
-				})
-				.catch(err => {
-					Mixpanel.track('Unsuccessful Api Key generation', {
-						$error: err.message
-					});
-					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
 				});
 		});
@@ -265,22 +245,3 @@ export function updateDeliveryStrategies(email, strategies) {
 	};
 }
 
-export function updateDeliveryTimes(email, deliveryHours) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			console.log(email);
-			return apiCall('POST', '/server/main/update-delivery-hours', deliveryHours, { params: { email } })
-				.then(res => {
-					Mixpanel.track('Delivery hours updated successfully');
-					dispatch(updateCurrentUser({ deliveryHours }));
-					resolve('Your new delivery times have been updated!');
-				})
-				.catch(err => {
-					Mixpanel.track('Unsuccessful update for delivery hours', { $error: err.message });
-					if (err.message) dispatch(addError(err.message));
-					else dispatch(addError('Server is down!'));
-					reject(err);
-				});
-		});
-	};
-}

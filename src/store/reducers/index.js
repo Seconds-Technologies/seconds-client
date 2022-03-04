@@ -12,6 +12,7 @@ import errors from "./errors";
 import deliveryJobs from './deliveryJobs';
 import addressHistory from './addressHistory';
 import driversStore from './driversStore';
+import settingsStore from './settingsStore'
 import { setAuthorizationToken } from '../actions/auth';
 import { LOGOUT_USER } from '../actionTypes';
 
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
     deliveryJobs,
     addressHistory,
     driversStore,
+    settingsStore,
     errors
 });
 

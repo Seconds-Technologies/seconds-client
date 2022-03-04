@@ -130,8 +130,13 @@ export const DELIVERY_TYPES = {
 	MULTI_DROP: 'MULTI_DROP'
 };
 
+export const DISPATCH_TYPES = {
+	DRIVER: "DRIVER",
+	COURIER: "COURIER"
+}
+
 export const DELIVERY_STRATEGIES = {
-	price: 'Lowest Price',
-	eta: 'Fastest Delivery Time',
-	rating: 'Best Driver Rating'
+	ETA: "eta",
+	PRICE: "price",
+	RATING: "rating"
 };
