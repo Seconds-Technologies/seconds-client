@@ -70,9 +70,9 @@ const BusinessWorkflows = props => {
 							</div>
 						</div>
 						<div className='row pb-4 w-75'>
-							<h1 className='workflow-header fs-4'>Default dispatcher</h1>
+							<h1 className='workflow-header fs-4'>Auto dispatch</h1>
 							<p className='text-muted'>Decide who we should prioritise to carry out your deliveries</p>
-							<div>
+							<div className="mb-3">
 								<div className='form-check'>
 									<input className='form-check-input' type='radio' name='exampleRadios' id='exampleRadios1' value='option1' />
 									<label className='form-check-label' htmlFor='exampleRadios1'>
@@ -86,9 +86,6 @@ const BusinessWorkflows = props => {
 									</label>
 								</div>
 							</div>
-						</div>
-						<div className='row pb-4 w-75'>
-							<h1 className='workflow-header fs-4'>Auto dispatch</h1>
 							<div className='d-flex my-2'>
 								<Switch
 									onColor={'#9FEA86'}

@@ -68,9 +68,9 @@ const Settings = props => {
 	}));
 
 	return (
-		<div className='page-container d-flex py-3'>
-			<Box sx={{ width: '100%' }}>
-				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+		<div className='page-container pb-3'>
+			<Box sx={{ width: '100%'}}>
+				<Box sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: 0 }}>
 					<Tabs
 						indicatorColor='secondary'
 						value={index}
