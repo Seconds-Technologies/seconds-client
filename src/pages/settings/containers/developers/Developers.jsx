@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './developers.css'
 import ApiKey from './ApiKey';
 import { useSelector } from 'react-redux';
