@@ -9,6 +9,8 @@ import { DELIVERY_STRATEGIES, DISPATCH_TYPES } from '../../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBusinessWorkflow } from '../../../../../store/actions/settings';
 import SuccessToast from '../../../../../modals/SuccessToast';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
@@ -16,13 +18,14 @@ const offIcon = <div className='switch-icon'>Off</div>;
 const BusinessWorkflows = props => {
 	const dispatch = useDispatch();
 	const [showModal, setShowModal] = useState(false);
-	const [message, setMessage] = useState("");
+	const [message, setMessage] = useState('');
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } = useSelector(state => state['settingsStore']);
+	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } =
+		useSelector(state => state['settingsStore']);
 
 	return (
 		<div className='tab-container px-3'>
-			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={"bottomRight"}/>
+			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={'bottomRight'} />
 			<DeliveryTimes show={showModal} onHide={() => setShowModal(false)} />
 			<Formik
 				enableReinitialize
@@ -36,8 +39,8 @@ const BusinessWorkflows = props => {
 					driverDeliveryFee
 				}}
 				onSubmit={values => {
-					console.log(values)
-					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message))
+					console.log(values);
+					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message));
 				}}
 			>
 				{({ values, handleSubmit, handleChange, handleBlur, handleReset, setFieldValue }) => (
@@ -73,9 +76,11 @@ const BusinessWorkflows = props => {
 								/>
 								<div className='d-flex align-items-center'>
 									<span className='ms-3 me-2 workflow-header fs-6'>SMS notification</span>
-									<div role='button' data-bs-toggle='tooltip' data-bs-placement='top' title='We charge £0.05 per sms notification'>
-										<BsInfoCircle />
-									</div>
+									<Tooltip title='We charge £0.05 per sms notification' placement="right-start">
+										<IconButton size="small">
+											<BsInfoCircle />
+										</IconButton>
+									</Tooltip>
 								</div>
 							</div>
 						</div>
@@ -235,18 +240,15 @@ const BusinessWorkflows = props => {
 								</div>
 							</div>
 							<div className='mt-4'>
-								<div className='d-flex'>
-									<label htmlFor='customRange2' className='form-label me-1'>
+								<div className='d-flex align-items-center mb-2'>
+									<label htmlFor='customRange2' className='d-flex me-2'>
 										Price Threshold
 									</label>
-									<div
-										role='button'
-										data-bs-toggle='tooltip'
-										data-bs-placement='top'
-										title='Set this price to send alerts whenever third party couriers charge more'
-									>
-										<BsInfoCircle />
-									</div>
+									<Tooltip title='Set this price to receive alerts whenever third party couriers charge you more' placement="right-start">
+										<IconButton size="small">
+											<BsInfoCircle />
+										</IconButton>
+									</Tooltip>
 								</div>
 								<div className='d-flex w-50'>
 									<span className='px-4'>£5</span>
