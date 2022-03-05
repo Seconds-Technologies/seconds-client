@@ -7,13 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import moment from 'moment';
 import { PATHS } from '../../constants';
-import {
-	addPaymentMethod,
-	fetchStripeCard,
-	removePaymentMethod,
-	setupIntent,
-	updatePaymentMethod,
-} from '../../store/actions/stripe';
+import { addPaymentMethod, fetchStripeCard, removePaymentMethod, setupIntent, updatePaymentMethod } from '../../store/actions/stripe';
 import Card from '../../components/card/Card';
 import './CardSetupForm.css';
 import { Mixpanel } from '../../config/mixpanel';
@@ -87,12 +81,12 @@ const Form = ({ handleChange, handleSubmit, handleError, billingDetails, error, 
 	</form>
 );
 
-const CardSetupForm = ({ isComponent, showToast }) => {
+const CardSetupForm = ({ isComponent, showToast, ...props }) => {
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const { user } = useSelector(state => state['currentUser']);
 	const stripe = useStripe();
 	const elements = useElements();
+	const { user } = useSelector(state => state['currentUser']);
 	const [showModal, setShowModal] = useState(false);
 	const [error, setError] = useState(null);
 	const [cardComplete, setCardComplete] = useState(false);
@@ -103,32 +97,31 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 		name: '',
 		exp_month: '',
 		exp_year: '',
-		brand: '',
+		brand: ''
 	});
 	const [billingDetails, setBillingDetails] = useState({
 		name: `${user.firstname} ${user.lastname}`,
 		address: {
-			postal_code: '',
-		},
+			postal_code: ''
+		}
 	});
 	const [newPaymentDetails, setNewPaymentDetails] = useState({
 		name: '',
 		month: '',
-		year: '',
+		year: ''
 	});
 
 	const confirmBtnClass = classNames({
 		'd-flex': true,
 		'pt-5': true,
-		'justify-content-end': true,
+		'justify-content-end': true
 	});
 
 	useEffect(() => {
-		console.log("USER UPDATED:", user)
-	}, [user])
+		console.log(props);
+	}, [props]);
 
 	useEffect(() => {
-		console.log(paymentAdded);
 		if (user.paymentMethodId) {
 			(async () => {
 				const paymentMethod = await dispatch(fetchStripeCard(user));
@@ -137,12 +130,12 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 					name: paymentMethod.billing_details.name,
 					exp_month: paymentMethod.card.exp_month,
 					exp_year: paymentMethod.card.exp_year,
-					brand: paymentMethod.card.brand,
+					brand: paymentMethod.card.brand
 				}));
 				setNewPaymentDetails(prevState => ({
 					name: paymentMethod.billing_details.name,
 					month: paymentMethod.card.exp_month,
-					year: paymentMethod.card.exp_year,
+					year: paymentMethod.card.exp_year
 				}));
 			})();
 		}
@@ -172,20 +165,20 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 		const result = await stripe.confirmCardSetup(intent.client_secret, {
 			payment_method: {
 				card: elements.getElement(CardNumberElement),
-				billing_details: { name: billingDetails.name, email: user.email },
-			},
+				billing_details: { name: billingDetails.name, email: user.email }
+			}
 		});
 		setProcessing(false);
 		if (result.error) {
 			console.log(result.error);
 			setError(result.error);
 			Mixpanel.track('Add payment method', {
-				$type: 'FAILURE',
+				$type: 'FAILURE'
 			});
 		} else {
 			console.log('success', result.setupIntent.payment_method);
 			Mixpanel.track('Add payment method', {
-				$type: 'SUCCESS',
+				$type: 'SUCCESS'
 			});
 			await dispatch(addPaymentMethod(user.email, intent.customer, result.setupIntent.payment_method));
 			showToast('Your payment method has been saved successfully!');
@@ -201,8 +194,8 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 		setBillingDetails(prevState => ({
 			name: '',
 			address: {
-				postal_code: '',
-			},
+				postal_code: ''
+			}
 		}));
 	};
 
@@ -229,7 +222,7 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 									updatePaymentMethod(user, {
 										name: newPaymentDetails.name,
 										month: newPaymentDetails.month,
-										year: newPaymentDetails.year,
+										year: newPaymentDetails.year
 									})
 								).then(() => {
 									setShowModal(false);
@@ -265,7 +258,7 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 										onChange={e =>
 											setNewPaymentDetails(prevState => ({
 												...prevState,
-												name: e.target.value,
+												name: e.target.value
 											}))
 										}
 									/>
@@ -284,7 +277,7 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 												onChange={e =>
 													setNewPaymentDetails(prevState => ({
 														...prevState,
-														month: e.target.value,
+														month: e.target.value
 													}))
 												}
 											>
@@ -310,7 +303,7 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 												onChange={e =>
 													setNewPaymentDetails(prevState => ({
 														...prevState,
-														year: e.target.value,
+														year: e.target.value
 													}))
 												}
 											>
@@ -359,21 +352,23 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 				cardCvv='***'
 				brand={`${paymentMethod.brand}`}
 			/>
-			{!isComponent && <div className='d-flex justify-content-between mt-5'>
-				<div>
-					<button className='btn btn-edit' onClick={() => history.push(PATHS.SUBSCRIPTION)}>
-						Manage Subscription
-					</button>
+			{!isComponent && (
+				<div className='d-flex justify-content-between mt-5'>
+					<div>
+						<button className='btn btn-edit' onClick={() => history.push(PATHS.SUBSCRIPTION)}>
+							Manage Subscription
+						</button>
+					</div>
+					<div>
+						<button className='btn btn-edit mx-2' onClick={edit}>
+							Edit card
+						</button>
+						<button className='btn btn-danger mx-2' onClick={remove}>
+							Remove card
+						</button>
+					</div>
 				</div>
-				<div>
-					<button className='btn btn-edit mx-2' onClick={edit}>
-						Edit card
-					</button>
-					<button className='btn btn-danger mx-2' onClick={remove}>
-						Remove card
-					</button>
-				</div>
-			</div>}
+			)}
 		</div>
 	) : (
 		<Form
@@ -385,6 +380,29 @@ const CardSetupForm = ({ isComponent, showToast }) => {
 			handleSubmit={handleSubmit}
 			handleChange={handleChange}
 			handleError={handleError}
+			/*cardNumberOptions={{
+				iconStyle: 'solid',
+				style: {
+					base: {
+						iconColor: '#c4f0ff',
+						color: '#fff',
+						fontWeight: 500,
+						fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+						fontSize: '16px',
+						fontSmoothing: 'antialiased',
+						':-webkit-autofill': {
+							color: '#fce883'
+						},
+						'::placeholder': {
+							color: '#87bbfd'
+						}
+					},
+					invalid: {
+						iconColor: '#ffc7ee',
+						color: '#ffc7ee'
+					}
+				}
+			}}*/
 		/>
 	);
 };

@@ -58,7 +58,7 @@ const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price }) => {
 		<div>
 			<h1 className='fs-3 py-2'>Plans</h1>
 			<div className='d-flex flex-column border p-3'>
-				<div className='d-flex justify-content-between py-2'>
+				<div className='d-flex justify-content-between align-items-center py-2'>
 					<span className='display-5 text-capitalize plan-text'>{subscriptionPlan}</span>
 					<span className='display-6 price-text'>{`£${price}/mo`}</span>
 				</div>
@@ -74,7 +74,6 @@ const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price }) => {
 					</button>
 				</form>
 			</div>
-
 		</div>
 	);
 };
@@ -121,7 +120,7 @@ const Subscription = props => {
 		});
 		dispatch(fetchInvoices(user.email)).then(invoices => setInvoices(invoices))
 		Mixpanel.people.increment('page_views');
-	}, []);
+	}, [props.location]);
 
 	const containerClass = classnames({
 		'container-fluid': !props.isComponent,

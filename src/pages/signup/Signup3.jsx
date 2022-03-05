@@ -29,7 +29,7 @@ const Signup3 = props => {
 					<h2 className='signup-header pb-2'>Choose a subscription plan</h2>
 					<span className='text-muted'>You must be <strong>subscribed</strong> before you can create orders</span>
 				</div>
-				<Subscription isComponent />
+				<Subscription isComponent {...props} />
 				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
 					<button disabled={!user.subscriptionId} onClick={signup} className='btn btn-dark btn-lg w-sm mt-4'>
 						Show My Dashboard

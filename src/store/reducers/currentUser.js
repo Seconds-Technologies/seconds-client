@@ -19,6 +19,7 @@ export const DEFAULT_STATE = {
 		stripeCustomerId: '',
 		paymentMethodId: '',
 		subscriptionId: '',
+		subscriptionPlan: ''
 	}, //all user info when logged in
 };
 
