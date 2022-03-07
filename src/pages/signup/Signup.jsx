@@ -140,8 +140,10 @@ export default function Signup(props) {
 									setLoading(true);
 									console.log(values)
 									values.fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`
+									let inputPostcode = values.address.postcode; // store postcode entered by the user during signup
 									let addressComponents = await geocodeByAddress(values.fullAddress);
 									values.address = getParsedAddress(addressComponents, true);
+									values.address.postcode = inputPostcode
 									validateAddress(values.address);
 									console.table({address: values.address, fullAddress: values.fullAddress});
 									const user = await dispatch(authUser('register', values));

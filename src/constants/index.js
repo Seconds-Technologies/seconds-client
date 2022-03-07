@@ -135,6 +135,11 @@ export const DISPATCH_TYPES = {
 	COURIER: "COURIER"
 }
 
+export const DISPATCH_MODES = {
+	AUTO: "AUTO",
+	MANUAL: "MANUAL"
+}
+
 export const DELIVERY_STRATEGIES = {
 	ETA: "eta",
 	PRICE: "price",

@@ -2,6 +2,7 @@ import { PLACE_TYPES } from '../constants';
 import moment from 'moment';
 
 export function parseAddress(data, requiresGeoJSON = false) {
+	console.log(data)
 	let address = data[0].address_components;
 	let formattedAddress = {
 		street: '',
