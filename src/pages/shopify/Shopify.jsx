@@ -63,7 +63,7 @@ const Shopify = props => {
 								isSubmitting
 								/* and other goodies */
 							}) => (
-								<form className='w-50' onSubmit={handleSubmit}>
+								<form onSubmit={handleSubmit}>
 									<div className='mb-3'>
 										<label htmlFor='shopName' className='form-label'>
 											Shop Name

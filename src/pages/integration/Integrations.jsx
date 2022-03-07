@@ -53,7 +53,7 @@ export default function Integrations(props) {
 						</div>
 					</div>
 					<div
-						onClick={() => props.history.push(PATHS.MAGENTO)}
+						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
 						role='button'
 						className={IntegrationLinkBtn}
 					>
@@ -62,7 +62,7 @@ export default function Integrations(props) {
 						</div>
 					</div>
 					<div
-						onClick={() => props.history.push(PATHS.WOOCOMMERCE)}
+						onClick={() => props.history.push(PATHS.SQUARESPACE)}
 						role='button'
 						className={IntegrationLinkBtn}
 					>
