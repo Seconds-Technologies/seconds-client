@@ -133,18 +133,27 @@ export default function Orders(props) {
 										: privateCourier
 								}
 								alt=''
-								className='me-3'
+								className={`${params.row.dispatchMode === DISPATCH_MODES.MANUAL && 'img-red'} me-3`}
 								width={25}
 								height={25}
 							/>
 							{params.row.dispatchMode === DISPATCH_MODES.MANUAL && (
-								<FormControl variant='standard' sx={{ m: 1, minWidth: 150, display: 'flex' }}>
-									<InputLabel id='demo-simple-select-standard-label'>Manual Dispatch</InputLabel>
+								<FormControl
+									error
+									variant='filled'
+									sx={{
+										m: 1,
+										minWidth: 150,
+										display: 'flex',
+										justifyContent: 'center'
+									}}
+								>
+									<InputLabel id='drivers-dropdown' style={{fontSize: 14}}>⚠️ Select Driver</InputLabel>
 									<Select
-										labelId='demo-simple-select-label'
-										id='demo-simple-select'
+										labelId='drivers-dropdown'
+										id='drivers-dropdown'
 										value={null}
-										label='Age'
+										label='Manual Dispatch'
 										onChange={e => console.log(e)}
 									>
 										{drivers.map(driver => (

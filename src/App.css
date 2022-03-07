@@ -131,3 +131,7 @@
   border-radius: 0;
 }
 
+.img-red {
+  filter: invert(33%) sepia(51%) saturate(3608%) hue-rotate(334deg) brightness(88%) contrast(96%);
+}
+
