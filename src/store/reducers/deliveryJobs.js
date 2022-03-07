@@ -2,6 +2,7 @@ import {
 	CLEAR_JOBS, NEW_DELIVERY_JOB,
 	REMOVE_COMPLETED_JOB,
 	SET_ALL_JOBS,
+	UPDATE_DELIVERY_JOB,
 	SET_COMPLETED_JOBS,
 	UPDATE_COMPLETED_JOBS
 } from '../actionTypes';
@@ -18,6 +19,9 @@ export default (state = DEFAULT_STATE, action) => {
 			return { ...state, allJobs: action.jobs }
 		case NEW_DELIVERY_JOB:
 			return { ...state, allJobs: [...state.allJobs, action.job] }
+		case UPDATE_DELIVERY_JOB:
+			const updatedJobs = state.allJobs.map(job => job._id === action.job._id ? action.job : job)
+			return {...state, allJobs: updatedJobs}
 		case SET_COMPLETED_JOBS:
 			let newCompletedJobs = action.jobs.filter(item => item.status === STATUS.COMPLETED)
 			return { ...state, completedJobs: newCompletedJobs }

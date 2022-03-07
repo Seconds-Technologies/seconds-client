@@ -11,7 +11,7 @@ import {
 	SET_DROPOFFS,
 	TIMER_START,
 	TIMER_STOP,
-	UPDATE_COMPLETED_JOBS
+	UPDATE_COMPLETED_JOBS, UPDATE_DELIVERY_JOB
 } from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
 
@@ -53,6 +53,11 @@ export const newDeliveryJob = job => ({
 	type: NEW_DELIVERY_JOB,
 	job
 });
+
+export const updateDeliveryJob = job => ({
+	type: UPDATE_DELIVERY_JOB,
+	job
+})
 
 export const clearAllJobs = () => ({
 	type: CLEAR_JOBS
@@ -137,6 +142,32 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId = undefine
 				})
 				.catch(err => {
 					Mixpanel.track('Unsuccessful Multi-drop job creation');
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function manuallyDispatchJob(apiKey, driverId, orderNumber) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			console.log(driverId, orderNumber)
+			return apiCall(
+				'PATCH',
+				`/api/v1/jobs/dispatch`,
+				{ driverId, orderNumber },
+				{headers: { 'X-Seconds-Api-Key': apiKey}}
+			)
+				.then(job => {
+					Mixpanel.track('Successful manual dispatch');
+					dispatch(updateDeliveryJob(job));
+					dispatch(removeError());
+					resolve(job);
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful Delivery job creation');
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);

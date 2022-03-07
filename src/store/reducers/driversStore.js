@@ -1,11 +1,14 @@
 import { ADD_DRIVER, UPDATE_DRIVER, SET_DRIVERS } from '../actionTypes';
 
 export const schema = {
+	id: '',
 	verified: false, //be true when user logged in
 	firstname: '',
 	lastname: '',
 	phone: '',
 	email: '',
+	vehicle: '',
+	status: '',
 }
 
 export const DEFAULT_STATE = []
