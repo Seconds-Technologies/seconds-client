@@ -6,12 +6,11 @@ import { ReOrderSchema } from '../../../validation';
 import moment from 'moment';
 import { jobRequestSchema } from '../../../schemas';
 import Select from 'react-select';
-import { DELIVERY_TYPES, VEHICLE_TYPES } from '../../../constants';
+import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../../constants';
 import VehicleOptions from '../../../components/VehicleOptions';
 import ErrorField from '../../../components/ErrorField';
 
 const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
-
 	const PICKUP_LIMIT = useMemo(() => -600, []);
 	const drops = useMemo(() => {
 		return prevJob.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
@@ -29,7 +28,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 				moment().diff(dropoffEndTime, 'seconds') < PICKUP_LIMIT
 					? moment(dropoffEndTime).format('YYYY-MM-DDTHH:mm')
 					: moment().add(75, 'minutes').format('YYYY-MM-DDTHH:mm'),
-			packageDescription: description,
+			packageDescription: description
 		}));
 	}, [prevJob]);
 
@@ -43,6 +42,7 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 					validationSchema={ReOrderSchema}
 					initialValues={{
 						...jobRequestSchema,
+						type: '',
 						pickupFirstName: prevJob.pickupLocation['firstName'],
 						pickupLastName: prevJob.pickupLocation['lastName'],
 						pickupBusinessName: prevJob.pickupLocation['businessName'],
@@ -64,7 +64,13 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 					onSubmit={onSubmit}
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
-						<form onSubmit={handleSubmit} className='d-flex flex-column' autoComplete='on'>
+						<form onSubmit={e => {
+							const { name, value } = e.nativeEvent['submitter'];
+							name === SUBMISSION_TYPES.ASSIGN_DRIVER || value === SUBMISSION_TYPES.ASSIGN_DRIVER
+								? setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER)
+								: setFieldValue('type', SUBMISSION_TYPES.CREATE_JOB);
+							handleSubmit(e);
+						}} className='d-flex flex-column' autoComplete='on'>
 							<div className='row'>
 								<div className='col'>
 									<h4 className='text-center'>Pickup</h4>
@@ -457,24 +463,37 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												container: (provided, state) => ({
 													...provided,
 													border: 0,
-													boxShadow: 0,
+													boxShadow: 0
 												}),
 												control: (provided, state) => ({
 													...provided,
 													border: 0,
 													boxShadow: 'none',
 													borderRadius: 0,
-													borderBottom: '1px solid lightgrey',
-												}),
+													borderBottom: '1px solid lightgrey'
+												})
 											}}
 											aria-label='vehicle type selection'
 										/>
 									</div>
 								</div>
 							</div>
-							<div className='d-flex justify-content-center mt-4'>
-								<button type='submit' className='btn w-25 btn-primary'>
-									<span className='fs-5'>Re-order</span>
+							<div className='d-flex justify-content-around mt-4'>
+								<button
+									type='submit'
+									className='btn w-25 btn-primary'
+									name={SUBMISSION_TYPES.ASSIGN_DRIVER}
+									value={SUBMISSION_TYPES.ASSIGN_DRIVER}
+								>
+									<span className='fs-5'>Assign</span>
+								</button>
+								<button
+									type='submit'
+									className='btn w-25 btn-primary'
+									name={SUBMISSION_TYPES.CREATE_JOB}
+									value={SUBMISSION_TYPES.CREATE_JOB}
+								>
+									<span className='fs-5'>Outsource</span>
 								</button>
 							</div>
 						</form>

@@ -80,7 +80,8 @@ export const PLACE_TYPES = {
 
 export const SUBMISSION_TYPES = {
 	ASSIGN_DRIVER: 'assign',
-	GET_QUOTE: 'quote'
+	GET_QUOTE: 'quote',
+	CREATE_JOB: 'create'
 };
 
 export const PROVIDER_TYPES = {

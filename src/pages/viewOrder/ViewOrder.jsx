@@ -2,7 +2,7 @@ import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { createDeliveryJob, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
@@ -15,22 +15,34 @@ import Item from './components/Item';
 import Card from './components/Card';
 import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
-import ConfirmModal from './modals/ConfirmModal';
-import { PROVIDERS, STATUS } from '../../constants';
+import ConfirmCancel from './modals/ConfirmCancel';
+import { PROVIDER_TYPES, PROVIDERS, STATUS, SUBMISSION_TYPES } from '../../constants';
 import { useIntercom } from 'react-use-intercom';
+import { getAllDrivers } from '../../store/actions/drivers';
+import { jobRequestSchema } from '../../schemas';
+import Drivers from '../../modals/Drivers';
+import ConfirmProvider from '../../modals/ConfirmProvider';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
 	const { firstname, lastname, email, company, phone, apiKey } = useSelector(state => state['currentUser'].user);
+	const drivers = useSelector(state => state['driversStore']);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const [message, showMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const [confirmCancel, showCancelDialog] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
 	const [reorderForm, showReOrderForm] = useState(false);
+	const [loadingText, setLoadingText] = useState('');
 	const [jobModal, showJobModal] = useState(false);
+	const [driversModal, showDriversModal] = useState(false);
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
+	const [deliveryParams, setDeliveryParams] = useState({
+		...jobRequestSchema
+	});
+	const [provider, selectProvider] = useState({ type: '', id: '', name: '' });
 	const modalRef = useRef(null);
 	const { boot, shutdown } = useIntercom();
 
@@ -105,7 +117,7 @@ const ViewOrder = props => {
 	}, [order, activeIndex]);
 
 	const stuartWidget = useCallback(() => {
-		console.log("booting intercom widget....")
+		console.log('booting intercom widget....');
 		return boot({
 			name: `${firstname} ${lastname}`,
 			email: email,
@@ -113,20 +125,19 @@ const ViewOrder = props => {
 			phone: phone,
 			userId: process.env.REACT_APP_STUART_USER_ID,
 			userHash: process.env.REACT_APP_STUART_USER_HASH
-		})
-	}, [boot])
+		});
+	}, [boot]);
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => {
 			apiKey && dispatch(unsubscribe());
-			console.log("shutting down intercom widget....")
-			shutdown()
-		}
+			console.log('shutting down intercom widget....');
+			shutdown();
+		};
 	}, []);
 
 	useEffect(() => {
-		console.table({ COURIER: order.providerId });
 		order && order.providerId === PROVIDERS.STUART && stuartWidget();
 	}, [order.providerId, stuartWidget]);
 
@@ -207,37 +218,52 @@ const ViewOrder = props => {
 
 	const handleSubmit = async (values, actions) => {
 		showReOrderForm(false);
-		setLoading(true);
 		try {
-			values = await handleAddresses(values);
-			console.log(values);
-			const {
-				jobSpecification: {
-					deliveries,
+			if (values.type === SUBMISSION_TYPES.ASSIGN_DRIVER) {
+				setLoadingText('Checking available drivers...');
+				setLoading(true);
+				try {
+					values = await handleAddresses(values);
+					setDeliveryParams(prevState => ({ ...values }));
+					setLoading(false);
+					showDriversModal(true);
+				} catch (err) {
+					setLoading(false);
+					console.log(err);
+				}
+			} else {
+				setLoadingText('Creating Order...');
+				setLoading(true);
+				values = await handleAddresses(values);
+				console.log(values);
+				const {
+					jobSpecification: {
+						deliveries,
+						orderNumber,
+						pickupLocation: { fullAddress: pickupAddress },
+						pickupStartTime
+					},
+					selectedConfiguration: { deliveryFee, providerId }
+				} = await dispatch(createDeliveryJob(values, apiKey));
+				let {
+					dropoffLocation: { fullAddress: dropoffAddress },
+					dropoffEndTime,
+					orderReference: customerReference
+				} = deliveries[0];
+				let newJob = {
 					orderNumber,
-					pickupLocation: { fullAddress: pickupAddress },
-					pickupStartTime
-				},
-				selectedConfiguration: { deliveryFee, providerId }
-			} = await dispatch(createDeliveryJob(values, apiKey));
-			let {
-				dropoffLocation: { fullAddress: dropoffAddress },
-				dropoffEndTime,
-				orderReference: customerReference
-			} = deliveries[0];
-			let newJob = {
-				orderNumber,
-				customerReference,
-				pickupAddress,
-				dropoffAddress,
-				pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-				dropoffUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-				deliveryFee,
-				fleetProvider: providerId.replace(/_/g, ' ')
-			};
-			setLoading(false);
-			setJob(newJob);
-			showJobModal(true);
+					customerReference,
+					pickupAddress,
+					dropoffAddress,
+					pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					dropoffUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+					deliveryFee,
+					fleetProvider: providerId.replace(/_/g, ' ')
+				};
+				setLoading(false);
+				setJob(newJob);
+				showJobModal(true);
+			}
 		} catch (err) {
 			setLoading(false);
 			console.log(err);
@@ -245,12 +271,63 @@ const ViewOrder = props => {
 		}
 	};
 
+	const confirmProvider = () => {
+		setLoadingText('Creating Order');
+		showConfirmDialog(false);
+		setLoading(true);
+		dispatch(assignDriver(deliveryParams, apiKey, provider.id))
+				.then(
+					({
+						 jobSpecification: {
+							 deliveries,
+							 orderNumber,
+							 pickupLocation: { fullAddress: pickupAddress },
+							 pickupStartTime
+						 },
+						 selectedConfiguration: { deliveryFee },
+						 driverInformation: { name }
+					 }) => {
+						let {
+							dropoffLocation: { fullAddress: dropoffAddress },
+							dropoffStartTime,
+							orderReference: customerReference
+						} = deliveries[0];
+						let newJob = {
+							orderNumber,
+							customerReference,
+							pickupAddress,
+							dropoffAddress,
+							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliveryFee,
+							courier: name.replace(/_/g, ' ')
+						};
+						setLoading(false);
+						setJob(newJob);
+						showJobModal(true);
+					}
+				)
+				.catch(err => {
+					setLoading(false);
+					console.log(err);
+					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+				});
+	};
+
 	return (
-		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text='Creating Order'>
+		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text={loadingText}>
 			<div ref={modalRef} className='container-fluid my-auto'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
-				<ConfirmModal show={confirmDialog} toggleShow={showConfirmDialog} orderId={order.id} showMessage={showMessage} />
+				<ConfirmCancel show={confirmCancel} toggleShow={showCancelDialog} orderId={order.id} showMessage={showMessage} />
+				<Drivers
+					show={driversModal}
+					toggleShow={showDriversModal}
+					drivers={drivers}
+					selectDriver={selectProvider}
+					showConfirmDialog={showConfirmDialog}
+				/>
+				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 				{successModal}
 				{errorModal}
 				<div className='row mx-5'>
@@ -265,7 +342,12 @@ const ViewOrder = props => {
 						</div>
 						<div className='row d-flex justify-content-end'>
 							<Card styles='mt-3'>
-								<Item label='Delivery provider' value={order.providerId} type={order.providerId === 'private' ? undefined : 'image'} styles='my-2' />
+								<Item
+									label='Delivery provider'
+									value={order.providerId}
+									type={order.providerId === 'private' ? undefined : 'image'}
+									styles='my-2'
+								/>
 								<Item label='Driver name' value={order.driverName} styles='my-2' />
 								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
 								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
@@ -287,7 +369,7 @@ const ViewOrder = props => {
 											Re-order
 										</button>
 									) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
-										<button className='btn btn-outline-secondary' onClick={() => showConfirmDialog(true)}>
+										<button className='btn btn-outline-secondary' onClick={() => showCancelDialog(true)}>
 											Cancel Order
 										</button>
 									) : null}

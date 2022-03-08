@@ -5,13 +5,13 @@ import { cancelDelivery } from '../../../store/actions/delivery';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const ConfirmModal = ({ show, toggleShow, orderId, showMessage }) => {
+const ConfirmCancel = ({ show, toggleShow, orderId, showMessage }) => {
 	const { apiKey } = useSelector(state => state['currentUser'].user)
 	const dispatch = useDispatch();
 	return (
 		<Modal show={show} onHide={() => toggleShow(false)}>
 			<Modal.Header closeButton>
-				<Modal.Title>Confirm Selection</Modal.Title>
+				<Modal.Title>Cancel Order</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
 				<span className='fs-5'>Are you sure you want to cancel this order?</span>
@@ -33,11 +33,11 @@ const ConfirmModal = ({ show, toggleShow, orderId, showMessage }) => {
 	);
 };
 
-ConfirmModal.propTypes = {
+ConfirmCancel.propTypes = {
 	show: PropTypes.bool.isRequired,
 	toggleShow: PropTypes.func.isRequired,
 	orderId: PropTypes.string.isRequired,
 	showMessage: PropTypes.func.isRequired
 };
 
-export default ConfirmModal;
+export default ConfirmCancel;

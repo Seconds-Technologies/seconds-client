@@ -57,8 +57,10 @@ const Create = props => {
 	const [drivers, setDrivers] = useState([]);
 	const [uploadCSV, showCSVUpload] = useState(false);
 	const [isLocked, setLock] = useState(true);
+	// handlers
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
+	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { dropoffs } = useSelector(state => state['addressHistory']);
@@ -390,11 +392,10 @@ const Create = props => {
 					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
 						<form
 							onSubmit={e => {
-								console.table(values);
 								const { name, value } = e.nativeEvent['submitter'];
 								name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE
 									? setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
-									: setFieldValue('type', SUBMISSION_TYPES.CREATE_JOB);
+									: setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER);
 								handleSubmit(e);
 							}}
 							autoComplete='on'
