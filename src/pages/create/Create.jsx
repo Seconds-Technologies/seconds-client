@@ -54,7 +54,6 @@ const Create = props => {
 	const [quoteModal, showQuoteModal] = useState(false);
 	const [driversModal, showDriversModal] = useState(false);
 	const [quotes, setQuotes] = useState([]);
-	const [drivers, setDrivers] = useState([]);
 	const [uploadCSV, showCSVUpload] = useState(false);
 	const [isLocked, setLock] = useState(true);
 	// handlers
@@ -62,6 +61,7 @@ const Create = props => {
 	const handleOpen = () => showJobModal(true);
 	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
+	const drivers = useSelector(state => state['driversStore'])
 	const error = useSelector(state => state['errors']);
 	const { dropoffs } = useSelector(state => state['addressHistory']);
 	const dispatch = useDispatch();
@@ -374,8 +374,6 @@ const Create = props => {
 								try {
 									values = await handleAddresses(values);
 									setDeliveryParams(prevState => ({ ...values }));
-									const drivers = await dispatch(getAllDrivers(email));
-									setDrivers(drivers);
 									setLoadingModal(false);
 									showDriversModal(true);
 								} catch (err) {

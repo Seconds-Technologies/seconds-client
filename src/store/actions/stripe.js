@@ -135,6 +135,23 @@ export function checkSubscriptionStatus(email) {
 	};
 }
 
+export function cancelSubscription(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			apiCall('GET', '/server/subscription/cancel-subscription', null, { params: { email }})
+				.then(({ subscriptionId, cancelDate }) => {
+					console.table({ subscriptionId, cancelDate});
+					resolve(cancelDate);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
 export function fetchInvoices(email){
 	return dispatch => {
 		return new Promise((resolve, reject) => {

@@ -16,9 +16,8 @@ import Card from './components/Card';
 import Panel from './components/Panel';
 import Map from '../../components/Map/Map';
 import ConfirmCancel from './modals/ConfirmCancel';
-import { PROVIDER_TYPES, PROVIDERS, STATUS, SUBMISSION_TYPES } from '../../constants';
+import { PROVIDERS, STATUS, SUBMISSION_TYPES } from '../../constants';
 import { useIntercom } from 'react-use-intercom';
-import { getAllDrivers } from '../../store/actions/drivers';
 import { jobRequestSchema } from '../../schemas';
 import Drivers from '../../modals/Drivers';
 import ConfirmProvider from '../../modals/ConfirmProvider';
@@ -276,42 +275,42 @@ const ViewOrder = props => {
 		showConfirmDialog(false);
 		setLoading(true);
 		dispatch(assignDriver(deliveryParams, apiKey, provider.id))
-				.then(
-					({
-						 jobSpecification: {
-							 deliveries,
-							 orderNumber,
-							 pickupLocation: { fullAddress: pickupAddress },
-							 pickupStartTime
-						 },
-						 selectedConfiguration: { deliveryFee },
-						 driverInformation: { name }
-					 }) => {
-						let {
-							dropoffLocation: { fullAddress: dropoffAddress },
-							dropoffStartTime,
-							orderReference: customerReference
-						} = deliveries[0];
-						let newJob = {
-							orderNumber,
-							customerReference,
-							pickupAddress,
-							dropoffAddress,
-							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-							deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-							deliveryFee,
-							courier: name.replace(/_/g, ' ')
-						};
-						setLoading(false);
-						setJob(newJob);
-						showJobModal(true);
-					}
-				)
-				.catch(err => {
+			.then(
+				({
+					jobSpecification: {
+						deliveries,
+						orderNumber,
+						pickupLocation: { fullAddress: pickupAddress },
+						pickupStartTime
+					},
+					selectedConfiguration: { deliveryFee },
+					driverInformation: { name }
+				}) => {
+					let {
+						dropoffLocation: { fullAddress: dropoffAddress },
+						dropoffStartTime,
+						orderReference: customerReference
+					} = deliveries[0];
+					let newJob = {
+						orderNumber,
+						customerReference,
+						pickupAddress,
+						dropoffAddress,
+						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliveryFee,
+						courier: name.replace(/_/g, ' ')
+					};
 					setLoading(false);
-					console.log(err);
-					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-				});
+					setJob(newJob);
+					showJobModal(true);
+				}
+			)
+			.catch(err => {
+				setLoading(false);
+				console.log(err);
+				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+			});
 	};
 
 	return (

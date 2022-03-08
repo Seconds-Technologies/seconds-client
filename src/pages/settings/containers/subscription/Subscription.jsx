@@ -1,11 +1,13 @@
 import './subscription.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus, fetchInvoices } from '../../../../store/actions/stripe';
 import Modal from 'react-bootstrap/Modal';
 import { Mixpanel } from '../../../../config/mixpanel';
 import classnames from 'classnames';
 import moment from 'moment';
+import CancelSubscription from '../../modals/CancelSubscription';
+import SuccessModal from '../../modals/SuccessModal';
 
 const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
@@ -53,7 +55,7 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 	);
 };
 
-const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price }) => {
+const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price, showModal }) => {
 	return (
 		<div>
 			<h1 className='fs-3 py-2'>Plans</h1>
@@ -69,7 +71,7 @@ const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price }) => {
 					<button id='checkout-and-portal-button' className='btn btn-primary text-white mt-4' type='submit'>
 						Change Plan
 					</button>
-					<button id='checkout-and-portal-button' className='ms-4 btn btn-outline-dark mt-4' type='button'>
+					<button id='checkout-and-portal-button' className='ms-4 btn btn-outline-dark mt-4' type='button' onClick={showModal}>
 						Cancel Subscription
 					</button>
 				</form>
@@ -106,12 +108,16 @@ const InvoiceHistory = ({ invoices }) => (
 const Subscription = props => {
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
-	let [message, setMessage] = useState('');
+	let [successMessage, setSuccessMessage] = useState('')
+	let [showModal, setShowModal] = useState(false);
 	let [isSubscribed, setSubscribed] = useState(false);
 	let [invoiceHistory, setInvoices] = useState([]);
 	let [currentPlan, setCurrentPlan] = useState({
 		amount: 2500
 	});
+	const handleOpen = () => setShowModal(true)
+	const handleClose = () => setShowModal(false)
+	const modalRef = useRef()
 
 	useEffect(() => {
 		dispatch(checkSubscriptionStatus(user.email)).then(({ status, items }) => {
@@ -130,8 +136,9 @@ const Subscription = props => {
 	});
 
 	return (
-		<div className={containerClass}>
-			<Message message={message} onHide={() => setMessage('')} />
+		<div ref={modalRef} className={containerClass}>
+			<CancelSubscription centered show={showModal} onHide={handleClose} onComplete={(timestamp) => setSuccessMessage(`Your subscription plan will cancel on ${moment.unix(timestamp).calendar()}`)}/>
+			<SuccessModal ref={modalRef} show={!!successMessage} message={successMessage} onHide={() => setSuccessMessage('')}/>
 			{user.subscriptionId || isSubscribed ? (
 				<div className='row'>
 					<div className='col-md-6 col-sm-12'>
@@ -140,6 +147,7 @@ const Subscription = props => {
 							stripeCustomerId={user.stripeCustomerId}
 							subscriptionPlan={user.subscriptionPlan}
 							price={currentPlan.amount / 100}
+							showModal={handleOpen}
 						/>
 					</div>
 					<div className='col-md-6 col-sm-12'>
