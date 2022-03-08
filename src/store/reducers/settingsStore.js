@@ -18,8 +18,8 @@ export const DEFAULT_STATE = {
 export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case SET_BUSINESS_WORKFLOW:
-			let { defaultDispatch, sms, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } = action.settings
-			return { defaultDispatch, sms, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold }
+			let { defaultDispatch, sms, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold, expiredJobAlerts } = action.settings
+			return { defaultDispatch, sms, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold, expiredJobAlerts }
 		default:
 			return state;
 	}
