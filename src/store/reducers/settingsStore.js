@@ -4,11 +4,12 @@ export const DEFAULT_STATE = {
 	defaultDispatch: "DRIVER",
 	sms: false, //be true when user logged in
 	autoDispatch: {
-		enabled: false,
+		enabled: true,
 		maxOrders: 1,
-		onlineOnly: false
+		onlineOnly: true
 	},
 	driverResponseTime: 5,
+	expiredJobAlerts: false,
 	driverDeliveryFee: 5,
 	courierSelectionCriteria: "eta",
 	courierPriceThreshold: 10,

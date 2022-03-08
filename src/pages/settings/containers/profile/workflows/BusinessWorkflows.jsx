@@ -20,7 +20,7 @@ const BusinessWorkflows = props => {
 	const [showModal, setShowModal] = useState(false);
 	const [message, setMessage] = useState('');
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } =
+	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold, expiredJobAlerts } =
 		useSelector(state => state['settingsStore']);
 
 	return (
@@ -34,9 +34,10 @@ const BusinessWorkflows = props => {
 					defaultDispatch,
 					autoDispatch,
 					driverResponseTime,
+					expiredJobAlerts,
 					courierSelectionCriteria,
 					courierPriceThreshold,
-					driverDeliveryFee
+					driverDeliveryFee,
 				}}
 				onSubmit={values => {
 					console.log(values);
@@ -190,6 +191,20 @@ const BusinessWorkflows = props => {
 									onBlur={handleBlur}
 								/>
 								<span className='input-group-text'>mins</span>
+							</div>
+							<div className='d-flex flex-grow-1 align-items-center mt-4'>
+								<Switch
+									onColor={'#9FEA86'}
+									checkedIcon={onIcon}
+									uncheckedIcon={offIcon}
+									onChange={() => setFieldValue('expiredJobAlerts', !values.expiredJobAlerts)}
+									handleDiameter={19}
+									checked={values.expiredJobAlerts}
+									className='switch-text'
+								/>
+								<div className='d-flex align-items-center'>
+									<span className='ms-3 me-2 workflow-header fs-6'>Receive alerts for expired jobs</span>
+								</div>
 							</div>
 						</div>
 						<div className='row pb-4'>

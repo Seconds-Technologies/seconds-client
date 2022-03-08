@@ -1,5 +1,5 @@
 import './Orders.css';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
