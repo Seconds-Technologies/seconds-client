@@ -66,9 +66,9 @@ const Drivers = props => {
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
 	const confirmDelete = useCallback(
-		(type = DELETE_TYPES.BATCH, driverIds = null) => {
+		(driverIds=[]) => {
 			handleClose();
-			dispatch(deleteDrivers(email, type === DELETE_TYPES.BATCH ? selectionModel : driverIds)).then(res => console.log(res));
+			dispatch(deleteDrivers(email, driverIds)).then(res => console.log(res));
 		},
 		[selectionModel]
 	);
@@ -183,7 +183,6 @@ const Drivers = props => {
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<DeleteModal
-				type={deleteModal.type}
 				ids={deleteModal.ids}
 				show={deleteModal.show}
 				onHide={handleClose}

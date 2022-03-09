@@ -10,8 +10,16 @@ import TimeFilter from '../../components/TimeFilter';
 
 const Dashboard = props => {
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const { company, address: {geolocation} } = useSelector(state => state['currentUser'].user);
+	const {
+		company,
+		address: { geolocation }
+	} = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
+	const activeCustomers = useSelector(state =>
+		state['deliveryJobs'].allJobs
+			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
+			.flatMap(item => item['jobSpecification'].deliveries)
+	);
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
@@ -31,9 +39,15 @@ const Dashboard = props => {
 		return { longitude: Number(localStorage.getItem('longitude')), latitude: Number(localStorage.getItem('latitude')) };
 	}, [geolocation]);
 
-	const courierLocations = useMemo(() => {
-		return activeCouriers.map(({ location }) => location.coordinates);
-	}, [activeCouriers]);
+	const courierLocations = useMemo(() => activeCouriers.map(({ location }) => location.coordinates), [activeCouriers]);
+
+	const customerLocations = useMemo(
+		() =>
+			activeCustomers
+				.filter(({ dropoffLocation: { latitude, longitude } }) => latitude && longitude)
+				.map(({ dropoffLocation: { latitude, longitude } }) => [longitude, latitude]),
+		[activeCustomers]
+	);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -48,10 +62,17 @@ const Dashboard = props => {
 						<span className='bold-text'>{`Hey ${company},`}</span>&nbsp;here is your delivery overview
 					</span>
 				</div>
-				<TimeFilter current={active} onSelect={setActive}/>
+				<TimeFilter current={active} onSelect={setActive} />
 			</div>
 			<FeaturedInfo interval={active.id} />
-			<Map styles='mt-4' busy={courierLocations.length} location={[longitude, latitude]} couriers={courierLocations} height={200} />
+			<Map
+				styles='mt-4'
+				busy={courierLocations.length}
+				location={[longitude, latitude]}
+				couriers={courierLocations}
+				customers={customerLocations}
+				height={200}
+			/>
 		</div>
 	);
 };

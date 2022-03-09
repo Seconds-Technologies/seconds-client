@@ -8,16 +8,21 @@ import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
 
-const Map = ({ styles, height, location, markers, couriers, busy }) => {
+const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
 	const baseClient = mbxClient({
 		accessToken:
 			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
 	});
 
-	const Mapbox = useMemo(() => ReactMapboxGl({
-		accessToken:
-			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
-	}), []);
+	const Mapbox = useMemo(
+		() =>
+			ReactMapboxGl({
+				accessToken:
+					process.env.REACT_APP_MAPBOX_TOKEN ||
+					'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+			}),
+		[]
+	);
 
 	const [geoJSON, setGeoJSON] = useState({
 		type: 'FeatureCollection',
@@ -30,7 +35,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 				}
 			}
 		]
-	})
+	});
 
 	const onLoaded = map => {
 		map.resize();
@@ -39,12 +44,12 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 	const dashboardBounds = useMemo(() => {
 		let result = [];
 		if (busy) {
-			const coordinates = [location, ...couriers];
+			const coordinates = [location, ...couriers, ...customers];
 			const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 			result = Object.values(bounds).map(bound => Object.values(bound));
 		}
 		return result;
-	}, [busy, location, couriers]);
+	}, [busy, location, couriers, customers]);
 
 	const orderBounds = useMemo(() => {
 		let result = [];
@@ -65,17 +70,17 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 			});
 			const response = await request.send();
 			const geojson = {
-				'type': 'FeatureCollection',
-				'features': [
+				type: 'FeatureCollection',
+				features: [
 					{
-						'type': 'Feature',
-						'geometry': {
+						type: 'Feature',
+						geometry: {
 							...response.body.routes[0].geometry
 						}
 					}
 				]
 			};
-			console.log(geojson)
+			console.log(geojson);
 			setGeoJSON(geojson);
 		})();
 	}, []);
@@ -108,6 +113,14 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 						<img src={pickupMarker} alt='' width={40} height={40} />
 					</Marker>
 				)}
+				{customers &&
+					customers.map((coords, index) => (
+						<Marker key={index} coordinates={coords}>
+							<div className='d-flex flex-column' data-bs-placement='top' data-bs-toggle='tooltip' data-bs-html='true' title='Pickup'>
+								<img src={dropoffMarker} alt='' width={40} height={40} />
+							</div>
+						</Marker>
+					))}
 				{markers &&
 					markers.map((coords, index) => (
 						<Marker key={index} coordinates={coords}>
@@ -152,7 +165,7 @@ const Map = ({ styles, height, location, markers, couriers, busy }) => {
 							</div>
 						</Marker>
 					))}
-				{geoJSON.features[0].geometry.coordinates.length && <GeoJSONLayer data={geoJSON} linePaint={linePaint}/>}
+				{geoJSON.features[0].geometry.coordinates.length && <GeoJSONLayer data={geoJSON} linePaint={linePaint} />}
 			</Mapbox>
 		</div>
 	);

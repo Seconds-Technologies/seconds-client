@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
 
-const DeleteModal = ({ type, onHide, show, centered, onConfirm, ids }) => {
+const DeleteModal = ({ onHide, show, centered, onConfirm, ids }) => {
 	const drivers = useSelector(state => state['driversStore'].filter(driver => ids.includes(driver.id)))
 	return (
 		<Modal show={show} onHide={onHide} centered={!!centered}>
@@ -19,7 +19,7 @@ const DeleteModal = ({ type, onHide, show, centered, onConfirm, ids }) => {
 				<Button variant='secondary' onClick={onHide}>
 					Cancel
 				</Button>
-				<Button	onClick={() => onConfirm(type, ids)}>
+				<Button	onClick={() => onConfirm(ids)}>
 					Confirm
 				</Button>
 			</Modal.Footer>
@@ -29,7 +29,6 @@ const DeleteModal = ({ type, onHide, show, centered, onConfirm, ids }) => {
 
 DeleteModal.propTypes = {
 	ids: PropTypes.array,
-	type: PropTypes.string.isRequired,
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	onConfirm: PropTypes.func.isRequired
