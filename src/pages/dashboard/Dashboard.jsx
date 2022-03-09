@@ -17,7 +17,7 @@ const Dashboard = props => {
 	const dispatch = useDispatch();
 	const activeCustomers = useSelector(state =>
 		state['deliveryJobs'].allJobs
-			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
+			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW, STATUS.PENDING].includes(item.status))
 			.flatMap(item => item['jobSpecification'].deliveries)
 	);
 	const activeCouriers = useSelector(state =>
