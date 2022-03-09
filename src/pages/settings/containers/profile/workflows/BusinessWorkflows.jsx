@@ -85,6 +85,24 @@ const BusinessWorkflows = props => {
 								</div>
 							</div>
 						</div>
+						<div className='row pb-4'>
+							<h1 className='workflow-header fs-4'>Job Alerts</h1>
+							<p className='text-muted'>Turn on emails for new delivery jobs</p>
+							<div className='d-flex flex-grow-1 align-items-center'>
+								<Switch
+									onColor={'#9FEA86'}
+									checkedIcon={onIcon}
+									uncheckedIcon={offIcon}
+									onChange={() => setFieldValue('email', !values.email)}
+									handleDiameter={19}
+									checked={values.email}
+									className='switch-text'
+								/>
+								<div className='d-flex align-items-center'>
+									<span className='ms-3 me-2 workflow-header fs-6'>Email notification</span>
+								</div>
+							</div>
+						</div>
 						<div className='row pb-4 w-75'>
 							<h1 className='workflow-header fs-4'>Auto dispatch</h1>
 							<p className='text-muted'>Decide who we should prioritise to carry out your deliveries</p>
