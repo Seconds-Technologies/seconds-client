@@ -20,7 +20,7 @@ const BusinessWorkflows = props => {
 	const [showModal, setShowModal] = useState(false);
 	const [message, setMessage] = useState('');
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { sms, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold, expiredJobAlerts } =
+	const { sms, jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } =
 		useSelector(state => state['settingsStore']);
 
 	return (
@@ -31,10 +31,10 @@ const BusinessWorkflows = props => {
 				enableReinitialize
 				initialValues={{
 					sms,
+					jobAlerts,
 					defaultDispatch,
 					autoDispatch,
 					driverResponseTime,
-					expiredJobAlerts,
 					courierSelectionCriteria,
 					courierPriceThreshold,
 					driverDeliveryFee,
@@ -93,9 +93,9 @@ const BusinessWorkflows = props => {
 									onColor={'#9FEA86'}
 									checkedIcon={onIcon}
 									uncheckedIcon={offIcon}
-									onChange={() => setFieldValue('email', !values.email)}
+									onChange={() => setFieldValue('jobAlerts.new', !values.jobAlerts.new)}
 									handleDiameter={19}
-									checked={values.email}
+									checked={values.jobAlerts.new}
 									className='switch-text'
 								/>
 								<div className='d-flex align-items-center'>
@@ -215,9 +215,9 @@ const BusinessWorkflows = props => {
 									onColor={'#9FEA86'}
 									checkedIcon={onIcon}
 									uncheckedIcon={offIcon}
-									onChange={() => setFieldValue('expiredJobAlerts', !values.expiredJobAlerts)}
+									onChange={() => setFieldValue('jobAlerts.expired', !values.jobAlerts.expired)}
 									handleDiameter={19}
-									checked={values.expiredJobAlerts}
+									checked={values.jobAlerts.expired}
 									className='switch-text'
 								/>
 								<div className='d-flex align-items-center'>
