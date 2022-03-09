@@ -67,7 +67,7 @@ const Dashboard = props => {
 			<FeaturedInfo interval={active.id} />
 			<Map
 				styles='mt-4'
-				busy={courierLocations.length}
+				busy={courierLocations.length || customerLocations.length}
 				location={[longitude, latitude]}
 				couriers={courierLocations}
 				customers={customerLocations}
