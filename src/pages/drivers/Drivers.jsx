@@ -4,15 +4,22 @@ import { DataGrid } from '@mui/x-data-grid';
 import DriverModal from './modals/DriverModal';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeDriver, createDriver, subscribe, unsubscribe } from '../../store/actions/drivers';
+import { changeDriver, createDriver, deleteDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
 import SuccessToast from '../../modals/SuccessToast';
 import Switch from 'react-switch';
 import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
 import { Mixpanel } from '../../config/mixpanel';
+import CustomFooter from '../../components/CustomFooter';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import DeleteModal from './modals/DeleteModal';
+import { DELETE_TYPES } from './constants';
 
 const Drivers = props => {
 	const dispatch = useDispatch();
 	const [driverFormType, showDriverForm] = useState('');
+	const [deleteModal, setDeleteModal] = useState({ show: false, type: DELETE_TYPES.BATCH, ids: [] });
+	const [selectionModel, setSelectionModel] = React.useState([]);
 	const [successMessage, setSuccess] = useState('');
 	const [selectedDriver, selectDriver] = useState({
 		firstname: '',
@@ -22,7 +29,6 @@ const Drivers = props => {
 		vehicle: ''
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
-
 	const drivers = useSelector(state => {
 		return state['driversStore'].map(driver => {
 			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);
@@ -39,7 +45,6 @@ const Drivers = props => {
 			};
 		});
 	});
-
 	const saveDriver = useCallback(values => {
 		console.log(values);
 		values.type === 'create'
@@ -57,6 +62,16 @@ const Drivers = props => {
 
 	const onIcon = <div className='switch-icon'>On</div>;
 	const offIcon = <div className='switch-icon'>Off</div>;
+	const handleOpen = (type, ids) => setDeleteModal(prevState => ({ show: true, type, ids }));
+	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
+
+	const confirmDelete = useCallback(
+		(type = DELETE_TYPES.BATCH, driverIds = null) => {
+			handleClose();
+			dispatch(deleteDrivers(email, type === DELETE_TYPES.BATCH ? selectionModel : driverIds)).then(res => console.log(res));
+		},
+		[selectionModel]
+	);
 
 	const columns = [
 		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
@@ -112,7 +127,7 @@ const Drivers = props => {
 			field: 'isOnline',
 			headerName: 'Shift Status',
 			type: 'boolean',
-			width: 150,
+			width: 120,
 			renderCell: params => {
 				return (
 					<Switch
@@ -131,37 +146,50 @@ const Drivers = props => {
 			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
 			hide: true
 		},
+		{ field: 'verified', headerName: 'Verified', type: 'boolean', width: 120 },
 		{
 			field: 'action',
 			headerName: 'Action',
 			width: 150,
 			renderCell: params => {
 				return (
-					<button
-						className='d-flex justify-content-center align-items-center table-edit-btn'
-						onClick={() => {
-							selectDriver(params.row);
-							showDriverForm('update');
-						}}
-					>
-						<span className='text-decoration-none'>Edit</span>
-					</button>
+					<div className='d-flex align-items-center justify-content-between'>
+						<button
+							className='d-flex justify-content-center align-items-center table-edit-btn'
+							onClick={() => {
+								selectDriver(params.row);
+								showDriverForm('update');
+							}}
+						>
+							<span className='text-decoration-none'>Edit</span>
+						</button>
+						<Button color='error' size='small' onClick={() => handleOpen(DELETE_TYPES.SINGLE, [params.row.id])}>
+							<DeleteIcon />
+						</Button>
+					</div>
 				);
 			}
-		},
-		{ field: 'verified', headerName: 'Verified', type: 'boolean', width: 150 }
+		}
 	];
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		dispatch(subscribe(email))
-		return () => dispatch(unsubscribe())
-	}, [])
+		dispatch(subscribe(email));
+		return () => dispatch(unsubscribe());
+	}, []);
 
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
+			<DeleteModal
+				type={deleteModal.type}
+				ids={deleteModal.ids}
+				show={deleteModal.show}
+				onHide={handleClose}
+				centered
+				onConfirm={confirmDelete}
+			/>
 			<div className='d-flex mx-3 justify-content-between '>
 				<h3>Your Drivers</h3>
 				<button
@@ -193,6 +221,10 @@ const Drivers = props => {
 						]
 					}
 				}}
+				onSelectionModelChange={newSelectionModel => {
+					setSelectionModel(newSelectionModel);
+					console.log(newSelectionModel);
+				}}
 				autoHeight={false}
 				className='mt-3 mx-3'
 				rows={drivers}
@@ -201,6 +233,13 @@ const Drivers = props => {
 				checkboxSelection
 				autoPageSize
 				pagination
+				components={
+					selectionModel.length
+						? {
+								Footer: () => <CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} />
+						  }
+						: undefined
+				}
 			/>
 		</div>
 	);
