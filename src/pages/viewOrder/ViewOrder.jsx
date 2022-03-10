@@ -9,7 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import ReorderForm from './modals/ReorderForm';
 import DeliveryJob from '../../modals/DeliveryJob';
 import LoadingOverlay from 'react-loading-overlay';
-import { parseAddress, validateAddress } from '../../helpers';
+import { capitalize, parseAddress, validateAddress } from '../../helpers';
 import { geocodeByAddress } from 'react-google-places-autocomplete';
 import Item from './components/Item';
 import Card from './components/Card';
@@ -21,6 +21,8 @@ import { useIntercom } from 'react-use-intercom';
 import { jobRequestSchema } from '../../schemas';
 import Drivers from '../../modals/Drivers';
 import ConfirmProvider from '../../modals/ConfirmProvider';
+import DeliveryProof from './modals/DeliveryProof';
+import { downloadDeliveryProof } from '../../store/actions/auth';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -33,6 +35,7 @@ const ViewOrder = props => {
 	const [confirmCancel, showCancelDialog] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
 	const [reorderForm, showReOrderForm] = useState(false);
+	const [proofModal, showProofModal] = useState(false);
 	const [loadingText, setLoadingText] = useState('');
 	const [jobModal, showJobModal] = useState(false);
 	const [driversModal, showDriversModal] = useState(false);
@@ -41,6 +44,8 @@ const ViewOrder = props => {
 	const [deliveryParams, setDeliveryParams] = useState({
 		...jobRequestSchema
 	});
+	const [deliverySignature, setSignature] = useState('');
+	const [deliveryPhoto, setPhoto] = useState('');
 	const [provider, selectProvider] = useState({ type: '', id: '', name: '' });
 	const modalRef = useRef(null);
 	const { boot, shutdown } = useIntercom();
@@ -63,7 +68,7 @@ const ViewOrder = props => {
 						id: _id,
 						reference: jobReference,
 						createdAt,
-						status: status[0].toUpperCase() + status.toLowerCase().slice(1),
+						status,
 						providerId,
 						deliveryFee,
 						driverName,
@@ -80,7 +85,7 @@ const ViewOrder = props => {
 
 	const delivery = useMemo(() => {
 		return order.deliveries
-			? order.deliveries.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status }) => ({
+			? order.deliveries.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
 					dropoffEndTime: dropoffEndTime,
 					firstName: dropoffLocation.firstName,
 					lastName: dropoffLocation.lastName,
@@ -89,6 +94,7 @@ const ViewOrder = props => {
 					longitude: dropoffLocation.longitude,
 					phoneNumber: dropoffLocation.phoneNumber,
 					address: dropoffLocation.fullAddress,
+					proofOfDelivery,
 					orderReference,
 					trackingURL,
 					description,
@@ -129,6 +135,10 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
+		if (order && order.providerId === PROVIDERS.PRIVATE && order.status === STATUS.COMPLETED) {
+			dispatch(downloadDeliveryProof(email, delivery.proofOfDelivery.signature.filename)).then(img => setSignature(img));
+			dispatch(downloadDeliveryProof(email, delivery.proofOfDelivery.photo.filename)).then(img => setPhoto(img));
+		}
 		return () => {
 			apiKey && dispatch(unsubscribe());
 			console.log('shutting down intercom widget....');
@@ -327,6 +337,7 @@ const ViewOrder = props => {
 					showConfirmDialog={showConfirmDialog}
 				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
+				<DeliveryProof show={proofModal} onHide={showProofModal} signature={deliverySignature} photo={deliveryPhoto} />
 				{successModal}
 				{errorModal}
 				<div className='row mx-5'>
@@ -350,6 +361,13 @@ const ViewOrder = props => {
 								<Item label='Driver name' value={order.driverName} styles='my-2' />
 								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
 								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
+								{order.status === STATUS.COMPLETED && order.providerId === PROVIDERS.PRIVATE && (
+									<div className='d-flex justify-content-end'>
+										<button className='btn btn-outline-success' onClick={() => showProofModal(true)}>
+											Proof of Delivery
+										</button>
+									</div>
+								)}
 							</Card>
 						</div>
 					</div>
@@ -387,7 +405,7 @@ const ViewOrder = props => {
 									styles='me-1'
 								/>
 								<Panel label='Price' value={`£${order.deliveryFee.toFixed(2)}`} styles='mx-2' />
-								<Panel label='Status' value={order.status} styles='ms-1' />
+								<Panel label='Status' value={capitalize(order.status)} styles='ms-1' />
 							</div>
 						</Card>
 						<Map height={340} markers={markers} />

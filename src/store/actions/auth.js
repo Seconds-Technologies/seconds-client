@@ -245,3 +245,17 @@ export function updateDeliveryStrategies(email, strategies) {
 	};
 }
 
+export function downloadDeliveryProof(email, filename){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('POST', '/server/driver/download-photo', { filename })
+				.then(data => resolve(data))
+				.catch(err => {
+					if (err.message) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		})
+	}
+}
+

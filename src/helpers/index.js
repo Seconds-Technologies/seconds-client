@@ -91,6 +91,12 @@ export function dateFilter(data, interval) {
 	}
 }
 
+export function capitalize(str) {
+	let start = str[0].toUpperCase()
+	const lower = str.slice(1).toLowerCase()
+	return start.concat(lower);
+}
+
 /*
 export function stuartWidget(intercomSettings) {
 	let w = window;

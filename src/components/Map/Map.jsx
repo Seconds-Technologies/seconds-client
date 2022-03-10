@@ -80,7 +80,6 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 					}
 				]
 			};
-			console.log(geojson);
 			setGeoJSON(geojson);
 		})();
 	}, []);
