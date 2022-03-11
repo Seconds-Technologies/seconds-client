@@ -1,3 +1,11 @@
+.courier-tile {
+    border-radius: 10px;
+}
+
+.courier-text {
+    font-size: 0.85rem;
+}
+
 .courier-tile:hover {
     box-shadow: 0 0 30px rgba(156,156,156, 0.3);
     cursor: pointer;

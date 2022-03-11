@@ -21,17 +21,20 @@ const FeaturedInfo = ({interval}) => {
         return () => apiKey && dispatch(unsubscribe());
     }, [apiKey]);
 
-    const deliveryFee = useMemo(() => {
-        let totalFee = 0;
-        for (let order of completed){
-            totalFee = totalFee + order.deliveryFee
-        }
-        return totalFee.toFixed(2)
-    }, [completed]);
-
     const inTransit = useMemo(() => {
         return (total.filter(job => job.status === STATUS.DISPATCHING || job.status === STATUS.EN_ROUTE)).length
     }, [total])
+
+    const fulfillmentRate = useMemo(() => {
+		console.log(completed.length);
+		console.log(total.length);
+		if (total.length === 0) {
+			return `0%`;
+		} else {
+            let rate = ((completed.length / total.length) * 100).toFixed(1);
+			return `${rate}%`
+		}
+	}, [total, completed]);
 
     return (
         <div className='featured'>
@@ -50,8 +53,8 @@ const FeaturedInfo = ({interval}) => {
                 <span className='featuredValue'>{completed.length}</span>
             </div>
             <div className='featuredItem d-flex flex-column align-items-center py-1'>
-                <span className='featuredTitle mb-1'>Payouts</span>
-                <span className='featuredValue'>{`£${deliveryFee}`}</span>
+                <span className='featuredTitle mb-1'>Fulfillment</span>
+                <span className='featuredValue'>{fulfillmentRate}</span>
             </div>
         </div>
     );
