@@ -27,7 +27,8 @@ const Couriers = () => {
 						<CourierPanel
 							name='Stuart'
 							img={stuart}
-							link='stuart.com'
+							link='https://stuart.com'
+							linkText="stuart.com"
 							description="Stuart is Europe's leading on-demand provider with a fleet of geolocalised independent couriers"
 							locations='Throughout France, United Kingdom, Spain, Poland, Portugal, Italy'
 							services='Service Level: On-demand and Scheduled delivery'
@@ -39,7 +40,8 @@ const Couriers = () => {
 							name='Gophr'
 							img={gophr}
 							description='Gophr has built a platform focused on courier needs, unlocking greater opportunities for couriers'
-							link='gophr.com'
+							link='https://gophr.com'
+							linkText="gophr.com"
 							locations='Throughout London and the UK'
 							services='Service Level: On-demand and Scheduled delivery'
 							vehicles='Bicycle, Motorcycle, Cargobike, Car and Van'
@@ -50,7 +52,8 @@ const Couriers = () => {
 							name='Street Stream'
 							img={streetStream}
 							description='Street Stream are a London based Same-Day courier Service.'
-							link='streetstream.co.uk'
+							link='https://streetstream.co.uk'
+							linkText="streetstream.co.uk"
 							locations='London'
 							services='Service Level: Same-Day On-demand and Scheduled delivery'
 							vehicles='Bicycle, Motorcycle, Cargobike, Car and Van'
@@ -61,7 +64,8 @@ const Couriers = () => {
 							name='Ecofleet'
 							img={ecofleet}
 							description='Carbon-neutral electric bikes offering a last-mile delivery service in London. '
-							link='ecofleet.co.uk'
+							link='https://ecofleet.co.uk'
+							linkText='ecofleet.co.uk'
 							locations='London'
 							services='Service Level: Scheduled delivery'
 							vehicles='Cargobike'
@@ -72,7 +76,8 @@ const Couriers = () => {
 							name="Addison Lee"
 							img={addisonLee}
 							description='Addison Lee has a network of dedicated courier fleets of all sizes at your service for anything you need to deliver from small parcels to bulky deliveries.'
-							link='addisonlee.com'
+							link="http://addisonlee.com"
+							linkText='addisonlee.com'
 							locations='London'
 							services='Service Level: On-demand and Scheduled delivery'
 							vehicles='Bicycle, Motorbike, Small Van and Large Van'

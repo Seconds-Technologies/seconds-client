@@ -21,11 +21,11 @@ export default function Sidebar() {
 
 	return (
 		<div className='sidebar bg-light'>
-			<div className='mb-1 d-flex flex-column flex-shrink-0 ps-3 pe-2'>
-				<ul className='nav nav-pills flex-column mb-auto'>
+			<div className='mb-1 d-flex flex-column ps-3 me-0'>
+				<ul className='nav nav-pills flex-column mb-auto me-0'>
 					<Link to='/' className='navbar-brand' href=''>
 						<span className='logo'>
-							<img src={logo} alt='' width={150} />
+							<img src={logo} alt='' width={120} />
 						</span>
 					</Link>
 					<Link to={PATHS.HOME} className='link text-black mt-3'>

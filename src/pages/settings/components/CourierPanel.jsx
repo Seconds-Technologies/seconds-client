@@ -1,11 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import stuart from '../../../assets/img/stuart.svg';
 import trackIcon from '../../../assets/img/track1.svg';
 import serviceIcon from '../../../assets/img/service.svg';
 import vehicleIcon from '../../../assets/img/vehicle.svg';
 
-const CourierPanel = ({ img, name, link, description, locations, services, vehicles }) => {
+const CourierPanel = ({ img, name, link, linkText, description, locations, services, vehicles }) => {
 	return (
 		<div className='d-flex flex-column h-100 border p-3 courier-tile'>
 			<div className='d-flex flex-column intro-content'>
@@ -13,8 +11,8 @@ const CourierPanel = ({ img, name, link, description, locations, services, vehic
 				<span className='fs-2 mb-1'>{name}</span>
 				<span>{description}</span>
 				<small className='text-muted'>
-					<a href={`https://${link}`} target='_blank'>
-						{link}
+					<a href={link} target='_blank'>
+						{linkText}
 					</a>
 				</small>
 			</div>
