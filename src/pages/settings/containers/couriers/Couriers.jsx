@@ -69,6 +69,7 @@ const Couriers = () => {
 					</div>
 					<div className={courierLinkBtn}>
 						<CourierPanel
+							name="Addison Lee"
 							img={addisonLee}
 							description='Addison Lee has a network of dedicated courier fleets of all sizes at your service for anything you need to deliver from small parcels to bulky deliveries.'
 							link='addisonlee.com'
