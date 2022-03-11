@@ -343,7 +343,7 @@ const ViewOrder = props => {
 				<div className='row mx-5'>
 					<div className='col-4'>
 						<div className='row d-flex justify-content-end'>
-							<Card styles>
+							<Card styles="border">
 								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles='my-2' />
 								<Item label='Address' value={delivery.address} styles='my-2' />
 								<Item label='Email' value={delivery.email} styles='my-2' />
@@ -351,7 +351,7 @@ const ViewOrder = props => {
 							</Card>
 						</div>
 						<div className='row d-flex justify-content-end'>
-							<Card styles='mt-3'>
+							<Card styles='mt-3 border'>
 								<Item
 									label='Delivery provider'
 									value={order.providerId}
@@ -372,7 +372,7 @@ const ViewOrder = props => {
 						</div>
 					</div>
 					<div className='col-8'>
-						<Card>
+						<Card styles="border-top border-end border-start">
 							<div className='d-flex justify-content-between my-2'>
 								<Item label='Job Reference' value={order.reference} />
 								<div>

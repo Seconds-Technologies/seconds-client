@@ -40,7 +40,7 @@ const Couriers = () => {
 							img={gophr}
 							description='Gophr has built a platform focused on courier needs, unlocking greater opportunities for couriers'
 							link='gophr.com'
-							locations='London, Brighton, Cambridge, Luton, Oxford, Southampton, Portsmouth, Burnley, Bury, Liverpool, Manchester, Wigna, Sheffield, Leeds, Wakefield, York, Bournemouth, Bristol, Cardiff, Birmingam, Nottingham, Leicester, Shrewsbury, Wolverhampton, Edinburgh, Glasgow'
+							locations='Throughout London and the UK'
 							services='Service Level: On-demand and Scheduled delivery'
 							vehicles='Bicycle, Motorcycle, Cargobike, Car and Van'
 						/>
