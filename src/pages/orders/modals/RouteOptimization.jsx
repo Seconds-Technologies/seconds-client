@@ -22,7 +22,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 		duration: ''
 	});
 
-	const handleDelete = id => alert('psych xD');
+	const handleDelete = id => alert('');
 	const handleChange = event => {
 		const {
 			target: { value }
@@ -67,6 +67,57 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 							min={'07:30'}
 							max={'21:00'}
 						/>
+					</div>
+					<div className='col-6'>
+						<h2 className='fs-6'>Specify break periods</h2>
+						<p>These are the allocated time slots that drivers can take breaks during their job</p>
+						<div className='w-100'>
+							<TextField
+								helperText="Enter a useful name for the break period e.g. 'lunch time'"
+								id='standard-basic'
+								label='Name'
+								variant='standard'
+								onChange={e => setBreakParams(prevState => ({ ...prevState, name: e.target.value }))}
+							/>
+							<div className='d-flex justify-content-center flex-row mb-2'>
+								<div className='d-flex flex-column flex-grow-1 me-2'>
+									<label htmlFor=''>Start</label>
+									<input
+										name='breakStartTime'
+										className='form-control form-control-sm rounded-3'
+										type='time'
+										aria-label='default input example'
+										onChange={e => setBreakParams(prevState => ({ ...prevState, start: e.target.value }))}
+									/>
+								</div>
+								<div className='d-flex flex-column flex-grow-1 ms-2'>
+									<label htmlFor=''>End</label>
+									<input
+										name='breakEndTime'
+										className='form-control form-control-sm rounded-3'
+										type='time'
+										aria-label='default input example'
+										onChange={e => setBreakParams(prevState => ({ ...prevState, end: e.target.value }))}
+									/>
+								</div>
+							</div>
+						</div>
+						<div className='d-flex justify-content-between align-items-center'>
+							<div>
+								<label htmlFor=''>Duration (mins)</label>
+								<input
+									className='form-control form-control-sm rounded-3 w-50'
+									min={0}
+									max={60}
+									type='number'
+									onChange={e => setBreakParams(prevState => ({ ...prevState, duration: e.target.value }))}
+									aria-label='default input example'
+								/>
+							</div>
+							<button className='btn btn-sm btn-outline-primary' onClick={() => addBreak(prevState => [...prevState, breakParams])}>
+								<span>Add</span>
+							</button>
+						</div>
 					</div>
 					<div className='col-6'>
 						<h2 className='fs-6'>Select driver and vehicle</h2>
@@ -135,62 +186,16 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 							</div>
 						</div>
 					</div>
-					<div className='col-6'>
-						<h2 className='fs-6'>Specify break periods</h2>
-						<p>These are the allocated time slots that drivers can take breaks during their job</p>
-						<div className='w-100'>
-							<TextField
-								helperText="Enter a useful name for the break period e.g. 'lunch time'"
-								id='standard-basic'
-								label='Name'
-								variant='standard'
-								onChange={e => setBreakParams(prevState => ({ ...prevState, name: e.target.value}))}
-							/>
-							<div className='d-flex justify-content-center flex-row mb-2'>
-								<div className='d-flex flex-column flex-grow-1 me-2'>
-									<label htmlFor=''>Start</label>
-									<input
-										name='breakStartTime'
-										className='form-control form-control-sm rounded-3'
-										type='time'
-										aria-label='default input example'
-										onChange={e => setBreakParams(prevState => ({ ...prevState, start: e.target.value }))}
-									/>
-								</div>
-								<div className='d-flex flex-column flex-grow-1 ms-2'>
-									<label htmlFor=''>End</label>
-									<input
-										name='breakEndTime'
-										className='form-control form-control-sm rounded-3'
-										type='time'
-										aria-label='default input example'
-										onChange={e => setBreakParams(prevState => ({ ...prevState, end: e.target.value }))}
-									/>
-								</div>
-							</div>
-						</div>
-						<div className='d-flex justify-content-between align-items-center'>
-							<div>
-								<label htmlFor=''>Duration (mins)</label>
-								<input
-									className='form-control form-control-sm rounded-3 w-50'
-									min={0}
-									max={60}
-									type='number'
-									onChange={e => setBreakParams(prevState => ({ ...prevState, duration: e.target.value }))}
-									aria-label='default input example'
-								/>
-							</div>
-							<button className='btn btn-sm btn-outline-primary' onClick={() => addBreak(prevState => [...prevState, breakParams])}>
-								<span>Add</span>
-							</button>
-						</div>
-						<div className='d-flex flex-row mt-3'>
-							{breaks.map(item => (
-								<Chip label={`${item.start} - ${item.end} (${item.duration} mins)`} onDelete={handleDelete} />
-							))}
-						</div>
+				</div>
+				<div className='d-flex align-items-end justify-content-between'>
+					<div className='d-flex flex-row mt-3 flex-wrap'>
+						{breaks.map(item => (
+							<Chip label={`${item.start} - ${item.end} (${item.duration} mins)`} onDelete={handleDelete} className='me-2 mb-2' />
+						))}
 					</div>
+					<button className='btn btn-lg btn-primary' style={{ width: 130 }}>
+						<span>Proceed</span>
+					</button>
 				</div>
 			</div>
 		</Modal>
