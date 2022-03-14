@@ -122,6 +122,7 @@ export const PROVIDERS = {
 	GOPHR: 'gophr',
 	STREET_STREAM: 'street_stream',
 	ECOFLEET: 'ecofleet',
+	ADDISON_LEE: 'addison_lee',
 	PRIVATE: 'private'
 };
 

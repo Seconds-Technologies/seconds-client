@@ -2,11 +2,16 @@ import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError } from './errors';
 import { updateCurrentUser } from './auth';
-import { SET_BUSINESS_WORKFLOW } from '../actionTypes';
+import { SET_BUSINESS_WORKFLOW, UPDATE_BUSINESS_WORKFLOW } from '../actionTypes';
 
 export const setSettings = settings => ({
 	type: SET_BUSINESS_WORKFLOW,
 	settings
+})
+
+export const updateSettings = data => ({
+	type: UPDATE_BUSINESS_WORKFLOW,
+	data
 })
 
 export function updateBusinessWorkflow(email, data) {
@@ -47,4 +52,22 @@ export function updateDeliveryTimes(email, deliveryHours) {
 				});
 		});
 	};
+}
+
+export function updateFleetProviders(email, data){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', '/server/settings/update-providers', data, { params: { email } })
+				.then(({ message, ...activeFleetProviders }) => {
+					dispatch(updateSettings(activeFleetProviders))
+					resolve(message);
+				})
+				.catch(err => {
+					Mixpanel.track('FAILED - update fleet providers', { $error: err.message });
+					if (err.message) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		})
+	}
 }

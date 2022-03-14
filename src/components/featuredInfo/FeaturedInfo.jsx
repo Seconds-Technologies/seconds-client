@@ -26,8 +26,6 @@ const FeaturedInfo = ({interval}) => {
     }, [total])
 
     const fulfillmentRate = useMemo(() => {
-		console.log(completed.length);
-		console.log(total.length);
 		if (total.length === 0) {
 			return `0%`;
 		} else {
