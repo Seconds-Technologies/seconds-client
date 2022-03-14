@@ -13,7 +13,6 @@ import { useHistory } from 'react-router-dom';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
 
 const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
-	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const history = useHistory();
 	const baseClient = mbxClient({
 		accessToken:
@@ -47,10 +46,12 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 		show: false,
 		orderNumber: '',
 		deliveryId: '',
-		coords: [],
 		fullAddress: '',
+		driverId: '',
+		driverName: '',
 		customerName: '',
-		provider: ''
+		provider: '',
+		coords: []
 	});
 
 	const customerCoords = useMemo(() => (customers ? customers.map(({ coords }) => coords) : null), [customers]);
@@ -211,7 +212,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 							<span>
 								{popup.provider !== PROVIDERS.PRIVATE
 									? `Assigned: ${popup.provider}`
-									: popup.driverName
+									: popup.driverId
 									? `Assigned: ${popup.driverName}`
 									: 'Unassigned'}
 							</span>

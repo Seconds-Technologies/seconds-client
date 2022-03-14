@@ -21,6 +21,7 @@ const Dashboard = props => {
 			.flatMap(job => {
 				return job['jobSpecification'].deliveries.map(delivery => ({
 					orderNumber: job['jobSpecification']['orderNumber'],
+					driverId: job['driverInformation']['id'],
 					driverName: job['driverInformation']['name'],
 					provider: job['selectedConfiguration']['providerId'],
 					...delivery
@@ -52,10 +53,11 @@ const Dashboard = props => {
 		() =>
 			activeCustomers
 				.filter(({ dropoffLocation: { latitude, longitude } }) => latitude && longitude)
-				.map(({ orderNumber, id, driverName, provider, dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude } }) => ({
+				.map(({ orderNumber, id, driverName, driverId, provider, dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude } }) => ({
 					orderNumber,
 					customerName: `${firstName} ${lastName}`,
 					fullAddress,
+					driverId,
 					driverName,
 					provider,
 					deliveryId: id,
