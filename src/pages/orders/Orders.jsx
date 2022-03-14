@@ -20,47 +20,63 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import RouteOptimization from './modals/RouteOptimization';
 
 const INIT_STATE = {
 	firstname: '',
 	lastname: '',
 	id: '',
 	orderNumber: ''
-}
+};
 
 export default function Orders(props) {
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
+	const [optModal, showOptRoutes] = useState(false);
 
 	const jobs = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return apiKey
 			? allJobs.map(
-					({ _id, status, dispatchMode, driverInformation, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId }, createdAt }) => {
+					({
+						_id,
+						status,
+						dispatchMode,
+						driverInformation,
+						jobSpecification: { orderNumber, deliveries },
+						selectedConfiguration: { providerId },
+						createdAt
+					}) => {
 						let {
 							dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
 						} = deliveries[0];
 						let customerName = `${firstName} ${lastName}`;
 						phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 						let driver = providerId;
-						return { id: orderNumber, driverId: driverInformation.id, status, customerName, phoneNumber, address, driver, createdAt, dispatchMode };
+						return {
+							id: orderNumber,
+							driverId: driverInformation.id,
+							status,
+							customerName,
+							phoneNumber,
+							address,
+							driver,
+							createdAt,
+							dispatchMode
+						};
 					}
 			  )
 			: [];
 	});
 
 	const dispatchToDriver = () => {
-		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber))
-			.then(() => selectDriver(prevState => INIT_STATE))
+		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
 	};
 
 	const manualDispatchModal = (
-		<Modal
-			show={!!chosenDriver.id}
-			onHide={() => selectDriver(prevState => INIT_STATE)}
-		>
+		<Modal show={!!chosenDriver.id} onHide={() => selectDriver(prevState => INIT_STATE)}>
 			<Modal.Header closeButton>
 				<Modal.Title>Confirm Driver</Modal.Title>
 			</Modal.Header>
@@ -74,10 +90,7 @@ export default function Orders(props) {
 				</span>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button
-					variant='secondary'
-					onClick={() => selectDriver(prevState => INIT_STATE)}
-				>
+				<Button variant='secondary' onClick={() => selectDriver(prevState => INIT_STATE)}>
 					Cancel
 				</Button>
 				<Button onClick={() => dispatchToDriver()}>Confirm</Button>
@@ -193,7 +206,7 @@ export default function Orders(props) {
 							width={25}
 							height={25}
 						/>
-						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && !params.row.driverId &&  (
+						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && !params.row.driverId && (
 							<FormControl
 								error
 								variant='filled'
@@ -214,7 +227,7 @@ export default function Orders(props) {
 									label='Manual Dispatch'
 									onChange={e => {
 										let driver = drivers.find(({ id }) => id === e.target.value);
-										console.log(driver)
+										console.log(driver);
 										selectDriver(prevState => ({
 											...driver,
 											orderNumber: params.row.id
@@ -257,6 +270,7 @@ export default function Orders(props) {
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
 			{manualDispatchModal}
+			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={[]}/>
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
@@ -279,6 +293,13 @@ export default function Orders(props) {
 				autoPageSize
 				pagination
 				components={{ Toolbar: CustomToolbar }}
+				componentsProps={{
+					toolbar: {
+						toggleShow: () => {
+							showOptRoutes(true);
+						}
+					}
+				}}
 			/>
 		</div>
 	);
