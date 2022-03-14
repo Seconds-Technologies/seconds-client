@@ -2,18 +2,23 @@ import './map.css';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mbxClient from '@mapbox/mapbox-sdk';
-import React, { useEffect, useMemo, useState } from 'react';
-import ReactMapboxGl, { Marker, GeoJSONLayer } from 'react-mapbox-gl';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import ReactMapboxGl, { GeoJSONLayer, Marker, Popup } from 'react-mapbox-gl';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
+import { useSelector } from 'react-redux';
+import { PATHS } from '../../constants';
+import { useHistory } from 'react-router-dom';
+import { BsArrowRightCircleFill } from 'react-icons/bs';
 
 const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
+	const { allJobs } = useSelector(state => state['deliveryJobs']);
+	const history = useHistory();
 	const baseClient = mbxClient({
 		accessToken:
 			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
 	});
-
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
@@ -23,7 +28,9 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 			}),
 		[]
 	);
-
+	const onLoaded = map => {
+		map.resize();
+	};
 	const [geoJSON, setGeoJSON] = useState({
 		type: 'FeatureCollection',
 		features: [
@@ -36,15 +43,15 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 			}
 		]
 	});
+	const [popup, setShowPopup] = useState({ show: false, orderNumber: '', deliveryId: '', coords: [] });
 
-	const onLoaded = map => {
-		map.resize();
-	};
+	const customerCoords = useMemo(() => customers ? customers.map(({ coords }) => coords) : null, [customers]);
 
 	const dashboardBounds = useMemo(() => {
 		let result = [];
 		if (busy) {
-			const coordinates = [location, ...couriers, ...customers];
+			const coordinates = [location, ...couriers, ...customerCoords];
+			console.log('COORDINATES:', coordinates);
 			const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 			result = Object.values(bounds).map(bound => Object.values(bound));
 		}
@@ -59,6 +66,16 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 		}
 		return result;
 	}, [markers]);
+
+	const togglePopup = info => setShowPopup({ show: !popup.show, ...info });
+	const openPopup = coords => setShowPopup({ show: true, coords, orderNumber: '', deliveryId: '' });
+	const closePopup = () => setShowPopup({ show: false, coords: [], orderNumber: '', deliveryId: '' });
+
+	const findOrder = (orderNo, deliveryId) => {
+		const order = allJobs.find(item => item['jobSpecification']['orderNumber'] === orderNo);
+		console.log(order);
+		return order;
+	};
 
 	useEffect(() => {
 		(async () => {
@@ -113,13 +130,21 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 					</Marker>
 				)}
 				{customers &&
-					customers.map((coords, index) => (
-						<Marker key={index} coordinates={coords}>
-							<div className='d-flex flex-column' data-bs-placement='top' data-bs-toggle='tooltip' data-bs-html='true' title='Pickup'>
-								<img src={dropoffMarker} alt='' width={40} height={40} />
-							</div>
-						</Marker>
-					))}
+					Object.entries(customers).map(([key, value], index) => {
+						return (
+							<Marker key={index} coordinates={value.coords} onClick={() => togglePopup(value)}>
+								<div
+									className='d-flex flex-column'
+									data-bs-placement='top'
+									data-bs-toggle='tooltip'
+									data-bs-html='true'
+									title='Pickup'
+								>
+									<img src={dropoffMarker} alt='' width={40} height={40} />
+								</div>
+							</Marker>
+						);
+					})}
 				{markers &&
 					markers.map((coords, index) => (
 						<Marker key={index} coordinates={coords}>
@@ -164,6 +189,27 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 							</div>
 						</Marker>
 					))}
+				{popup.show && (
+					<Popup
+						style={{ width: 200 }}
+						coordinates={popup.coords}
+						offset={{
+							'bottom-left': [12, -38],
+							bottom: [0, -38],
+							'bottom-right': [-12, -38]
+						}}
+					>
+						<div>
+							<div className='d-flex justify-content-between align-items-center'>
+								<h1 className='fw-bold'>{popup.customerName}</h1>
+								<div role="button" onClick={() => history.push(`${PATHS.VIEW_ORDER}/${popup.orderNumber}`)}>
+									<BsArrowRightCircleFill size={16}/>
+								</div>
+							</div>
+							<span>{popup.fullAddress}</span>
+						</div>
+					</Popup>
+				)}
 				{geoJSON.features[0].geometry.coordinates.length && <GeoJSONLayer data={geoJSON} linePaint={linePaint} />}
 			</Mapbox>
 		</div>
