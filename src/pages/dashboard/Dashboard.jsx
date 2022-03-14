@@ -19,7 +19,12 @@ const Dashboard = props => {
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.COMPLETED, STATUS.CANCELLED].includes(item.status))
 			.flatMap(job => {
-				return job['jobSpecification'].deliveries.map(delivery => ({ orderNumber: job['jobSpecification']['orderNumber'], ...delivery }));
+				return job['jobSpecification'].deliveries.map(delivery => ({
+					orderNumber: job['jobSpecification']['orderNumber'],
+					driverName: job['driverInformation']['name'],
+					provider: job['selectedConfiguration']['providerId'],
+					...delivery
+				}));
 			})
 	);
 	const activeCouriers = useSelector(state =>
@@ -47,10 +52,12 @@ const Dashboard = props => {
 		() =>
 			activeCustomers
 				.filter(({ dropoffLocation: { latitude, longitude } }) => latitude && longitude)
-				.map(({ orderNumber, id, dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude } }) => ({
+				.map(({ orderNumber, id, driverName, provider, dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude } }) => ({
 					orderNumber,
 					customerName: `${firstName} ${lastName}`,
 					fullAddress,
+					driverName,
+					provider,
 					deliveryId: id,
 					coords: [longitude, latitude]
 				})),

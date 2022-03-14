@@ -8,7 +8,7 @@ import pickupMarker from '../../assets/img/pickup-icon.svg';
 import dropoffMarker from '../../assets/img/dropoff-icon.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
 import { useSelector } from 'react-redux';
-import { PATHS } from '../../constants';
+import { PATHS, PROVIDERS } from '../../constants';
 import { useHistory } from 'react-router-dom';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
 
@@ -43,9 +43,17 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 			}
 		]
 	});
-	const [popup, setShowPopup] = useState({ show: false, orderNumber: '', deliveryId: '', coords: [] });
+	const [popup, setShowPopup] = useState({
+		show: false,
+		orderNumber: '',
+		deliveryId: '',
+		coords: [],
+		fullAddress: '',
+		customerName: '',
+		provider: ''
+	});
 
-	const customerCoords = useMemo(() => customers ? customers.map(({ coords }) => coords) : null, [customers]);
+	const customerCoords = useMemo(() => (customers ? customers.map(({ coords }) => coords) : null), [customers]);
 
 	const dashboardBounds = useMemo(() => {
 		let result = [];
@@ -68,14 +76,6 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 	}, [markers]);
 
 	const togglePopup = info => setShowPopup({ show: !popup.show, ...info });
-	const openPopup = coords => setShowPopup({ show: true, coords, orderNumber: '', deliveryId: '' });
-	const closePopup = () => setShowPopup({ show: false, coords: [], orderNumber: '', deliveryId: '' });
-
-	const findOrder = (orderNo, deliveryId) => {
-		const order = allJobs.find(item => item['jobSpecification']['orderNumber'] === orderNo);
-		console.log(order);
-		return order;
-	};
 
 	useEffect(() => {
 		(async () => {
@@ -191,7 +191,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 					))}
 				{popup.show && (
 					<Popup
-						style={{ width: 200 }}
+						style={{ width: 200, borderRadius: 30 }}
 						coordinates={popup.coords}
 						offset={{
 							'bottom-left': [12, -38],
@@ -202,11 +202,19 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 						<div>
 							<div className='d-flex justify-content-between align-items-center'>
 								<h1 className='fw-bold'>{popup.customerName}</h1>
-								<div role="button" onClick={() => history.push(`${PATHS.VIEW_ORDER}/${popup.orderNumber}`)}>
-									<BsArrowRightCircleFill size={16}/>
+								<div role='button' onClick={() => history.push(`${PATHS.VIEW_ORDER}/${popup.orderNumber}`)}>
+									<BsArrowRightCircleFill size={16} />
 								</div>
 							</div>
-							<span>{popup.fullAddress}</span>
+							<span style={{ fontSize: 12 }}>{popup.fullAddress}</span>
+							<br/>
+							<span>
+								{popup.provider !== PROVIDERS.PRIVATE
+									? `Assigned: ${popup.provider}`
+									: popup.driverName
+									? `Assigned: ${popup.driverName}`
+									: 'Unassigned'}
+							</span>
 						</div>
 					</Popup>
 				)}
