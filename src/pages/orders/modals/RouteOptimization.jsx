@@ -93,7 +93,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 								})}
 							</Select>
 						</FormControl>
-						<div>
+						<div className='my-3'>
 							<h2 className='fs-6'>Optimisation objective</h2>
 							<div>
 								<div className='form-check'>
@@ -144,6 +144,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 								id='standard-basic'
 								label='Name'
 								variant='standard'
+								onChange={e => setBreakParams(prevState => ({ ...prevState, name: e.target.value}))}
 							/>
 							<div className='d-flex justify-content-center flex-row mb-2'>
 								<div className='d-flex flex-column flex-grow-1 me-2'>
@@ -153,7 +154,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 										className='form-control form-control-sm rounded-3'
 										type='time'
 										aria-label='default input example'
-										onChange={(e) => setBreakParams(prevState => ({...prevState, start: e.target.value}))}
+										onChange={e => setBreakParams(prevState => ({ ...prevState, start: e.target.value }))}
 									/>
 								</div>
 								<div className='d-flex flex-column flex-grow-1 ms-2'>
@@ -163,7 +164,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 										className='form-control form-control-sm rounded-3'
 										type='time'
 										aria-label='default input example'
-										onChange={(e) => setBreakParams(prevState => ({...prevState, end: e.target.value}))}
+										onChange={e => setBreakParams(prevState => ({ ...prevState, end: e.target.value }))}
 									/>
 								</div>
 							</div>
@@ -184,11 +185,11 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 								<span>Add</span>
 							</button>
 						</div>
-						{breaks.map(item => (
-							<div>
+						<div className='d-flex flex-row mt-3'>
+							{breaks.map(item => (
 								<Chip label={`${item.start} - ${item.end} (${item.duration} mins)`} onDelete={handleDelete} />
-							</div>
-						))}
+							))}
+						</div>
 					</div>
 				</div>
 			</div>
