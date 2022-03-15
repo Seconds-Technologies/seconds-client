@@ -147,3 +147,9 @@ export const DELIVERY_STRATEGIES = {
 	PRICE: "price",
 	RATING: "rating"
 };
+
+export const OPTIMIZATION_OBJECTIVES = {
+	DURATION: "less_duration",
+	MILEAGE: "less_mileage",
+	COST: "minimize_cost"
+}

@@ -11,7 +11,8 @@ import {
 	SET_DROPOFFS,
 	TIMER_START,
 	TIMER_STOP,
-	UPDATE_COMPLETED_JOBS, UPDATE_DELIVERY_JOB
+	UPDATE_COMPLETED_JOBS,
+	UPDATE_DELIVERY_JOB
 } from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
 
@@ -174,6 +175,29 @@ export function manuallyDispatchJob(apiKey, driverId, orderNumber) {
 				});
 		});
 	};
+}
+
+export function optimizeRoutes(apiKey, params, orderIds){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall(
+				'POST',
+				`/api/v1/jobs/optimise`,
+				{ params, orderIds },
+				{
+					headers: { 'X-Seconds-Api-Key': apiKey }
+				}
+			)
+				.then(({ message, ...res }) => {
+					resolve(message);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		})
+	}
 }
 
 export function getAllJobs(apiKey, email) {

@@ -135,3 +135,11 @@
   filter: invert(33%) sepia(51%) saturate(3608%) hue-rotate(334deg) brightness(88%) contrast(96%);
 }
 
+.img-grey {
+  filter: invert(77%) sepia(20%) saturate(0%) hue-rotate(205deg) brightness(102%) contrast(89%);
+}
+
+.img-blue {
+  filter: invert(53%) sepia(95%) saturate(6125%) hue-rotate(197deg) brightness(94%) contrast(80%);
+}
+

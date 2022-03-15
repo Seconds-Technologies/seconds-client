@@ -90,8 +90,6 @@ const Profile = props => {
 				}}
 				onSubmit={async ({ profileImage, fullAddress, ...values }) => {
 					try {
-						console.log(fullAddress);
-						console.log(user.fullAddress);
 						// check if address has changed
 						if (fullAddress !== user.fullAddress) {
 							values.fullAddress = fullAddress;

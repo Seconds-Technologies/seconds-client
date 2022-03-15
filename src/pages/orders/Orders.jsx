@@ -1,12 +1,12 @@
 import './Orders.css';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BACKGROUND, STATUS_COLOURS, PATHS, STATUS, PROVIDERS, DISPATCH_MODES } from '../../constants';
-import { manuallyDispatchJob, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
 import stuart from '../../assets/img/stuart.svg';
@@ -14,7 +14,7 @@ import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
-import { removeError } from '../../store/actions/errors';
+import { addError, removeError } from '../../store/actions/errors';
 import CustomToolbar from '../../components/CustomToolbar';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -31,45 +31,48 @@ const INIT_STATE = {
 
 export default function Orders(props) {
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const error = useSelector(state => state['errors']);
+	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const dispatch = useDispatch();
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [selectionModel, setSelectionModel] = useState([]);
+	const modalRef = useRef(null);
 
-	const jobs = useSelector(state => {
-		const { allJobs } = state['deliveryJobs'];
-		return apiKey
-			? allJobs.map(
-					({
-						_id,
+	const jobs = useMemo(
+		() =>
+			allJobs.map(
+				({
+					_id,
+					status,
+					dispatchMode,
+					driverInformation,
+					jobSpecification: { orderNumber, deliveries },
+					selectedConfiguration: { providerId },
+					createdAt
+				}) => {
+					let {
+						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
+					} = deliveries[0];
+					let customerName = `${firstName} ${lastName}`;
+					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
+					let driver = providerId;
+					return {
+						id: orderNumber,
+						driverId: driverInformation.id,
 						status,
-						dispatchMode,
-						driverInformation,
-						jobSpecification: { orderNumber, deliveries },
-						selectedConfiguration: { providerId },
-						createdAt
-					}) => {
-						let {
-							dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
-						} = deliveries[0];
-						let customerName = `${firstName} ${lastName}`;
-						phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
-						let driver = providerId;
-						return {
-							id: orderNumber,
-							driverId: driverInformation.id,
-							status,
-							customerName,
-							phoneNumber,
-							address,
-							driver,
-							createdAt,
-							dispatchMode
-						};
-					}
-			  )
-			: [];
-	});
+						customerName,
+						phoneNumber,
+						address,
+						driver,
+						createdAt,
+						dispatchMode
+					};
+				}
+			),
+		[allJobs]
+	);
 
 	const dispatchToDriver = () => {
 		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
@@ -267,10 +270,62 @@ export default function Orders(props) {
 		}
 	];
 
+	const errorModal = (
+		<Modal
+			show={!!error.message}
+			container={modalRef}
+			onHide={() => dispatch(removeError())}
+			size='lg'
+			aria-labelledby='example-custom-modal-styling-title'
+		>
+			<div className='alert alert-danger mb-0' role='alert'>
+				<h3 className='text-center'>{error.message}</h3>
+			</div>
+		</Modal>
+	);
+
+	const validateTimeWindows = useCallback(
+		(start, end) => {
+			selectionModel.every(orderNo => {
+				let isValid = false;
+				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
+				console.log(order);
+				if (order) {
+					// check if the order's pickup / delivery time fit within the optimization time window
+					const deliveries = order['jobSpecification'].deliveries;
+					isValid = deliveries.every(delivery => {
+						const deliveryTime = delivery.dropoffEndTime;
+						let result = moment().date() === moment(deliveryTime).date()
+						console.log(result)
+						return result
+					});
+				}
+				return isValid;
+			});
+			return true;
+		},
+		[selectionModel]
+	);
+
+	const optimize = useCallback(
+		values => {
+			showOptRoutes(false);
+			console.table(values);
+			const { startTime, endTime } = values;
+			/*let isValid = validateTimeWindows(startTime, endTime);
+			if (!isValid) {
+				dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"))
+			}*/
+			dispatch(optimizeRoutes(apiKey, values, selectionModel))
+		},
+		[selectionModel]
+	);
+
 	return (
-		<div className='page-container d-flex flex-column px-2 py-4'>
+		<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
 			{manualDispatchModal}
-			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={[]}/>
+			{errorModal}
+			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={selectionModel} onSubmit={optimize} />
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
@@ -292,12 +347,17 @@ export default function Orders(props) {
 				checkboxSelection
 				autoPageSize
 				pagination
+				onSelectionModelChange={newSelectionModel => {
+					setSelectionModel(newSelectionModel);
+				}}
+				selectionModel={selectionModel}
 				components={{ Toolbar: CustomToolbar }}
 				componentsProps={{
 					toolbar: {
 						toggleShow: () => {
 							showOptRoutes(true);
-						}
+						},
+						canOptimize: !!selectionModel.length
 					}
 				}}
 			/>
