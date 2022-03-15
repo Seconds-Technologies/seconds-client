@@ -96,7 +96,7 @@ const Profile = props => {
 						if (fullAddress !== user.fullAddress) {
 							values.fullAddress = fullAddress;
 							let addressComponents = await geocodeByAddress(fullAddress);
-							values.address = getParsedAddress(addressComponents);
+							values.address = getParsedAddress(addressComponents, true);
 							validateAddress(values.address);
 						}
 						console.log(values);

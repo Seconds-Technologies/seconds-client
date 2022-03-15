@@ -6,11 +6,11 @@ import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
-import { Chip } from '@mui/material';
 
 const RouteOptimization = ({ show, onHide, orders }) => {
 	const [driverName, setDriver] = useState([]);
@@ -22,7 +22,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 		duration: ''
 	});
 
-	const handleDelete = id => alert('');
+	const handleDelete = id => alert('lool');
 	const handleChange = event => {
 		const {
 			target: { value }
@@ -32,6 +32,7 @@ const RouteOptimization = ({ show, onHide, orders }) => {
 			typeof value === 'string' ? value.split(',') : value
 		);
 	};
+
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<div className='container-fluid p-4'>
