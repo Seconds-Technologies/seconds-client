@@ -56,13 +56,12 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 												defaultValue={moment().format('HH:mm')}
 												id='start-time'
 												name='startTime'
-												type='time'
+												type='datetime-local'
 												aria-label='start-time'
 												className='form-control form-border rounded-3'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={'07:30'}
-												max={'21:00'}
+												min={moment().format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
@@ -72,13 +71,13 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 												defaultValue={moment().format('HH:mm')}
 												name='endTime'
 												id='end-time'
-												type='time'
+												type='datetime-local'
 												className='form-control form-border rounded-3'
 												aria-label='end-time'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={'07:30'}
-												max={'21:00'}
+												min={moment(values.startTime).format('YYYY-MM-DDTHH:mm')}
+												max={moment(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
@@ -135,13 +134,6 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 														aria-label='default input example'
 													/>
 												</div>
-												<button
-													type='button'
-													className='btn btn-sm btn-outline-primary'
-													onClick={() => arrayHelpers.push(values.breakPeriod)}
-												>
-													<span>Add</span>
-												</button>
 											</div>
 										</div>
 										<div className='col-6'>
