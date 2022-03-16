@@ -12,15 +12,9 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import { Formik, Form, FieldArray } from 'formik';
-import { OPTIMIZATION_OBJECTIVES } from '../../../constants';
 
 const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 	const drivers = useSelector(state => state['driversStore']);
-	const [breakParams, setBreakParams] = useState({
-		start: '',
-		end: '',
-		duration: ''
-	});
 
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>

@@ -20,8 +20,6 @@ import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import Subscription from '../pages/settings/containers/subscription/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
-import Couriers from '../pages/settings/containers/couriers/Couriers';
-import DeliveryTimes from '../pages/settings/containers/deliveryTimes/DeliveryTimes';
 import Shopify from '../pages/shopify/Shopify';
 import WooCommerce from '../pages/wooCommerce/WooCommerce';
 import Square from '../pages/square/Square';
