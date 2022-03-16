@@ -18,9 +18,10 @@ import { addError, removeError } from '../../store/actions/errors';
 import CustomToolbar from '../../components/CustomToolbar';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import RouteOptimization from './modals/RouteOptimization';
+import ManualDispatch from './modals/ManualDispatch';
+import Error from '../../modals/Error';
+import Loading from '../../modals/Loading';
 
 const INIT_STATE = {
 	firstname: '',
@@ -37,6 +38,7 @@ export default function Orders(props) {
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [selectionModel, setSelectionModel] = useState([]);
 	const modalRef = useRef(null);
 
@@ -77,29 +79,6 @@ export default function Orders(props) {
 	const dispatchToDriver = () => {
 		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
 	};
-
-	const manualDispatchModal = (
-		<Modal show={!!chosenDriver.id} onHide={() => selectDriver(prevState => INIT_STATE)}>
-			<Modal.Header closeButton>
-				<Modal.Title>Confirm Driver</Modal.Title>
-			</Modal.Header>
-			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
-				<span className='fs-4'>
-					You are confirming{' '}
-					<span className='fw-bold'>
-						{chosenDriver.firstname} {chosenDriver.lastname}
-					</span>
-					!
-				</span>
-			</Modal.Body>
-			<Modal.Footer>
-				<Button variant='secondary' onClick={() => selectDriver(prevState => INIT_STATE)}>
-					Cancel
-				</Button>
-				<Button onClick={() => dispatchToDriver()}>Confirm</Button>
-			</Modal.Footer>
-		</Modal>
-	);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -270,20 +249,6 @@ export default function Orders(props) {
 		}
 	];
 
-	const errorModal = (
-		<Modal
-			show={!!error.message}
-			container={modalRef}
-			onHide={() => dispatch(removeError())}
-			size='lg'
-			aria-labelledby='example-custom-modal-styling-title'
-		>
-			<div className='alert alert-danger mb-0' role='alert'>
-				<h3 className='text-center'>{error.message}</h3>
-			</div>
-		</Modal>
-	);
-
 	const validateTimeWindows = useCallback(
 		(start, end) => {
 			selectionModel.every(orderNo => {
@@ -310,21 +275,24 @@ export default function Orders(props) {
 	const optimize = useCallback(
 		values => {
 			showOptRoutes(false);
+			setLoading(true);
 			console.table(values);
 			const { startTime, endTime } = values;
-			/*let isValid = validateTimeWindows(startTime, endTime);
+			let isValid = validateTimeWindows(startTime, endTime);
 			if (!isValid) {
+				setLoading(false)
 				dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"))
-			}*/
-			dispatch(optimizeRoutes(apiKey, values, selectionModel))
+			}
+			dispatch(optimizeRoutes(apiKey, values, selectionModel)).then(() => setLoading(false))
 		},
 		[selectionModel]
 	);
 
 	return (
 		<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
-			{manualDispatchModal}
-			{errorModal}
+			<Loading show={loading} onHide={() => setLoading(false)}/>
+			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message}/>
+			<ManualDispatch show={!!chosenDriver.id} onHide={() => selectDriver(prevState => INIT_STATE)} driverName={`${chosenDriver.firstname} ${chosenDriver.lastname}`} onConfirm={dispatchToDriver}/>
 			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={selectionModel} onSubmit={optimize} />
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid

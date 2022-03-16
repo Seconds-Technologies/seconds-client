@@ -30,7 +30,7 @@ const CustomToolbar = ({toggleShow, canOptimize}) => {
 				onClick={toggleShow}
 				startIcon={<img src={infinityIcon} alt={''} width={25} height={25} className={canOptimize ? "img-blue" : "img-grey"}/>}
 			>
-				<span>Optimise route</span>
+				<span>Optimize</span>
 			</Button>
 		</GridToolbarContainer>
 	);
