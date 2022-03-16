@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import { Formik, Form, FieldArray } from 'formik';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 	const drivers = useSelector(state => state['driversStore']);
@@ -39,7 +40,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 				}}
 				onSubmit={onSubmit}
 			>
-				{({ values, handleBlur, handleChange }) => (
+				{({ values, handleBlur, handleChange, setFieldValue }) => (
 					<Form>
 						<FieldArray
 							name='breakPeriods'
@@ -142,16 +143,32 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 											<FormControl sx={{ m: 1, width: 300 }}>
 												<InputLabel id='multiple-checkbox-label'>Select</InputLabel>
 												<Select
-													name="vehicles"
+													name='vehicles'
 													labelId='multiple-checkbox-label'
 													id='multiple-checkbox'
 													multiple
 													value={values.vehicles}
-													onChange={handleChange}
+													onChange={e => {
+														const { value } = e.target;
+														if (value[value.length - 1] === 'all') {
+															setFieldValue('vehicles', values.vehicles.length === drivers.length ? [] : drivers.map(({ firstname, lastname }) => `${firstname} ${lastname}`));
+														} else {
+															handleChange(e);
+														}
+													}}
 													onBlur={handleBlur}
 													input={<OutlinedInput label='Select' />}
 													renderValue={selected => selected.join(', ')}
 												>
+													<MenuItem value='all'>
+														<ListItemIcon>
+															<Checkbox
+																checked={drivers.length > 0 && values.vehicles.length === drivers.length}
+																indeterminate={values.vehicles.length > 0 && values.vehicles.length < drivers.length}
+															/>
+														</ListItemIcon>
+														<ListItemText primary='Select All' />
+													</MenuItem>
 													{drivers.map(({ id, firstname, lastname }) => {
 														const name = `${firstname} ${lastname}`;
 														return (
@@ -169,7 +186,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 													<div className='form-check'>
 														<input
 															defaultChecked={values.objectives.mileage}
-															name="objectives.mileage"
+															name='objectives.mileage'
 															className='form-check-input'
 															type='checkbox'
 															id='criteria-radio-1'
@@ -185,7 +202,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 															defaultChecked={values.objectives.duration}
 															className='form-check-input'
 															type='checkbox'
-															name="objectives.duration"
+															name='objectives.duration'
 															id='criteria-radio-2'
 															onChange={handleChange}
 															onBlur={handleBlur}
@@ -199,7 +216,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 															defaultChecked={values.objectives.cost}
 															className='form-check-input'
 															type='checkbox'
-															name="objectives.cost"
+															name='objectives.cost'
 															id='criteria-radio-3'
 															onChange={handleChange}
 															onBlur={handleBlur}
