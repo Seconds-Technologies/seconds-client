@@ -254,7 +254,7 @@ export default function Orders(props) {
 	const validateTimeWindows = useCallback(
 		(start, end) => {
 			let badOrders = [];
-			let allValid = selectionModel.every(orderNo => {
+			let validStates = selectionModel.map(orderNo => {
 				let isValid = false;
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				if (order) {
@@ -270,7 +270,7 @@ export default function Orders(props) {
 				}
 				return isValid;
 			});
-			return { allValid, badOrders };
+			return { allValid: validStates.every(item => item), badOrders };
 		},
 		[selectionModel]
 	);
