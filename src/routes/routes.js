@@ -47,7 +47,7 @@ const routes = (
 		<PrivateRoute exact path={PATHS.HUBRISE_CATALOG} component={Catalog} />
 		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
-		<PrivateRoute exact path={PATHS.CREATE} component={Create} />
+		<PrivateRoute path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
 		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
