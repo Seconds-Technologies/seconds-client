@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel';
 import RouteOptimization from './modals/RouteOptimization';
 import ManualDispatch from './modals/ManualDispatch';
 import Error from '../../modals/Error';
-import Loading from '../../modals/Loading';
+import Loading from './modals/Loading';
 import ReviewOrders from './modals/ReviewOrders';
 
 const INIT_STATE = {
