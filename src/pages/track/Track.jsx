@@ -44,7 +44,7 @@ const Track = props => {
 		<div className='page-container container-fluid px-5 pb-4'>
 			<div className="d-flex justify-content-end py-3 px-3">
 				<Button className="me-3" onClick={() => props.history.push(PATHS.ORDERS)} startIcon={<BsTable />}>
-					<span>Table View</span>
+					<span>Table</span>
 				</Button>
 				<TimeFilter current={active} onSelect={setActive}/>
 			</div>

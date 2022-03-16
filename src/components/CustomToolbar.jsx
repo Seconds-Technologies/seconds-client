@@ -22,7 +22,7 @@ const CustomToolbar = ({toggleShow, canOptimize}) => {
 			<GridToolbarDensitySelector />
 			<GridToolbarExport />
 			<Button size='small' onClick={() => history.push(PATHS.TRACK)} startIcon={<BsKanban size={16} />}>
-				<span>Kanban View</span>
+				<span>Kanban</span>
 			</Button>
 			<Button
 				disabled={!canOptimize}

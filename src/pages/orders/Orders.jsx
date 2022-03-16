@@ -22,6 +22,7 @@ import RouteOptimization from './modals/RouteOptimization';
 import ManualDispatch from './modals/ManualDispatch';
 import Error from '../../modals/Error';
 import Loading from '../../modals/Loading';
+import ReviewOrders from './modals/ReviewOrders';
 
 const INIT_STATE = {
 	firstname: '',
@@ -38,6 +39,7 @@ export default function Orders(props) {
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [reviewModal, showReviewModal] = useState({ show: false, orders: [] });
 	const [loading, setLoading] = useState(false);
 	const [selectionModel, setSelectionModel] = useState([]);
 	const modalRef = useRef(null);
@@ -251,23 +253,24 @@ export default function Orders(props) {
 
 	const validateTimeWindows = useCallback(
 		(start, end) => {
-			selectionModel.every(orderNo => {
+			let badOrders = [];
+			let allValid = selectionModel.every(orderNo => {
 				let isValid = false;
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
-				console.log(order);
 				if (order) {
 					// check if the order's pickup / delivery time fit within the optimization time window
 					const deliveries = order['jobSpecification'].deliveries;
 					isValid = deliveries.every(delivery => {
 						const deliveryTime = delivery.dropoffEndTime;
-						let result = moment().date() === moment(deliveryTime).date()
-						console.log(result)
-						return result
+						let result = moment(end).date() === moment(deliveryTime).date();
+						console.log(result);
+						return result;
 					});
+					!isValid && badOrders.push(order);
 				}
 				return isValid;
 			});
-			return true;
+			return { allValid, badOrders };
 		},
 		[selectionModel]
 	);
@@ -276,23 +279,38 @@ export default function Orders(props) {
 		values => {
 			showOptRoutes(false);
 			setLoading(true);
-			console.table(values);
 			const { startTime, endTime } = values;
-			let isValid = validateTimeWindows(startTime, endTime);
-			if (!isValid) {
-				setLoading(false)
-				dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"))
+			let { allValid, badOrders } = validateTimeWindows(startTime, endTime);
+			if (!allValid) {
+				setLoading(false);
+				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
+				showReviewModal({ show: true, orders: badOrders });
 			}
-			dispatch(optimizeRoutes(apiKey, values, selectionModel)).then(() => setLoading(false))
+			dispatch(optimizeRoutes(apiKey, values, selectionModel)).then(() => setLoading(false));
 		},
 		[selectionModel]
 	);
 
 	return (
 		<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
-			<Loading show={loading} onHide={() => setLoading(false)}/>
-			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message}/>
-			<ManualDispatch show={!!chosenDriver.id} onHide={() => selectDriver(prevState => INIT_STATE)} driverName={`${chosenDriver.firstname} ${chosenDriver.lastname}`} onConfirm={dispatchToDriver}/>
+			<Loading show={loading} onHide={() => setLoading(false)} />
+			<ReviewOrders
+				show={reviewModal.show}
+				onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
+				orders={reviewModal.orders}
+				onConfirm={() => {
+					showReviewModal(prevState => ({ ...prevState, show: false }))
+					setLoading(true)
+					setTimeout(() => setLoading(false), 5000)
+				}}
+			/>
+			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
+			<ManualDispatch
+				show={!!chosenDriver.id}
+				onHide={() => selectDriver(prevState => INIT_STATE)}
+				driverName={`${chosenDriver.firstname} ${chosenDriver.lastname}`}
+				onConfirm={dispatchToDriver}
+			/>
 			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={selectionModel} onSubmit={optimize} />
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
