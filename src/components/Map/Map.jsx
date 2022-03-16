@@ -60,7 +60,6 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 		let result = [];
 		if (busy) {
 			const coordinates = [location, ...couriers, ...customerCoords];
-			console.log('COORDINATES:', coordinates);
 			const bounds = coordinates.reduce((bounds, coord) => bounds.extend(coord), new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 			result = Object.values(bounds).map(bound => Object.values(bound));
 		}
