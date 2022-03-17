@@ -167,7 +167,7 @@ const Create = props => {
 				}) => {
 					let {
 						dropoffLocation: { fullAddress: dropoffAddress },
-						dropoffStartTime,
+						dropoffEndTime,
 						orderReference: customerReference
 					} = deliveries[0];
 					let newJob = {
@@ -176,7 +176,7 @@ const Create = props => {
 						pickupAddress,
 						dropoffAddress,
 						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliveryFee,
 						courier: providerId.replace(/_/g, ' ')
 					};
@@ -210,7 +210,7 @@ const Create = props => {
 						}) => {
 							let {
 								dropoffLocation: { fullAddress: dropoffAddress },
-								dropoffStartTime,
+								dropoffEndTime,
 								orderReference: customerReference
 							} = deliveries[0];
 							let newJob = {
@@ -219,7 +219,7 @@ const Create = props => {
 								pickupAddress,
 								dropoffAddress,
 								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 								deliveryFee,
 								courier: providerId.replace(/_/g, ' ')
 							};
@@ -247,7 +247,7 @@ const Create = props => {
 						}) => {
 							let {
 								dropoffLocation: { fullAddress: dropoffAddress },
-								dropoffStartTime,
+								dropoffEndTime,
 								orderReference: customerReference
 							} = deliveries[0];
 							let newJob = {
@@ -256,7 +256,7 @@ const Create = props => {
 								pickupAddress,
 								dropoffAddress,
 								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
+								deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 								deliveryFee,
 								courier: name.replace(/_/g, ' ')
 							};

@@ -177,19 +177,24 @@ export function manuallyDispatchJob(apiKey, driverId, orderNumber) {
 	};
 }
 
-export function optimizeRoutes(apiKey, params, orderIds){
+export function optimizeRoutes(email, params, orderNumbers){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall(
 				'POST',
-				`/api/v1/jobs/optimise`,
-				{ params, orderIds },
+				`/server/main/optimise-route`,
+				{ params, orderNumbers },
 				{
-					headers: { 'X-Seconds-Api-Key': apiKey }
+					params: { email }
 				}
 			)
-				.then(({ message, ...res }) => {
-					resolve(message);
+				.then(({ message, job_id }) => {
+					console.log(message)
+					return apiCall('GET', '/server/main/optimise-route', null, {params: { email, job_id, num_orders: orderNumbers.length }})
+						.then(({message, routes} ) => {
+							console.log(routes)
+							resolve(routes)
+						})
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

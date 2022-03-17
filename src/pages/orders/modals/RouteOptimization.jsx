@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import moment from 'moment';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -11,26 +10,27 @@ import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
-import { Formik, Form, FieldArray } from 'formik';
+import { FieldArray, Form, Formik } from 'formik';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
 const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 	const drivers = useSelector(state => state['driversStore']);
+	const { deliveryHours } = useSelector(state => state['currentUser'].user);
 
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<Formik
 				enableReinitialize
 				initialValues={{
-					startTime: moment().format('HH:mm'),
-					endTime: moment().format('HH:mm'),
+					startTime: moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm'),
+					endTime: moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm'),
 					breakPeriod: {
 						label: '',
 						start: '',
 						end: '',
 						duration: ''
 					},
-					vehicles: [],
+					driverIds: [],
 					breakPeriods: [],
 					objectives: {
 						duration: true,
@@ -54,7 +54,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 										<div className='col-6'>
 											<label htmlFor=''>Start from</label>
 											<input
-												defaultValue={moment().format('HH:mm')}
+												defaultValue={values.startTime}
 												id='start-time'
 												name='startTime'
 												type='datetime-local'
@@ -62,14 +62,14 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 												className='form-control form-border rounded-3'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment().format('YYYY-MM-DDTHH:mm')}
+												min={moment().set('hour', 0).set('minute', 0).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
 										<div className='col-6'>
 											<label htmlFor=''>End at</label>
 											<input
-												defaultValue={moment().format('HH:mm')}
+												defaultValue={values.endTime}
 												name='endTime'
 												id='end-time'
 												type='datetime-local'
@@ -143,28 +143,40 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 											<FormControl sx={{ m: 1, width: 300 }}>
 												<InputLabel id='multiple-checkbox-label'>Select</InputLabel>
 												<Select
-													name='vehicles'
+													name='driverIds'
 													labelId='multiple-checkbox-label'
 													id='multiple-checkbox'
 													multiple
-													value={values.vehicles}
+													value={values.driverIds}
 													onChange={e => {
 														const { value } = e.target;
 														if (value[value.length - 1] === 'all') {
-															setFieldValue('vehicles', values.vehicles.length === drivers.length ? [] : drivers.map(({ firstname, lastname }) => `${firstname} ${lastname}`));
+															setFieldValue(
+																'driverIds',
+																values.driverIds.length === drivers.length ? [] : drivers.map(({ id }) => id)
+															);
 														} else {
 															handleChange(e);
 														}
 													}}
 													onBlur={handleBlur}
 													input={<OutlinedInput label='Select' />}
-													renderValue={selected => selected.join(', ')}
+													renderValue={selected =>
+														selected
+															.map(id => {
+																const driver = drivers.find(driver => driver.id === id);
+																return `${driver.firstname} ${driver.lastname}`;
+															})
+															.join(', ')
+													}
 												>
 													<MenuItem value='all'>
 														<ListItemIcon>
 															<Checkbox
-																checked={drivers.length > 0 && values.vehicles.length === drivers.length}
-																indeterminate={values.vehicles.length > 0 && values.vehicles.length < drivers.length}
+																checked={drivers.length > 0 && values.driverIds.length === drivers.length}
+																indeterminate={
+																	values.driverIds.length > 0 && values.driverIds.length < drivers.length
+																}
 															/>
 														</ListItemIcon>
 														<ListItemText primary='Select All' />
@@ -172,8 +184,8 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 													{drivers.map(({ id, firstname, lastname }) => {
 														const name = `${firstname} ${lastname}`;
 														return (
-															<MenuItem key={id} value={name}>
-																<Checkbox checked={values.vehicles.indexOf(name) > -1} />
+															<MenuItem key={id} value={id}>
+																<Checkbox checked={values.driverIds.indexOf(id) > -1} />
 																<ListItemText primary={name} />
 															</MenuItem>
 														);

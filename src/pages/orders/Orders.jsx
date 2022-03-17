@@ -23,6 +23,7 @@ import ManualDispatch from './modals/ManualDispatch';
 import Error from '../../modals/Error';
 import Loading from './modals/Loading';
 import ReviewOrders from './modals/ReviewOrders';
+import OptimizationResult from './modals/OptimizationResult';
 
 const INIT_STATE = {
 	firstname: '',
@@ -39,6 +40,8 @@ export default function Orders(props) {
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [params, setParams] = useState({})
+	const [routes, setOptimizedRoutes] = useState([])
 	const [reviewModal, showReviewModal] = useState({ show: false, orders: [] });
 	const [loading, setLoading] = useState(false);
 	const [selectionModel, setSelectionModel] = useState([]);
@@ -283,10 +286,17 @@ export default function Orders(props) {
 			let { allValid, badOrders } = validateTimeWindows(startTime, endTime);
 			if (!allValid) {
 				setLoading(false);
+				setParams(values)
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
 				showReviewModal({ show: true, orders: badOrders });
+			} else {
+				dispatch(optimizeRoutes(email, values, selectionModel))
+					.then((routes) => {
+						setLoading(false)
+						setOptimizedRoutes(routes)
+					})
+					.catch((err) => setLoading(false))
 			}
-			dispatch(optimizeRoutes(apiKey, values, selectionModel)).then(() => setLoading(false));
 		},
 		[selectionModel]
 	);
@@ -301,10 +311,16 @@ export default function Orders(props) {
 				onConfirm={() => {
 					showReviewModal(prevState => ({ ...prevState, show: false }))
 					setLoading(true)
-					setTimeout(() => setLoading(false), 5000)
+					dispatch(optimizeRoutes(email, params, selectionModel))
+						.then((routes) => {
+							setLoading(false)
+							setOptimizedRoutes(routes)
+						})
+						.catch((err) => setLoading(false))
 				}}
 			/>
 			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
+			<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes}/>
 			<ManualDispatch
 				show={!!chosenDriver.id}
 				onHide={() => selectDriver(prevState => INIT_STATE)}
