@@ -12,25 +12,24 @@ import InputLabel from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import { FieldArray, Form, Formik } from 'formik';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { VEHICLE_TYPES } from '../../../constants';
+import PropTypes from 'prop-types';
 
-const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
-	const drivers = useSelector(state => state['driversStore']);
-	const { deliveryHours } = useSelector(state => state['currentUser'].user);
-
+const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, defaultEndTime }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<Formik
 				enableReinitialize
 				initialValues={{
-					startTime: moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm'),
-					endTime: moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm'),
+					startTime: defaultStartTime,
+					endTime:defaultEndTime,
 					breakPeriod: {
 						label: '',
 						start: '',
 						end: '',
 						duration: ''
 					},
-					driverIds: [],
+					vehicles: [],
 					breakPeriods: [],
 					objectives: {
 						duration: true,
@@ -62,7 +61,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 												className='form-control form-border rounded-3'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment().set('hour', 0).set('minute', 0).format('YYYY-MM-DDTHH:mm')}
+												// min={moment().set('hour', 0).set('minute', 0).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
@@ -78,7 +77,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 												onChange={handleChange}
 												onBlur={handleBlur}
 												min={moment(values.startTime).format('YYYY-MM-DDTHH:mm')}
-												max={moment(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
+												// max={moment(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
@@ -143,17 +142,17 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 											<FormControl sx={{ m: 1, width: 300 }}>
 												<InputLabel id='multiple-checkbox-label'>Select</InputLabel>
 												<Select
-													name='driverIds'
+													name='vehicles'
 													labelId='multiple-checkbox-label'
 													id='multiple-checkbox'
 													multiple
-													value={values.driverIds}
+													value={values.vehicles}
 													onChange={e => {
 														const { value } = e.target;
 														if (value[value.length - 1] === 'all') {
 															setFieldValue(
-																'driverIds',
-																values.driverIds.length === drivers.length ? [] : drivers.map(({ id }) => id)
+																'vehicles',
+																values.vehicles.length === VEHICLE_TYPES.length ? [] : VEHICLE_TYPES.map(({ value }) => value)
 															);
 														} else {
 															handleChange(e);
@@ -164,8 +163,9 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 													renderValue={selected =>
 														selected
 															.map(id => {
-																const driver = drivers.find(driver => driver.id === id);
-																return `${driver.firstname} ${driver.lastname}`;
+																const vehicle = VEHICLE_TYPES.find(vehicle => vehicle.value === id);
+																console.log(vehicle)
+																return `${vehicle.label}`;
 															})
 															.join(', ')
 													}
@@ -173,20 +173,19 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 													<MenuItem value='all'>
 														<ListItemIcon>
 															<Checkbox
-																checked={drivers.length > 0 && values.driverIds.length === drivers.length}
+																checked={VEHICLE_TYPES.length > 0 && values.vehicles.length === VEHICLE_TYPES.length}
 																indeterminate={
-																	values.driverIds.length > 0 && values.driverIds.length < drivers.length
+																	values.vehicles.length > 0 && values.vehicles.length < VEHICLE_TYPES.length
 																}
 															/>
 														</ListItemIcon>
 														<ListItemText primary='Select All' />
 													</MenuItem>
-													{drivers.map(({ id, firstname, lastname }) => {
-														const name = `${firstname} ${lastname}`;
+													{VEHICLE_TYPES.map(({ value, label }, index) => {
 														return (
-															<MenuItem key={id} value={id}>
-																<Checkbox checked={values.driverIds.indexOf(id) > -1} />
-																<ListItemText primary={name} />
+															<MenuItem key={index} value={value}>
+																<Checkbox checked={values.vehicles.indexOf(value) > -1} />
+																<ListItemText primary={label} />
 															</MenuItem>
 														);
 													})}
@@ -265,6 +264,13 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit }) => {
 	);
 };
 
-RouteOptimization.propTypes = {};
+RouteOptimization.propTypes = {
+	show: PropTypes.bool.isRequired,
+	onHide: PropTypes.func.isRequired,
+	orders: PropTypes.array.isRequired,
+	onSubmit: PropTypes.func.isRequired,
+	defaultStartTime: PropTypes.string.isRequired,
+	defaultEndTime: PropTypes.string.isRequired
+};
 
 export default RouteOptimization;

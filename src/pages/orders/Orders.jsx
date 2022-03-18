@@ -33,15 +33,15 @@ const INIT_STATE = {
 };
 
 export default function Orders(props) {
-	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const dispatch = useDispatch();
 	const drivers = useSelector(state => state['driversStore']);
 	const [chosenDriver, selectDriver] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
-	const [params, setParams] = useState({})
-	const [routes, setOptimizedRoutes] = useState([])
+	const [params, setParams] = useState({});
+	const [routes, setOptimizedRoutes] = useState([]);
 	const [reviewModal, showReviewModal] = useState({ show: false, orders: [] });
 	const [loading, setLoading] = useState(false);
 	const [selectionModel, setSelectionModel] = useState([]);
@@ -80,6 +80,20 @@ export default function Orders(props) {
 			),
 		[allJobs]
 	);
+
+	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
+		let earliestPickupTime = moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm')
+		let latestDeliveryTime = moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm')
+		const jobs = allJobs.filter(({jobSpecification: { orderNumber }}) => selectionModel.includes(orderNumber))
+		for (let job of jobs) {
+			const isEarlier = moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime)
+			const isLater = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime)
+			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm')
+			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm')
+		}
+		console.table({ earliestPickupTime, latestDeliveryTime })
+		return { earliestPickupTime, latestDeliveryTime }
+	}, [selectionModel])
 
 	const dispatchToDriver = () => {
 		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
@@ -286,16 +300,16 @@ export default function Orders(props) {
 			let { allValid, badOrders } = validateTimeWindows(startTime, endTime);
 			if (!allValid) {
 				setLoading(false);
-				setParams(values)
+				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
 				showReviewModal({ show: true, orders: badOrders });
 			} else {
 				dispatch(optimizeRoutes(email, values, selectionModel))
-					.then((routes) => {
-						setLoading(false)
-						setOptimizedRoutes(routes)
+					.then(routes => {
+						setLoading(false);
+						setOptimizedRoutes(routes);
 					})
-					.catch((err) => setLoading(false))
+					.catch(err => setLoading(false));
 			}
 		},
 		[selectionModel]
@@ -309,25 +323,31 @@ export default function Orders(props) {
 				onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
 				orders={reviewModal.orders}
 				onConfirm={() => {
-					showReviewModal(prevState => ({ ...prevState, show: false }))
-					setLoading(true)
+					showReviewModal(prevState => ({ ...prevState, show: false }));
+					setLoading(true);
 					dispatch(optimizeRoutes(email, params, selectionModel))
-						.then((routes) => {
-							setLoading(false)
-							setOptimizedRoutes(routes)
+						.then(routes => {
+							setLoading(false);
+							setOptimizedRoutes(routes);
 						})
-						.catch((err) => setLoading(false))
+						.catch(err => setLoading(false));
 				}}
 			/>
 			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
-			<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes}/>
+			<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes} />
 			<ManualDispatch
 				show={!!chosenDriver.id}
 				onHide={() => selectDriver(prevState => INIT_STATE)}
 				driverName={`${chosenDriver.firstname} ${chosenDriver.lastname}`}
 				onConfirm={dispatchToDriver}
 			/>
-			<RouteOptimization show={optModal} onHide={() => showOptRoutes(false)} orders={selectionModel} onSubmit={optimize} />
+			<RouteOptimization
+				show={optModal}
+				onHide={() => showOptRoutes(false)}
+				orders={selectionModel}
+				onSubmit={optimize}
+				defaultStartTime={earliestPickupTime}
+				defaultEndTime={latestDeliveryTime}/>
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}
