@@ -61,9 +61,9 @@ const Create = props => {
 	const handleOpen = () => showJobModal(true);
 	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
+	const { dropoffs } = useSelector(state => state['addressHistory']);
 	const drivers = useSelector(state => state['driversStore'])
 	const error = useSelector(state => state['errors']);
-	const { dropoffs } = useSelector(state => state['addressHistory']);
 	const dispatch = useDispatch();
 
 	useEffect(() => {

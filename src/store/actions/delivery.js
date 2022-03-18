@@ -195,10 +195,15 @@ export function optimizeRoutes(email, params, orderNumbers){
 							console.log(routes)
 							resolve(routes)
 						})
+						.catch(err => {
+							if (err) dispatch(addError(err.message));
+							else dispatch(addError('Server is down!'));
+							reject(err);
+						});
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
+					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
 		})
