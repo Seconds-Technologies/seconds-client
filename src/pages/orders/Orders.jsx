@@ -5,7 +5,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, STATUS_COLOURS, PATHS, STATUS, PROVIDERS, DISPATCH_MODES } from '../../constants';
+import { BACKGROUND, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS } from '../../constants';
 import { manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe } from '../../store/actions/delivery';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
@@ -14,7 +14,7 @@ import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
-import { addError, removeError } from '../../store/actions/errors';
+import { removeError } from '../../store/actions/errors';
 import CustomToolbar from '../../components/CustomToolbar';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -42,7 +42,7 @@ export default function Orders(props) {
 	const [optModal, showOptRoutes] = useState(false);
 	const [params, setParams] = useState({});
 	const [routes, setOptimizedRoutes] = useState([]);
-	const [reviewModal, showReviewModal] = useState({ show: false, orders: [] });
+	const [reviewModal, showReviewModal] = useState({ show: false, orders: [], startTime: '', endTime: '' });
 	const [loading, setLoading] = useState(false);
 	const [selectionModel, setSelectionModel] = useState([]);
 	const modalRef = useRef(null);
@@ -82,18 +82,18 @@ export default function Orders(props) {
 	);
 
 	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
-		let earliestPickupTime = moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm')
-		let latestDeliveryTime = moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm')
-		const jobs = allJobs.filter(({jobSpecification: { orderNumber }}) => selectionModel.includes(orderNumber))
+		let earliestPickupTime;
+		let latestDeliveryTime;
+		const jobs = allJobs.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber));
 		for (let job of jobs) {
-			const isEarlier = moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime)
-			const isLater = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime)
-			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm')
-			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm')
+			const isEarlier = earliestPickupTime ? moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime) : true;
+			const isLater = latestDeliveryTime ? moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime) : true;
+			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm');
+			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm');
 		}
-		console.table({ earliestPickupTime, latestDeliveryTime })
-		return { earliestPickupTime, latestDeliveryTime }
-	}, [selectionModel])
+		console.table({ earliestPickupTime, latestDeliveryTime });
+		return { earliestPickupTime, latestDeliveryTime };
+	}, [selectionModel]);
 
 	const dispatchToDriver = () => {
 		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
@@ -275,14 +275,15 @@ export default function Orders(props) {
 				let isValid = false;
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				if (order) {
+					// check pickup is not earlier than start time
+					isValid = moment(order['jobSpecification'].pickupStartTime).isSameOrAfter(moment(start))
 					// check if the order's pickup / delivery time fit within the optimization time window
-					const deliveries = order['jobSpecification'].deliveries;
-					isValid = deliveries.every(delivery => {
-						const deliveryTime = delivery.dropoffEndTime;
-						let result = moment(end).date() === moment(deliveryTime).date();
-						console.log(result);
-						return result;
-					});
+					if (isValid) {
+						const deliveries = order['jobSpecification'].deliveries;
+						isValid = deliveries.every(delivery => {
+							return moment(delivery.dropoffEndTime).isSameOrBefore(end)
+						});
+					}
 					!isValid && badOrders.push(order);
 				}
 				return isValid;
@@ -302,7 +303,7 @@ export default function Orders(props) {
 				setLoading(false);
 				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
-				showReviewModal({ show: true, orders: badOrders });
+				showReviewModal({ show: true, orders: badOrders, startTime: moment(startTime).calendar(), endTime: moment(endTime).calendar() });
 			} else {
 				dispatch(optimizeRoutes(email, values, selectionModel))
 					.then(routes => {
@@ -320,6 +321,10 @@ export default function Orders(props) {
 			<Loading show={loading} onHide={() => setLoading(false)} />
 			<ReviewOrders
 				show={reviewModal.show}
+				onGoBack={() => {
+					showReviewModal(prevState => ({ ...prevState, show: false }))
+					showOptRoutes(true)
+				}}
 				onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
 				orders={reviewModal.orders}
 				onConfirm={() => {
@@ -332,6 +337,8 @@ export default function Orders(props) {
 						})
 						.catch(err => setLoading(false));
 				}}
+				startTime={reviewModal.startTime}
+				endTime={reviewModal.endTime}
 			/>
 			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
 			<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes} />
@@ -347,7 +354,8 @@ export default function Orders(props) {
 				orders={selectionModel}
 				onSubmit={optimize}
 				defaultStartTime={earliestPickupTime}
-				defaultEndTime={latestDeliveryTime}/>
+				defaultEndTime={latestDeliveryTime}
+			/>
 			<h3 className='ms-3'>Your Orders</h3>
 			<DataGrid
 				sortingOrder={['desc', 'asc']}

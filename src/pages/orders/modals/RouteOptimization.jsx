@@ -19,7 +19,6 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<Formik
-				enableReinitialize
 				initialValues={{
 					startTime: defaultStartTime,
 					endTime:defaultEndTime,
@@ -137,7 +136,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 											</div>
 										</div>
 										<div className='col-6'>
-											<h2 className='fs-6'>Select driver and vehicle</h2>
+											<h2 className='fs-6'>Select vehicle types</h2>
 											<p>You will be able to assign the optimised orders to drivers with your desired vehicle type</p>
 											<FormControl sx={{ m: 1, width: 300 }}>
 												<InputLabel id='multiple-checkbox-label'>Select</InputLabel>
@@ -164,7 +163,6 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 														selected
 															.map(id => {
 																const vehicle = VEHICLE_TYPES.find(vehicle => vehicle.value === id);
-																console.log(vehicle)
 																return `${vehicle.label}`;
 															})
 															.join(', ')
