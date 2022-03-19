@@ -21,7 +21,7 @@ const Error = React.forwardRef(({ show, onHide, message }, ref) => {
 Error.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
-	message: PropTypes.string.isRequired,
+	message: PropTypes.string
 };
 
 export default Error;

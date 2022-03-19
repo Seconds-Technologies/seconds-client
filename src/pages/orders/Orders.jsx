@@ -24,6 +24,7 @@ import Error from '../../modals/Error';
 import Loading from './modals/Loading';
 import ReviewOrders from './modals/ReviewOrders';
 import OptimizationResult from './modals/OptimizationResult';
+import CustomSelect, { StyledOption } from './components/CustomSelect';
 
 const INIT_STATE = {
 	firstname: '',
@@ -33,7 +34,7 @@ const INIT_STATE = {
 };
 
 export default function Orders(props) {
-	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
+	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const dispatch = useDispatch();
@@ -47,75 +48,13 @@ export default function Orders(props) {
 	const [selectionModel, setSelectionModel] = useState([]);
 	const modalRef = useRef(null);
 
-	useEffect(() => {
-		Mixpanel.people.increment('page_views');
-		apiKey && dispatch(subscribe(apiKey, email));
-		return () => apiKey && dispatch(unsubscribe());
-	}, []);
-
-	useEffect(() => {
-		dispatch(removeError());
-	}, [props.location]);
-
-	const jobs = useMemo(
-		() =>
-			allJobs.map(
-				({
-					_id,
-					status,
-					dispatchMode,
-					driverInformation,
-					jobSpecification: { orderNumber, deliveries },
-					selectedConfiguration: { providerId },
-					createdAt
-				}) => {
-					let {
-						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
-					} = deliveries[0];
-					let customerName = `${firstName} ${lastName}`;
-					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
-					let driver = providerId;
-					return {
-						id: orderNumber,
-						driverId: driverInformation.id,
-						status,
-						customerName,
-						phoneNumber,
-						address,
-						driver,
-						createdAt,
-						dispatchMode
-					};
-				}
-			),
-		[allJobs]
-	);
-
-	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
-		let earliestPickupTime;
-		let latestDeliveryTime;
-		const jobs = allJobs.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber));
-		for (let job of jobs) {
-			const isEarlier = earliestPickupTime ? moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime) : true;
-			const isLater = latestDeliveryTime ? moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime) : true;
-			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm');
-			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm');
+	const renderValue = useCallback(option => {
+		if (option == null) {
+			return <span>Set Courier </span>;
 		}
-		console.table({ earliestPickupTime, latestDeliveryTime });
-		return { earliestPickupTime, latestDeliveryTime };
-	}, [selectionModel]);
 
-	const canOptimize = useMemo(() => {
-		return selectionModel.length ? selectionModel.every((orderNo) => {
-			let job = allJobs.find(({jobSpecification: { orderNumber }}) => orderNumber === orderNo)
-			return job.dispatchMode === DISPATCH_MODES.MANUAL && !job.driverInformation.id
-		}) : false
-	}, [selectionModel]);
-
-	const dispatchToDriver = () => {
-		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
-
-	};
+		return <span className="text-wrap">{option.label.join(' ')}</span>;
+	}, []);
 
 	const columns = [
 		{ field: 'id', headerName: 'Order No.', width: 150 },
@@ -216,40 +155,23 @@ export default function Orders(props) {
 							height={25}
 						/>
 						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && !params.row.driverId && (
-							<FormControl
-								error
-								variant='filled'
-								sx={{
-									m: 1,
-									minWidth: 150,
-									display: 'flex',
-									justifyContent: 'center'
+							<CustomSelect
+								renderValue={renderValue}
+								onChange={value => {
+									let driver = drivers.find(({ id }) => id === value);
+									console.log(driver);
+									selectDriver(prevState => ({
+										...driver,
+										orderNumber: params.row.id
+									}));
 								}}
 							>
-								<InputLabel id='drivers-dropdown' style={{ fontSize: 14 }} error>
-									⚠️ Select Driver
-								</InputLabel>
-								<Select
-									labelId='drivers-dropdown'
-									id='drivers-dropdown'
-									value={null}
-									label='Manual Dispatch'
-									onChange={e => {
-										let driver = drivers.find(({ id }) => id === e.target.value);
-										console.log(driver);
-										selectDriver(prevState => ({
-											...driver,
-											orderNumber: params.row.id
-										}));
-									}}
-								>
-									{drivers.map(driver => (
-										<MenuItem value={driver.id}>
-											{driver.firstname} {driver.lastname}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
+								{drivers.map((driver, index) => (
+									<StyledOption key={index} value={driver.id}>
+										{driver.firstname} {driver.lastname}
+									</StyledOption>
+								))}
+							</CustomSelect>
 						)}
 					</div>
 				);
@@ -276,6 +198,75 @@ export default function Orders(props) {
 		}
 	];
 
+	useEffect(() => {
+		Mixpanel.people.increment('page_views');
+		apiKey && dispatch(subscribe(apiKey, email));
+		return () => apiKey && dispatch(unsubscribe());
+	}, []);
+
+	useEffect(() => {
+		dispatch(removeError());
+	}, [props.location]);
+
+	const jobs = useMemo(
+		() =>
+			allJobs.map(
+				({
+					_id,
+					status,
+					dispatchMode,
+					driverInformation,
+					jobSpecification: { orderNumber, deliveries },
+					selectedConfiguration: { providerId },
+					createdAt
+				}) => {
+					let {
+						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
+					} = deliveries[0];
+					let customerName = `${firstName} ${lastName}`;
+					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
+					let driver = providerId;
+					return {
+						id: orderNumber,
+						driverId: driverInformation.id,
+						status,
+						customerName,
+						phoneNumber,
+						address,
+						driver,
+						createdAt,
+						dispatchMode
+					};
+				}
+			),
+		[allJobs]
+	);
+
+	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
+		let earliestPickupTime;
+		let latestDeliveryTime;
+		const jobs = allJobs.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber));
+		for (let job of jobs) {
+			const isEarlier = earliestPickupTime ? moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime) : true;
+			const isLater = latestDeliveryTime ? moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime) : true;
+			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm');
+			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm');
+		}
+		return { earliestPickupTime, latestDeliveryTime };
+	}, [selectionModel]);
+
+	const canOptimize = useMemo(() => {
+		return selectionModel.length
+			? selectionModel.every(orderNo => {
+					let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
+					return job.dispatchMode === DISPATCH_MODES.MANUAL && !job.driverInformation.id;
+			  })
+			: false;
+	}, [selectionModel]);
+	const dispatchToDriver = () => {
+		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
+	};
+
 	const validateTimeWindows = useCallback(
 		(start, end) => {
 			let badOrders = [];
@@ -284,12 +275,12 @@ export default function Orders(props) {
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				if (order) {
 					// check pickup is not earlier than start time
-					isValid = moment(order['jobSpecification'].pickupStartTime).isSameOrAfter(moment(start))
+					isValid = moment(order['jobSpecification'].pickupStartTime).isSameOrAfter(moment(start));
 					// check if the order's pickup / delivery time fit within the optimization time window
 					if (isValid) {
 						const deliveries = order['jobSpecification'].deliveries;
 						isValid = deliveries.every(delivery => {
-							return moment(delivery.dropoffEndTime).isSameOrBefore(end)
+							return moment(delivery.dropoffEndTime).isSameOrBefore(end);
 						});
 					}
 					!isValid && badOrders.push(order);
@@ -330,8 +321,8 @@ export default function Orders(props) {
 			<ReviewOrders
 				show={reviewModal.show}
 				onGoBack={() => {
-					showReviewModal(prevState => ({ ...prevState, show: false }))
-					showOptRoutes(true)
+					showReviewModal(prevState => ({ ...prevState, show: false }));
+					showOptRoutes(true);
 				}}
 				onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
 				orders={reviewModal.orders}
@@ -395,7 +386,7 @@ export default function Orders(props) {
 						toggleShow: () => {
 							showOptRoutes(true);
 						},
-						canOptimize,
+						canOptimize
 					}
 				}}
 			/>

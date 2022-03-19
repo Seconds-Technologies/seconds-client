@@ -267,8 +267,8 @@ RouteOptimization.propTypes = {
 	onHide: PropTypes.func.isRequired,
 	orders: PropTypes.array.isRequired,
 	onSubmit: PropTypes.func.isRequired,
-	defaultStartTime: PropTypes.string.isRequired,
-	defaultEndTime: PropTypes.string.isRequired
+	defaultStartTime: PropTypes.string,
+	defaultEndTime: PropTypes.string
 };
 
 export default RouteOptimization;
