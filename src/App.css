@@ -143,3 +143,14 @@
   filter: invert(53%) sepia(95%) saturate(6125%) hue-rotate(197deg) brightness(94%) contrast(80%);
 }
 
+.action-button {
+  background-color: #565656;
+  border-color: #565656;
+  cursor: pointer;
+  border-width: 0;
+  color: white;
+  width: 80px;
+  height: 30px;
+  border-radius: 0px;
+}
+

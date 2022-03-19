@@ -47,6 +47,16 @@ export default function Orders(props) {
 	const [selectionModel, setSelectionModel] = useState([]);
 	const modalRef = useRef(null);
 
+	useEffect(() => {
+		Mixpanel.people.increment('page_views');
+		apiKey && dispatch(subscribe(apiKey, email));
+		return () => apiKey && dispatch(unsubscribe());
+	}, []);
+
+	useEffect(() => {
+		dispatch(removeError());
+	}, [props.location]);
+
 	const jobs = useMemo(
 		() =>
 			allJobs.map(
@@ -95,19 +105,17 @@ export default function Orders(props) {
 		return { earliestPickupTime, latestDeliveryTime };
 	}, [selectionModel]);
 
+	const canOptimize = useMemo(() => {
+		return selectionModel.length ? selectionModel.every((orderNo) => {
+			let job = allJobs.find(({jobSpecification: { orderNumber }}) => orderNumber === orderNo)
+			return job.dispatchMode === DISPATCH_MODES.MANUAL && !job.driverInformation.id
+		}) : false
+	}, [selectionModel]);
+
 	const dispatchToDriver = () => {
 		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
+
 	};
-
-	useEffect(() => {
-		Mixpanel.people.increment('page_views');
-		apiKey && dispatch(subscribe(apiKey, email));
-		return () => apiKey && dispatch(unsubscribe());
-	}, []);
-
-	useEffect(() => {
-		dispatch(removeError());
-	}, [props.location]);
 
 	const columns = [
 		{ field: 'id', headerName: 'Order No.', width: 150 },
@@ -387,7 +395,7 @@ export default function Orders(props) {
 						toggleShow: () => {
 							showOptRoutes(true);
 						},
-						canOptimize: !!selectionModel.length
+						canOptimize,
 					}
 				}}
 			/>

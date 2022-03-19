@@ -192,6 +192,48 @@ const Create = props => {
 			});
 	};
 
+	const assign = useCallback((driverId) => {
+		setLoadingText('Creating Order');
+		setLoadingModal(true);
+		dispatch(assignDriver(deliveryParams, apiKey, driverId))
+			.then(
+				({
+					 jobSpecification: {
+						 deliveries,
+						 orderNumber,
+						 pickupLocation: { fullAddress: pickupAddress },
+						 pickupStartTime
+					 },
+					 selectedConfiguration: { deliveryFee },
+					 driverInformation: { name }
+				 }) => {
+					let {
+						dropoffLocation: { fullAddress: dropoffAddress },
+						dropoffEndTime,
+						orderReference: customerReference
+					} = deliveries[0];
+					let newJob = {
+						orderNumber,
+						customerReference,
+						pickupAddress,
+						dropoffAddress,
+						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliveryFee,
+						courier: name.replace(/_/g, ' ')
+					};
+					setLoadingModal(false);
+					setJob(newJob);
+					handleOpen();
+				}
+			)
+			.catch(err => {
+				setLoadingModal(false);
+				console.log(err);
+				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+			});
+	}, [deliveryParams, provider])
+
 	const confirmProvider = () => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
@@ -233,43 +275,7 @@ const Create = props => {
 						console.log(err);
 						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 					})
-			: dispatch(assignDriver(deliveryParams, apiKey, provider.id))
-					.then(
-						({
-							jobSpecification: {
-								deliveries,
-								orderNumber,
-								pickupLocation: { fullAddress: pickupAddress },
-								pickupStartTime
-							},
-							selectedConfiguration: { deliveryFee },
-							driverInformation: { name }
-						}) => {
-							let {
-								dropoffLocation: { fullAddress: dropoffAddress },
-								dropoffEndTime,
-								orderReference: customerReference
-							} = deliveries[0];
-							let newJob = {
-								orderNumber,
-								customerReference,
-								pickupAddress,
-								dropoffAddress,
-								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliveryFee,
-								courier: name.replace(/_/g, ' ')
-							};
-							setLoadingModal(false);
-							setJob(newJob);
-							handleOpen();
-						}
-					)
-					.catch(err => {
-						setLoadingModal(false);
-						console.log(err);
-						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-					});
+			: assign(provider.id)
 	};
 
 	return (
@@ -292,6 +298,7 @@ const Create = props => {
 				drivers={drivers}
 				selectDriver={selectProvider}
 				showConfirmDialog={showConfirmDialog}
+				createUnassigned={assign}
 			/>
 			<CSVUpload
 				show={uploadCSV}

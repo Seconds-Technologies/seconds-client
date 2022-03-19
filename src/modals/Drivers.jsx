@@ -2,8 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { BACKGROUND, DRIVER_STATUS, PROVIDER_TYPES, STATUS_COLOURS, VEHICLE_TYPES } from '../constants';
+import IconButton from '@mui/material/IconButton';
+import { BsInfoCircle } from 'react-icons/bs';
+import Tooltip from '@mui/material/Tooltip';
 
-const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver }) => {
+const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver, createUnassigned }) => {
 	return (
 		<Modal show={show} onHide={() => toggleShow(false)} size='lg'>
 			<Modal.Header closeButton>
@@ -72,10 +75,14 @@ const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver })
 											<td className='col text-capitalize'>{VEHICLE_TYPES.find(({ value }) => value === vehicle).label}</td>
 											<td className='col'>
 												<button
-													className='d-flex justify-content-center align-items-center OrdersListEdit'
+													className='d-flex justify-content-center align-items-center action-button'
 													onClick={() => {
 														toggleShow(false);
-														selectDriver(prevState => ({type: PROVIDER_TYPES.DRIVER, id, name: `${firstname} ${lastname}`}));
+														selectDriver(prevState => ({
+															type: PROVIDER_TYPES.DRIVER,
+															id,
+															name: `${firstname} ${lastname}`
+														}));
 														showConfirmDialog(true);
 													}}
 												>
@@ -87,6 +94,23 @@ const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver })
 							)}
 						</tbody>
 					</table>
+					<div className='d-flex justify-content-end align-content-center'>
+						<button
+							role="button"
+							className='action-button'
+							onClick={() => {
+								toggleShow(false);
+								createUnassigned(null);
+							}}
+						>
+							Create
+						</button>
+						<Tooltip title='Create an unassigned job to dispatch later' className='mx-2' placement='right-start'>
+							<IconButton size='small'>
+								<BsInfoCircle />
+							</IconButton>
+						</Tooltip>
+					</div>
 				</div>
 			</Modal.Body>
 		</Modal>
