@@ -1,60 +1,60 @@
 import './Orders.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS } from '../../constants';
-import { manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { BACKGROUND, DELIVERY_TYPES, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS } from '../../constants';
+import { getAllQuotes, manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
+// images
 import stuart from '../../assets/img/stuart.svg';
 import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
-import { removeError } from '../../store/actions/errors';
+// components & modals
 import CustomToolbar from '../../components/CustomToolbar';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import RouteOptimization from './modals/RouteOptimization';
 import ManualDispatch from './modals/ManualDispatch';
 import Error from '../../modals/Error';
 import Loading from './modals/Loading';
 import ReviewOrders from './modals/ReviewOrders';
 import OptimizationResult from './modals/OptimizationResult';
-import CustomSelect, { StyledOption } from './components/CustomSelect';
+import { StyledButton } from './components/CustomSelect';
+import AssignModal from './modals/AssignModal';
+import SelectDriver from '../../modals/SelectDriver';
+import { jobRequestSchema } from '../../schemas';
+import Quotes from '../../modals/Quotes';
+import SuccessMessage from '../../modals/SuccessMessage';
 
-const INIT_STATE = {
-	firstname: '',
-	lastname: '',
-	id: '',
-	orderNumber: ''
-};
+const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
-	const error = useSelector(state => state['errors']);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
+	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
 	const drivers = useSelector(state => state['driversStore']);
-	const [chosenDriver, selectDriver] = useState(INIT_STATE);
+	const [provider, selectProvider] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [selectDriverModal, showDriversModal] = useState(false);
 	const [params, setParams] = useState({});
+	const [assignModal, showAssignModal] = useState(false);
 	const [routes, setOptimizedRoutes] = useState([]);
 	const [reviewModal, showReviewModal] = useState({ show: false, orders: [], startTime: '', endTime: '' });
-	const [loading, setLoading] = useState(false);
+	const [optLoading, setOptLoading] = useState(false);
+	const [jobLoader, setJobLoader] = useState({ loading: false, text: '' });
 	const [selectionModel, setSelectionModel] = useState([]);
+	const [quotes, setQuotes] = useState({ show: false, values: [] });
+	const [confirmModal, showConfirmDialog] = useState(false);
+	const [deliveryParams, setDeliveryParams] = useState({
+		...jobRequestSchema
+	});
+	const [message, setMessage] = useState("");
 	const modalRef = useRef(null);
-
-	const renderValue = useCallback(option => {
-		if (option == null) {
-			return <span>Set Courier </span>;
-		}
-
-		return <span className="text-wrap">{option.label.join(' ')}</span>;
-	}, []);
 
 	const columns = [
 		{ field: 'id', headerName: 'Order No.', width: 150 },
@@ -65,10 +65,6 @@ export default function Orders(props) {
 		},
 		{
 			field: 'dispatchMode',
-			hide: true
-		},
-		{
-			field: 'driverId',
 			hide: true
 		},
 		{
@@ -150,28 +146,21 @@ export default function Orders(props) {
 									: privateCourier
 							}
 							alt=''
-							className={`${params.row.dispatchMode === DISPATCH_MODES.MANUAL && !params.row.driverId && 'img-red'} me-3`}
+							className={`${
+								params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && 'img-red'
+							} me-3`}
 							width={25}
 							height={25}
 						/>
-						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && !params.row.driverId && (
-							<CustomSelect
-								renderValue={renderValue}
-								onChange={value => {
-									let driver = drivers.find(({ id }) => id === value);
-									console.log(driver);
-									selectDriver(prevState => ({
-										...driver,
-										orderNumber: params.row.id
-									}));
+						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && (
+							<StyledButton
+								onClick={() => {
+									selectProvider(prevState => ({ ...prevState, orderNumber: params.row.id }));
+									showAssignModal(true);
 								}}
 							>
-								{drivers.map((driver, index) => (
-									<StyledOption key={index} value={driver.id}>
-										{driver.firstname} {driver.lastname}
-									</StyledOption>
-								))}
-							</CustomSelect>
+								Assign
+							</StyledButton>
 						)}
 					</div>
 				);
@@ -211,15 +200,7 @@ export default function Orders(props) {
 	const jobs = useMemo(
 		() =>
 			allJobs.map(
-				({
-					_id,
-					status,
-					dispatchMode,
-					driverInformation,
-					jobSpecification: { orderNumber, deliveries },
-					selectedConfiguration: { providerId },
-					createdAt
-				}) => {
+				({ _id, status, dispatchMode, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId }, createdAt }) => {
 					let {
 						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
 					} = deliveries[0];
@@ -228,7 +209,6 @@ export default function Orders(props) {
 					let driver = providerId;
 					return {
 						id: orderNumber,
-						driverId: driverInformation.id,
 						status,
 						customerName,
 						phoneNumber,
@@ -263,9 +243,71 @@ export default function Orders(props) {
 			  })
 			: false;
 	}, [selectionModel]);
-	const dispatchToDriver = () => {
-		dispatch(manuallyDispatchJob(apiKey, chosenDriver.id, chosenDriver.orderNumber)).then(() => selectDriver(prevState => INIT_STATE));
+
+	const dispatchJob = () => {
+		showConfirmDialog(false)
+		setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Creating Job' }));
+		dispatch(manuallyDispatchJob(apiKey, provider.type, provider.id, provider.orderNumber))
+			.then(() => {
+				setJobLoader(prevState => ({ ...prevState, loading: false }));
+				selectProvider(prevState => INIT_STATE);
+				setMessage("Your order has been assigned!")
+			})
+			.catch(err => {
+				setJobLoader(prevState => ({ ...prevState, loading: false }));
+			});
 	};
+
+	function assemblePayload({ jobSpecification, vehicleType }) {
+		let payload = {
+			...jobRequestSchema,
+			pickupFirstName: jobSpecification.pickupLocation.firstName,
+			pickupLastName: jobSpecification.pickupLocation.lastName,
+			pickupBusinessName: jobSpecification.pickupLocation.businessName,
+			pickupAddress: jobSpecification.pickupLocation.fullAddress,
+			pickupAddressLine1: jobSpecification.pickupLocation.streetAddress,
+			pickupCity: jobSpecification.pickupLocation.city,
+			pickupPostcode: jobSpecification.pickupLocation.postcode,
+			pickupLongitude: jobSpecification.pickupLocation.longitude,
+			pickupLatitude: jobSpecification.pickupLocation.latitude,
+			pickupEmailAddress: jobSpecification.pickupLocation.email,
+			pickupPhoneNumber: jobSpecification.pickupLocation.phoneNumber,
+			pickupInstructions: jobSpecification.pickupLocation.instructions,
+			packagePickupStartTime: jobSpecification.pickupStartTime,
+			...(jobSpecification.pickupEndTime && { packagePickupEndTime: jobSpecification.pickupStartTime }),
+			drops: jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
+				dropoffFirstName: dropoffLocation.firstName,
+				dropoffLastName: dropoffLocation.lastName,
+				dropoffBusinessName: dropoffLocation.businessName,
+				dropoffAddress: dropoffLocation.fullAddress,
+				dropoffAddressLine1: dropoffLocation.streetAddress,
+				dropoffCity: dropoffLocation.city,
+				dropoffPostcode: dropoffLocation.postcode,
+				dropoffLatitude: dropoffLocation.latitude,
+				dropoffLongitude: dropoffLocation.longitude,
+				dropoffEmailAddress: dropoffLocation.email,
+				dropoffPhoneNumber: dropoffLocation.phoneNumber,
+				dropoffInstructions: dropoffLocation.instructions,
+				packageDropoffEndTime: dropoffEndTime,
+				packageDescription: description
+			})),
+			packageDeliveryType: jobSpecification.deliveryType,
+			vehicleType
+		};
+		console.log(payload);
+		return payload;
+	}
+
+	const fetchQuotes = useCallback(async () => {
+		showAssignModal(false);
+		setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
+		const job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === provider.orderNumber);
+		const payload = assemblePayload(job);
+		setDeliveryParams(prevState => ({ ...payload }));
+		const { quotes } = await dispatch(getAllQuotes(apiKey, payload));
+		setJobLoader(prevState => ({ ...prevState, loading: false }));
+		setQuotes(prevState => ({ show: true, values: quotes }));
+	}, [provider]);
 
 	const validateTimeWindows = useCallback(
 		(start, end) => {
@@ -295,101 +337,136 @@ export default function Orders(props) {
 	const optimize = useCallback(
 		values => {
 			showOptRoutes(false);
-			setLoading(true);
+			setOptLoading(true);
 			const { startTime, endTime } = values;
 			let { allValid, badOrders } = validateTimeWindows(startTime, endTime);
 			if (!allValid) {
-				setLoading(false);
+				setOptLoading(false);
 				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
 				showReviewModal({ show: true, orders: badOrders, startTime: moment(startTime).calendar(), endTime: moment(endTime).calendar() });
 			} else {
 				dispatch(optimizeRoutes(email, values, selectionModel))
 					.then(routes => {
-						setLoading(false);
+						setOptLoading(false);
 						setOptimizedRoutes(routes);
 					})
-					.catch(err => setLoading(false));
+					.catch(err => setOptLoading(false));
 			}
 		},
 		[selectionModel]
 	);
 
 	return (
-		<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
-			<Loading show={loading} onHide={() => setLoading(false)} />
-			<ReviewOrders
-				show={reviewModal.show}
-				onGoBack={() => {
-					showReviewModal(prevState => ({ ...prevState, show: false }));
-					showOptRoutes(true);
-				}}
-				onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
-				orders={reviewModal.orders}
-				onConfirm={() => {
-					showReviewModal(prevState => ({ ...prevState, show: false }));
-					setLoading(true);
-					dispatch(optimizeRoutes(email, params, selectionModel))
-						.then(routes => {
-							setLoading(false);
-							setOptimizedRoutes(routes);
-						})
-						.catch(err => setLoading(false));
-				}}
-				startTime={reviewModal.startTime}
-				endTime={reviewModal.endTime}
-			/>
-			<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
-			<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes} />
-			<ManualDispatch
-				show={!!chosenDriver.id}
-				onHide={() => selectDriver(prevState => INIT_STATE)}
-				driverName={`${chosenDriver.firstname} ${chosenDriver.lastname}`}
-				onConfirm={dispatchToDriver}
-			/>
-			<RouteOptimization
-				show={optModal}
-				onHide={() => showOptRoutes(false)}
-				orders={selectionModel}
-				onSubmit={optimize}
-				defaultStartTime={earliestPickupTime}
-				defaultEndTime={latestDeliveryTime}
-			/>
-			<h3 className='ms-3'>Your Orders</h3>
-			<DataGrid
-				sortingOrder={['desc', 'asc']}
-				initialState={{
-					sorting: {
-						sortModel: [
-							{
-								field: 'createdAt',
-								sort: 'asc'
-							}
-						]
-					}
-				}}
-				autoHeight={false}
-				className='mt-3 mx-3'
-				rows={jobs}
-				disableSelectionOnClick
-				columns={columns}
-				checkboxSelection
-				autoPageSize
-				pagination
-				onSelectionModelChange={newSelectionModel => {
-					setSelectionModel(newSelectionModel);
-				}}
-				selectionModel={selectionModel}
-				components={{ Toolbar: CustomToolbar }}
-				componentsProps={{
-					toolbar: {
-						toggleShow: () => {
-							showOptRoutes(true);
+		<LoadingOverlay active={jobLoader.loading} spinner text={jobLoader.text} classNamePrefix='order_loader_'>
+			<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
+				<Loading show={optLoading} onHide={() => setOptLoading(false)} />
+				<SuccessMessage ref={modalRef} show={!!message} onHide={() => setMessage('')} message={message} centered/>
+				<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
+				<ReviewOrders
+					show={reviewModal.show}
+					onGoBack={() => {
+						showReviewModal(prevState => ({ ...prevState, show: false }));
+						showOptRoutes(true);
+					}}
+					onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
+					orders={reviewModal.orders}
+					onConfirm={() => {
+						showReviewModal(prevState => ({ ...prevState, show: false }));
+						setOptLoading(true);
+						dispatch(optimizeRoutes(email, params, selectionModel))
+							.then(routes => {
+								setOptLoading(false);
+								setOptimizedRoutes(routes);
+							})
+							.catch(err => setOptLoading(false));
+					}}
+					startTime={reviewModal.startTime}
+					endTime={reviewModal.endTime}
+				/>
+				<AssignModal
+					show={assignModal}
+					onHide={() => showAssignModal(false)}
+					assignToDriver={() => {
+						showAssignModal(false);
+						showDriversModal(true);
+					}}
+					outsourceToCourier={fetchQuotes}
+				/>
+				<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes} />
+				<ManualDispatch
+					show={confirmModal}
+					onHide={() => selectProvider(prevState => INIT_STATE)}
+					driverName={provider.name}
+					onConfirm={dispatchJob}
+				/>
+				<SelectDriver
+					show={selectDriverModal}
+					onHide={() => showDriversModal(false)}
+					drivers={drivers}
+					selectDriver={selectProvider}
+					showConfirmDialog={showConfirmDialog}
+					showCreateBtn={false}
+				/>
+				<Quotes
+					show={quotes.show}
+					onHide={() => setQuotes(prevState => ({ ...prevState, show: false }))}
+					quotes={quotes.values}
+					selectCourier={selectProvider}
+					showConfirmDialog={showConfirmDialog}
+				/>
+				<RouteOptimization
+					show={optModal}
+					onHide={() => showOptRoutes(false)}
+					orders={selectionModel}
+					onSubmit={optimize}
+					defaultStartTime={earliestPickupTime}
+					defaultEndTime={latestDeliveryTime}
+				/>
+				<h3 className='ms-3'>Your Orders</h3>
+				<DataGrid
+					sx={{
+						'& .MuiDataGrid-cell:focus': {
+							outline: 'none !important'
 						},
-						canOptimize
-					}
-				}}
-			/>
-		</div>
+						'& .MuiDataGrid-cell': {
+							outline: 'none !important'
+						}
+					}}
+					sortingOrder={['desc', 'asc']}
+					initialState={{
+						sorting: {
+							sortModel: [
+								{
+									field: 'createdAt',
+									sort: 'asc'
+								}
+							]
+						}
+					}}
+					autoHeight={false}
+					className='mt-3 mx-3'
+					rows={jobs}
+					disableSelectionOnClick
+					columns={columns}
+					checkboxSelection
+					autoPageSize
+					pagination
+					onSelectionModelChange={newSelectionModel => {
+						setSelectionModel(newSelectionModel);
+					}}
+					selectionModel={selectionModel}
+					components={{ Toolbar: CustomToolbar }}
+					componentsProps={{
+						toolbar: {
+							toggleShow: () => {
+								showOptRoutes(true);
+							},
+							canOptimize
+						}
+					}}
+				/>
+			</div>
+		</LoadingOverlay>
 	);
 }

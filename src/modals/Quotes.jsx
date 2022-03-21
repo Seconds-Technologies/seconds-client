@@ -8,9 +8,9 @@ import ecofleet from '../assets/img/ecofleet.svg';
 import moment from 'moment';
 import { PROVIDER_TYPES } from '../constants';
 
-const Quotes = ({quotes, show, toggleShow, selectCourier, showConfirmDialog}) => {
+const Quotes = ({quotes, show, onHide, selectCourier, showConfirmDialog}) => {
 	return (
-		<Modal show={show} onHide={() => toggleShow(false)} size='lg'>
+		<Modal show={show} onHide={onHide} size='lg'>
 			<Modal.Header closeButton>
 				<Modal.Title>Courier Quotes</Modal.Title>
 			</Modal.Header>
@@ -58,8 +58,8 @@ const Quotes = ({quotes, show, toggleShow, selectCourier, showConfirmDialog}) =>
 									<button
 										className='d-flex justify-content-center align-items-center OrdersListEdit'
 										onClick={() => {
-											toggleShow(false);
-											selectCourier(prevState => ({type: PROVIDER_TYPES.COURIER, id: providerId, name: providerId.toUpperCase()}));
+											onHide();
+											selectCourier(prevState => ({...prevState, type: PROVIDER_TYPES.COURIER, id: providerId, name: providerId.toUpperCase()}));
 											showConfirmDialog(true);
 										}}
 									>
@@ -79,7 +79,7 @@ const Quotes = ({quotes, show, toggleShow, selectCourier, showConfirmDialog}) =>
 Quotes.propTypes = {
 	quotes: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
-	toggleShow: PropTypes.func.isRequired,
+	onHide: PropTypes.func.isRequired,
 	selectCourier: PropTypes.func.isRequired,
 	showConfirmDialog: PropTypes.func.isRequired
 };

@@ -151,14 +151,14 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId = undefine
 	};
 }
 
-export function manuallyDispatchJob(apiKey, driverId, orderNumber) {
+export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(driverId, orderNumber)
+			console.table({type, providerId, orderNumber})
 			return apiCall(
 				'PATCH',
 				`/api/v1/jobs/dispatch`,
-				{ driverId, orderNumber },
+				{ type, providerId, orderNumber },
 				{headers: { 'X-Seconds-Api-Key': apiKey}}
 			)
 				.then(job => {

@@ -6,9 +6,9 @@ import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import Tooltip from '@mui/material/Tooltip';
 
-const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver, createUnassigned }) => {
+const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, createUnassigned, showCreateBtn=true }) => {
 	return (
-		<Modal show={show} onHide={() => toggleShow(false)} size='lg'>
+		<Modal show={show} onHide={onHide} size='lg'>
 			<Modal.Header closeButton>
 				<Modal.Title>Assign To Your Driver</Modal.Title>
 			</Modal.Header>
@@ -77,8 +77,9 @@ const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver, c
 												<button
 													className='d-flex justify-content-center align-items-center action-button'
 													onClick={() => {
-														toggleShow(false);
+														onHide();
 														selectDriver(prevState => ({
+															...prevState,
 															type: PROVIDER_TYPES.DRIVER,
 															id,
 															name: `${firstname} ${lastname}`
@@ -94,12 +95,12 @@ const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver, c
 							)}
 						</tbody>
 					</table>
-					<div className='d-flex justify-content-end align-content-center'>
+					{showCreateBtn && <div className='d-flex justify-content-end align-content-center'>
 						<button
 							role="button"
 							className='action-button'
 							onClick={() => {
-								toggleShow(false);
+								onHide();
 								createUnassigned(null);
 							}}
 						>
@@ -110,19 +111,20 @@ const Drivers = ({ show, toggleShow, drivers, showConfirmDialog, selectDriver, c
 								<BsInfoCircle />
 							</IconButton>
 						</Tooltip>
-					</div>
+					</div>}
 				</div>
 			</Modal.Body>
 		</Modal>
 	);
 };
 
-Drivers.propTypes = {
+SelectDriver.propTypes = {
 	drivers: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
-	toggleShow: PropTypes.func.isRequired,
+	onHide: PropTypes.func.isRequired,
 	selectDriver: PropTypes.func.isRequired,
-	showConfirmDialog: PropTypes.func.isRequired
+	showConfirmDialog: PropTypes.func.isRequired,
+	showCreateBtn: PropTypes.bool
 };
 
-export default Drivers;
+export default SelectDriver;

@@ -34,7 +34,7 @@ import ApiKeyAlert from '../../modals/ApiKeyAlert';
 import DeliveryJob from '../../modals/DeliveryJob';
 import MultiDropQuote from '../../modals/MultiDropQuote';
 import NewDropoffForm from '../../modals/NewDropoffForm';
-import Drivers from '../../modals/Drivers';
+import SelectDriver from '../../modals/SelectDriver';
 
 const Create = props => {
 	const csvUploadRef = useRef(null);
@@ -287,14 +287,14 @@ const Create = props => {
 			<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 			<Quotes
 				show={quoteModal}
-				toggleShow={showQuoteModal}
+				onHide={() => showQuoteModal(false)}
 				quotes={quotes}
 				selectCourier={selectProvider}
 				showConfirmDialog={showConfirmDialog}
 			/>
-			<Drivers
+			<SelectDriver
 				show={driversModal}
-				toggleShow={showDriversModal}
+				onHide={() => showDriversModal(false)}
 				drivers={drivers}
 				selectDriver={selectProvider}
 				showConfirmDialog={showConfirmDialog}

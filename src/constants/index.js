@@ -123,7 +123,8 @@ export const PROVIDERS = {
 	STREET_STREAM: 'street_stream',
 	ECOFLEET: 'ecofleet',
 	ADDISON_LEE: 'addison_lee',
-	PRIVATE: 'private'
+	PRIVATE: 'private',
+	UNASSIGNED: 'unassigned',
 };
 
 export const DELIVERY_TYPES = {

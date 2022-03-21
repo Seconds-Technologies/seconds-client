@@ -29,14 +29,12 @@ const grey = {
 export const StyledButton = styled('button')(
 	({ theme }) => `
   font-size: 0.875rem;
-  box-sizing: border-box;
-  width: calc(9em);
+  width: calc(8em);
+  text-align: center;
   background: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
   border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
   border-radius: 0.75em;
   padding: 5px;
-  padding-left: 10px;
-  text-align: left;
   color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
 
   &:hover {
@@ -55,7 +53,7 @@ export const StyledButton = styled('button')(
   }
 
   &::after {
-    content: '▾';
+    content: ;
     float: right;
   }
   `

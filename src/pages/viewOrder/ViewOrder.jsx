@@ -19,10 +19,11 @@ import ConfirmCancel from './modals/ConfirmCancel';
 import { PROVIDERS, STATUS, SUBMISSION_TYPES } from '../../constants';
 import { useIntercom } from 'react-use-intercom';
 import { jobRequestSchema } from '../../schemas';
-import Drivers from '../../modals/Drivers';
+import SelectDriver from '../../modals/SelectDriver';
 import ConfirmProvider from '../../modals/ConfirmProvider';
 import DeliveryProof from './modals/DeliveryProof';
 import { downloadDeliveryProof } from '../../store/actions/auth';
+import SuccessMessage from '../../modals/SuccessMessage';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -155,20 +156,7 @@ const ViewOrder = props => {
 		dispatch(removeError());
 	}, [props.location]);
 
-	const successModal = (
-		<Modal
-			show={!!message}
-			container={modalRef}
-			onHide={() => showMessage('')}
-			size='lg'
-			aria-labelledby='example-custom-modal-styling-title'
-			// className='alert alert-success' //Add class name here
-		>
-			<div className='alert alert-success mb-0'>
-				<h2 className='text-center'>{message}</h2>
-			</div>
-		</Modal>
-	);
+
 
 	const errorModal = (
 		<Modal
@@ -329,16 +317,16 @@ const ViewOrder = props => {
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 				<ConfirmCancel show={confirmCancel} toggleShow={showCancelDialog} orderId={order.id} showMessage={showMessage} />
-				<Drivers
+				<SelectDriver
 					show={driversModal}
-					toggleShow={showDriversModal}
+					onHide={() => showDriversModal(false)}
 					drivers={drivers}
 					selectDriver={selectProvider}
 					showConfirmDialog={showConfirmDialog}
 				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 				<DeliveryProof show={proofModal} onHide={showProofModal} signature={deliverySignature} photo={deliveryPhoto} />
-				{successModal}
+				<SuccessMessage ref={modalRef} show={!!message} onHide={() => showMessage('')} message={message}/>
 				{errorModal}
 				<div className='row mx-5'>
 					<div className='col-4'>
