@@ -343,7 +343,7 @@ const ViewOrder = props => {
 								<Item
 									label='Delivery provider'
 									value={order.providerId}
-									type={order.providerId === 'private' ? undefined : 'image'}
+									type={[PROVIDERS.PRIVATE, PROVIDERS.UNASSIGNED].includes(order.providerId) ? undefined : 'image'}
 									styles='my-2'
 								/>
 								<Item label='Driver name' value={order.driverName} styles='my-2' />
