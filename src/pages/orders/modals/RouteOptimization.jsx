@@ -14,11 +14,13 @@ import { FieldArray, Form, Formik } from 'formik';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { VEHICLE_TYPES } from '../../../constants';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, defaultEndTime }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<Formik
+				enableReinitialize
 				initialValues={{
 					startTime: defaultStartTime,
 					endTime:defaultEndTime,

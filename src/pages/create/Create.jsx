@@ -62,14 +62,14 @@ const Create = props => {
 	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
 	const { dropoffs } = useSelector(state => state['addressHistory']);
-	const drivers = useSelector(state => state['driversStore'])
+	const drivers = useSelector(state => state['driversStore']);
 	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
-		dispatch(subscribe(email))
-		return () => dispatch(unsubscribe())
+		dispatch(subscribe(email));
+		return () => dispatch(unsubscribe());
 	}, []);
 
 	useEffect(() => {
@@ -192,47 +192,50 @@ const Create = props => {
 			});
 	};
 
-	const assign = useCallback((driverId) => {
-		setLoadingText('Creating Order');
-		setLoadingModal(true);
-		dispatch(assignDriver(deliveryParams, apiKey, driverId))
-			.then(
-				({
-					 jobSpecification: {
-						 deliveries,
-						 orderNumber,
-						 pickupLocation: { fullAddress: pickupAddress },
-						 pickupStartTime
-					 },
-					 selectedConfiguration: { deliveryFee },
-					 driverInformation: { name }
-				 }) => {
-					let {
-						dropoffLocation: { fullAddress: dropoffAddress },
-						dropoffEndTime,
-						orderReference: customerReference
-					} = deliveries[0];
-					let newJob = {
-						orderNumber,
-						customerReference,
-						pickupAddress,
-						dropoffAddress,
-						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliveryFee,
-						courier: name.replace(/_/g, ' ')
-					};
+	const assign = useCallback(
+		driverId => {
+			setLoadingText('Creating Order');
+			setLoadingModal(true);
+			dispatch(assignDriver(deliveryParams, apiKey, driverId))
+				.then(
+					({
+						jobSpecification: {
+							deliveries,
+							orderNumber,
+							pickupLocation: { fullAddress: pickupAddress },
+							pickupStartTime
+						},
+						selectedConfiguration: { deliveryFee },
+						driverInformation: { name }
+					}) => {
+						let {
+							dropoffLocation: { fullAddress: dropoffAddress },
+							dropoffEndTime,
+							orderReference: customerReference
+						} = deliveries[0];
+						let newJob = {
+							orderNumber,
+							customerReference,
+							pickupAddress,
+							dropoffAddress,
+							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliveryFee,
+							courier: name.replace(/_/g, ' ')
+						};
+						setLoadingModal(false);
+						setJob(newJob);
+						handleOpen();
+					}
+				)
+				.catch(err => {
 					setLoadingModal(false);
-					setJob(newJob);
-					handleOpen();
-				}
-			)
-			.catch(err => {
-				setLoadingModal(false);
-				console.log(err);
-				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-			});
-	}, [deliveryParams, provider])
+					console.log(err);
+					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+				});
+		},
+		[deliveryParams, provider]
+	);
 
 	const confirmProvider = () => {
 		setLoadingText('Creating Order');
@@ -275,7 +278,7 @@ const Create = props => {
 						console.log(err);
 						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 					})
-			: assign(provider.id)
+			: assign(provider.id);
 	};
 
 	return (
@@ -972,25 +975,17 @@ const Create = props => {
 													{error.message && <div className='alert alert-danger text-center w-75'>{error.message}</div>}
 												</div>
 												<div className='d-flex justify-content-evenly'>
-													<div>
-														<Button
-															type='submit'
-															name={SUBMISSION_TYPES.ASSIGN_DRIVER}
-															value={SUBMISSION_TYPES.ASSIGN_DRIVER}
-															variant='primary'
-															size='lg'
-															className='mx-3'
-															disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
-															onClick={() =>
-																values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-																dropoffs.length < 5 &&
-																alert('Please add at least 5 dropoffs before creating a multi drop')
-															}
-															style={{ width: 150 }}
-														>
-															<span className='btn-text'>Assign</span>
-														</Button>
-													</div>
+													<Button
+														type='submit'
+														name={SUBMISSION_TYPES.ASSIGN_DRIVER}
+														value={SUBMISSION_TYPES.ASSIGN_DRIVER}
+														variant='primary'
+														size='lg'
+														className='mx-3'
+														style={{ width: 150 }}
+													>
+														<span className='btn-text'>Assign</span>
+													</Button>
 													<div>
 														<Button
 															type='submit'

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { BACKGROUND, DRIVER_STATUS, PROVIDER_TYPES, STATUS_COLOURS, VEHICLE_TYPES } from '../constants';
@@ -6,7 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import Tooltip from '@mui/material/Tooltip';
 
-const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, createUnassigned, showCreateBtn=true }) => {
+const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, createUnassigned, showCreateBtn=true, disabled=false }) => {
+
 	return (
 		<Modal show={show} onHide={onHide} size='lg'>
 			<Modal.Header closeButton>
@@ -75,6 +76,7 @@ const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, 
 											<td className='col text-capitalize'>{VEHICLE_TYPES.find(({ value }) => value === vehicle).label}</td>
 											<td className='col'>
 												<button
+													disabled={disabled}
 													className='d-flex justify-content-center align-items-center action-button'
 													onClick={() => {
 														onHide();
@@ -124,7 +126,8 @@ SelectDriver.propTypes = {
 	onHide: PropTypes.func.isRequired,
 	selectDriver: PropTypes.func.isRequired,
 	showConfirmDialog: PropTypes.func.isRequired,
-	showCreateBtn: PropTypes.bool
+	showCreateBtn: PropTypes.bool,
+	disabled: PropTypes.bool
 };
 
 export default SelectDriver;

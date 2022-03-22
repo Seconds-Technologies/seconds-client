@@ -19,7 +19,6 @@ export function updateBusinessWorkflow(email, data) {
 		return new Promise((resolve, reject) => {
 			return apiCall('PATCH', '/server/settings/business-workflow', data, { params: { email } })
 				.then(({ message, ...settings }) => {
-					console.log(settings)
 					Mixpanel.track('Business workflow updated successfully');
 					dispatch(setSettings(settings))
 					resolve(message);

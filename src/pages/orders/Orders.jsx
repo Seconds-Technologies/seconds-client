@@ -40,10 +40,10 @@ export default function Orders(props) {
 	const drivers = useSelector(state => state['driversStore']);
 	const [provider, selectProvider] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
-	const [selectDriverModal, showDriversModal] = useState(false);
+	const [selectDriverModal, showDriversModal] = useState({ show: false, drivers });
 	const [params, setParams] = useState({});
 	const [assignModal, showAssignModal] = useState(false);
-	const [routes, setOptimizedRoutes] = useState([]);
+	const [routesModal, setOptimizedRoutes] = useState({show: false, routes: []});
 	const [reviewModal, showReviewModal] = useState({ show: false, orders: [], startTime: '', endTime: '' });
 	const [optLoading, setOptLoading] = useState(false);
 	const [jobLoader, setJobLoader] = useState({ loading: false, text: '' });
@@ -238,8 +238,8 @@ export default function Orders(props) {
 	const canOptimize = useMemo(() => {
 		return selectionModel.length
 			? selectionModel.every(orderNo => {
-					let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
-					return job.dispatchMode === DISPATCH_MODES.MANUAL && !job.driverInformation.id;
+					let job = allJobs.find(({ jobSpecification: { orderNumber }}) => orderNumber === orderNo);
+					return job.dispatchMode === DISPATCH_MODES.MANUAL && job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 			  })
 			: false;
 	}, [selectionModel]);
@@ -349,7 +349,7 @@ export default function Orders(props) {
 				dispatch(optimizeRoutes(email, values, selectionModel))
 					.then(routes => {
 						setOptLoading(false);
-						setOptimizedRoutes(routes);
+						setOptimizedRoutes(prevState => ({...prevState, show: true, routes}));
 					})
 					.catch(err => setOptLoading(false));
 			}
@@ -377,7 +377,7 @@ export default function Orders(props) {
 						dispatch(optimizeRoutes(email, params, selectionModel))
 							.then(routes => {
 								setOptLoading(false);
-								setOptimizedRoutes(routes);
+								setOptimizedRoutes(prevState => ({...prevState, show: true, routes}));
 							})
 							.catch(err => setOptLoading(false));
 					}}
@@ -389,11 +389,14 @@ export default function Orders(props) {
 					onHide={() => showAssignModal(false)}
 					assignToDriver={() => {
 						showAssignModal(false);
-						showDriversModal(true);
+						showDriversModal(prevState => ({...prevState, show: true}));
 					}}
 					outsourceToCourier={fetchQuotes}
 				/>
-				<OptimizationResult show={!!routes.length} onHide={() => setOptimizedRoutes(prevState => [])} routes={routes} />
+				<OptimizationResult show={routesModal.show} onHide={() => setOptimizedRoutes(prevState => ({...prevState, show: false}))} routes={routesModal.routes} onAssign={(vehicleCode) => {
+					setOptimizedRoutes(prevState => ({...prevState, show: false}))
+					showDriversModal(prevState => ({...prevState, show: true, drivers: drivers.filter(item => item.vehicle === vehicleCode)}));
+				}} />
 				<ManualDispatch
 					show={confirmModal}
 					onHide={() => selectProvider(prevState => INIT_STATE)}
@@ -401,12 +404,13 @@ export default function Orders(props) {
 					onConfirm={dispatchJob}
 				/>
 				<SelectDriver
-					show={selectDriverModal}
-					onHide={() => showDriversModal(false)}
-					drivers={drivers}
+					show={selectDriverModal.show}
+					onHide={() => showDriversModal(prevState => ({ ...prevState, show: false}))}
+					drivers={selectDriverModal.drivers}
 					selectDriver={selectProvider}
 					showConfirmDialog={showConfirmDialog}
 					showCreateBtn={false}
+					disabled={!!routesModal.routes.length}
 				/>
 				<Quotes
 					show={quotes.show}

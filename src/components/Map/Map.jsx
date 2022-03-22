@@ -133,13 +133,12 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 					Object.entries(customers).map(([key, value], index) => {
 						return (
 							<Marker key={index} coordinates={value.coords} onClick={() => togglePopup(value)}>
-								<div
-									className='d-flex flex-column'
-									data-bs-placement='top'
-									data-bs-toggle='tooltip'
-									data-bs-html='true'
-								>
-									{customers[index].provider === PROVIDERS.UNASSIGNED ? <img src={unassignedDropoffMarker} alt='' width={40} height={40} /> : <img src={assignedDropoffMarker} alt='' width={40} height={40} />}
+								<div className='d-flex flex-column' data-bs-placement='top' data-bs-toggle='tooltip' data-bs-html='true'>
+									{customers[index].provider === PROVIDERS.UNASSIGNED ? (
+										<img src={unassignedDropoffMarker} alt='' width={40} height={40} />
+									) : (
+										<img src={assignedDropoffMarker} alt='' width={40} height={40} />
+									)}
 								</div>
 							</Marker>
 						);
@@ -206,7 +205,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 								</div>
 							</div>
 							<span style={{ fontSize: 12 }}>{popup.fullAddress}</span>
-							<br/>
+							<br />
 							<span>
 								{popup.provider !== PROVIDERS.PRIVATE
 									? `Assigned: ${popup.provider}`

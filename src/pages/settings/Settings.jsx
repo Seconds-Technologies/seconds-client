@@ -9,7 +9,7 @@ import Profile from './containers/profile/Profile';
 import Couriers from './containers/couriers/Couriers';
 import Integrations from '../integration/Integrations';
 import Subscription from './containers/subscription/Subscription';
-import TabPanel from './components/TabPanel';
+import TabPanel from '../../components/TabPanel';
 import BusinessWorkflows from './containers/profile/workflows/BusinessWorkflows';
 import Developers from './containers/developers/Developers';
 import TabContext from '../../context/TabContext';
