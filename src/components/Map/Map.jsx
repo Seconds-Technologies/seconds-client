@@ -2,12 +2,12 @@ import './map.css';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mbxClient from '@mapbox/mapbox-sdk';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ReactMapboxGl, { GeoJSONLayer, Marker, Popup } from 'react-mapbox-gl';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
-import dropoffMarker from '../../assets/img/dropoff-icon.svg';
+import assignedDropoffMarker from '../../assets/img/dropoff-icon-green.svg';
+import unassignedDropoffMarker from '../../assets/img/dropoff-icon-red.svg';
 import courierMarker from '../../assets/img/courier-location-icon.svg';
-import { useSelector } from 'react-redux';
 import { PATHS, PROVIDERS } from '../../constants';
 import { useHistory } from 'react-router-dom';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
@@ -138,9 +138,8 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 									data-bs-placement='top'
 									data-bs-toggle='tooltip'
 									data-bs-html='true'
-									title='Pickup'
 								>
-									<img src={dropoffMarker} alt='' width={40} height={40} />
+									{customers[index].provider === PROVIDERS.UNASSIGNED ? <img src={unassignedDropoffMarker} alt='' width={40} height={40} /> : <img src={assignedDropoffMarker} alt='' width={40} height={40} />}
 								</div>
 							</Marker>
 						);
@@ -166,7 +165,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 									data-bs-html='true'
 									title='Dropoff'
 								>
-									<img src={dropoffMarker} alt='' width={40} height={40} />
+									<img src={assignedDropoffMarker} alt='' width={40} height={40} />
 								</div>
 							) : (
 								<div

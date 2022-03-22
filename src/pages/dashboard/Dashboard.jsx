@@ -15,6 +15,7 @@ const Dashboard = props => {
 		address: { geolocation }
 	} = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
+
 	const activeCustomers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.COMPLETED, STATUS.CANCELLED].includes(item.status))
