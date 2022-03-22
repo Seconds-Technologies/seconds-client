@@ -38,7 +38,8 @@ const Drivers = props => {
 				lastname: driver.lastname,
 				phone: driver.phone,
 				email: driver.email,
-				vehicle: vehicleType ? vehicleType.label : driver.vehicle,
+				vehicleCode: driver.vehicle,
+				vehicleName: vehicleType ? vehicleType.label : driver.vehicle,
 				status: driver.status,
 				isOnline: driver.isOnline,
 				verified: driver.verified
@@ -78,7 +79,8 @@ const Drivers = props => {
 		{ field: 'firstname', headerName: 'First Name', width: 150, flex: 0.5 },
 		{ field: 'lastname', headerName: 'Last Name', width: 150, flex: 0.5 },
 		{ field: 'phone', headerName: 'Phone Number', width: 150 },
-		{ field: 'vehicle', headerName: 'Vehicle', width: 150 },
+		{ field: 'vehicleCode', headerName: 'Vehicle Code', hide: true },
+		{ field: 'vehicleName', headerName: 'Vehicle', width: 150 },
 		{
 			field: 'status',
 			headerName: 'Job Status',

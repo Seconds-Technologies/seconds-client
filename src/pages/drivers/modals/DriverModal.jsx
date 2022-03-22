@@ -27,7 +27,7 @@ const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
 						lastname: details.lastname,
 						email: details.email,
 						phone: details.phone,
-						vehicle: details.vehicle,
+						vehicle: details.vehicleCode,
 						type
 					}} onSubmit={onSubmit}>
 					{({ errors, values, handleSubmit, handleChange, handleBlur, setFieldValue }) => (
