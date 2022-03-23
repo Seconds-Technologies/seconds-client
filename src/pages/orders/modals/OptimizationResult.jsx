@@ -190,7 +190,7 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 							{routes.map(({ summary, stops }, index) => (
 								<Tab
 									key={index}
-									label={VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label}
+									label={`${VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label}-${index}`}
 									id={`simple-tab-${index}`}
 									aria-controls={`simple-tabpanel-${index}`}
 								/>
@@ -211,7 +211,7 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 												<div className='fw-bold'>{stop.id}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Pickup at: {moment(job.jobSpecification.pickupStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
+													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
 													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
