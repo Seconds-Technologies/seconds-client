@@ -157,16 +157,6 @@ const TEST_ROUTES = [
 
 const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-	/*const jobs = useMemo(() => {
-		const result = [];
-		for (let route of ROUTES) {
-			for (let stop of route.stops) {
-				let matches = allJobs.filter(({ jobSpecification: { orderNumber } }) => orderNumber === stop.id);
-				result.push(...matches);
-			}
-		}
-		return result;
-	}, [routes]);*/
 	const [value, setValue] = React.useState(0);
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
@@ -190,7 +180,7 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 							{routes.map(({ summary, stops }, index) => (
 								<Tab
 									key={index}
-									label={`${VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label}-${index}`}
+									label={`${VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label} ${index}`}
 									id={`simple-tab-${index}`}
 									aria-controls={`simple-tabpanel-${index}`}
 								/>
@@ -236,15 +226,15 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 					{unreachable.length && (
 						<TabPanel value={value} index={routes.length}>
 							<ol className='list-group list-group-numbered mb-3'>
-								{unreachable.map(orderNo => {
+								{unreachable.map((orderNo, index) => {
 									const job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 									return (
-										<li className='list-group-item d-flex justify-content-between align-items-start'>
+										<li key={index} className='list-group-item d-flex justify-content-between align-items-start'>
 											<div className='d-flex flex-column ms-2 me-auto'>
 												<div className='fw-bold'>{orderNo}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Pickup at: {moment(job.jobSpecification.pickupStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
+													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; - &emsp; Deliver until:
 													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
