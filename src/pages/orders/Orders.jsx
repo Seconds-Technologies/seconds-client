@@ -4,8 +4,8 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, DELIVERY_TYPES, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS } from '../../constants';
-import { getAllQuotes, manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { BACKGROUND, DELIVERY_TYPES, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
+import { getAllQuotes, manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
@@ -29,22 +29,28 @@ import SelectDriver from '../../modals/SelectDriver';
 import { jobRequestSchema } from '../../schemas';
 import Quotes from '../../modals/Quotes';
 import SuccessMessage from '../../modals/SuccessMessage';
+import SuccessToast from '../../modals/SuccessToast';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
-	const { email, apiKey } = useSelector(state => state['currentUser'].user);
+	const dispatch = useDispatch();
+	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const error = useSelector(state => state['errors']);
-	const dispatch = useDispatch();
 	const drivers = useSelector(state => state['driversStore']);
 	const [provider, selectProvider] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
 	const [selectDriverModal, showDriversModal] = useState({ show: false, drivers });
 	const [params, setParams] = useState({});
 	const [assignModal, showAssignModal] = useState(false);
-	const [routesModal, setOptimizedRoutes] = useState({show: false, routes: []});
-	const [reviewModal, showReviewModal] = useState({ show: false, orders: [], startTime: '', endTime: '' });
+	const [routesModal, setOptimizedRoutes] = useState({ show: false, routes: [], unreachable: [] });
+	const [reviewModal, showReviewModal] = useState({
+		show: false,
+		orders: [],
+		startTime: moment(deliveryHours[moment().day()].open),
+		endTime: moment(deliveryHours[moment().day()].close)
+	});
 	const [optLoading, setOptLoading] = useState(false);
 	const [jobLoader, setJobLoader] = useState({ loading: false, text: '' });
 	const [selectionModel, setSelectionModel] = useState([]);
@@ -53,7 +59,8 @@ export default function Orders(props) {
 	const [deliveryParams, setDeliveryParams] = useState({
 		...jobRequestSchema
 	});
-	const [message, setMessage] = useState("");
+	const [message, setMessage] = useState('');
+	const [toast, setToast] = useState('');
 	const modalRef = useRef(null);
 
 	const columns = [
@@ -222,6 +229,12 @@ export default function Orders(props) {
 		[allJobs]
 	);
 
+	const vehicles = useMemo(() => {
+		const driverVehicles = drivers.filter(({verified}) => verified).map(({ vehicle }) => vehicle);
+		const uniqueVehicles = [...new Set(driverVehicles)];
+		return uniqueVehicles.map(code => VEHICLE_TYPES.find(item => item.value === code));
+	}, [drivers]);
+
 	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
 		let earliestPickupTime;
 		let latestDeliveryTime;
@@ -238,20 +251,20 @@ export default function Orders(props) {
 	const canOptimize = useMemo(() => {
 		return selectionModel.length
 			? selectionModel.every(orderNo => {
-					let job = allJobs.find(({ jobSpecification: { orderNumber }}) => orderNumber === orderNo);
+					let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 					return job.dispatchMode === DISPATCH_MODES.MANUAL && job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 			  })
 			: false;
 	}, [selectionModel]);
 
 	const dispatchJob = () => {
-		showConfirmDialog(false)
+		showConfirmDialog(false);
 		setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Creating Job' }));
 		dispatch(manuallyDispatchJob(apiKey, provider.type, provider.id, provider.orderNumber))
 			.then(() => {
 				setJobLoader(prevState => ({ ...prevState, loading: false }));
 				selectProvider(prevState => INIT_STATE);
-				setMessage("Your order has been assigned!")
+				setMessage('Your order has been assigned!');
 			})
 			.catch(err => {
 				setJobLoader(prevState => ({ ...prevState, loading: false }));
@@ -316,15 +329,15 @@ export default function Orders(props) {
 				let isValid = false;
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				if (order) {
-					// check pickup is not earlier than start time
-					isValid = moment(order['jobSpecification'].pickupStartTime).isSameOrAfter(moment(start));
 					// check if the order's pickup / delivery time fit within the optimization time window
-					if (isValid) {
-						const deliveries = order['jobSpecification'].deliveries;
-						isValid = deliveries.every(delivery => {
-							return moment(delivery.dropoffEndTime).isSameOrBefore(end);
-						});
-					}
+					const deliveries = order['jobSpecification'].deliveries;
+					isValid = deliveries.every(delivery => {
+						return (
+							moment(delivery.dropoffStartTime).isSameOrAfter(moment(start)) &&
+							moment(delivery.dropoffEndTime).isSameOrBefore(end) &&
+							moment(delivery.dropoffStartTime).isBefore(moment(delivery.dropoffEndTime))
+						);
+					});
 					!isValid && badOrders.push(order);
 				}
 				return isValid;
@@ -344,12 +357,12 @@ export default function Orders(props) {
 				setOptLoading(false);
 				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
-				showReviewModal({ show: true, orders: badOrders, startTime: moment(startTime).calendar(), endTime: moment(endTime).calendar() });
+				showReviewModal({ show: true, orders: badOrders, startTime: moment(startTime), endTime: moment(endTime) });
 			} else {
 				dispatch(optimizeRoutes(email, values, selectionModel))
-					.then(routes => {
+					.then(({ routes, unreachable }) => {
 						setOptLoading(false);
-						setOptimizedRoutes(prevState => ({...prevState, show: true, routes}));
+						setOptimizedRoutes(prevState => ({ ...prevState, show: true, routes, unreachable }));
 					})
 					.catch(err => setOptLoading(false));
 			}
@@ -361,7 +374,8 @@ export default function Orders(props) {
 		<LoadingOverlay active={jobLoader.loading} spinner text={jobLoader.text} classNamePrefix='order_loader_'>
 			<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
 				<Loading show={optLoading} onHide={() => setOptLoading(false)} />
-				<SuccessMessage ref={modalRef} show={!!message} onHide={() => setMessage('')} message={message} centered/>
+				<SuccessMessage ref={modalRef} show={!!message} onHide={() => setMessage('')} message={message} centered />
+				<SuccessToast position='topRight' toggleShow={setToast} message={toast} />
 				<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
 				<ReviewOrders
 					show={reviewModal.show}
@@ -375,28 +389,39 @@ export default function Orders(props) {
 						showReviewModal(prevState => ({ ...prevState, show: false }));
 						setOptLoading(true);
 						dispatch(optimizeRoutes(email, params, selectionModel))
-							.then(routes => {
+							.then(({ routes, unreachable }) => {
 								setOptLoading(false);
-								setOptimizedRoutes(prevState => ({...prevState, show: true, routes}));
+								setOptimizedRoutes(prevState => ({ ...prevState, show: true, routes, unreachable }));
 							})
 							.catch(err => setOptLoading(false));
 					}}
-					startTime={reviewModal.startTime}
-					endTime={reviewModal.endTime}
+					onUpdate={(values, jobId) => {
+						dispatch(updateDelivery(apiKey, jobId, values))
+							.then(message => setToast(message))
+							.catch(err => console.error(err));
+					}}
+					windowStartTime={reviewModal.startTime}
+					windowEndTime={reviewModal.endTime}
 				/>
 				<AssignModal
 					show={assignModal}
 					onHide={() => showAssignModal(false)}
 					assignToDriver={() => {
 						showAssignModal(false);
-						showDriversModal(prevState => ({...prevState, show: true}));
+						showDriversModal(prevState => ({ ...prevState, show: true }));
 					}}
 					outsourceToCourier={fetchQuotes}
 				/>
-				<OptimizationResult show={routesModal.show} onHide={() => setOptimizedRoutes(prevState => ({...prevState, show: false}))} routes={routesModal.routes} onAssign={(vehicleCode) => {
-					setOptimizedRoutes(prevState => ({...prevState, show: false}))
-					showDriversModal(prevState => ({...prevState, show: true, drivers: drivers.filter(item => item.vehicle === vehicleCode)}));
-				}} />
+				<OptimizationResult
+					show={routesModal.show}
+					onHide={() => setOptimizedRoutes(prevState => ({ ...prevState, show: false }))}
+					routes={routesModal.routes}
+					unreachable={routesModal.unreachable}
+					onAssign={vehicleCode => {
+						setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
+						showDriversModal(prevState => ({ ...prevState, show: true, drivers: drivers.filter(item => item.vehicle === vehicleCode) }));
+					}}
+				/>
 				<ManualDispatch
 					show={confirmModal}
 					onHide={() => selectProvider(prevState => INIT_STATE)}
@@ -405,7 +430,7 @@ export default function Orders(props) {
 				/>
 				<SelectDriver
 					show={selectDriverModal.show}
-					onHide={() => showDriversModal(prevState => ({ ...prevState, show: false}))}
+					onHide={() => showDriversModal(prevState => ({ ...prevState, show: false }))}
 					drivers={selectDriverModal.drivers}
 					selectDriver={selectProvider}
 					showConfirmDialog={showConfirmDialog}
@@ -423,9 +448,10 @@ export default function Orders(props) {
 					show={optModal}
 					onHide={() => showOptRoutes(false)}
 					orders={selectionModel}
+					availableVehicles={vehicles}
 					onSubmit={optimize}
-					defaultStartTime={earliestPickupTime}
-					defaultEndTime={latestDeliveryTime}
+					defaultStartTime={moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm')}
+					defaultEndTime={moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm')}
 				/>
 				<h3 className='ms-3'>Your Orders</h3>
 				<DataGrid

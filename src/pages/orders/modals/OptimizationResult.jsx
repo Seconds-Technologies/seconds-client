@@ -155,9 +155,8 @@ const TEST_ROUTES = [
 	}
 ];
 
-const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
+const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-
 	/*const jobs = useMemo(() => {
 		const result = [];
 		for (let route of ROUTES) {
@@ -176,7 +175,7 @@ const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<div className='container p-4'>
-				<h1>Your Optimized Routes</h1>
+				<h1 className="text-center">Optimized Routes</h1>
 				<Box sx={{ width: '100%' }}>
 					<AppBar sx={{ borderBottom: 1, borderColor: 'divider', position: 'sticky', top: 0, backgroundColor: 'white', boxShadow: 'none' }}>
 						<Tabs
@@ -188,29 +187,31 @@ const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 							scrollButtons='auto'
 							allowScrollButtonsMobile
 						>
-							{routes.map(({ summary, stops }, index) => {
-								return (
-									<Tab
-										label={VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label}
-										id={`simple-tab-${index}`}
-										aria-controls={`simple-tabpanel-${index}`}
-									/>
-								);
-							})}
+							{routes.map(({ summary, stops }, index) => (
+								<Tab
+									key={index}
+									label={VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label}
+									id={`simple-tab-${index}`}
+									aria-controls={`simple-tabpanel-${index}`}
+								/>
+							))}
+							{unreachable.length && (
+								<Tab label='Unreachable' id={`simple-tab-${routes.length}`} aria-controls={`simple-tabpanel-${routes.length}`} />
+							)}
 						</Tabs>
 					</AppBar>
 					{routes.map((route, index) => (
-						<TabPanel value={value} index={index}>
+						<TabPanel key={index} value={value} index={index}>
 							<ol className='list-group list-group-numbered mb-3'>
-								{route.stops.map(stop => {
+								{route.stops.map((stop, index) => {
 									const job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === stop.id);
 									return job ? (
-										<li className='list-group-item d-flex justify-content-between align-items-start'>
+										<li key={index} className='list-group-item d-flex justify-content-between align-items-start'>
 											<div className='d-flex flex-column ms-2 me-auto'>
 												<div className='fw-bold'>{stop.id}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Pickup: {moment(job.jobSpecification.pickupStartTime).calendar()}&emsp; - &emsp; Deliver:{' '}
+													Pickup at: {moment(job.jobSpecification.pickupStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
 													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
@@ -225,13 +226,34 @@ const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 									);
 								})}
 							</ol>
-							<div className="d-flex justify-content-end">
-								<button className="btn btn-lg btn-primary" style={{width: 120}} onClick={() => onAssign(route.summary.vehicle_id)}>
+							<div className='d-flex justify-content-end'>
+								<button className='btn btn-lg btn-primary' style={{ width: 120 }} onClick={() => onAssign(route.summary.vehicle_id)}>
 									<span>Assign</span>
 								</button>
 							</div>
 						</TabPanel>
 					))}
+					{unreachable.length && (
+						<TabPanel value={value} index={routes.length}>
+							<ol className='list-group list-group-numbered mb-3'>
+								{unreachable.map(orderNo => {
+									const job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
+									return (
+										<li className='list-group-item d-flex justify-content-between align-items-start'>
+											<div className='d-flex flex-column ms-2 me-auto'>
+												<div className='fw-bold'>{orderNo}</div>
+												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
+												<span className='text-muted'>
+													Pickup at: {moment(job.jobSpecification.pickupStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
+													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
+												</span>
+											</div>
+										</li>
+									);
+								})}
+							</ol>
+						</TabPanel>
+					)}
 				</Box>
 			</div>
 		</Modal>
@@ -242,6 +264,7 @@ OptimizationResult.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	routes: PropTypes.array.isRequired,
+	unreachable: PropTypes.array,
 	onAssign: PropTypes.func.isRequired
 };
 

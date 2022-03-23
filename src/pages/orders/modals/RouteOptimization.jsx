@@ -9,21 +9,19 @@ import Chip from '@mui/material/Chip';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import { useSelector } from 'react-redux';
 import { FieldArray, Form, Formik } from 'formik';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { VEHICLE_TYPES } from '../../../constants';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 
-const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, defaultEndTime }) => {
+const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, defaultStartTime, defaultEndTime }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<Formik
 				enableReinitialize
 				initialValues={{
 					startTime: defaultStartTime,
-					endTime:defaultEndTime,
+					endTime: defaultEndTime,
 					breakPeriod: {
 						label: '',
 						start: '',
@@ -153,7 +151,9 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 														if (value[value.length - 1] === 'all') {
 															setFieldValue(
 																'vehicles',
-																values.vehicles.length === VEHICLE_TYPES.length ? [] : VEHICLE_TYPES.map(({ value }) => value)
+																values.vehicles.length === availableVehicles.length
+																	? []
+																	: availableVehicles.map(({ value }) => value)
 															);
 														} else {
 															handleChange(e);
@@ -164,7 +164,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 													renderValue={selected =>
 														selected
 															.map(id => {
-																const vehicle = VEHICLE_TYPES.find(vehicle => vehicle.value === id);
+																const vehicle = availableVehicles.find(vehicle => vehicle.value === id);
 																return `${vehicle.label}`;
 															})
 															.join(', ')
@@ -181,7 +181,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, defaultStartTime, d
 														</ListItemIcon>
 														<ListItemText primary='Select All' />
 													</MenuItem>
-													{VEHICLE_TYPES.map(({ value, label }, index) => {
+													{availableVehicles.map(({ value, label }, index) => {
 														return (
 															<MenuItem key={index} value={value}>
 																<Checkbox checked={values.vehicles.indexOf(value) > -1} />
@@ -268,6 +268,7 @@ RouteOptimization.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	orders: PropTypes.array.isRequired,
+	availableVehicles: PropTypes.array.isRequired,
 	onSubmit: PropTypes.func.isRequired,
 	defaultStartTime: PropTypes.string,
 	defaultEndTime: PropTypes.string

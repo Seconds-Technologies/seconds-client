@@ -191,9 +191,10 @@ export function optimizeRoutes(email, params, orderNumbers){
 				.then(({ message, job_id }) => {
 					console.log(message)
 					return apiCall('GET', '/server/main/optimise-route', null, {params: { email, job_id, num_orders: orderNumbers.length }})
-						.then(({message, routes} ) => {
+						.then(({message, routes, unreachable} ) => {
 							console.log(routes)
-							resolve(routes)
+							console.log(unreachable)
+							resolve({routes, unreachable})
 						})
 						.catch(err => {
 							if (err) dispatch(addError(err.message));
@@ -282,4 +283,22 @@ export function cancelDelivery(apiKey, jobId) {
 				});
 		});
 	};
+}
+
+export function updateDelivery(apiKey, jobId, data) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', `/api/v1/jobs/${jobId}`, data, { headers: { 'X-Seconds-Api-Key': apiKey } })
+				.then(({ message }) => {
+					Mixpanel.track('Successful job update');
+					resolve(message);
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful job update');
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		})
+	}
 }
