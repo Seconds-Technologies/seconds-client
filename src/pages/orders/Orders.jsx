@@ -4,7 +4,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, DELIVERY_TYPES, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
+import { BACKGROUND, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
 import {
 	getAllQuotes,
 	manuallyDispatchJob,
@@ -23,6 +23,7 @@ import gophr from '../../assets/img/gophr.svg';
 import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
+import infinityIcon from '../../assets/img/infinity.svg';
 // components & modals
 import CustomToolbar from '../../components/CustomToolbar';
 import RouteOptimization from './modals/RouteOptimization';
@@ -167,6 +168,10 @@ export default function Orders(props) {
 							width={25}
 							height={25}
 						/>
+						{params.row.routeOptimization && (
+							<img src={infinityIcon} alt='' width={25}
+							     height={25} />
+						)}
 						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && (
 							<StyledButton
 								onClick={() => {
@@ -215,7 +220,7 @@ export default function Orders(props) {
 	const jobs = useMemo(
 		() =>
 			allJobs.map(
-				({ _id, status, dispatchMode, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId }, createdAt }) => {
+				({ _id, status, dispatchMode, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId }, createdAt, routeOptimization }) => {
 					let {
 						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
 					} = deliveries[0];
@@ -230,7 +235,8 @@ export default function Orders(props) {
 						address,
 						driver,
 						createdAt,
-						dispatchMode
+						dispatchMode,
+						routeOptimization
 					};
 				}
 			),
