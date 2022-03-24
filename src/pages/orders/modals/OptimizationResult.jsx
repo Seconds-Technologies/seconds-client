@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
@@ -7,8 +7,12 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Select from '@mui/material/Select';
 import TabPanel from '../../../components/TabPanel';
 import { VEHICLE_TYPES } from '../../../constants';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 
 const TEST_ROUTES = [
 	{
@@ -155,23 +159,34 @@ const TEST_ROUTES = [
 	}
 ];
 
-const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => {
+const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
-	const [value, setValue] = React.useState(0);
-	const handleChange = (event, newValue) => {
+	const drivers = useSelector(state => state['driversStore']);
+	const [value, setValue] = useState(0);
+	const [selectedDriver, setDriver] = useState('');
+
+	const handleTab = (event, newValue) => {
 		setValue(newValue);
+	};
+
+	const handleOption = event => {
+		console.log(event.target.value)
+		setDriver(event.target.value);
 	};
 
 	return (
 		<Modal show={show} onHide={onHide} centered size='lg'>
 			<div className='container p-4'>
-				<h1 className="text-center">Optimized Routes</h1>
+				<div className="d-flex justify-content-end" role="button" onClick={onHide}>
+					<button type="button" className="btn-close shadow-none" aria-label="Close"/>
+				</div>
+				<h1 className='text-center'>Optimized Routes</h1>
 				<Box sx={{ width: '100%' }}>
 					<AppBar sx={{ borderBottom: 1, borderColor: 'divider', position: 'sticky', top: 0, backgroundColor: 'white', boxShadow: 'none' }}>
 						<Tabs
 							indicatorColor='secondary'
 							value={value}
-							onChange={handleChange}
+							onChange={handleTab}
 							aria-label='basic tabs example'
 							variant='scrollable'
 							scrollButtons='auto'
@@ -180,14 +195,11 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 							{routes.map(({ summary, stops }, index) => (
 								<Tab
 									key={index}
-									label={`${VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label} ${index}`}
+									label={`${VEHICLE_TYPES.find(item => item.value === summary.vehicle_id).label} (${index})`}
 									id={`simple-tab-${index}`}
 									aria-controls={`simple-tabpanel-${index}`}
 								/>
 							))}
-							{unreachable.length && (
-								<Tab label='Unreachable' id={`simple-tab-${routes.length}`} aria-controls={`simple-tabpanel-${routes.length}`} />
-							)}
 						</Tabs>
 					</AppBar>
 					{routes.map((route, index) => (
@@ -201,13 +213,13 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 												<div className='fw-bold'>{stop.id}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; - &emsp; Deliver until:{' '}
-													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
+													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; -
+													&emsp; Deliver until: {moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
 										</li>
 									) : (
-										<li className='list-group-item d-flex justify-content-between align-items-start'>
+										<li key={index} className='list-group-item d-flex justify-content-between align-items-start'>
 											<div className='ms-2 me-auto'>
 												<div className='fw-bold'>{stop.id}</div>
 												<span>Start Depot</span>
@@ -216,14 +228,31 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 									);
 								})}
 							</ol>
-							<div className='d-flex justify-content-end'>
-								<button className='btn btn-lg btn-primary' style={{ width: 120 }} onClick={() => onAssign(route.summary.vehicle_id)}>
-									<span>Assign</span>
-								</button>
+							<div className='d-flex justify-content-end align-items-center'>
+								<FormControl variant='standard' sx={{ m: 1, minWidth: 150 }}>
+									<InputLabel id='demo-simple-select-standard-label'>Select Driver</InputLabel>
+									<Select
+										labelId='demo-simple-select-standard-label'
+										id='demo-simple-select-helper'
+										value={selectedDriver}
+										label='Select Driver'
+										onChange={handleOption}
+									>
+										{drivers.map((driver, index) => (
+											<MenuItem key={index} value={driver.id} className="d-flex flex-column">
+												<span>{driver.firstname} {driver.lastname}&nbsp;</span>
+												<span>({VEHICLE_TYPES.find(vehicle => vehicle.value === driver.vehicle).label})</span>
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+								<div className="ms-3">
+									<button className='btn btn-primary' disabled={!selectedDriver} onClick={() => onAssign(selectedDriver, route.stops)}><span>Assign</span></button>
+								</div>
 							</div>
 						</TabPanel>
 					))}
-					{unreachable.length && (
+					{/*{unreachable.length && (
 						<TabPanel value={value} index={routes.length}>
 							<ol className='list-group list-group-numbered mb-3'>
 								{unreachable.map((orderNo, index) => {
@@ -243,7 +272,7 @@ const OptimizationResult = ({ show, onHide, routes, unreachable, onAssign }) => 
 								})}
 							</ol>
 						</TabPanel>
-					)}
+					)}*/}
 				</Box>
 			</div>
 		</Modal>

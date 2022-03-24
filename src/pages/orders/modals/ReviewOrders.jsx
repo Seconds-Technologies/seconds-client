@@ -9,13 +9,12 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 	const [validOrders, setValidOrders] = useState([])
 
 	const isDisabled = useMemo(() => {
-		return !orders.every(({ jobSpecification: { orderNumber }}) => validOrders.includes(orderNumber));
+		return validOrders.length ? !orders.every(({ jobSpecification: { orderNumber }}) => validOrders.includes(orderNumber)) : true;
 	}, [validOrders])
 
 	useEffect(() => {
-		console.log(validOrders)
-		console.log(!orders.every(({ jobSpecification: { orderNumber }}) => validOrders.includes(orderNumber)))
-	}, [validOrders])
+		console.log(isDisabled)
+	}, [validOrders, isDisabled])
 
 	return (
 		<Modal show={show} onHide={onHide}>

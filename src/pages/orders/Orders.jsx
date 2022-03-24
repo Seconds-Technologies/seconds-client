@@ -5,7 +5,15 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { BACKGROUND, DELIVERY_TYPES, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
-import { getAllQuotes, manuallyDispatchJob, optimizeRoutes, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
+import {
+	getAllQuotes,
+	manuallyDispatchJob,
+	manuallyDispatchRoute,
+	optimizeRoutes,
+	subscribe,
+	unsubscribe,
+	updateDelivery
+} from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import moment from 'moment';
@@ -235,19 +243,6 @@ export default function Orders(props) {
 		return uniqueVehicles.map(code => VEHICLE_TYPES.find(item => item.value === code));
 	}, [drivers]);
 
-	const { earliestPickupTime, latestDeliveryTime } = useMemo(() => {
-		let earliestPickupTime;
-		let latestDeliveryTime;
-		const jobs = allJobs.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber));
-		for (let job of jobs) {
-			const isEarlier = earliestPickupTime ? moment(job['jobSpecification'].pickupStartTime).isBefore(earliestPickupTime) : true;
-			const isLater = latestDeliveryTime ? moment(job['jobSpecification'].deliveries[0].dropoffEndTime).isAfter(latestDeliveryTime) : true;
-			if (isEarlier) earliestPickupTime = moment(job['jobSpecification'].pickupStartTime).format('YYYY-MM-DDTHH:mm');
-			if (isLater) latestDeliveryTime = moment(job['jobSpecification'].deliveries[0].dropoffEndTime).format('YYYY-MM-DDTHH:mm');
-		}
-		return { earliestPickupTime, latestDeliveryTime };
-	}, [selectionModel]);
-
 	const canOptimize = useMemo(() => {
 		return selectionModel.length
 			? selectionModel.every(orderNo => {
@@ -257,7 +252,7 @@ export default function Orders(props) {
 			: false;
 	}, [selectionModel]);
 
-	const dispatchJob = () => {
+	const dispatchJob = useCallback(() => {
 		showConfirmDialog(false);
 		setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Creating Job' }));
 		dispatch(manuallyDispatchJob(apiKey, provider.type, provider.id, provider.orderNumber))
@@ -269,7 +264,7 @@ export default function Orders(props) {
 			.catch(err => {
 				setJobLoader(prevState => ({ ...prevState, loading: false }));
 			});
-	};
+	}, [provider]);
 
 	function assemblePayload({ jobSpecification, vehicleType }) {
 		let payload = {
@@ -370,6 +365,17 @@ export default function Orders(props) {
 		[selectionModel]
 	);
 
+	const assignRoute = useCallback(
+		(driverId, route) => {
+			setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
+			setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Assigning route to driver...' }))
+			dispatch(manuallyDispatchRoute(apiKey, driverId, route)).then((message) => {
+				setJobLoader(prevState => ({ ...prevState, loading: false }))
+				setToast(message)
+				setOptimizedRoutes(prevState => ({ ...prevState, show: true }));
+			}).catch(err => console.error(err))
+		}, [])
+
 	return (
 		<LoadingOverlay active={jobLoader.loading} spinner text={jobLoader.text} classNamePrefix='order_loader_'>
 			<div ref={modalRef} className='page-container d-flex flex-column px-2 py-4'>
@@ -417,10 +423,7 @@ export default function Orders(props) {
 					onHide={() => setOptimizedRoutes(prevState => ({ ...prevState, show: false }))}
 					routes={routesModal.routes}
 					unreachable={routesModal.unreachable}
-					onAssign={vehicleCode => {
-						setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
-						showDriversModal(prevState => ({ ...prevState, show: true, drivers: drivers.filter(item => item.vehicle === vehicleCode) }));
-					}}
+					onAssign={assignRoute}
 				/>
 				<ManualDispatch
 					show={confirmModal}

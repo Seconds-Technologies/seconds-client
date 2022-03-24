@@ -1,6 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
-import logger from 'redux-logger';
 import rootReducer from './reducers';
 
 export const store = configureStore({

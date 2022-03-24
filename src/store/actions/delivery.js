@@ -78,6 +78,7 @@ export const unsubscribe = () => dispatch => {
 	dispatch({ type: TIMER_STOP });
 };
 
+//THUNKS
 export function assignDriver(deliveryParams, apiKey, driverId){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
@@ -166,6 +167,30 @@ export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 					dispatch(updateDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
+				})
+				.catch(err => {
+					Mixpanel.track('Unsuccessful Delivery job creation');
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function manuallyDispatchRoute(apiKey, driverId, route) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall(
+				'PATCH',
+				`/api/v1/jobs/optimise`,
+				{ driverId, route },
+				{headers: { 'X-Seconds-Api-Key': apiKey}}
+			)
+				.then(({message}) => {
+					Mixpanel.track('Successful route optimization');
+					dispatch(removeError());
+					resolve(message);
 				})
 				.catch(err => {
 					Mixpanel.track('Unsuccessful Delivery job creation');
