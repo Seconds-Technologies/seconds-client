@@ -213,7 +213,7 @@ const ViewOrder = props => {
 		[getParsedAddress, validateAddresses]
 	);
 
-	const handleSubmit = async (values, actions) => {
+	const handleSubmit = async (values) => {
 		showReOrderForm(false);
 		try {
 			if (values.type === SUBMISSION_TYPES.ASSIGN_DRIVER) {
@@ -272,44 +272,53 @@ const ViewOrder = props => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
 		setLoading(true);
-		dispatch(assignDriver(deliveryParams, apiKey, provider.id))
-			.then(
-				({
-					jobSpecification: {
-						deliveries,
-						orderNumber,
-						pickupLocation: { fullAddress: pickupAddress },
-						pickupStartTime
-					},
-					selectedConfiguration: { deliveryFee },
-					driverInformation: { name }
-				}) => {
-					let {
-						dropoffLocation: { fullAddress: dropoffAddress },
-						dropoffStartTime,
-						orderReference: customerReference
-					} = deliveries[0];
-					let newJob = {
-						orderNumber,
-						customerReference,
-						pickupAddress,
-						dropoffAddress,
-						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliveryFee,
-						courier: name.replace(/_/g, ' ')
-					};
-					setLoading(false);
-					setJob(newJob);
-					showJobModal(true);
-				}
-			)
-			.catch(err => {
-				setLoading(false);
-				console.log(err);
-				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-			});
+		assign(provider.id)
 	};
+
+	const assign = useCallback(
+		driverId => {
+			setLoadingText('Creating Order');
+			setLoading(true);
+			dispatch(assignDriver(deliveryParams, apiKey, driverId))
+				.then(
+					({
+						 jobSpecification: {
+							 deliveries,
+							 orderNumber,
+							 pickupLocation: { fullAddress: pickupAddress },
+							 pickupStartTime
+						 },
+						 selectedConfiguration: { deliveryFee },
+						 driverInformation: { name }
+					 }) => {
+						let {
+							dropoffLocation: { fullAddress: dropoffAddress },
+							dropoffEndTime,
+							orderReference: customerReference
+						} = deliveries[0];
+						let newJob = {
+							orderNumber,
+							customerReference,
+							pickupAddress,
+							dropoffAddress,
+							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliveryFee,
+							courier: name.replace(/_/g, ' ')
+						};
+						setLoading(false);
+						setJob(newJob);
+						showJobModal(true);
+					}
+				)
+				.catch(err => {
+					setLoading(false);
+					console.log(err);
+					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+				});
+		},
+		[deliveryParams, provider]
+	);
 
 	return (
 		<LoadingOverlay active={loading} spinner classNamePrefix='view_order_loading_' text={loadingText}>
@@ -323,6 +332,7 @@ const ViewOrder = props => {
 					drivers={drivers}
 					selectDriver={selectProvider}
 					showConfirmDialog={showConfirmDialog}
+					createUnassigned={assign}
 				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 				<DeliveryProof show={proofModal} onHide={showProofModal} signature={deliverySignature} photo={deliveryPhoto} />
