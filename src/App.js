@@ -34,6 +34,7 @@ function App() {
 				.then(() => console.log('USER SYNCED'))
 				.catch(err => console.error('USER SYNC FAILED!', err));
 	}, [isAuthenticated]);
+
 	return (
 		<GeolocationContextProvider>
 			<TabContext.Provider value={{ index: val, dispatch: setVal }}>

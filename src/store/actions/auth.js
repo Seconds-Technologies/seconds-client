@@ -15,7 +15,7 @@ import { setWoo } from './woocommerce';
 import { setSquareSpace } from './squarespace';
 import { setHubrise } from './hubrise';
 import { setDrivers } from './drivers';
-import { setSettings } from './settings';
+import { setSettings, updateSettings } from './settings';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -107,10 +107,11 @@ export function syncUser(email, authenticated = true) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
-				.then(({ message, drivers, ...user }) => {
+				.then(({ message,settings, drivers, ...user }) => {
 					if (authenticated) {
 						dispatch(setCurrentUser(user));
 						dispatch(setDrivers(drivers));
+						settings && dispatch(updateSettings(settings))
 					} else {
 						dispatch(setUserDetails(user));
 					}
