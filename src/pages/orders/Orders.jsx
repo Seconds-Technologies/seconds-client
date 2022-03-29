@@ -53,7 +53,13 @@ export default function Orders(props) {
 	const [selectDriverModal, showDriversModal] = useState({ show: false, drivers });
 	const [params, setParams] = useState({});
 	const [assignModal, showAssignModal] = useState(false);
-	const [routesModal, setOptimizedRoutes] = useState({ show: false, routes: [], unreachable: [] });
+	const [routesModal, setOptimizedRoutes] = useState({
+		show: false,
+		routes: [],
+		unreachable: [],
+		startTime: moment(deliveryHours[moment().day()].open),
+		endTime: moment(deliveryHours[moment().day()].close)
+	});
 	const [reviewModal, showReviewModal] = useState({
 		show: false,
 		orders: [],
@@ -168,10 +174,7 @@ export default function Orders(props) {
 							width={25}
 							height={25}
 						/>
-						{params.row.routeOptimization && (
-							<img src={infinityIcon} alt='' width={25}
-							     height={25} />
-						)}
+						{params.row.routeOptimization && <img src={infinityIcon} alt='' width={25} height={25} />}
 						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && (
 							<StyledButton
 								onClick={() => {
@@ -220,7 +223,15 @@ export default function Orders(props) {
 	const jobs = useMemo(
 		() =>
 			allJobs.map(
-				({ _id, status, dispatchMode, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId }, createdAt, routeOptimization }) => {
+				({
+					_id,
+					status,
+					dispatchMode,
+					jobSpecification: { orderNumber, deliveries },
+					selectedConfiguration: { providerId },
+					createdAt,
+					routeOptimization
+				}) => {
 					let {
 						dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }
 					} = deliveries[0];
@@ -244,7 +255,7 @@ export default function Orders(props) {
 	);
 
 	const vehicles = useMemo(() => {
-		const driverVehicles = drivers.filter(({verified}) => verified).map(({ vehicle }) => vehicle);
+		const driverVehicles = drivers.filter(({ verified }) => verified).map(({ vehicle }) => vehicle);
 		const uniqueVehicles = [...new Set(driverVehicles)];
 		return uniqueVehicles.map(code => VEHICLE_TYPES.find(item => item.value === code));
 	}, [drivers]);
@@ -363,7 +374,7 @@ export default function Orders(props) {
 				dispatch(optimizeRoutes(email, values, selectionModel))
 					.then(({ routes, unreachable }) => {
 						setOptLoading(false);
-						setOptimizedRoutes(prevState => ({ ...prevState, show: true, routes, unreachable }));
+						setOptimizedRoutes(prevState => ({ ...prevState, show: true, routes, unreachable, startTime, endTime }));
 					})
 					.catch(err => setOptLoading(false));
 			}
@@ -371,16 +382,17 @@ export default function Orders(props) {
 		[selectionModel]
 	);
 
-	const assignRoute = useCallback(
-		(driverId, route) => {
-			setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
-			setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Assigning route to driver...' }))
-			dispatch(manuallyDispatchRoute(apiKey, driverId, route)).then((message) => {
-				setJobLoader(prevState => ({ ...prevState, loading: false }))
-				setToast(message)
+	const assignRoute = useCallback((driverId, route) => {
+		setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
+		setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Assigning route to driver...' }));
+		dispatch(manuallyDispatchRoute(apiKey, driverId, route, { startTime: routesModal.startTime.format(), endTime: routesModal.endTime.format() }))
+			.then(message => {
+				setJobLoader(prevState => ({ ...prevState, loading: false }));
+				setToast(message);
 				setOptimizedRoutes(prevState => ({ ...prevState, show: true }));
-			}).catch(err => console.error(err))
-		}, [])
+			})
+			.catch(err => console.error(err));
+	}, []);
 
 	return (
 		<LoadingOverlay active={jobLoader.loading} spinner text={jobLoader.text} classNamePrefix='order_loader_'>
@@ -403,7 +415,14 @@ export default function Orders(props) {
 						dispatch(optimizeRoutes(email, params, selectionModel))
 							.then(({ routes, unreachable }) => {
 								setOptLoading(false);
-								setOptimizedRoutes(prevState => ({ ...prevState, show: true, routes, unreachable }));
+								setOptimizedRoutes(prevState => ({
+									...prevState,
+									show: true,
+									routes,
+									unreachable,
+									startTime: reviewModal.startTime,
+									endTime: reviewModal.endTime
+								}));
 							})
 							.catch(err => setOptLoading(false));
 					}}

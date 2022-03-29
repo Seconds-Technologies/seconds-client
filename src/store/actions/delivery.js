@@ -178,13 +178,13 @@ export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 	};
 }
 
-export function manuallyDispatchRoute(apiKey, driverId, route) {
+export function manuallyDispatchRoute(apiKey, driverId, route, timeWindow) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall(
 				'PATCH',
 				`/api/v1/jobs/optimise`,
-				{ driverId, route },
+				{ driverId, route, timeWindow },
 				{headers: { 'X-Seconds-Api-Key': apiKey}}
 			)
 				.then(({message}) => {

@@ -156,8 +156,6 @@ const ViewOrder = props => {
 		dispatch(removeError());
 	}, [props.location]);
 
-
-
 	const errorModal = (
 		<Modal
 			show={!!error.message}
