@@ -75,7 +75,8 @@ export const PLACE_TYPES = {
 	STREET_ADDRESS: 'route',
 	CITY: 'postal_town',
 	POSTCODE: 'postal_code',
-	POSTCODE_PREFIX: 'postal_code_prefix'
+	POSTCODE_PREFIX: 'postal_code_prefix',
+	INTERSECTION: 'intersection'
 };
 
 export const SUBMISSION_TYPES = {

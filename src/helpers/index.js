@@ -31,6 +31,9 @@ export function parseAddress(data, requiresGeoJSON = false) {
 			case PLACE_TYPES.PREMISE:
 				formattedAddress.street = formattedAddress.street + long_name + ' ';
 				break;
+			case PLACE_TYPES.INTERSECTION:
+				formattedAddress.street = formattedAddress.street + long_name + ' ';
+				break;
 			case PLACE_TYPES.CITY:
 				formattedAddress.city = long_name;
 				break;
