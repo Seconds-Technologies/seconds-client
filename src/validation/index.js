@@ -34,12 +34,10 @@ export const CreateOrderSchema = Yup.object().shape({
 	pickupLastName: Yup.string().max(20, 'Max. 20 characters').required('* Required'),
 	pickupEmailAddress: Yup.string().required('* Required').email('Invalid email address!'),
 	pickupPhoneNumber: Yup.string().matches(phoneRegExp2, 'Phone number is not valid').required('* Required'),
-	pickupBusinessName: Yup.string().required('* Required'),
 	pickupAddressLine1: Yup.string().required('*Required'),
 	pickupCity: Yup.string().required('*Required'),
 	pickupPostcode: Yup.string().required('*Required'),
-	vehicleType: Yup.string().required('* Required'),
-	itemsCount: Yup.number().min(0).max(10),
+	vehicleType: Yup.string().required('*Required')
 });
 
 export const ReOrderSchema = Yup.object().shape({

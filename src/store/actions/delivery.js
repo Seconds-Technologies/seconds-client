@@ -31,7 +31,7 @@ export const removeDropoff = index => ({
 	index
 });
 
-export const clearDropoffs = () => ({
+export const removeBatch = () => ({
 	type: CLEAR_DROPOFFS
 });
 

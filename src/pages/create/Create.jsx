@@ -10,7 +10,15 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
-import { assignDriver, createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setBatch } from '../../store/actions/delivery';
+import {
+	assignDriver,
+	removeBatch,
+	createDeliveryJob,
+	createMultiDropJob,
+	getAllQuotes,
+	removeDropoff,
+	setBatch
+} from '../../store/actions/delivery';
 import { getAllDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
@@ -35,6 +43,7 @@ import DeliveryJob from '../../modals/DeliveryJob';
 import MultiDropQuote from '../../modals/MultiDropQuote';
 import NewDropoffForm from '../../modals/NewDropoffForm';
 import SelectDriver from '../../modals/SelectDriver';
+import BatchCarousel from '../../components/BatchCarousel';
 
 const Create = props => {
 	const csvUploadRef = useRef(null);
@@ -56,6 +65,7 @@ const Create = props => {
 	const [quotes, setQuotes] = useState([]);
 	const [uploadCSV, showCSVUpload] = useState(false);
 	const [isLocked, setLock] = useState(true);
+	const [batchSuccessModal, showBatchModal] = useState(false);
 	// handlers
 	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
@@ -86,12 +96,12 @@ const Create = props => {
 								props.value === 'BIC'
 									? bicycle
 									: props.value === 'MTB'
-									? motorbike
-									: props.value === 'CGB'
-									? cargobike
-									: props.value === 'CAR'
-									? car
-									: van
+										? motorbike
+										: props.value === 'CGB'
+											? cargobike
+											: props.value === 'CAR'
+												? car
+												: van
 							}
 							className='img-fluid'
 							alt=''
@@ -129,7 +139,7 @@ const Create = props => {
 				console.log('INDEX', index);
 				values.drops[
 					index
-				].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
+					].dropoffAddress = `${drop.dropoffAddressLine1} ${drop.dropoffAddressLine2} ${drop.dropoffCity} ${drop.dropoffPostcode}`;
 				let dropoffAddressComponents = await geocodeByAddress(values.drops[index].dropoffAddress);
 				let dropoffFormattedAddress = getParsedAddress(dropoffAddressComponents);
 				// check if postcode from geocoding is different to original postcode
@@ -156,15 +166,15 @@ const Create = props => {
 			dispatch(assignDriver(deliveryParams, apiKey, driverId))
 				.then(
 					({
-						jobSpecification: {
-							deliveries,
-							orderNumber,
-							pickupLocation: { fullAddress: pickupAddress },
-							pickupStartTime
-						},
-						selectedConfiguration: { deliveryFee },
-						driverInformation: { name }
-					}) => {
+						 jobSpecification: {
+							 deliveries,
+							 orderNumber,
+							 pickupLocation: { fullAddress: pickupAddress },
+							 pickupStartTime
+						 },
+						 selectedConfiguration: { deliveryFee },
+						 driverInformation: { name }
+					 }) => {
 						let {
 							dropoffLocation: { fullAddress: dropoffAddress },
 							dropoffEndTime,
@@ -200,41 +210,41 @@ const Create = props => {
 		setLoading(true);
 		provider.type === PROVIDER_TYPES.COURIER
 			? dispatch(createDeliveryJob(deliveryParams, apiKey, provider.id))
-					.then(
-						({
-							jobSpecification: {
-								deliveries,
-								orderNumber,
-								pickupLocation: { fullAddress: pickupAddress },
-								pickupStartTime
-							},
-							selectedConfiguration: { deliveryFee, providerId }
-						}) => {
-							let {
-								dropoffLocation: { fullAddress: dropoffAddress },
-								dropoffEndTime,
-								orderReference: customerReference
-							} = deliveries[0];
-							let newJob = {
-								orderNumber,
-								customerReference,
-								pickupAddress,
-								dropoffAddress,
-								pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-								deliveryFee,
-								courier: providerId.replace(/_/g, ' ')
-							};
-							setLoading(false);
-							setJob(newJob);
-							handleOpen();
-						}
-					)
-					.catch(err => {
+				.then(
+					({
+						 jobSpecification: {
+							 deliveries,
+							 orderNumber,
+							 pickupLocation: { fullAddress: pickupAddress },
+							 pickupStartTime
+						 },
+						 selectedConfiguration: { deliveryFee, providerId }
+					 }) => {
+						let {
+							dropoffLocation: { fullAddress: dropoffAddress },
+							dropoffEndTime,
+							orderReference: customerReference
+						} = deliveries[0];
+						let newJob = {
+							orderNumber,
+							customerReference,
+							pickupAddress,
+							dropoffAddress,
+							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliveryFee,
+							courier: providerId.replace(/_/g, ' ')
+						};
 						setLoading(false);
-						console.log(err);
-						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-					})
+						setJob(newJob);
+						handleOpen();
+					}
+				)
+				.catch(err => {
+					setLoading(false);
+					console.log(err);
+					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
+				})
 			: assign(provider.id);
 	};
 
@@ -244,6 +254,7 @@ const Create = props => {
 			<ApiKeyAlert message={toastMessage} onClose={setToast} />
 			<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
 			<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
+			<BatchCarousel orders={batch} show={batchSuccessModal} onHide={() => showBatchModal(false)} />
 			<CSVUpload
 				show={uploadCSV}
 				ref={csvUploadRef}
@@ -262,7 +273,7 @@ const Create = props => {
 						let order = {};
 						data.forEach((item, index) => {
 							let key = keys[index];
-							if (key === 'packageDropoffStartTime' || key === 'packageDropoffEndTime') {
+							if (['packagePickupStartTime', 'packageDropoffStartTime', 'packageDropoffEndTime'].includes(key)) {
 								item = moment(item, 'DD/MM/YYYY HH:mm').format();
 							}
 							order[key] = item;
@@ -332,32 +343,47 @@ const Create = props => {
 								setLoading(true);
 								try {
 									for (let item of batch) {
-										let order = { ...values, drops: [{...item}] };
-										order = await handleAddresses(order);
+										console.log("***********************")
+										console.log(item)
+										console.log("***********************")
+										let {
+											packagePickupStartTime,
+											pickupLastName,
+											pickupEmailAddress,
+											pickupPhoneNumber,
+											pickupBusinessName,
+											pickupInstructions,
+											pickupAddressLine1,
+											pickupAddressLine2,
+											pickupCity,
+											pickupPostcode,
+											...drop
+										} = item;
+										let order = {
+											...values,
+											packagePickupStartTime,
+											pickupLastName,
+											pickupEmailAddress,
+											pickupPhoneNumber,
+											pickupBusinessName,
+											pickupInstructions,
+											pickupAddressLine1,
+											pickupAddressLine2,
+											pickupCity,
+											pickupPostcode,
+											drops: [drop],
+										}
 										console.log(order);
+										order = await handleAddresses(order);
 										const job = await dispatch(assignDriver(order, apiKey, null));
 										console.log(job);
-										// let {
-										// 	dropoffLocation: { fullAddress: dropoffAddress },
-										// 	dropoffEndTime,
-										// 	orderReference: customerReference
-										// } = deliveries[0];
-										// let newJob = {
-										// 	orderNumber,
-										// 	customerReference,
-										// 	pickupAddress,
-										// 	dropoffAddress,
-										// 	pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-										// 	deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-										// 	deliveryFee,
-										// 	courier: name.replace(/_/g, ' ')
-										// };
 									}
+									setLoading(false);
+									showBatchModal(true);
 								} catch (err) {
 									setLoading(false);
 									console.error(err);
 								}
-								setLoading(false);
 							} else {
 								setLoadingText('Checking available drivers...');
 								setLoading(true);
@@ -381,18 +407,21 @@ const Create = props => {
 						<form
 							onSubmit={e => {
 								const { name, value } = e.nativeEvent['submitter'];
-								name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE
-									? setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
-									: name === SUBMISSION_TYPES.ASSIGN_DRIVER || value === SUBMISSION_TYPES.ASSIGN_DRIVER
-									? setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER)
-									: setFieldValue('type', SUBMISSION_TYPES.CREATE_UNASSIGNED);
+								if(name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE){
+									setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
+								} else if (name === SUBMISSION_TYPES.ASSIGN_DRIVER || value === SUBMISSION_TYPES.ASSIGN_DRIVER){
+									setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER)
+								} else {
+									setFieldValue('type', SUBMISSION_TYPES.CREATE_UNASSIGNED);
+								}
+								console.log(values)
 								handleSubmit(e);
 							}}
 							autoComplete='on'
 							className='container-fluid overflow-hidden'
 						>
 							<div className='row mx-1'>
-								<div className='col-6'>
+								<div className={`${values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? 'col-12' : 'col-6'}`}>
 									<div className='border border-2 rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
 										<h4>Delivery Method</h4>
 										<div className='d-flex mt-2 justify-content-center'>
@@ -414,7 +443,6 @@ const Create = props => {
 													On Demand
 												</label>
 											</div>
-
 											<div className='form-check mb-2 mx-4'>
 												<input
 													className='form-check-input'
@@ -429,7 +457,6 @@ const Create = props => {
 													Scheduled Same Day
 												</label>
 											</div>
-
 											<div className='form-check'>
 												<input
 													className='form-check-input'
@@ -447,279 +474,245 @@ const Create = props => {
 											<ErrorField name='packageDeliveryType' classNames='mt-2' />
 										</div>
 										<div className='mt-2 mb-2' />
-										<div className='d-flex justify-content-between align-items-center'>
-											<h4>Pickup</h4>
-											<div
-												className='btn btn-sm btn-outline-primary me-1'
-												onClick={() => {
-													setLock(!isLocked);
-													console.log(values);
-												}}
-											>
-												Edit
-											</div>
-										</div>
-										<div className='row'>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='address-line-1'>
-													<span>
-														{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
-														Address line 1
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupAddressLine1}
-													autoComplete='address-line1'
-													type='text'
-													id='address-line-1'
-													name='pickupAddressLine1'
-													className='form-control  rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='address-line-2'>
-													<span>
-														{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
-														Address line 2
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupAddressLine2}
-													autoComplete='address-line2'
-													type='text'
-													id='pickupAddressLine2'
-													name='pickupAddress.addressLine2'
-													className='form-control  rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-										</div>
-										<div className='row'>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='city'>
-													<span>
-														{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
-														City
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupCity}
-													autoComplete='address-level2'
-													type='text'
-													id='city'
-													name='pickupCity'
-													className='form-control  rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-											<div className='col-md-6 col-lg-6 pb-xs-4'>
-												<label className='mb-1' htmlFor='postcode'>
-													<span>
-														{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
-														Postcode
-													</span>
-												</label>
-												<input
-													defaultValue={values.pickupPostcode}
-													autoComplete='postal-code'
-													type='text'
-													id='postcode'
-													name='pickupPostcode'
-													className='form-control  rounded-3 mb-2'
-													onBlur={handleBlur}
-													onChange={handleChange}
-													disabled={isLocked}
-												/>
-											</div>
-										</div>
-										<div className='row'>
-											<div className='col-6'>
-												<label htmlFor='pickup-datetime' className='mb-1'>
-													Pickup At
-												</label>
-												<input
-													disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-													name='packagePickupStartTime'
-													id='pickup-datetime'
-													type='datetime-local'
-													className='form-control  form-border rounded-3 mb-3'
-													aria-label='pickup-datetime'
-													onChange={e => {
-														handleChange(e);
-														setPickupDatetime(e.target.value);
-													}}
-													onBlur={handleBlur}
-													min={moment().format('YYYY-MM-DDTHH:mm')}
-													max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
-													required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
-												/>
-											</div>
-											<div className='col-6'>
-												<label htmlFor='pickup-instructions' className='mb-1'>
-													Pickup Instructions
-												</label>
-												<textarea
-													id='pickup-instructions'
-													name='pickupInstructions'
-													className='form-control  form-border rounded-3 mb-3'
-													aria-label='pickup-instructions'
-													onChange={handleChange}
-													onBlur={handleBlur}
-													rows={1}
-												/>
-											</div>
-										</div>
-										<div className='mt-2 mb-2' />
-										<h4>Package Details</h4>
-										<div className='row'>
-											<div className='col-6'>
-												<label htmlFor='items-count' className='mb-1'>
-													<span>
-														{errors['itemsCount'] && <span className='text-danger'>*&nbsp;</span>}
-														Number of items
-													</span>
-												</label>
-												<input
-													id='items-count'
-													name='itemsCount'
-													type='number'
-													className='form-control  form-border rounded-3 my-2'
-													placeholder='Number of Items'
-													aria-label='items-count'
-													onChange={handleChange}
-													onBlur={handleBlur}
-													min={0}
-													max={10}
-												/>
-											</div>
-											<div className='col-6'>
-												<label htmlFor='vehicle-type' className='mb-1'>
-													<span>
-														{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
-														Vehicle Type
-													</span>
-												</label>
-												<Select
-													menuPlacement='top'
-													id='vehicle-type'
-													name='vehicleType'
-													className='my-2'
-													options={VEHICLE_TYPES}
-													components={{ Option }}
-													onChange={({ value }) => {
-														setFieldValue('vehicleType', value);
-														console.log(value);
-													}}
-													aria-label='vehicle type selection'
-												/>
-											</div>
-										</div>
-										<div className='row'>
-											<div className='col'>
-												<label htmlFor='package-description' className='mb-1'>
-													Package Description
-												</label>
-												<textarea
-													id='package-description'
-													name='drops[0].packageDescription'
-													className='form-control  form-border rounded-3 my-2'
-													placeholder='Max. 200 characters'
-													maxLength={200}
-													aria-label='package-description'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-											</div>
-										</div>
+										{values.packageDeliveryType !== DELIVERY_TYPES.MULTI_DROP && (
+											<>
+												<div className='d-flex justify-content-between align-items-center'>
+													<h4>Pickup</h4>
+													<div
+														className='btn btn-sm btn-outline-primary me-1'
+														onClick={() => {
+															setLock(!isLocked);
+															console.log(values);
+														}}
+													>
+														Edit
+													</div>
+												</div>
+												<div className='row'>
+													<div className='col-md-6 col-lg-6 pb-xs-4'>
+														<label className='mb-1' htmlFor='address-line-1'>
+															<span>
+																{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
+																Address line 1
+															</span>
+														</label>
+														<input
+															defaultValue={values.pickupAddressLine1}
+															autoComplete='address-line1'
+															type='text'
+															id='address-line-1'
+															name='pickupAddressLine1'
+															className='form-control  rounded-3 mb-2'
+															onBlur={handleBlur}
+															onChange={handleChange}
+															disabled={isLocked}
+														/>
+													</div>
+													<div className='col-md-6 col-lg-6 pb-xs-4'>
+														<label className='mb-1' htmlFor='address-line-2'>
+															<span>
+																{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
+																Address line 2
+															</span>
+														</label>
+														<input
+															defaultValue={values.pickupAddressLine2}
+															autoComplete='address-line2'
+															type='text'
+															id='pickupAddressLine2'
+															name='pickupAddress.addressLine2'
+															className='form-control  rounded-3 mb-2'
+															onBlur={handleBlur}
+															onChange={handleChange}
+															disabled={isLocked}
+														/>
+													</div>
+												</div>
+												<div className='row'>
+													<div className='col-md-6 col-lg-6 pb-xs-4'>
+														<label className='mb-1' htmlFor='city'>
+															<span>
+																{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
+																City
+															</span>
+														</label>
+														<input
+															defaultValue={values.pickupCity}
+															autoComplete='address-level2'
+															type='text'
+															id='city'
+															name='pickupCity'
+															className='form-control  rounded-3 mb-2'
+															onBlur={handleBlur}
+															onChange={handleChange}
+															disabled={isLocked}
+														/>
+													</div>
+													<div className='col-md-6 col-lg-6 pb-xs-4'>
+														<label className='mb-1' htmlFor='postcode'>
+															<span>
+																{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
+																Postcode
+															</span>
+														</label>
+														<input
+															defaultValue={values.pickupPostcode}
+															autoComplete='postal-code'
+															type='text'
+															id='postcode'
+															name='pickupPostcode'
+															className='form-control  rounded-3 mb-2'
+															onBlur={handleBlur}
+															onChange={handleChange}
+															disabled={isLocked}
+														/>
+													</div>
+												</div>
+												<div className='row'>
+													<div className='col-6'>
+														<label htmlFor='pickup-datetime' className='mb-1'>
+															Pickup At
+														</label>
+														<input
+															disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
+															name='packagePickupStartTime'
+															id='pickup-datetime'
+															type='datetime-local'
+															className='form-control  form-border rounded-3 mb-3'
+															aria-label='pickup-datetime'
+															onChange={e => {
+																handleChange(e);
+																setPickupDatetime(e.target.value);
+															}}
+															onBlur={handleBlur}
+															min={moment().format('YYYY-MM-DDTHH:mm')}
+															max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
+															required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
+														/>
+													</div>
+													<div className='col-6'>
+														<label htmlFor='pickup-instructions' className='mb-1'>
+															Pickup Instructions
+														</label>
+														<textarea
+															id='pickup-instructions'
+															name='pickupInstructions'
+															className='form-control  form-border rounded-3 mb-3'
+															aria-label='pickup-instructions'
+															onChange={handleChange}
+															onBlur={handleBlur}
+															rows={1}
+														/>
+													</div>
+												</div>
+												<div className='mt-2 mb-2' />
+												<h4>Package Details</h4>
+												<div className='row'>
+													<div className='col-6'>
+														<label htmlFor='items-count' className='mb-1'>
+															<span>
+																{errors['itemsCount'] && <span className='text-danger'>*&nbsp;</span>}
+																Number of items
+															</span>
+														</label>
+														<input
+															id='items-count'
+															name='itemsCount'
+															type='number'
+															className='form-control  form-border rounded-3 my-2'
+															placeholder='Number of Items'
+															aria-label='items-count'
+															onChange={handleChange}
+															onBlur={handleBlur}
+															min={0}
+															max={10}
+														/>
+													</div>
+													<div className='col-6'>
+														<label htmlFor='vehicle-type' className='mb-1'>
+															<span>
+																{errors['vehicleType'] && <span className='text-danger'>*&nbsp;</span>}
+																Vehicle Type
+															</span>
+														</label>
+														<Select
+															menuPlacement='top'
+															id='vehicle-type'
+															name='vehicleType'
+															className='my-2'
+															options={VEHICLE_TYPES}
+															components={{ Option }}
+															onChange={({ value }) => {
+																setFieldValue('vehicleType', value);
+																console.log(value);
+															}}
+															aria-label='vehicle type selection'
+														/>
+													</div>
+												</div>
+												<div className='row'>
+													<div className='col'>
+														<label htmlFor='package-description' className='mb-1'>
+															Package Description
+														</label>
+														<textarea
+															id='package-description'
+															name='drops[0].packageDescription'
+															className='form-control  form-border rounded-3 my-2'
+															placeholder='Max. 200 characters'
+															maxLength={200}
+															aria-label='package-description'
+															onChange={handleChange}
+															onBlur={handleBlur}
+														/>
+													</div>
+												</div>
+											</>
+										)}
 									</div>
 								</div>
-								<div className='col-6'>
-									<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
-										<h4>
-											{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-												? 'Batch Order upload (max 10 orders)'
-												: 'Dropoff'}
-										</h4>
-										{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (
-											<div>
-												<ol className='list list-unstyled'>
-													{batch.map(
-														(
-															{
-																dropoffFirstName,
-																dropoffLastName,
-																dropoffAddressLine1,
-																dropoffPostcode,
-																packageDropoffEndTime,
-																dropoffPhoneNumber,
-																dropoffPackageDescription
-															},
-															index
-														) => (
-															<li key={index} className='card mb-2'>
-																<div className='card-body'>
-																	<h5 className='card-title'>
-																		{dropoffAddressLine1}, {dropoffPostcode}
-																	</h5>
-																	<span className='fs-6'>
-																		{dropoffFirstName} {dropoffLastName} -&nbsp;
-																		<span className='card-text'>{dropoffPhoneNumber}</span>
-																	</span>
-																	<div className='d-flex align-items-center justify-content-between'>
-																		<small className='text-muted'>
-																			{moment(packageDropoffEndTime).calendar()}
-																		</small>
-																		<div>
-																			<button
-																				type='button'
-																				className='btn btn-sm btn-outline-danger'
-																				onClick={() => dispatch(removeDropoff(index))}
-																			>
-																				Remove
-																			</button>
-																		</div>
-																	</div>
-																</div>
-															</li>
-														)
-													)}
-												</ol>
-												<div className='d-flex align-items-center'>
+								{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (
+									<div className={`${values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? 'col-12' : 'col-6'}`}>
+										<div className='py-3'>
+											<div className='d-flex justify-content-center align-items-center'>
+												{batch.length ? (
+													<div className='btn btn-outline-danger' onClick={() => dispatch(removeBatch())}>
+														Remove CSV
+													</div>
+												) : (
 													<div className='btn btn-outline-success' onClick={() => showCSVUpload(true)}>
 														Upload CSV
 													</div>
-													<Link className='ms-4' to='/example.csv' target='_blank' download='template.csv'>
-														Download CSV template
-													</Link>
-												</div>
-												<div className='d-flex pt-3 justify-content-center'>
-													<Button
-														type='submit'
-														name={SUBMISSION_TYPES.CREATE_UNASSIGNED}
-														value={SUBMISSION_TYPES.CREATE_UNASSIGNED}
-														variant='primary'
-														size='lg'
-														className='mx-3'
-														disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && batch.length < 5}
-														onClick={() =>
-															values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-															batch.length < 5 &&
-															alert('Please add at least 5 batch before creating a multi drop')
-														}
-														style={{ width: '100%' }}
-													>
-														<span className='btn-text'>Create</span>
-													</Button>
-												</div>
+												)}
+												<Link className='ms-4' to='/example.csv' target='_blank' download='template.csv'>
+													Download CSV template
+												</Link>
 											</div>
-										) : (
+											<div className='d-flex pt-3 justify-content-center'>
+												<Button
+													type='submit'
+													name={SUBMISSION_TYPES.CREATE_UNASSIGNED}
+													value={SUBMISSION_TYPES.CREATE_UNASSIGNED}
+													variant='primary'
+													size='lg'
+													className='mx-3 w-25'
+													disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && batch.length < 5}
+													onClick={() => {
+														setFieldValue('vehicleType', batch[0].vehicleType);
+														values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
+														batch.length < 5 &&
+														alert('Please add at least 5 batch before creating a multi drop');
+													}}
+												>
+													<span className='btn-text'>Create</span>
+												</Button>
+											</div>
+										</div>
+									</div>
+								) : (
+									<div className='col-6'>
+										<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
+											<h4>Dropoff</h4>
 											<div className='my-2'>
 												<div className='row'>
 													<div className='col-6'>
@@ -974,14 +967,14 @@ const Create = props => {
 															}
 															style={{ width: 150 }}
 														>
-															<span className='btn-text'>Create</span>
+															<span className='btn-text'>Outsource</span>
 														</Button>
 													</div>
 												</div>
 											</div>
-										)}
+										</div>
 									</div>
-								</div>
+								)}
 							</div>
 						</form>
 					)}
