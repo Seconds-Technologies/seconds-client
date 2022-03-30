@@ -1,9 +1,9 @@
-﻿dropoffFirstName,dropoffLastName,dropoffEmailAddress,dropoffPhoneNumber,dropoffAddressLine1,dropoffAddressLine2,dropoffCity,dropoffPostcode,packageDropoffEndTime,packageDescription
-Chisom,Oguibe,chisom.oguibe@googlemail.com,07507210809,39 Effra Rd,,London,SW2 1BZ,06/12/2021 14:50,Small and Fragile
-Lucy,Baker,lucy.baker@googlemail.com,07507210810,185 Mayall Rd,,London,SE24 0PS,06/12/2021 15:10,Small and Fragile
-Bill,Oliver,bill.oliver@example.com,07507210811,70 Lomond Grove,,London,SE5 7LE,06/12/2021 15:20,Small and Fragile
-Ola,Oladapo,olaoladapo7@gmail.com,07507210812,106 Crofton Rd,,London,SE5 8NA,06/12/2021 15:30,Small and Fragile
-Tina,Palmer,tina.palmer@example.com,07507210813,109 Coleman Rd,,London,SE5 7TF,06/12/2021 15:44,Small and Fragile
-Darlene,Diaz,darlene.diaz@example.com,07527391080,27B Stansfield Rd,,London,SW9 9RY,06/12/2021 15:57,Small and Fragile
-Edwin,Rhodes,edwin.rhodes@example.com,07507212916,14 Hubert Grove,,London,SW9 9PB,06/12/2021 16:00,Small and Fragile
-Kyle,Carroll,kyle.carroll@example.com,07528903197,25 Montford Pl,,London,SE11 5DE,06/12/2021 16:21,Small and Fragile
+dropoffFirstName,dropoffLastName,dropoffEmailAddress,dropoffPhoneNumber,dropoffBusinessName,dropoffInstructions,dropoffAddressLine1,dropoffAddressLine2,dropoffCity,dropoffPostcode,packageDropoffStartTime,packageDropoffEndTime,packageDescription,packageDeliveryType,vehicleType
+Chisom,Oguibe,chisom.oguibe@googlemail.com,07507210809,Weezy,Ring door bell,39 Effra Rd,,London,SW2 1BZ,30-03-22 12:00,30-03-22 21:00,Small and Fragile,ON_DEMAND,BIC
+Lucy,Baker,lucy.baker@googlemail.com,07507210810,Weezy,Ring door bell,185 Mayall Rd,,London,SE24 0PS,30-03-22 13:00,30-03-22 21:00,Small and Fragile,SAME_DAY,CGB
+Bill,Oliver,bill.oliver@example.com,07507210811,Weezy,Ring door bell,70 Lomond Grove,,London,SE5 7LE,30-03-22 13:00,30-03-22 21:00,Small and Fragile,SAME_DAY,BIC
+Ola,Oladapo,olaoladapo7@gmail.com,07507210812,Weezy,Ring door bell,106 Crofton Rd,,London,SE5 8NA,30-03-22 14:00,30-03-22 21:00,Small and Fragile,SAME_DAY,VAN
+Tina,Palmer,tina.palmer@example.com,07507210813,Weezy,Ring door bell,109 Coleman Rd,,London,SE5 7TF,30-03-22 15:00,30-03-22 21:00,Small and Fragile,SAME_DAY,MTB
+Darlene,Diaz,darlene.diaz@example.com,07527391080,Weezy,Ring door bell,27B Stansfield Rd,,London,SW9 9RY,30-03-22 13:00,30-03-22 21:00,Small and Fragile,SAME_DAY,BIC
+Edwin,Rhodes,edwin.rhodes@example.com,07507212916,Weezy,Ring door bell,14 Hubert Grove,,London,SW9 9PB,30-03-22 13:00,30-03-22 21:00,Small and Fragile,SAME_DAY,BIC
+Kyle,Carroll,kyle.carroll@example.com,07528903197,Weezy,Ring door bell,25 Montford Pl,,London,SE11 5DE,30-03-22 17:00,30-03-22 21:00,Small and Fragile,SAME_DAY,CAR

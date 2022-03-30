@@ -82,7 +82,7 @@ export const PLACE_TYPES = {
 export const SUBMISSION_TYPES = {
 	ASSIGN_DRIVER: 'assign',
 	GET_QUOTE: 'quote',
-	CREATE_JOB: 'create'
+	CREATE_UNASSIGNED: 'unassigned'
 };
 
 export const PROVIDER_TYPES = {
@@ -131,6 +131,7 @@ export const PROVIDERS = {
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
 	SAME_DAY: 'SAME_DAY',
+	NEXT_DAY: 'NEXT_DAY',
 	MULTI_DROP: 'MULTI_DROP'
 };
 

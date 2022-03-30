@@ -10,7 +10,7 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
-import { assignDriver, createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setDropoffs } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, createMultiDropJob, getAllQuotes, removeDropoff, setBatch } from '../../store/actions/delivery';
 import { getAllDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
@@ -40,7 +40,7 @@ const Create = props => {
 	const csvUploadRef = useRef(null);
 	const [deliveryJob, setJob] = useState({});
 	const [jobModal, showJobModal] = useState(false);
-	const [isLoading, setLoadingModal] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
 	const [multiDropDialog, showMultiDropDialog] = useState(false);
 	const [dropoffModal, showDropoffModal] = useState(false);
@@ -61,7 +61,7 @@ const Create = props => {
 	const handleOpen = () => showJobModal(true);
 	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);
-	const { dropoffs } = useSelector(state => state['addressHistory']);
+	const { batch } = useSelector(state => state['addressHistory']);
 	const drivers = useSelector(state => state['driversStore']);
 	const error = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
@@ -149,53 +149,10 @@ const Create = props => {
 		[getParsedAddress, validateAddresses]
 	);
 
-	const confirmMultiDropQuote = () => {
-		showMultiDropDialog(false);
-		setLoadingText('Creating Order');
-		showConfirmDialog(false);
-		setLoadingModal(true);
-		dispatch(createMultiDropJob(deliveryParams, apiKey))
-			.then(
-				({
-					jobSpecification: {
-						deliveries,
-						orderNumber,
-						pickupLocation: { fullAddress: pickupAddress },
-						pickupStartTime
-					},
-					selectedConfiguration: { deliveryFee, providerId }
-				}) => {
-					let {
-						dropoffLocation: { fullAddress: dropoffAddress },
-						dropoffEndTime,
-						orderReference: customerReference
-					} = deliveries[0];
-					let newJob = {
-						orderNumber,
-						customerReference,
-						pickupAddress,
-						dropoffAddress,
-						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliveryFee,
-						courier: providerId.replace(/_/g, ' ')
-					};
-					setLoadingModal(false);
-					setJob(newJob);
-					handleOpen();
-				}
-			)
-			.catch(err => {
-				setLoadingModal(false);
-				console.log(err);
-				err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
-			});
-	};
-
 	const assign = useCallback(
 		driverId => {
 			setLoadingText('Creating Order');
-			setLoadingModal(true);
+			setLoading(true);
 			dispatch(assignDriver(deliveryParams, apiKey, driverId))
 				.then(
 					({
@@ -223,13 +180,13 @@ const Create = props => {
 							deliveryFee,
 							courier: name.replace(/_/g, ' ')
 						};
-						setLoadingModal(false);
+						setLoading(false);
 						setJob(newJob);
 						handleOpen();
 					}
 				)
 				.catch(err => {
-					setLoadingModal(false);
+					setLoading(false);
 					console.log(err);
 					err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 				});
@@ -240,7 +197,7 @@ const Create = props => {
 	const confirmProvider = () => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
-		setLoadingModal(true);
+		setLoading(true);
 		provider.type === PROVIDER_TYPES.COURIER
 			? dispatch(createDeliveryJob(deliveryParams, apiKey, provider.id))
 					.then(
@@ -268,13 +225,13 @@ const Create = props => {
 								deliveryFee,
 								courier: providerId.replace(/_/g, ' ')
 							};
-							setLoadingModal(false);
+							setLoading(false);
 							setJob(newJob);
 							handleOpen();
 						}
 					)
 					.catch(err => {
-						setLoadingModal(false);
+						setLoading(false);
 						console.log(err);
 						err ? dispatch(addError(err.message)) : dispatch(addError('Api endpoint could not be accessed!'));
 					})
@@ -285,9 +242,38 @@ const Create = props => {
 		<LoadingOverlay active={isLoading} spinner text={loadingText} className='pt-2' classNamePrefix='create_loader_'>
 			<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
 			<ApiKeyAlert message={toastMessage} onClose={setToast} />
-			<MultiDropQuote show={multiDropDialog} toggleShow={showMultiDropDialog} numDropoffs={dropoffs.length} confirm={confirmMultiDropQuote} />
 			<NewDropoffForm show={dropoffModal} toggleShow={showDropoffModal} pickupDateTime={pickupDatetime} />
 			<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
+			<CSVUpload
+				show={uploadCSV}
+				ref={csvUploadRef}
+				hide={() => showCSVUpload(false)}
+				handleRemoveFile={() => console.log('File removed')}
+				handleOnError={err => console.log(err)}
+				handleOnDrop={result => {
+					let order = {};
+					let { data: keys } = result.shift();
+					if (result.length > 10) {
+						result = result.slice(0, 10);
+						setToast(``);
+					}
+					keys.forEach(key => (order[key] = ''));
+					let orders = result.map(({ data }) => {
+						let order = {};
+						data.forEach((item, index) => {
+							let key = keys[index];
+							if (key === 'packageDropoffStartTime' || key === 'packageDropoffEndTime') {
+								item = moment(item, 'DD/MM/YYYY HH:mm').format();
+							}
+							order[key] = item;
+						});
+						return order;
+					});
+					console.log(orders);
+					dispatch(setBatch(orders));
+				}}
+				handleOpenDialog={res => console.log(res)}
+			/>
 			<Quotes
 				show={quoteModal}
 				onHide={() => showQuoteModal(false)}
@@ -302,36 +288,6 @@ const Create = props => {
 				selectDriver={selectProvider}
 				showConfirmDialog={showConfirmDialog}
 				createUnassigned={assign}
-			/>
-			<CSVUpload
-				show={uploadCSV}
-				ref={csvUploadRef}
-				hide={() => showCSVUpload(false)}
-				handleRemoveFile={() => console.log('File removed')}
-				handleOnError={err => console.log(err)}
-				handleOnDrop={drops => {
-					let dropoff = {};
-					let { data: keys } = drops.shift();
-					if (drops.length > 8) {
-						drops = drops.slice(0, 8);
-						setToast(`Multi-drop only supports a maximum of 8 dropoffs`);
-					}
-					keys.forEach(key => (dropoff[key] = ''));
-					let dropoffs = drops.map(({ data }) => {
-						let dropoff = {};
-						data.forEach((item, index) => {
-							let key = keys[index];
-							if (key === 'packageDropoffEndTime') {
-								item = moment(item, 'DD/MM/YYYY HH:mm').format();
-							}
-							dropoff[key] = item;
-						});
-						return dropoff;
-					});
-					console.log(dropoffs);
-					dispatch(setDropoffs(dropoffs));
-				}}
-				handleOpenDialog={res => console.log(res)}
 			/>
 			<div className='container-fluid my-auto'>
 				<Formik
@@ -352,47 +308,71 @@ const Create = props => {
 					validateOnChange={false}
 					validateOnBlur={false}
 					onSubmit={async (values, actions) => {
+						console.log(values.type);
 						if (apiKey) {
 							if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
 								setLoadingText('Getting Quote');
-								setLoadingModal(true);
-								try {
-									if (values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP) {
-										values.drops = dropoffs;
-										values = await handleAddresses(values);
-										setDeliveryParams(prevState => ({ ...values }));
-										setLoadingModal(false);
-										showMultiDropDialog(true);
-									} else {
-										values = await handleAddresses(values);
-										setDeliveryParams(prevState => ({ ...values }));
-										const {
-											quotes,
-											bestQuote: { id }
-										} = await dispatch(getAllQuotes(apiKey, values));
-										setQuotes(quotes);
-										setLoadingModal(false);
-										showQuoteModal(true);
-									}
-								} catch (err) {
-									setLoadingModal(false);
-									console.error(err);
-								}
-							} else {
-								setLoadingText('Checking available drivers...');
-								setLoadingModal(true);
+								setLoading(true);
 								try {
 									values = await handleAddresses(values);
 									setDeliveryParams(prevState => ({ ...values }));
-									setLoadingModal(false);
+									const {
+										quotes,
+										bestQuote: { id }
+									} = await dispatch(getAllQuotes(apiKey, values));
+									setQuotes(quotes);
+									setLoading(false);
+									showQuoteModal(true);
+								} catch (err) {
+									setLoading(false);
+									console.error(err);
+								}
+							} else if (values.type === SUBMISSION_TYPES.CREATE_UNASSIGNED) {
+								setLoadingText('Creating unassigned orders...');
+								setLoading(true);
+								try {
+									for (let item of batch) {
+										let order = { ...values, drops: [{...item}] };
+										order = await handleAddresses(order);
+										console.log(order);
+										const job = await dispatch(assignDriver(order, apiKey, null));
+										console.log(job);
+										// let {
+										// 	dropoffLocation: { fullAddress: dropoffAddress },
+										// 	dropoffEndTime,
+										// 	orderReference: customerReference
+										// } = deliveries[0];
+										// let newJob = {
+										// 	orderNumber,
+										// 	customerReference,
+										// 	pickupAddress,
+										// 	dropoffAddress,
+										// 	pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+										// 	deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+										// 	deliveryFee,
+										// 	courier: name.replace(/_/g, ' ')
+										// };
+									}
+								} catch (err) {
+									setLoading(false);
+									console.error(err);
+								}
+								setLoading(false);
+							} else {
+								setLoadingText('Checking available drivers...');
+								setLoading(true);
+								try {
+									values = await handleAddresses(values);
+									setDeliveryParams(prevState => ({ ...values }));
+									setLoading(false);
 									showDriversModal(true);
 								} catch (err) {
-									setLoadingModal(false);
+									setLoading(false);
 									console.log(err);
 								}
 							}
 						} else {
-							setLoadingModal(false);
+							setLoading(false);
 							setToast('Your account does not have an API key associated with it. Please generate one from the integrations page');
 						}
 					}}
@@ -403,7 +383,9 @@ const Create = props => {
 								const { name, value } = e.nativeEvent['submitter'];
 								name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE
 									? setFieldValue('type', SUBMISSION_TYPES.GET_QUOTE)
-									: setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER);
+									: name === SUBMISSION_TYPES.ASSIGN_DRIVER || value === SUBMISSION_TYPES.ASSIGN_DRIVER
+									? setFieldValue('type', SUBMISSION_TYPES.ASSIGN_DRIVER)
+									: setFieldValue('type', SUBMISSION_TYPES.CREATE_UNASSIGNED);
 								handleSubmit(e);
 							}}
 							autoComplete='on'
@@ -412,7 +394,7 @@ const Create = props => {
 							<div className='row mx-1'>
 								<div className='col-6'>
 									<div className='border border-2 rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
-										<h4>Delivery Type</h4>
+										<h4>Delivery Method</h4>
 										<div className='d-flex mt-2 justify-content-center'>
 											<div className='form-check mb-2'>
 												<input
@@ -459,7 +441,7 @@ const Create = props => {
 													onBlur={handleBlur}
 												/>
 												<label className='form-check-label' htmlFor='radio-2'>
-													Multi drop
+													CSV Batch upload
 												</label>
 											</div>
 											<ErrorField name='packageDeliveryType' classNames='mt-2' />
@@ -662,13 +644,13 @@ const Create = props => {
 									<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
 										<h4>
 											{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP
-												? 'Multi Drop (min. 5 dropoffs, max 8 dropoffs)'
+												? 'Batch Order upload (max 10 orders)'
 												: 'Dropoff'}
 										</h4>
 										{values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? (
 											<div>
 												<ol className='list list-unstyled'>
-													{dropoffs.map(
+													{batch.map(
 														(
 															{
 																dropoffFirstName,
@@ -710,17 +692,7 @@ const Create = props => {
 													)}
 												</ol>
 												<div className='d-flex align-items-center'>
-													<div
-														className='btn btn-outline-primary'
-														onClick={() =>
-															dropoffs.length < 8
-																? showDropoffModal(true)
-																: setToast(`You cannot add more than 8 dropoff locations per multi drop`)
-														}
-													>
-														Add Dropoff
-													</div>
-													<div className='ms-4 btn btn-outline-success' onClick={() => showCSVUpload(true)}>
+													<div className='btn btn-outline-success' onClick={() => showCSVUpload(true)}>
 														Upload CSV
 													</div>
 													<Link className='ms-4' to='/example.csv' target='_blank' download='template.csv'>
@@ -730,20 +702,20 @@ const Create = props => {
 												<div className='d-flex pt-3 justify-content-center'>
 													<Button
 														type='submit'
-														name={SUBMISSION_TYPES.GET_QUOTE}
-														value={SUBMISSION_TYPES.GET_QUOTE}
+														name={SUBMISSION_TYPES.CREATE_UNASSIGNED}
+														value={SUBMISSION_TYPES.CREATE_UNASSIGNED}
 														variant='primary'
 														size='lg'
 														className='mx-3'
-														disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
+														disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && batch.length < 5}
 														onClick={() =>
 															values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-															dropoffs.length < 5 &&
-															alert('Please add at least 5 dropoffs before creating a multi drop')
+															batch.length < 5 &&
+															alert('Please add at least 5 batch before creating a multi drop')
 														}
 														style={{ width: '100%' }}
 													>
-														<span className='btn-text'>Outsource</span>
+														<span className='btn-text'>Create</span>
 													</Button>
 												</div>
 											</div>
@@ -994,15 +966,15 @@ const Create = props => {
 															variant='primary'
 															size='lg'
 															className='mx-3'
-															disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && dropoffs.length < 5}
+															disabled={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP && batch.length < 5}
 															onClick={() =>
 																values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
-																dropoffs.length < 5 &&
-																alert('Please add at least 5 dropoffs before creating a multi drop')
+																batch.length < 5 &&
+																alert('Please add at least 5 orders before creating a batch')
 															}
 															style={{ width: 150 }}
 														>
-															<span className='btn-text'>Outsource</span>
+															<span className='btn-text'>Create</span>
 														</Button>
 													</div>
 												</div>

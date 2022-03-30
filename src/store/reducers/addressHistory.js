@@ -1,20 +1,20 @@
-import { ADD_DROPOFF, REMOVE_DROPOFF, SET_DROPOFFS, CLEAR_DROPOFFS } from '../actionTypes';
+import { ADD_DROPOFF, REMOVE_DROPOFF, SET_BATCH, CLEAR_DROPOFFS } from '../actionTypes';
 
 export const DEFAULT_STATE = {
-	dropoffs: [],
+	batch: [],
 	favourites: []
 }
 
 export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case ADD_DROPOFF:
-			return {...state, dropoffs: [...state.dropoffs, action.dropoff]}
+			return {...state, batch: [...state.batch, action.batch]}
 		case REMOVE_DROPOFF:
-			return {...state, dropoffs: state.dropoffs.filter((item, index) => index !== action.index)}
-		case SET_DROPOFFS:
-			return { ...state, dropoffs: action.dropoffs }
+			return {...state, batch: state.batch.filter((item, index) => index !== action.index)}
+		case SET_BATCH:
+			return { ...state, batch: action.batch }
 		case CLEAR_DROPOFFS:
-			return { ...state, dropoffs: []}
+			return { ...state, batch: []}
 		default:
 			return state
 	}

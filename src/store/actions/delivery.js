@@ -8,7 +8,7 @@ import {
 	REMOVE_DROPOFF,
 	SET_ALL_JOBS,
 	SET_COMPLETED_JOBS,
-	SET_DROPOFFS,
+	SET_BATCH,
 	TIMER_START,
 	TIMER_STOP,
 	UPDATE_COMPLETED_JOBS,
@@ -16,9 +16,9 @@ import {
 } from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
 
-export const setDropoffs = dropoffs => ({
-	type: SET_DROPOFFS,
-	dropoffs
+export const setBatch = batch => ({
+	type: SET_BATCH,
+	batch
 });
 
 export const addDropoff = dropoff => ({
