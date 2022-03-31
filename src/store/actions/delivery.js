@@ -58,7 +58,7 @@ export const newDeliveryJob = job => ({
 export const updateDeliveryJob = job => ({
 	type: UPDATE_DELIVERY_JOB,
 	job
-})
+});
 
 export const clearAllJobs = () => ({
 	type: CLEAR_JOBS
@@ -79,12 +79,12 @@ export const unsubscribe = () => dispatch => {
 };
 
 //THUNKS
-export function assignDriver(deliveryParams, apiKey, driverId){
+export function assignDriver(deliveryParams, apiKey, driverId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/assign`, deliveryParams, {
-				headers: { 'X-Seconds-Api-Key': apiKey	},
+				headers: { 'X-Seconds-Api-Key': apiKey },
 				params: { driverId }
 			})
 				.then(job => {
@@ -155,12 +155,12 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId = undefine
 export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.table({type, providerId, orderNumber})
+			console.table({ type, providerId, orderNumber });
 			return apiCall(
 				'PATCH',
 				`/api/v1/jobs/dispatch`,
 				{ type, providerId, orderNumber },
-				{headers: { 'X-Seconds-Api-Key': apiKey}}
+				{ headers: { 'X-Seconds-Api-Key': apiKey } }
 			)
 				.then(job => {
 					Mixpanel.track('Successful manual dispatch');
@@ -185,9 +185,9 @@ export function manuallyDispatchRoute(apiKey, driverId, route, timeWindow) {
 				'PATCH',
 				`/api/v1/jobs/optimise`,
 				{ driverId, route, timeWindow },
-				{headers: { 'X-Seconds-Api-Key': apiKey}}
+				{ headers: { 'X-Seconds-Api-Key': apiKey } }
 			)
-				.then(({message}) => {
+				.then(({ message }) => {
 					Mixpanel.track('Successful route optimization');
 					dispatch(removeError());
 					resolve(message);
@@ -202,7 +202,7 @@ export function manuallyDispatchRoute(apiKey, driverId, route, timeWindow) {
 	};
 }
 
-export function optimizeRoutes(email, params, orderNumbers){
+export function optimizeRoutes(email, params, orderNumbers) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall(
@@ -214,12 +214,12 @@ export function optimizeRoutes(email, params, orderNumbers){
 				}
 			)
 				.then(({ message, job_id }) => {
-					console.log(message)
-					return apiCall('GET', '/server/main/optimise-route', null, {params: { email, job_id, num_orders: orderNumbers.length }})
-						.then(({message, routes, unreachable} ) => {
-							console.log(routes)
-							console.log(unreachable)
-							resolve({routes, unreachable})
+					console.log(message);
+					return apiCall('GET', '/server/main/optimise-route', null, { params: { email, job_id, num_orders: orderNumbers.length } })
+						.then(({ message, routes, unreachable }) => {
+							console.log(routes);
+							console.log(unreachable);
+							resolve({ routes, unreachable });
 						})
 						.catch(err => {
 							if (err) dispatch(addError(err.message));
@@ -232,8 +232,8 @@ export function optimizeRoutes(email, params, orderNumbers){
 					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
-		})
-	}
+		});
+	};
 }
 
 export function getAllJobs(apiKey, email) {
@@ -242,7 +242,7 @@ export function getAllJobs(apiKey, email) {
 			setTokenHeader(localStorage.getItem('jwt_token'));
 			return apiCall('GET', `/api/v1/jobs`, null, {
 				headers: {
-					'Cache-Control': "private",
+					'Cache-Control': 'private',
 					'X-Seconds-Api-Key': apiKey
 				},
 				params: { email }
@@ -270,6 +270,7 @@ export function getAllJobs(apiKey, email) {
 		});
 	};
 }
+
 
 export function getAllQuotes(apiKey, data) {
 	return dispatch => {
@@ -322,6 +323,22 @@ export function updateDelivery(apiKey, jobId, data) {
 					Mixpanel.track('Unsuccessful job update');
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function deleteJobs(email, orderNumbers) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', `/server/main/cancel-orders`, { orderNumbers }, { params: { email } })
+				.then(({message}) => {
+					resolve(message);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
 		})

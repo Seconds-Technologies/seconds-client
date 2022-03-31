@@ -67,11 +67,12 @@ const Drivers = props => {
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
 	const confirmDelete = useCallback(
-		(driverIds=[]) => {
-			handleClose();
-			dispatch(deleteDrivers(email, driverIds)).then(res => console.log(res));
+		() => {
+			console.log(deleteModal)
+			dispatch(deleteDrivers(email, deleteModal.ids)).then(() => console.log("Drivers deleted successfully!"));
+			handleClose()
 		},
-		[selectionModel]
+		[selectionModel, deleteModal.ids]
 	);
 
 	const columns = [
@@ -180,14 +181,21 @@ const Drivers = props => {
 		return () => dispatch(unsubscribe());
 	}, []);
 
+	useEffect(() => {
+		console.log(deleteModal)
+	}, [deleteModal]);
+
+
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<DeleteModal
-				ids={deleteModal.ids}
+				data={drivers.filter(({ id }) => deleteModal.ids.includes(id)).map(({firstname, lastname}) => `${firstname} ${lastname}`)}
 				show={deleteModal.show}
 				onHide={handleClose}
+				title="Delete Drivers"
+				description="The following drivers will be deleted"
 				centered
 				onConfirm={confirmDelete}
 			/>
@@ -237,7 +245,7 @@ const Drivers = props => {
 				components={
 					selectionModel.length
 						? {
-								Footer: () => <CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} />
+								Footer: () => <CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} title="Bulk Delete"/>
 						  }
 						: undefined
 				}

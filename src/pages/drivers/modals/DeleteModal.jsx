@@ -4,22 +4,21 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
 
-const DeleteModal = ({ onHide, show, centered, onConfirm, ids }) => {
-	const drivers = useSelector(state => state['driversStore'].filter(driver => ids.includes(driver.id)))
+const DeleteModal = ({ onHide, show, centered, onConfirm, title, description, data }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered={!!centered}>
 			<Modal.Header closeButton>
-				<Modal.Title>Delete Drivers</Modal.Title>
+				<Modal.Title>{title}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='d-flex flex-column justify-content-center align-items-center border-0'>
-				<span className='fs-6'>The following drivers will be deleted</span>
-				{drivers.map(driver => <span className="fw-bold">{driver.firstname} {driver.lastname}</span>)}
+				<span className='fs-6'>{description}</span>
+				{data.map((name, index) => <span key={index} className="fw-bold">{name}</span>)}
 			</Modal.Body>
 			<Modal.Footer>
 				<Button variant='secondary' onClick={onHide}>
 					Cancel
 				</Button>
-				<Button	onClick={() => onConfirm(ids)}>
+				<Button	onClick={onConfirm}>
 					Confirm
 				</Button>
 			</Modal.Footer>
@@ -28,7 +27,7 @@ const DeleteModal = ({ onHide, show, centered, onConfirm, ids }) => {
 };
 
 DeleteModal.propTypes = {
-	ids: PropTypes.array,
+	data: PropTypes.array,
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	onConfirm: PropTypes.func.isRequired

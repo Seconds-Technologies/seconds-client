@@ -1,5 +1,6 @@
 import { PLACE_TYPES } from '../constants';
 import moment from 'moment';
+import { jobRequestSchema } from '../schemas';
 
 export function parseAddress(data, requiresGeoJSON = false) {
 	console.log(data)
@@ -98,6 +99,46 @@ export function capitalize(str) {
 	let start = str[0].toUpperCase()
 	const lower = str.slice(1).toLowerCase()
 	return start.concat(lower);
+}
+
+export function assemblePayload({ jobSpecification, vehicleType }) {
+	let payload = {
+		...jobRequestSchema,
+		pickupFirstName: jobSpecification.pickupLocation.firstName,
+		pickupLastName: jobSpecification.pickupLocation.lastName,
+		pickupBusinessName: jobSpecification.pickupLocation.businessName,
+		pickupAddress: jobSpecification.pickupLocation.fullAddress,
+		pickupAddressLine1: jobSpecification.pickupLocation.streetAddress,
+		pickupCity: jobSpecification.pickupLocation.city,
+		pickupPostcode: jobSpecification.pickupLocation.postcode,
+		pickupLongitude: jobSpecification.pickupLocation.longitude,
+		pickupLatitude: jobSpecification.pickupLocation.latitude,
+		pickupEmailAddress: jobSpecification.pickupLocation.email,
+		pickupPhoneNumber: jobSpecification.pickupLocation.phoneNumber,
+		pickupInstructions: jobSpecification.pickupLocation.instructions,
+		packagePickupStartTime: jobSpecification.pickupStartTime,
+		...(jobSpecification.pickupEndTime && { packagePickupEndTime: jobSpecification.pickupStartTime }),
+		drops: jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
+			dropoffFirstName: dropoffLocation.firstName,
+			dropoffLastName: dropoffLocation.lastName,
+			dropoffBusinessName: dropoffLocation.businessName,
+			dropoffAddress: dropoffLocation.fullAddress,
+			dropoffAddressLine1: dropoffLocation.streetAddress,
+			dropoffCity: dropoffLocation.city,
+			dropoffPostcode: dropoffLocation.postcode,
+			dropoffLatitude: dropoffLocation.latitude,
+			dropoffLongitude: dropoffLocation.longitude,
+			dropoffEmailAddress: dropoffLocation.email,
+			dropoffPhoneNumber: dropoffLocation.phoneNumber,
+			dropoffInstructions: dropoffLocation.instructions,
+			packageDropoffEndTime: dropoffEndTime,
+			packageDescription: description
+		})),
+		packageDeliveryType: jobSpecification.deliveryType,
+		vehicleType
+	};
+	console.log(payload);
+	return payload;
 }
 
 /*

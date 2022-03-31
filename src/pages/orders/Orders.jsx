@@ -39,6 +39,11 @@ import { jobRequestSchema } from '../../schemas';
 import Quotes from '../../modals/Quotes';
 import SuccessMessage from '../../modals/SuccessMessage';
 import SuccessToast from '../../modals/SuccessToast';
+import CustomFooter from '../../components/CustomFooter';
+import { DELETE_TYPES } from '../drivers/constants';
+import DeleteModal from '../drivers/modals/DeleteModal';
+import { deleteJobs } from '../../store/actions/delivery';
+import { assemblePayload } from '../../helpers';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
@@ -76,6 +81,10 @@ export default function Orders(props) {
 	});
 	const [message, setMessage] = useState('');
 	const [toast, setToast] = useState('');
+	const [deleteModal, setDeleteModal] = useState({ show: false, ids: [] });
+	const handleOpen = ids => setDeleteModal(prevState => ({ show: true, ids }));
+	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
+
 	const modalRef = useRef(null);
 
 	const columns = [
@@ -283,46 +292,6 @@ export default function Orders(props) {
 			});
 	}, [provider]);
 
-	function assemblePayload({ jobSpecification, vehicleType }) {
-		let payload = {
-			...jobRequestSchema,
-			pickupFirstName: jobSpecification.pickupLocation.firstName,
-			pickupLastName: jobSpecification.pickupLocation.lastName,
-			pickupBusinessName: jobSpecification.pickupLocation.businessName,
-			pickupAddress: jobSpecification.pickupLocation.fullAddress,
-			pickupAddressLine1: jobSpecification.pickupLocation.streetAddress,
-			pickupCity: jobSpecification.pickupLocation.city,
-			pickupPostcode: jobSpecification.pickupLocation.postcode,
-			pickupLongitude: jobSpecification.pickupLocation.longitude,
-			pickupLatitude: jobSpecification.pickupLocation.latitude,
-			pickupEmailAddress: jobSpecification.pickupLocation.email,
-			pickupPhoneNumber: jobSpecification.pickupLocation.phoneNumber,
-			pickupInstructions: jobSpecification.pickupLocation.instructions,
-			packagePickupStartTime: jobSpecification.pickupStartTime,
-			...(jobSpecification.pickupEndTime && { packagePickupEndTime: jobSpecification.pickupStartTime }),
-			drops: jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
-				dropoffFirstName: dropoffLocation.firstName,
-				dropoffLastName: dropoffLocation.lastName,
-				dropoffBusinessName: dropoffLocation.businessName,
-				dropoffAddress: dropoffLocation.fullAddress,
-				dropoffAddressLine1: dropoffLocation.streetAddress,
-				dropoffCity: dropoffLocation.city,
-				dropoffPostcode: dropoffLocation.postcode,
-				dropoffLatitude: dropoffLocation.latitude,
-				dropoffLongitude: dropoffLocation.longitude,
-				dropoffEmailAddress: dropoffLocation.email,
-				dropoffPhoneNumber: dropoffLocation.phoneNumber,
-				dropoffInstructions: dropoffLocation.instructions,
-				packageDropoffEndTime: dropoffEndTime,
-				packageDescription: description
-			})),
-			packageDeliveryType: jobSpecification.deliveryType,
-			vehicleType
-		};
-		console.log(payload);
-		return payload;
-	}
-
 	const fetchQuotes = useCallback(async () => {
 		showAssignModal(false);
 		setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
@@ -393,6 +362,17 @@ export default function Orders(props) {
 			})
 			.catch(err => console.error(err));
 	}, []);
+
+	const confirmDelete = useCallback(() => {
+		dispatch(deleteJobs(email, selectionModel)).then(res => console.log(res));
+		handleClose();
+	}, [selectionModel]);
+
+	const canDelete = useMemo(() => {
+		return allJobs
+			.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber))
+			.every(({ selectedConfiguration: { providerId } }) => providerId === PROVIDERS.UNASSIGNED);
+	}, [selectionModel]);
 
 	return (
 		<LoadingOverlay active={jobLoader.loading} spinner text={jobLoader.text} classNamePrefix='order_loader_'>
@@ -481,6 +461,17 @@ export default function Orders(props) {
 					defaultStartTime={moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm')}
 					defaultEndTime={moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm')}
 				/>
+				<DeleteModal
+					data={allJobs
+						.filter(job => selectionModel.includes(job['jobSpecification'].orderNumber))
+						.map(({ jobSpecification: { orderNumber } }) => orderNumber)}
+					show={deleteModal.show}
+					title='Delete Orders'
+					description='The following orders will be cancelled and removed from your account'
+					onHide={handleClose}
+					centered
+					onConfirm={confirmDelete}
+				/>
 				<h3 className='ms-3'>Your Orders</h3>
 				<DataGrid
 					sx={{
@@ -512,15 +503,24 @@ export default function Orders(props) {
 					pagination
 					onSelectionModelChange={newSelectionModel => {
 						setSelectionModel(newSelectionModel);
+						console.log(newSelectionModel);
 					}}
 					selectionModel={selectionModel}
-					components={{ Toolbar: CustomToolbar }}
+					components={{
+						Toolbar: CustomToolbar,
+						...(selectionModel.length && { Footer: CustomFooter })
+					}}
 					componentsProps={{
 						toolbar: {
 							toggleShow: () => {
 								showOptRoutes(true);
 							},
 							canOptimize
+						},
+						footer: {
+							onDelete: () => handleOpen(DELETE_TYPES.BATCH, selectionModel),
+							title: 'Delete',
+							canDelete
 						}
 					}}
 				/>

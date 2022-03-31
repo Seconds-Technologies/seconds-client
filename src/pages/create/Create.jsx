@@ -701,7 +701,7 @@ const Create = props => {
 														setFieldValue('vehicleType', batch[0].vehicleType);
 														values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP &&
 														batch.length < 5 &&
-														alert('Please add at least 5 batch before creating a multi drop');
+														alert('Please add at least 5 orders before creating your batch');
 													}}
 												>
 													<span className='btn-text'>Create</span>
