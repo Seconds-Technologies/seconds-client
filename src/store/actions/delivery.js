@@ -271,7 +271,6 @@ export function getAllJobs(apiKey, email) {
 	};
 }
 
-
 export function getAllQuotes(apiKey, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {

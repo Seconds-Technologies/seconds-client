@@ -135,14 +135,19 @@ export const DELIVERY_TYPES = {
 	MULTI_DROP: 'MULTI_DROP'
 };
 
+export const DISPATCH_MODES = {
+	AUTO: "AUTO",
+	MANUAL: "MANUAL"
+}
+
 export const DISPATCH_TYPES = {
 	DRIVER: "DRIVER",
 	COURIER: "COURIER"
 }
 
-export const DISPATCH_MODES = {
-	AUTO: "AUTO",
-	MANUAL: "MANUAL"
+export const BATCH_TYPES = {
+	INCREMENTAL: "INCREMENTAL",
+	DAILY: "DAILY"
 }
 
 export const DELIVERY_STRATEGIES = {

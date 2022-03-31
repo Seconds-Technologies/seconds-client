@@ -1,7 +1,9 @@
 import { SET_BUSINESS_WORKFLOW, UPDATE_BUSINESS_WORKFLOW } from '../actionTypes';
+import { BATCH_TYPES, DISPATCH_TYPES } from '../../constants';
 
 export const DEFAULT_STATE = {
-	defaultDispatch: 'DRIVER',
+	defaultDispatch: DISPATCH_TYPES.DRIVER,
+	defaultBatchMode: BATCH_TYPES.DAILY,
 	sms: false, //be true when user logged in
 	jobAlerts: {
 		new: false,
@@ -11,6 +13,17 @@ export const DEFAULT_STATE = {
 		enabled: true,
 		maxOrders: 1,
 		onlineOnly: true
+	},
+	autoBatch: {
+		enabled: false,
+		daily: {
+			deadline: '17:00',
+			pickupTime: '18:00'
+		},
+		incremental: {
+			batchInterval: 2,
+			waitTime: 30
+		}
 	},
 	driverResponseTime: 5,
 	driverDeliveryFee: 5,
@@ -29,27 +42,12 @@ export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case SET_BUSINESS_WORKFLOW:
 			let {
-				defaultDispatch,
-				sms,
-				jobAlerts,
-				autoDispatch,
-				driverResponseTime,
-				driverDeliveryFee,
-				courierSelectionCriteria,
-				courierPriceThreshold,
-				activeFleetProviders
+				_id,
+				_v,
+				clientId,
+				...workflowSetting
 			} = action.settings;
-			return {
-				defaultDispatch,
-				sms,
-				jobAlerts,
-				autoDispatch,
-				driverResponseTime,
-				driverDeliveryFee,
-				courierSelectionCriteria,
-				courierPriceThreshold,
-				activeFleetProviders
-			};
+			return workflowSetting;
 		case UPDATE_BUSINESS_WORKFLOW:
 			return { ...state, activeFleetProviders: { ...action.data } };
 		default:

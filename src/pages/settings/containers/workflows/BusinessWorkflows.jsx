@@ -2,15 +2,16 @@ import './workflows.css';
 import React, { useState } from 'react';
 import Switch from 'react-switch';
 import Slider from '@mui/material/Slider';
-import DeliveryTimes from '../../deliveryTimes/DeliveryTimes';
+import DeliveryTimes from '../deliveryTimes/DeliveryTimes';
 import { Formik } from 'formik';
 import { BsInfoCircle } from 'react-icons/bs';
-import { DELIVERY_STRATEGIES, DISPATCH_TYPES } from '../../../../../constants';
+import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES } from '../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateBusinessWorkflow } from '../../../../../store/actions/settings';
-import SuccessToast from '../../../../../modals/SuccessToast';
+import { updateBusinessWorkflow } from '../../../../store/actions/settings';
+import SuccessToast from '../../../../modals/SuccessToast';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import moment from 'moment';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
@@ -19,9 +20,19 @@ const BusinessWorkflows = props => {
 	const dispatch = useDispatch();
 	const [showModal, setShowModal] = useState(false);
 	const [message, setMessage] = useState('');
-	const { email } = useSelector(state => state['currentUser'].user);
-	const { sms, jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, driverDeliveryFee, courierSelectionCriteria, courierPriceThreshold } =
-		useSelector(state => state['settingsStore']);
+	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
+	const {
+		sms,
+		jobAlerts,
+		defaultDispatch,
+		defaultBatchMode,
+		autoDispatch,
+		autoBatch,
+		driverResponseTime,
+		driverDeliveryFee,
+		courierSelectionCriteria,
+		courierPriceThreshold
+	} = useSelector(state => state['settingsStore']);
 
 	return (
 		<div className='tab-container px-3'>
@@ -34,10 +45,12 @@ const BusinessWorkflows = props => {
 					jobAlerts,
 					defaultDispatch,
 					autoDispatch,
+					defaultBatchMode,
+					autoBatch,
 					driverResponseTime,
 					courierSelectionCriteria,
 					courierPriceThreshold,
-					driverDeliveryFee,
+					driverDeliveryFee
 				}}
 				onSubmit={values => {
 					console.log(values);
@@ -77,8 +90,8 @@ const BusinessWorkflows = props => {
 								/>
 								<div className='d-flex align-items-center'>
 									<span className='ms-3 me-2 workflow-header fs-6'>SMS notification</span>
-									<Tooltip title='We charge £0.05 per sms notification' placement="right-start">
-										<IconButton size="small">
+									<Tooltip title='We charge £0.05 per sms notification' placement='right-start'>
+										<IconButton size='small'>
 											<BsInfoCircle />
 										</IconButton>
 									</Tooltip>
@@ -139,7 +152,10 @@ const BusinessWorkflows = props => {
 									onColor={'#9FEA86'}
 									checkedIcon={onIcon}
 									uncheckedIcon={offIcon}
-									onChange={() => setFieldValue('autoDispatch.enabled', !values.autoDispatch.enabled)}
+									onChange={() => {
+										setFieldValue('autoDispatch.enabled', !values.autoDispatch.enabled);
+										values.autoDispatch.enabled && setFieldValue('autoBatch.enabled', false);
+									}}
 									handleDiameter={19}
 									checked={values.autoDispatch.enabled}
 								/>
@@ -192,6 +208,160 @@ const BusinessWorkflows = props => {
 									<p className='text-muted'>This will only show drivers active now when manually assigning a driver</p>
 								</div>
 							</div>
+						</div>
+						<div className='row pb-4 w-75'>
+							<h1 className='workflow-header fs-4'>Auto Batching</h1>
+							<p className='text-muted'>Configure rules to automate batching for incoming orders</p>
+							<div className='d-flex flex-row'>
+								<Switch
+									disabled={!values.autoDispatch.enabled}
+									onColor={'#9FEA86'}
+									checkedIcon={onIcon}
+									uncheckedIcon={offIcon}
+									onChange={() => setFieldValue('autoBatch.enabled', !values.autoBatch.enabled)}
+									handleDiameter={19}
+									checked={values.autoBatch.enabled}
+								/>
+								<div className='ms-3 d-flex flex-column flex-wrap'>
+									<span className='workflow-header fs-6'>Auto-batching</span>
+									<p className='text-muted'>
+										Turning on this feature will automatically batch any incoming orders until your desired time, <br />
+										before performing route optimization and assigning routes to your drivers
+									</p>
+								</div>
+							</div>
+							<div>
+								<div className='form-check'>
+									<input
+										className='form-check-input'
+										type='radio'
+										name='defaultBatchMode'
+										id='dispatch-radio-3'
+										onChange={e => setFieldValue('defaultBatchMode', BATCH_TYPES.DAILY)}
+										checked={values.defaultBatchMode === BATCH_TYPES.DAILY}
+									/>
+									<label className='form-check-label' htmlFor='dispatch-radio-3'>
+										Daily
+									</label>
+								</div>
+								<div className='form-check'>
+									<input
+										className='form-check-input'
+										type='radio'
+										name='defaultBatchMode'
+										id='dispatch-radio-4'
+										onChange={e => setFieldValue('defaultBatchMode', BATCH_TYPES.INCREMENTAL)}
+										checked={values.defaultBatchMode === BATCH_TYPES.INCREMENTAL}
+									/>
+									<label className='form-check-label' htmlFor='dispatch-radio-4'>
+										Hourly
+									</label>
+								</div>
+							</div>
+							{values.defaultBatchMode === BATCH_TYPES.DAILY ? (
+								<div className='row gy-3'>
+									<div className='col-sm-12 col-md-4'>
+										<label htmlFor='daily-batch-deadline' className='mb-1'>
+											Same day batch deadline
+										</label>
+										<input
+											id='daily-batch-deadline'
+											defaultValue={values.autoBatch.daily.deadline}
+											type='time'
+											min={moment(deliveryHours[moment().day()].open).format('HH:mm')}
+											max={moment(deliveryHours[moment().day()].close).format('HH:mm')}
+											name='autoBatch.daily.deadline'
+											className='form-control rounded-3 mb-2'
+											aria-label='drivers-response-time'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+										<div id='' className='form-text'>
+											Any orders placed before this time, will be batched for <strong>SAME DAY</strong> delivery. <br />
+											Orders placed after this time will be batched for <strong>NEXT DAY</strong> delivery (depending on your
+											delivery hours)
+										</div>
+									</div>
+									<div className='col-sm-12 col-md-4'>
+										<label htmlFor='daily-pickup-time' className='mb-1'>
+											Driver pickup time
+										</label>
+										<input
+											id='daily-pickup-time'
+											defaultValue={values.autoBatch.daily.pickupTime}
+											type='time'
+											min={moment(deliveryHours[moment().day()].open).format('HH:mm')}
+											max={moment(deliveryHours[moment().day()].close).format('HH:mm')}
+											name='autoBatch.daily.pickupTime'
+											className='form-control rounded-3 mb-2'
+											aria-label='drivers-response-time'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+										<div id='' className='form-text'>
+											Set the time that orders should be optimized and assigned to your drivers
+										</div>
+									</div>
+								</div>
+							) : (
+								<div className='row'>
+									<div className='col-sm-12 mb-3'>
+										<div className='d-flex align-items-center mb-2'>
+											<label htmlFor='daily-batch-deadline' className='me-1'>
+												Batching interval (hours)
+											</label>
+											<Tooltip title='Choose how often we should batch orders during the day' placement='right-start'>
+												<IconButton size='small'>
+													<BsInfoCircle />
+												</IconButton>
+											</Tooltip>
+										</div>
+										<div className='d-flex' style={{ width: 500 }}>
+											<span className='px-4'>2&nbsp;hrs</span>
+											<Slider
+												name='autoBatch.incremental.batchInterval'
+												color='secondary'
+												aria-label='courier-price-threshold'
+												defaultValue={values.autoBatch.incremental.batchInterval}
+												valueLabelDisplay='auto'
+												step={1}
+												marks
+												min={2}
+												max={12}
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+											<span className='px-4'>12&nbsp;hrs</span>
+										</div>
+									</div>
+									<div className='col-sm-12 col-md-3'>
+										<div className='d-flex align-items-center mb-2'>
+											<label htmlFor='daily-batch-deadline' className='me-1'>
+												Wait period (minutes)
+											</label>
+											<Tooltip title='Set how long to wait before assigning batches to drivers' placement='right-start'>
+												<IconButton size='small'>
+													<BsInfoCircle />
+												</IconButton>
+											</Tooltip>
+										</div>
+										<div className='input-group' style={{ width: 200 }}>
+											<input
+												defaultValue={values.autoBatch.incremental.waitTime}
+												type='number'
+												min={0}
+												max={60}
+												name='autoBatch.incremental.waitTime'
+												className='form-control'
+												aria-label='autoBatch-incremental-wait-time'
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+											<span className='input-group-text'>mins</span>
+										</div>
+									</div>
+								</div>
+							)}
 						</div>
 						<div className='row pb-4'>
 							<h1 className='workflow-header fs-4'>Drivers response time</h1>
@@ -277,8 +447,11 @@ const BusinessWorkflows = props => {
 									<label htmlFor='customRange2' className='d-flex me-2'>
 										Price Threshold
 									</label>
-									<Tooltip title='Set this price to receive alerts whenever third party couriers charge you more' placement="right-start">
-										<IconButton size="small">
+									<Tooltip
+										title='Set this price to receive alerts whenever third party couriers charge you more'
+										placement='right-start'
+									>
+										<IconButton size='small'>
 											<BsInfoCircle />
 										</IconButton>
 									</Tooltip>
