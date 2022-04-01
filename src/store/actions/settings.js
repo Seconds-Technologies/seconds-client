@@ -2,16 +2,16 @@ import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError } from './errors';
 import { updateCurrentUser } from './auth';
-import { SET_BUSINESS_WORKFLOW, UPDATE_BUSINESS_WORKFLOW } from '../actionTypes';
+import { SET_BUSINESS_WORKFLOW, UPDATE_FLEET_PROVIDERS } from '../actionTypes';
 
 export const setSettings = settings => ({
 	type: SET_BUSINESS_WORKFLOW,
 	settings
 })
 
-export const updateSettings = data => ({
-	type: UPDATE_BUSINESS_WORKFLOW,
-	data
+export const updateSettings = providers => ({
+	type: UPDATE_FLEET_PROVIDERS,
+	providers
 })
 
 export function updateBusinessWorkflow(email, data) {

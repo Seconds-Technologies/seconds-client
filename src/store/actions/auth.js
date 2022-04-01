@@ -107,11 +107,11 @@ export function syncUser(email, authenticated = true) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', `/server/main/sync-user`, null, { params: { email: email } })
-				.then(({ message,settings, drivers, ...user }) => {
+				.then(({ message, settings, drivers, ...user }) => {
 					if (authenticated) {
 						dispatch(setCurrentUser(user));
 						dispatch(setDrivers(drivers));
-						settings && dispatch(updateSettings(settings))
+						settings && dispatch(setSettings(settings))
 					} else {
 						dispatch(setUserDetails(user));
 					}
