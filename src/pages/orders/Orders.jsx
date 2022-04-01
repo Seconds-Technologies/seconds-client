@@ -95,10 +95,6 @@ export default function Orders(props) {
 			hide: true
 		},
 		{
-			field: 'dispatchMode',
-			hide: true
-		},
-		{
 			field: 'status',
 			headerName: 'Status',
 			type: 'singleSelect',
@@ -177,14 +173,12 @@ export default function Orders(props) {
 									: privateCourier
 							}
 							alt=''
-							className={`${
-								params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && 'img-red'
-							} me-3`}
+							className={`${params.row.driver === PROVIDERS.UNASSIGNED && 'img-red'} me-3`}
 							width={25}
 							height={25}
 						/>
 						{params.row.routeOptimization && <img src={infinityIcon} alt='' width={25} height={25} />}
-						{params.row.dispatchMode === DISPATCH_MODES.MANUAL && params.row.driver === PROVIDERS.UNASSIGNED && (
+						{params.row.driver === PROVIDERS.UNASSIGNED && (
 							<StyledButton
 								onClick={() => {
 									selectProvider(prevState => ({ ...prevState, orderNumber: params.row.id }));
@@ -235,7 +229,6 @@ export default function Orders(props) {
 				({
 					_id,
 					status,
-					dispatchMode,
 					jobSpecification: { orderNumber, deliveries },
 					selectedConfiguration: { providerId },
 					createdAt,
@@ -255,7 +248,6 @@ export default function Orders(props) {
 						address,
 						driver,
 						createdAt,
-						dispatchMode,
 						routeOptimization
 					};
 				}
@@ -273,7 +265,7 @@ export default function Orders(props) {
 		return selectionModel.length
 			? selectionModel.every(orderNo => {
 					let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
-					return job.dispatchMode === DISPATCH_MODES.MANUAL && job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
+					return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 			  })
 			: false;
 	}, [selectionModel]);
