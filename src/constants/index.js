@@ -90,6 +90,8 @@ export const PROVIDER_TYPES = {
 	DRIVER: 'driver'
 }
 
+export const VEHICLE_CODES = ['BIC', 'MTB', 'CGB', 'CAR', 'VAN']
+
 export const VEHICLE_TYPES = [
 	{
 		value: 'BIC',

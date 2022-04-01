@@ -25,6 +25,20 @@ export const DEFAULT_STATE = {
 			waitTime: 30
 		}
 	},
+	routeOptimization: {
+		vehicleTypes: {
+			BIC: false,
+			MTB: false,
+			CGB: false,
+			CAR: false,
+			VAN: false
+		},
+		objectives: {
+			mileage: true,
+			duration: true,
+			cost: true
+		}
+	},
 	driverResponseTime: 5,
 	driverDeliveryFee: 5,
 	courierSelectionCriteria: 'eta',

@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Switch from 'react-switch';
 import Slider from '@mui/material/Slider';
 import DeliveryTimes from '../deliveryTimes/DeliveryTimes';
-import { Formik } from 'formik';
+import { Form, FieldArray, Formik } from 'formik';
 import { BsInfoCircle } from 'react-icons/bs';
-import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES } from '../../../../constants';
+import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES, VEHICLE_CODES, VEHICLE_TYPES } from '../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateBusinessWorkflow } from '../../../../store/actions/settings';
 import SuccessToast from '../../../../modals/SuccessToast';
@@ -28,6 +28,7 @@ const BusinessWorkflows = props => {
 		defaultBatchMode,
 		autoDispatch,
 		autoBatch,
+		routeOptimization,
 		driverResponseTime,
 		driverDeliveryFee,
 		courierSelectionCriteria,
@@ -47,6 +48,7 @@ const BusinessWorkflows = props => {
 					autoDispatch,
 					defaultBatchMode,
 					autoBatch,
+					routeOptimization,
 					driverResponseTime,
 					courierSelectionCriteria,
 					courierPriceThreshold,
@@ -58,7 +60,7 @@ const BusinessWorkflows = props => {
 				}}
 			>
 				{({ values, handleSubmit, handleChange, handleBlur, handleReset, setFieldValue }) => (
-					<form onSubmit={handleSubmit} className='container-fluid'>
+					<Form className='container-fluid'>
 						<div className='row pb-4'>
 							<div>
 								<h1 className='workflow-header fs-4'>Set Delivery Time</h1>
@@ -275,6 +277,7 @@ const BusinessWorkflows = props => {
 											aria-label='drivers-response-time'
 											onChange={handleChange}
 											onBlur={handleBlur}
+											required={values.defaultBatchMode === BATCH_TYPES.DAILY}
 										/>
 										<div id='' className='form-text'>
 											Any orders placed before this time, will be batched for <strong>SAME DAY</strong> delivery. <br />
@@ -290,13 +293,14 @@ const BusinessWorkflows = props => {
 											id='daily-pickup-time'
 											defaultValue={values.autoBatch.daily.pickupTime}
 											type='time'
-											min={moment(deliveryHours[moment().day()].open).format('HH:mm')}
+											min={values.autoBatch.daily.deadline}
 											max={moment(deliveryHours[moment().day()].close).format('HH:mm')}
 											name='autoBatch.daily.pickupTime'
 											className='form-control rounded-3 mb-2'
 											aria-label='drivers-response-time'
 											onChange={handleChange}
 											onBlur={handleBlur}
+											required={values.defaultBatchMode === BATCH_TYPES.DAILY}
 										/>
 										<div id='' className='form-text'>
 											Set the time that orders should be optimized and assigned to your drivers
@@ -304,8 +308,8 @@ const BusinessWorkflows = props => {
 									</div>
 								</div>
 							) : (
-								<div className='row'>
-									<div className='col-sm-12 mb-3'>
+								<div className='row gy-3'>
+									<div className='col-sm-12 mb-1'>
 										<div className='d-flex align-items-center mb-2'>
 											<label htmlFor='daily-batch-deadline' className='me-1'>
 												Batching interval (hours)
@@ -334,7 +338,7 @@ const BusinessWorkflows = props => {
 											<span className='px-4'>12&nbsp;hrs</span>
 										</div>
 									</div>
-									<div className='col-sm-12 col-md-3'>
+									<div className='col-sm-12'>
 										<div className='d-flex align-items-center mb-2'>
 											<label htmlFor='daily-batch-deadline' className='me-1'>
 												Wait period (minutes)
@@ -356,12 +360,140 @@ const BusinessWorkflows = props => {
 												aria-label='autoBatch-incremental-wait-time'
 												onChange={handleChange}
 												onBlur={handleBlur}
+												required={values.defaultBatchMode === BATCH_TYPES.INCREMENTAL}
 											/>
 											<span className='input-group-text'>mins</span>
 										</div>
 									</div>
 								</div>
 							)}
+						</div>
+						<div className='row pb-4 gx-3'>
+							<h1 className='workflow-header fs-4'>Automated Route Optimization</h1>
+							<p className='text-muted'>Control how order batches should be optimized and assigned to your drivers</p>
+							<div className='col-sm-12 col-md-3'>
+								<span className='workflow-header fs-6'>Select vehicle types</span>
+								<div className='d-flex flex-column mt-2'>
+									{VEHICLE_TYPES.map(({ value, label }, index) => (
+										<div key={index} className='form-check'>
+											<input
+												defaultChecked={values.routeOptimization.vehicleTypes[value]}
+												name={`routeOptimization.vehicleTypes[${value}]`}
+												className='form-check-input'
+												type='checkbox'
+												onChange={handleChange}
+												onBlur={handleBlur}
+											/>
+											<label className='form-check-label' htmlFor='flexCheckDefault'>
+												{label}
+											</label>
+										</div>
+									))}
+									{/*<div className='form-check'>
+												<input
+													defaultChecked={values.routeOptimization.vehicleTypes.includes(VEHICLE_CODES[1]}
+													name='routeOptimization.objectives.mileage'
+													className='form-check-input'
+													type='checkbox'
+													id='criteria-radio-1'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='flexCheckChecked'>
+													Motorbike
+												</label>
+											</div>
+											<div className='form-check'>
+												<input
+													defaultChecked={values.routeOptimization.objectives.mileage}
+													name='routeOptimization.objectives.mileage'
+													className='form-check-input'
+													type='checkbox'
+													id='criteria-radio-1'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='flexCheckChecked'>
+													Car
+												</label>
+											</div>
+											<div className='form-check'>
+												<input
+													defaultChecked={values.routeOptimization.objectives.mileage}
+													name='routeOptimization.objectives.mileage'
+													className='form-check-input'
+													type='checkbox'
+													id='criteria-radio-1'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='flexCheckChecked'>
+													Cargobike
+												</label>
+											</div>
+											<div className='form-check'>
+												<input
+													defaultChecked={values.routeOptimization.objectives.mileage}
+													name='routeOptimization.objectives.mileage'
+													className='form-check-input'
+													type='checkbox'
+													id='criteria-radio-1'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
+												<label className='form-check-label' htmlFor='flexCheckChecked'>
+													Van
+												</label>
+											</div>*/}
+								</div>
+							</div>
+							<div className='col-sm-12 col-md-3'>
+								<span className='workflow-header fs-6'>Optimisation objectives</span>
+								<div className='d-flex flex-column mt-2'>
+									<div className='form-check'>
+										<input
+											defaultChecked={values.routeOptimization.objectives.mileage}
+											name='routeOptimization.objectives.mileage'
+											className='form-check-input'
+											type='checkbox'
+											id='criteria-radio-1'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+										<label className='form-check-label' htmlFor='exampleRadios1'>
+											Minimise drive time
+										</label>
+									</div>
+									<div className='form-check'>
+										<input
+											defaultChecked={values.routeOptimization.objectives.duration}
+											className='form-check-input'
+											type='checkbox'
+											name='routeOptimization.objectives.duration'
+											id='criteria-radio-2'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+										<label className='form-check-label' htmlFor='exampleRadios2'>
+											Arrive on time
+										</label>
+									</div>
+									<div className='form-check'>
+										<input
+											defaultChecked={values.routeOptimization.objectives.cost}
+											className='form-check-input'
+											type='checkbox'
+											name='routeOptimization.objectives.cost'
+											id='criteria-radio-3'
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+										<label className='form-check-label' htmlFor='exampleRadios3'>
+											Minimise cost
+										</label>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div className='row pb-4'>
 							<h1 className='workflow-header fs-4'>Drivers response time</h1>
@@ -503,7 +635,7 @@ const BusinessWorkflows = props => {
 								</button>
 							</div>
 						</div>
-					</form>
+					</Form>
 				)}
 			</Formik>
 		</div>
