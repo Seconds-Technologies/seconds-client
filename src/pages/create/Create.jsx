@@ -264,10 +264,6 @@ const Create = props => {
 				handleOnDrop={result => {
 					let order = {};
 					let { data: keys } = result.shift();
-					if (result.length > 10) {
-						result = result.slice(0, 10);
-						setToast(``);
-					}
 					keys.forEach(key => (order[key] = ''));
 					let orders = result.map(({ data }) => {
 						let order = {};
