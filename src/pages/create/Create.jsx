@@ -419,7 +419,7 @@ const Create = props => {
 							<div className='row mx-1'>
 								<div className={`${values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? 'col-12' : 'col-6'}`}>
 									<div className='border border-2 rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
-										<h4>Delivery Method</h4>
+										<h4>Delivery Type</h4>
 										<div className='d-flex mt-2 justify-content-center'>
 											<div className='form-check mb-2'>
 												<input

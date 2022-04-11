@@ -2,12 +2,12 @@ import './subscription.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus, fetchInvoices } from '../../../../store/actions/stripe';
-import Modal from 'react-bootstrap/Modal';
 import { Mixpanel } from '../../../../config/mixpanel';
 import classnames from 'classnames';
 import moment from 'moment';
 import CancelSubscription from '../../modals/CancelSubscription';
 import SuccessModal from '../../modals/SuccessModal';
+import invoice from '../../../../assets/img/invoice.svg';
 
 const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
@@ -80,21 +80,22 @@ const Plans = ({ isComponent, stripeCustomerId, subscriptionPlan, price, showMod
 	);
 };
 
-const Message = ({ message, onHide }) => (
-	<Modal show={message} onHide={onHide} className='alert alert-danger' centered>
-		<Modal.Header className='alert' closeButton>
-			<Modal.Title>Error</Modal.Title>
-		</Modal.Header>
-		<Modal.Body>{message}</Modal.Body>
-	</Modal>
-);
-
 const InvoiceHistory = ({ invoices }) => (
-	<div>
+	<div className="table-responsive">
 		<h1 className='fs-3 py-2'>Invoice History</h1>
-		<div className='d-flex flex-grow-1 flex-column border p-3 w-100'>
+		<div className='table table-borderless d-flex flex-column border p-3 w-100'>
+			{/*<thead className='d-flex justify-content-evenly'>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Date</th>
+					<th scope="col">Total Price</th>
+					<th scope="col">Status</th>
+					<th scope="col">Plan</th>
+				</tr>
+			</thead>*/}
 			{invoices.map(({ created, total, status, hosted_invoice_url }) => (
-				<a href={hosted_invoice_url} target="_blank" role="button" className='d-flex justify-content-evenly p-3 my-2 border rounded-3 text-decoration-none text-dark'>
+				<a href={hosted_invoice_url} target="_blank" role="button" className='d-flex justify-content-evenly py-3 my-2 border rounded-3 text-decoration-none text-dark'>
+					<img src={invoice} className="img-fluid" width={20} height={30} alt='' />
 					<span>{moment.unix(created).format("DD MMM YYYY")}</span>
 					<span>£{total / 100}</span>
 					<span className="text-capitalize">{status}</span>

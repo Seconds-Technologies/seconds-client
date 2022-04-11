@@ -5,6 +5,10 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { dateFilter } from '../../helpers';
+import panelIcon1 from '../../assets/img/feature-icon-1.svg'
+import panelIcon2 from '../../assets/img/feature-icon-2.svg'
+import panelIcon3 from '../../assets/img/feature-icon-3.svg'
+import panelIcon4 from '../../assets/img/feature-icon-4.svg'
 
 const FeaturedInfo = ({interval}) => {
     const dispatch = useDispatch();
@@ -37,22 +41,42 @@ const FeaturedInfo = ({interval}) => {
     return (
         <div className='featured'>
             <div className='featuredItem py-1'>
-                <Link to='/orders' className='ordersLink d-flex flex-column align-items-center text-center justify-content-between'>
-                    <span className='featuredTitle mb-1'>All Orders</span>
-                    <span className='featuredValue'>{total.length}</span>
+                <Link to='/orders' className='ordersLink d-flex align-items-center'>
+                    <div className="px-4">
+                        <img src={panelIcon1} alt='' className="img-fluid" width={60} height={60}/>
+                    </div>
+                    <div className='d-flex flex-column justify-content-center py-1'>
+                        <span className='featuredTitle'>All Orders</span>
+                        <span className='featuredValue'>{total.length}</span>
+                    </div>
                 </Link>
             </div>
-            <div className='featuredItem d-flex flex-column align-items-center py-1'>
-                <span className='featuredTitle mb-1'>In Transit</span>
-                <span className='featuredValue'>{inTransit}</span>
+            <div className='featuredItem d-flex align-items-center py-1'>
+                <div className="px-4">
+                    <img src={panelIcon2} alt='' className="img-fluid" width={60} height={60}/>
+                </div>
+                <div className='d-flex flex-column justify-content-center py-1'>
+                    <span className='featuredTitle'>In Transit</span>
+                    <span className='featuredValue'>{inTransit}</span>
+                </div>
             </div>
-            <div className='featuredItem d-flex flex-column align-items-center py-1'>
-                <span className='featuredTitle mb-1'>Completed Orders</span>
-                <span className='featuredValue'>{completed.length}</span>
+            <div className='featuredItem d-flex align-items-center py-1'>
+                <div className="px-4">
+                    <img src={panelIcon3} alt='' className="img-fluid" width={60} height={60}/>
+                </div>
+                <div className='d-flex flex-column justify-content-center py-1'>
+                    <span className='featuredTitle'>Completed Orders</span>
+                    <span className='featuredValue'>{completed.length}</span>
+                </div>
             </div>
-            <div className='featuredItem d-flex flex-column align-items-center py-1'>
-                <span className='featuredTitle mb-1'>Fulfillment</span>
-                <span className='featuredValue'>{fulfillmentRate}</span>
+            <div className='featuredItem d-flex align-items-center py-1'>
+                <div className="px-4">
+                    <img src={panelIcon4} alt='' className="img-fluid" width={60} height={60}/>
+                </div>
+                <div className='d-flex flex-column justify-content-center py-1'>
+                    <span className='featuredTitle'>Fulfillment</span>
+                    <span className='featuredValue'>{fulfillmentRate}</span>
+                </div>
             </div>
         </div>
     );

@@ -219,6 +219,14 @@ const Drivers = props => {
 				</button>
 			</div>
 			<DataGrid
+				sx={{
+					'& .MuiDataGrid-cell:focus': {
+						outline: 'none !important'
+					},
+					'& .MuiDataGrid-cell': {
+						outline: 'none !important'
+					}
+				}}
 				sortingOrder={['desc', 'asc']}
 				initialState={{
 					sorting: {

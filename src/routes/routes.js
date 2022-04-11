@@ -17,7 +17,7 @@ import Profile from '../pages/settings/containers/profile/Profile';
 import Settings from '../pages/settings/Settings';
 import CustomerSupport from '../pages/settings/containers/CustomerSupport';
 import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
-import Subscription from '../pages/settings/containers/subscription/Subscription';
+import Subscription from '../pages/settings/containers/billing/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Shopify from '../pages/shopify/Shopify';
