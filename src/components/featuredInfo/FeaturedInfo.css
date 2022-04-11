@@ -11,9 +11,7 @@
   border-radius: 5px;
   cursor: pointer;
   background-color: white;
-  border: 0 solid lightgray;
-  -webkit-box-shadow: 0 4px 8px 0 #cbd5e1;
-  box-shadow: 0 2px 4px 0 #cbd5e1;
+  border: 1px solid lightgray;
 }
 
 .featuredTitle {
