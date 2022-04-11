@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CSSTransition, SwitchTransition, TransitionGroup } from 'react-transition-group';
 import './styles.scss';
 
@@ -40,10 +40,6 @@ const Card = ({
 
 		return 'visa'; // default type
 	};
-
-	const useCardType = useMemo(() => {
-		return cardType(cardNumber);
-	}, [cardNumber]);
 
 	const outlineElementStyle = element => {
 		return element
