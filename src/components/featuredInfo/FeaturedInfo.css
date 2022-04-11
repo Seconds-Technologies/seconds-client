@@ -12,8 +12,8 @@
   cursor: pointer;
   background-color: white;
   border: 1px solid lightgray;
-  -webkit-box-shadow: 0 0 1px -1px #000000;
-  box-shadow: 0 0 1px -1px #000000;
+  -webkit-box-shadow: 0 4px 8px 0 #cbd5e1;
+  box-shadow: 0 2px 4px 0 #cbd5e1;
 }
 
 .featuredTitle {

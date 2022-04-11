@@ -43,7 +43,7 @@ const FeaturedInfo = ({interval}) => {
             <div className='featuredItem py-1'>
                 <Link to='/orders' className='ordersLink d-flex align-items-center'>
                     <div className="px-4">
-                        <img src={panelIcon1} alt='' className="img-fluid" width={45} height={45}/>
+                        <img src={panelIcon1} alt='' className="img-fluid" width={35} height={35}/>
                     </div>
                     <div className='d-flex flex-column justify-content-center py-1'>
                         <span className='featuredTitle'>All Orders</span>
@@ -62,7 +62,7 @@ const FeaturedInfo = ({interval}) => {
             </div>
             <div className='featuredItem d-flex align-items-center py-1'>
                 <div className="px-4">
-                    <img src={panelIcon3} alt='' className="img-fluid" width={45} height={45}/>
+                    <img src={panelIcon3} alt='' className="img-fluid" width={35} height={35}/>
                 </div>
                 <div className='d-flex flex-column justify-content-center py-1'>
                     <span className='featuredTitle'>Completed Orders</span>
@@ -71,7 +71,7 @@ const FeaturedInfo = ({interval}) => {
             </div>
             <div className='featuredItem d-flex align-items-center py-1'>
                 <div className="px-4">
-                    <img src={panelIcon4} alt='' className="img-fluid" width={45} height={45}/>
+                    <img src={panelIcon4} alt='' className="img-fluid" width={35} height={35}/>
                 </div>
                 <div className='d-flex flex-column justify-content-center py-1'>
                     <span className='featuredTitle'>Fulfillment</span>
