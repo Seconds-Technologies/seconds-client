@@ -1,12 +1,12 @@
 {
   "rewrites": [
 	{
-	  "source": "/api",
-	  "destination": "${REACT_APP_API_HOST}/api"
+	  "source": "/api/:path*",
+	  "destination": "https://seconds-api-dev.herokuapp.com/api/:path*"
 	},
 	{
-	  "source": "/server",
-	  "destination": "${REACT_APP_SERVER_HOST}/server"
+	  "source": "/server/:path*",
+	  "destination": "https://seconds-app-server-dev.herokuapp.com/server/:path*"
 	}
   ]
 }
