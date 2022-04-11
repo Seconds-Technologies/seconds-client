@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { removeError } from '../../store/actions/errors';
 import PasswordField from '../../components/PasswordField';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { Mixpanel } from '../../config/mixpanel'
+import { Mixpanel } from '../../config/mixpanel';
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -29,8 +29,8 @@ const Login = props => {
 						<div className='d-flex flex-grow-1 flex-column mt-5'>
 							<h1 className='login-aside-header'>SUPERCHARGE YOUR DELIVERIES</h1>
 							<p className='text-wrap'>
-								Seconds helps you to secure driver capacity, expand network coverage, and optimise your
-								delivery costs.
+								Seconds helps you to secure driver capacity, expand network coverage, optimize your costs across your own fleet and
+								multiple third-party services.
 							</p>
 						</div>
 					</div>
@@ -51,21 +51,21 @@ const Login = props => {
 						<Formik
 							initialValues={{
 								email: '',
-								password: '',
+								password: ''
 							}}
 							onSubmit={(values, actions) => {
 								setLoading(true);
 								dispatch(authUser('login', values))
 									.then((user) => {
-										Mixpanel.identify(user.id)
-										Mixpanel.track('Successful login')
+										Mixpanel.identify(user.id);
+										Mixpanel.track('Successful login');
 										Mixpanel.people.set({
 											$first_name: user.firstname,
 											$last_name: user.lastname,
 											$email: user.email,
 											$apiKey: false,
 											$subscribed: false
-										})
+										});
 										setLoading(false);
 										props.history.push('/');
 									})
@@ -77,15 +77,15 @@ const Login = props => {
 							}}
 						>
 							{({
-								values,
-								errors,
-								touched,
-								handleChange,
-								handleBlur,
-								handleSubmit,
-								isSubmitting,
-								/* and other goodies */
-							}) => (
+								  values,
+								  errors,
+								  touched,
+								  handleChange,
+								  handleBlur,
+								  handleSubmit,
+								  isSubmitting
+								  /* and other goodies */
+							  }) => (
 								<form onSubmit={handleSubmit}>
 									<div className='loginItem1'>
 										<label className='mb-2' htmlFor='email'>
