@@ -19,7 +19,7 @@
 .featuredTitle {
   color: black;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .featuredAllOrdersContainer {
@@ -28,7 +28,7 @@
 }
 
 .featuredValue {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
 }
 
