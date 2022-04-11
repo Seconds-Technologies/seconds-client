@@ -5,10 +5,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { STATUS } from '../../constants';
 import { subscribe, unsubscribe } from '../../store/actions/delivery';
 import { dateFilter } from '../../helpers';
-import panelIcon1 from '../../assets/img/feature-icon-1.svg';
-import panelIcon2 from '../../assets/img/feature-icon-2.svg';
-import panelIcon3 from '../../assets/img/feature-icon-3.svg';
-import panelIcon4 from '../../assets/img/feature-icon-4.svg';
 
 const FeaturedInfo = ({ interval }) => {
 	const dispatch = useDispatch();
