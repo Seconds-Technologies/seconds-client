@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+	{
+	  "source": "/api",
+	  "destination": "${REACT_APP_API_HOST}/api"
+	},
+	{
+	  "source": "/server",
+	  "destination": "${REACT_APP_SERVER_HOST}/server"
+	}
+  ]
+}
