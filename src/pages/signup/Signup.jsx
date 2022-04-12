@@ -43,29 +43,30 @@ export default function Signup(props) {
 	const getParsedAddress = useCallback(parseAddress, []);
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Checking your details...' classNamePrefix='signup_loader_'>
+		<LoadingOverlay active={isLoading} spinner text='Checking your details...' classNamePrefix="signup_loader_">
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 signup-aside'>
 					<div className='d-flex flex-column h-100'>
 						<img src={logo} alt='' className='img-fluid' width={150} />
 						<div className='d-flex flex-grow-1 flex-column mt-4'>
 							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Scale your revenue and business</h1>
+								<h1 className='signup-aside-header'>Strong coverage across the UK</h1>
 								<p className='text-wrap signup-aside-text'>
-									With our delivery network, delivery management software and post-purchase customer experiences, your business can
-									grow more rapidly than ever.
+									With over 7 fleet providers, your business can provide the best delivery experiences
+									to your customers.
 								</p>
 							</div>
 							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Automate and Optimize</h1>
+								<h1 className='signup-aside-header'>Low commission</h1>
 								<p className='text-wrap signup-aside-text'>
-									Save operational time and money by 20% by optimizing and automating your operations.
+									All deliveries through the Seconds API and dashboard are all with low commission
+									fees.
 								</p>
 							</div>
 							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Improve your customer experience and loyalty</h1>
+								<h1 className='signup-aside-header'>24/7 reliable customer support</h1>
 								<p className='text-wrap signup-aside-text'>
-									With our world class SMS notification and live tracking, your customers will be closer than ever.
+									Our team of specialists are always available to help via email, zoom, or call.
 								</p>
 							</div>
 							<div className='mt-4'>
@@ -73,6 +74,11 @@ export default function Signup(props) {
 									Thank you for choosing us. We look forward to being a reliable partner to your
 									business.
 								</p>
+							</div>
+							<div className='mt-4'>
+								<span className='signup-aside-text'>Ola and Chisom</span>
+								<br />
+								<span className='signup-aside-text'>Founders, Seconds</span>
 							</div>
 						</div>
 					</div>
@@ -104,9 +110,9 @@ export default function Signup(props) {
 								address: {
 									addressLine1: '',
 									city: '',
-									postcode: ''
+									postcode: '',
 								},
-								terms: false
+								terms: false,
 							}}
 							enableReinitialize
 							validationSchema={SignUpSchema}
@@ -125,21 +131,21 @@ export default function Signup(props) {
 									addressLine2: '',
 									city: '',
 									postcode: '',
-									countryCode: 'GB'
+									countryCode: 'GB',
 								},
-								terms: false
+								terms: false,
 							}}
 							onSubmit={async (values, actions) => {
 								try {
 									setLoading(true);
-									console.log(values);
-									values.fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`;
+									console.log(values)
+									values.fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`
 									let inputPostcode = values.address.postcode; // store postcode entered by the user during signup
 									let addressComponents = await geocodeByAddress(values.fullAddress);
 									values.address = getParsedAddress(addressComponents, true);
-									values.address.postcode = inputPostcode;
+									values.address.postcode = inputPostcode
 									validateAddress(values.address);
-									console.table({ address: values.address, fullAddress: values.fullAddress });
+									console.table({address: values.address, fullAddress: values.fullAddress});
 									const user = await dispatch(authUser('register', values));
 									Mixpanel.identify(user.id);
 									Mixpanel.track('Successful Registration');
@@ -150,7 +156,7 @@ export default function Signup(props) {
 										$company: user.company,
 										$address: user.fullAddress,
 										$apiKey: false,
-										$subscribed: false
+										$subscribed: false,
 									});
 									setLoading(false);
 									props.history.push('/signup/1');
@@ -162,16 +168,16 @@ export default function Signup(props) {
 							}}
 						>
 							{({
-								  values,
-								  errors,
-								  touched,
-								  handleChange,
-								  handleBlur,
-								  handleSubmit,
-								  isSubmitting,
-								  setFieldValue
-								  /* and other goodies */
-							  }) => (
+								values,
+								errors,
+								touched,
+								handleChange,
+								handleBlur,
+								handleSubmit,
+								isSubmitting,
+								setFieldValue,
+								/* and other goodies */
+							}) => (
 								<form onSubmit={handleSubmit} className='signupForm'>
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
