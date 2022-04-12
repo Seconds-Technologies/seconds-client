@@ -14,7 +14,7 @@ import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { logout } from '../../store/actions/auth';
 
-import MagicBell, { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
 
 export default function Sidebar() {
 	const [isOpen, setAlerts] = useState(false);
@@ -83,7 +83,15 @@ export default function Sidebar() {
 					</Link>
 					<div className='link text-black mt-4' onClick={() => setAlerts(true)}>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
-							<FloatingNotificationInbox isOpen={isOpen} toggle={() => setAlerts(!isOpen)} width={350} height={500} isheight={500} launcherRef={launcherRef.current}/>
+							<FloatingNotificationInbox
+								isOpen={isOpen}
+								toggle={() => setAlerts(!isOpen)}
+								width={350}
+								height={500}
+								isheight={500}
+								launcherRef={launcherRef.current}
+								notificationPreferencesEnabled={false}
+							/>
 							<img
 								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
 								src={bellIcon}
@@ -117,14 +125,15 @@ export default function Sidebar() {
 									height={29}
 								/>
 							) : (
-								<Avatar className={`ms-1 item-hover me-1 ${location['pathname'] === PATHS.PROFILE && 'currentIcon'}`} size={32} icon={<UserOutlined />} />
+								<Avatar className={`ms-1 item-hover me-1 ${location['pathname'] === PATHS.PROFILE && 'currentIcon'}`} size={32}
+								        icon={<UserOutlined />} />
 							)}
 							<span className={`item-hover ${location['pathname'] === PATHS.PROFILE && 'currentLink'}`}>Profile</span>
 						</div>
 						<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 							<li>
 								<div
-									role="button"
+									role='button'
 									className='dropdown-item'
 									onClick={() => history.push(PATHS.SETTINGS)}
 								>
@@ -133,7 +142,7 @@ export default function Sidebar() {
 							</li>
 							<li>
 								<div
-									role="button"
+									role='button'
 									className='dropdown-item'
 									onClick={() => {
 										dispatch(logout());
