@@ -18,6 +18,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 		accessToken:
 			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
 	});
+
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
@@ -27,6 +28,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 			}),
 		[]
 	);
+
 	const onLoaded = map => {
 		map.resize();
 	};

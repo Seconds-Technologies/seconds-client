@@ -4,23 +4,28 @@ import settingsIcon from '../../assets/img/settings.svg';
 import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create1.svg';
 import driversIcon from '../../assets/img/driver.svg';
+import bellIcon from '../../assets/img/bell.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/secondsapp.svg';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { logout } from '../../store/actions/auth';
 
+import MagicBell, { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+
 export default function Sidebar() {
-	const { profileImageData } = useSelector(state => state['currentUser'].user);
+	const [isOpen, setAlerts] = useState(false);
+	const { profileImageData, email } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
+	const launcherRef = useRef(null);
 
 	return (
-		<div className='sidebar bg-light'>
+		<div ref={launcherRef} className='sidebar bg-light'>
 			<div className='mb-1 d-flex flex-column ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto me-0'>
 					<Link to='/' className='navbar-brand mt-2 ' href=''>
@@ -76,7 +81,20 @@ export default function Sidebar() {
 							<div className='item-hover'>Drivers</div>
 						</li>
 					</Link>
-					<Link to={PATHS.SETTINGS} className='link text-black mt-4'>
+					<div className='link text-black mt-4' onClick={() => setAlerts(true)}>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
+							<FloatingNotificationInbox isOpen={isOpen} toggle={() => setAlerts(!isOpen)} isheight={500} launcherRef={launcherRef.current}/>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
+								src={bellIcon}
+								alt={''}
+								width={25}
+								height={25}
+							/>
+							<div className='item-hover'>Alerts</div>
+						</li>
+					</div>
+					<Link to={PATHS.SETTINGS} className='link text-black'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.SETTINGS && 'currentLink'}`}>
 							<img
 								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.SETTINGS && 'currentIcon'}`}
