@@ -41,6 +41,9 @@ function App() {
 			<MagicBellProvider apiKey={process.env.REACT_APP_MAGIC_BELL_API_KEY} userEmail={email} theme={{
 				header: {
 					backgroundColor: '#9400D3'
+				},
+				footer: {
+					backgroundColor: '#9400D3'
 				}
 			}}>
 				<TabContext.Provider value={{ index: val, dispatch: setVal }}>

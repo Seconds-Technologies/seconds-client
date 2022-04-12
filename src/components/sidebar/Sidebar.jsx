@@ -9,12 +9,14 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/secondsapp.svg';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { logout } from '../../store/actions/auth';
-
+import { useNotifications } from '@magicbell/magicbell-react';
 import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+import Badge from '@mui/material/Badge';
+import styled from '@mui/material/styles/styled';
 
 export default function Sidebar() {
 	const [isOpen, setAlerts] = useState(false);
@@ -23,6 +25,18 @@ export default function Sidebar() {
 	const history = useHistory();
 	const location = useLocation();
 	const launcherRef = useRef(null);
+	const notificationStore = useNotifications();
+
+	useEffect(() => {
+		console.log(notificationStore);
+	}, [notificationStore]);
+
+	const StyledBadge = styled(Badge)(({ theme }) => ({
+		'& .MuiBadge-badge': {
+			right: 19,
+			top: 2,
+		}
+	}));
 
 	return (
 		<div ref={launcherRef} className='sidebar bg-light'>
@@ -82,7 +96,7 @@ export default function Sidebar() {
 						</li>
 					</Link>
 					<div className='link text-black mt-4' onClick={() => setAlerts(true)}>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
+						<li className={`sidebarListItem`}>
 							<FloatingNotificationInbox
 								isOpen={isOpen}
 								toggle={() => setAlerts(!isOpen)}
@@ -92,13 +106,19 @@ export default function Sidebar() {
 								launcherRef={launcherRef.current}
 								notificationPreferencesEnabled={false}
 							/>
-							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
-								src={bellIcon}
-								alt={''}
-								width={25}
-								height={25}
-							/>
+							<StyledBadge
+								variant="dot"
+								overlap='circular'
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'right'
+								}}
+								showZero={false}
+								badgeContent={notificationStore.unreadCount}
+								color='secondary'
+							>
+								<img className={`sidebarIcon item-hover`} src={bellIcon} alt={''} width={25} height={25} />
+							</StyledBadge>
 							<div className='item-hover'>Alerts</div>
 						</li>
 					</div>
@@ -125,18 +145,17 @@ export default function Sidebar() {
 									height={29}
 								/>
 							) : (
-								<Avatar className={`ms-1 item-hover me-1 ${location['pathname'] === PATHS.PROFILE && 'currentIcon'}`} size={32}
-								        icon={<UserOutlined />} />
+								<Avatar
+									className={`ms-1 item-hover me-1 ${location['pathname'] === PATHS.PROFILE && 'currentIcon'}`}
+									size={32}
+									icon={<UserOutlined />}
+								/>
 							)}
 							<span className={`item-hover ${location['pathname'] === PATHS.PROFILE && 'currentLink'}`}>Profile</span>
 						</div>
 						<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 							<li>
-								<div
-									role='button'
-									className='dropdown-item'
-									onClick={() => history.push(PATHS.SETTINGS)}
-								>
+								<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
 									Profile
 								</div>
 							</li>
