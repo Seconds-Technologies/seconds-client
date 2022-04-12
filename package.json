@@ -2,7 +2,7 @@
   "name": "secondsapp",
   "version": "0.1.0",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +48,7 @@
     "mixpanel-browser": "^2.41.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
+    "node-sass": "6.0.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-avatar-edit": "^1.0.0",
@@ -72,7 +73,6 @@
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "sass": "^1.50.0",
     "shorthash": "^0.0.2",
     "web-vitals": "^1.0.1",
     "worker-loader": "^3.0.8",
