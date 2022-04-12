@@ -15,12 +15,12 @@ import { BsArrowRightCircleFill } from 'react-icons/bs';
 const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
 	const history = useHistory();
 	const baseClient = mbxClient({
-		accessToken: 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+		accessToken: 'sk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNsMXZ2eHU5dDBkdTUzY2wzM2l5b3NpbjgifQ.6QVJydLb8OKdZzfM8AkBtA'
 	});
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
-				accessToken: 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+				accessToken: 'sk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNsMXZ2eHU5dDBkdTUzY2wzM2l5b3NpbjgifQ.6QVJydLb8OKdZzfM8AkBtA'
 			}),
 		[]
 	);
