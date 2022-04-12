@@ -15,12 +15,12 @@ import { BsArrowRightCircleFill } from 'react-icons/bs';
 const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
 	const history = useHistory();
 	const baseClient = mbxClient({
-		accessToken: process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+		accessToken: 'sk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNsMXZ2eHU5dDBkdTUzY2wzM2l5b3NpbjgifQ.6QVJydLb8OKdZzfM8AkBtA'
 	});
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
-				accessToken: process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+				accessToken: 'sk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNsMXZ2eHU5dDBkdTUzY2wzM2l5b3NpbjgifQ.6QVJydLb8OKdZzfM8AkBtA'
 			}),
 		[]
 	);
@@ -76,7 +76,6 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 
 	useEffect(() => {
 		(async () => {
-			console.log(process.env.REACT_APP_MAPBOX_TOKEN)
 			const profile = 'mapbox/driving-traffic';
 			const coordinates = orderBounds.join(';');
 			const request = await baseClient.createRequest({
