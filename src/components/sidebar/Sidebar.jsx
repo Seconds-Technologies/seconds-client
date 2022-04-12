@@ -83,7 +83,7 @@ export default function Sidebar() {
 					</Link>
 					<div className='link text-black mt-4' onClick={() => setAlerts(true)}>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
-							<FloatingNotificationInbox isOpen={isOpen} toggle={() => setAlerts(!isOpen)} isheight={500} launcherRef={launcherRef.current}/>
+							<FloatingNotificationInbox isOpen={isOpen} toggle={() => setAlerts(!isOpen)} width={350} height={500} isheight={500} launcherRef={launcherRef.current}/>
 							<img
 								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
 								src={bellIcon}
