@@ -118,13 +118,13 @@ export function checkSubscriptionStatus(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			apiCall('GET', '/server/subscription/fetch-stripe-subscription', null, { params: { email }})
-				.then(({ id: subscriptionId, name: subscriptionPlan, status, items }) => {
+				.then(({ id: subscriptionId, name: subscriptionPlan, description, status, items }) => {
 					console.table({subscriptionId, status});
 					Mixpanel.people.set({
 						subscribed: !!subscriptionId,
 					});
 					dispatch(updateCurrentUser({ subscriptionId, subscriptionPlan }));
-					resolve({ status, items });
+					resolve({ status, items, description });
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

@@ -30,6 +30,14 @@
   border: pink solid 4px;
 }
 
+.font-medium {
+  font-family: 'Inter-Medium', sans-serif;
+}
+
+.font-semibold {
+  font-family: 'Inter-SemiBold', sans-serif;
+}
+
 .page-container {
   flex: 9;
   min-height: 100vh

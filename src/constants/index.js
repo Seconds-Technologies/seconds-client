@@ -31,6 +31,25 @@ export const PATHS = {
 	DRIVERS: '/drivers'
 };
 
+export const SUBSCRIPTION_PLANS = {
+	STARTER: {
+		name: 'starter',
+		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.'
+	},
+	GROWTH: {
+		name: 'growth',
+		description: 'Great for small businesses with mild delivery volume and manage their own team.'
+	},
+	PRO: {
+		name: 'pro',
+		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.'
+	},
+	ENTERPRISE: {
+		name: 'enterprise',
+		description: 'Built for large organisations looking for the most advanced technology to manage their entire last mile.'
+	}
+}
+
 export const STATUS_COLOURS = {
 	NEW: '#F44336',
 	PENDING: '#9933CC',

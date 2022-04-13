@@ -27,10 +27,6 @@ export default function Sidebar() {
 	const launcherRef = useRef(null);
 	const notificationStore = useNotifications();
 
-	useEffect(() => {
-		console.log(notificationStore);
-	}, [notificationStore]);
-
 	const StyledBadge = styled(Badge)(({ theme }) => ({
 		'& .MuiBadge-badge': {
 			right: 19,

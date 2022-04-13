@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import PaymentMethod from '../paymentMethod/PaymentMethod';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import backArrow from '../../assets/img/noun-go-back-vector.svg';
 import { PATHS } from '../../constants';
+import { authenticateUser } from '../../store/actions/auth';
 
 const Signup2 = props => {
 	const [cardValid, setCardValid] = useState(false);
 	const { user: userData } = useSelector(state => state['currentUser']);
+	const dispatch = useDispatch();
+
+	const signup = async () => {
+		try {
+			dispatch(authenticateUser());
+			props.history.push(PATHS.HOME);
+		} catch (err) {
+			console.error(err);
+		}
+	};
 
 	return (
 		<div className='container mx-auto my-auto py-4 signupPage'>
@@ -23,8 +34,8 @@ const Signup2 = props => {
 			</div>
 			<PaymentMethod isComponent isValid={cardValid} setCardValid={setCardValid} />
 			<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
-				<button disabled={!userData.paymentMethodId} onClick={() => props.history.push(PATHS.SIGNUP_3)} className='btn btn-dark btn-lg w-sm mt-4'>
-					Continue
+				<button disabled={!userData.paymentMethodId} onClick={signup} className='btn btn-dark btn-lg w-sm mt-4'>
+					Show My Dashboard
 				</button>
 			</div>
 		</div>

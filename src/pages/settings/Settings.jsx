@@ -1,5 +1,5 @@
 import './settings.css';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Mixpanel } from '../../config/mixpanel';
 import Box from '@mui/material/Box';
@@ -17,6 +17,10 @@ import AppBar from '@mui/material/AppBar';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
+	const [navColor, setNavColor] = useState("white")
+
+	const setWhite = () => setNavColor("white")
+	const setTransparent = () => setNavColor("transparent")
 
 	const handleChange = (event, newValue) => {
 		dispatch({type: 'setIndex', index: newValue})
@@ -71,7 +75,7 @@ const Settings = props => {
 	return (
 		<div className='page-container pb-3'>
 			<Box sx={{ width: '100%'}}>
-				<AppBar sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: 0, backgroundColor: 'white', boxShadow: 'none' }} >
+				<AppBar sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: 0, backgroundColor: navColor, boxShadow: 'none', zIndex: 10 }} >
 					<Tabs
 						indicatorColor='secondary'
 						value={index}
@@ -90,22 +94,22 @@ const Settings = props => {
 					</Tabs>
 				</AppBar>
 				<TabPanel value={index} index={0}>
-					<Profile />
+					<Profile setNavColor={setNavColor}/>
 				</TabPanel>
 				<TabPanel value={index} index={1}>
-					<Subscription {...props} />
+					<Subscription setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={2}>
-					<BusinessWorkflows {...props} />
+					<BusinessWorkflows setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={3}>
-					<Couriers />
+					<Couriers setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={4}>
-					<Integrations {...props} />
+					<Integrations setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={5}>
-					<Developers {...props} />
+					<Developers setNavColor={setNavColor} {...props} />
 				</TabPanel>
 			</Box>
 		</div>
