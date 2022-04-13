@@ -104,7 +104,6 @@ export default function Sidebar() {
 								height={500}
 								isheight={500}
 								launcherRef={launcherRef.current}
-								notificationPreferencesEnabled={false}
 							/>
 							<StyledBadge
 								variant="dot"

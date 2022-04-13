@@ -38,7 +38,7 @@ function App() {
 
 	return (
 		<GeolocationContextProvider>
-			<MagicBellProvider apiKey={process.env.REACT_APP_MAGIC_BELL_API_KEY} userEmail={email} theme={{
+			<MagicBellProvider userExternalId={id} apiKey={process.env.REACT_APP_MAGIC_BELL_API_KEY} theme={{
 				header: {
 					backgroundColor: '#9400D3'
 				},
