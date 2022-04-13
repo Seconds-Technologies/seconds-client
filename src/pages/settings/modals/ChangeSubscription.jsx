@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import PlanTile from '../components/PlanTile';
@@ -24,6 +24,7 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							description={SUBSCRIPTION_PLANS.STARTER.description}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name}
 							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)}
+							role={'button'}
 						/>
 					</div>
 					<div className='col-12'>
@@ -34,6 +35,7 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							price={49}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name}
 							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)}
+							role={'button'}
 						/>
 					</div>
 					<div className='col-12'>
@@ -44,6 +46,7 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							price={89}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name}
 							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)}
+							role={'button'}
 						/>
 					</div>
 					<div className='col-12'>
@@ -53,7 +56,6 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							description={SUBSCRIPTION_PLANS.ENTERPRISE.description}
 							price={'Book Demo'}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.ENTERPRISE.name}
-							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.ENTERPRISE.name)}
 						/>
 					</div>
 				</div>

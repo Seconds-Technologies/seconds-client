@@ -9,6 +9,7 @@ import CancelSubscription from '../../modals/CancelSubscription';
 import SuccessModal from '../../modals/SuccessModal';
 import invoice from '../../../../assets/img/invoice.svg';
 import ChangeSubscription from '../../modals/ChangeSubscription';
+import PaymentInformation from '../../modals/PaymentInformation';
 
 const ProductDisplay = ({ isComponent, plan, price, description, customerId, lookupKey, numUsers, checkoutText, commission }) => {
 	const container = classnames({
@@ -118,24 +119,34 @@ const Subscription = props => {
 	let [successMessage, setSuccessMessage] = useState('');
 	let [changeModal, setChangeModal] = useState(false);
 	let [cancelModal, setCancelModal] = useState(false);
+	let [paymentModal, setPaymentModal] = useState(false);
 	let [isSubscribed, setSubscribed] = useState(false);
 	let [invoiceHistory, setInvoices] = useState([]);
 	let [currentPlan, setCurrentPlan] = useState({
-		amount: "Free",
-		description: "Ideal for small businesses with small delivery volume who want to outsource their deliveries."
+		amount: 25,
+		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.'
 	});
 	const openCancelSub = () => {
-		props.setNavColor("transparent");
+		props.setNavColor('transparent');
 		setCancelModal(true);
-	}
+	};
 	const closeCancelSub = () => {
+		props.setNavColor('white');
 		setCancelModal(false);
-	}
+	};
 	const openChangeSub = () => {
-		props.setNavColor("transparent");
+		props.setNavColor('transparent');
 		setChangeModal(true);
-	}
-	const closeChangeSub = () => setChangeModal(false);
+	};
+	const closeChangeSub = () => {
+		props.setNavColor('white');
+		setChangeModal(false);
+	};
+	const openPaymentModal = () => setPaymentModal(true);
+	const closePaymentModal = () => {
+		props.setNavColor('white');
+		setPaymentModal(false);
+	};
 	const modalRef = useRef();
 
 	useEffect(() => {
@@ -162,7 +173,16 @@ const Subscription = props => {
 				onHide={closeCancelSub}
 				onComplete={timestamp => setSuccessMessage(`Your subscription plan will cancel on ${moment.unix(timestamp).calendar()}`)}
 			/>
-			<ChangeSubscription show={changeModal} onHide={closeChangeSub} centered onChange={(newPlan) => alert(newPlan)}/>
+			<ChangeSubscription
+				show={changeModal}
+				onHide={closeChangeSub}
+				centered
+				onChange={newPlan => {
+					setChangeModal(false);
+					openPaymentModal();
+				}}
+			/>
+			<PaymentInformation show={paymentModal} onHide={closePaymentModal}/>
 			<SuccessModal ref={modalRef} show={!!successMessage} message={successMessage} onHide={() => setSuccessMessage('')} />
 			{user.subscriptionId || isSubscribed ? (
 				<div className='row'>

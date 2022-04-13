@@ -118,10 +118,6 @@ const CardSetupForm = ({ isComponent, showToast, ...props }) => {
 	});
 
 	useEffect(() => {
-		console.log(props);
-	}, [props]);
-
-	useEffect(() => {
 		if (user.paymentMethodId) {
 			(async () => {
 				const paymentMethod = await dispatch(fetchStripeCard(user));
