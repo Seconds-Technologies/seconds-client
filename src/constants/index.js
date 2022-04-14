@@ -34,19 +34,27 @@ export const PATHS = {
 export const SUBSCRIPTION_PLANS = {
 	STARTER: {
 		name: 'starter',
-		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.'
+		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.',
+		price: 0,
+		priceLabel: "Free"
 	},
 	GROWTH: {
 		name: 'growth',
-		description: 'Great for small businesses with mild delivery volume and manage their own team.'
+		description: 'Great for small businesses with mild delivery volume and manage their own team.',
+		price: 49,
+		priceLabel: "49",
 	},
 	PRO: {
 		name: 'pro',
-		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.'
+		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.',
+		price: 89,
+		priceLabel: "89"
 	},
 	ENTERPRISE: {
 		name: 'enterprise',
-		description: 'Built for large organisations looking for the most advanced technology to manage their entire last mile.'
+		description: 'Built for large organisations looking for the most advanced technology to manage their entire last mile.',
+		price: "Custom",
+		priceLabel: "Custom"
 	}
 }
 

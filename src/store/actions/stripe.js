@@ -24,7 +24,6 @@ export function setupStripeCustomer(data) {
 export function setupIntent(id) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('stripeCustomerId:', id);
 			return apiCall('POST', `/server/payment/setup-intent`, { stripeCustomerId: id })
 				.then(intent => resolve(intent))
 				.catch(err => {
@@ -133,6 +132,23 @@ export function checkSubscriptionStatus(email) {
 				});
 		});
 	};
+}
+
+export function setupSubscription(email, stripeCustomerId, paymentMethodId, lookupKey){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			apiCall('POST', '/server/subscription/setup-subscription', { stripeCustomerId, paymentMethodId, lookupKey }, { params: { email }})
+				.then(({ id }) => {
+					console.table({ subscriptionId: id});
+					resolve(id);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	}
 }
 
 export function cancelSubscription(email){

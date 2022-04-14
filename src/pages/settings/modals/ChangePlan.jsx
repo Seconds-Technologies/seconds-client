@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
 import { SUBSCRIPTION_PLANS } from '../../../constants';
 
-const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
-	const [selectedPlan, setSelectedPlan] = useState("")
+const ChangePlan = ({ show, onHide, centered, onChange }) => {
+	const [selectedPlan, setSelectedPlan] = useState('');
 	const { subscriptionPlan } = useSelector(state => state['currentUser'].user);
 
 	return (
@@ -23,7 +23,9 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.STARTER.name}
 							description={SUBSCRIPTION_PLANS.STARTER.description}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name}
-							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)}
+							onSelect={() =>
+								subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)
+							}
 							role={'button'}
 						/>
 					</div>
@@ -34,7 +36,9 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							description={SUBSCRIPTION_PLANS.GROWTH.description}
 							price={49}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name}
-							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)}
+							onSelect={() =>
+								subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)
+							}
 							role={'button'}
 						/>
 					</div>
@@ -45,7 +49,9 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 							description={SUBSCRIPTION_PLANS.PRO.description}
 							price={89}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name}
-							onSelect={() => setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)}
+							onSelect={() =>
+								subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)
+							}
 							role={'button'}
 						/>
 					</div>
@@ -64,15 +70,17 @@ const ChangeSubscription = ({ show, onHide, centered, onChange }) => {
 				<Button variant='secondary' onClick={onHide}>
 					Cancel
 				</Button>
-				<Button onClick={onChange} disabled={!selectedPlan}>Upgrade</Button>
+				<Button onClick={() => onChange(selectedPlan)} disabled={!selectedPlan}>
+					Upgrade
+				</Button>
 			</Modal.Footer>
 		</Modal>
 	);
 };
 
-ChangeSubscription.propTypes = {
+ChangePlan.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired
 };
 
-export default ChangeSubscription;
+export default ChangePlan;

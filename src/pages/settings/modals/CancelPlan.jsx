@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelSubscription } from '../../../store/actions/stripe';
 
-const CancelSubscription = ({ show, onHide, centered, onComplete }) => {
+const CancelPlan = ({ show, onHide, centered, onComplete }) => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 
@@ -34,11 +34,11 @@ const CancelSubscription = ({ show, onHide, centered, onComplete }) => {
 	);
 };
 
-CancelSubscription.propTypes = {
+CancelPlan.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	centered: PropTypes.bool,
 	onComplete: PropTypes.func.isRequired
 };
 
-export default CancelSubscription;
+export default CancelPlan;

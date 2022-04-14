@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-bootstrap/Modal';
 import { updatePaymentMethod } from '../../../store/actions/stripe';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 
-const EditPayment = ({ show, onHide, onSuccess, setPaymentIndex, paymentMethod, updatePaymentDetails, paymentDetails }) => {
-	const user = useSelector(state => state['currentUser'].user)
-	const dispatch = useDispatch()
+const EditPaymentMethod = ({ onSuccess, paymentDetails, paymentMethod, cancel, updatePaymentDetails }) => {
+	const { user } = useSelector(state => state['currentUser']);
+	const dispatch = useDispatch();
 	return (
-		<Modal size='lg' show={show} onHide={onHide} centered>
-			<Modal.Header closeButton>
-				<Modal.Title>Edit payment method</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
+		<div>
+			<h1>Edit payment method</h1>
+			<div>
 				<div className='py-3'>
 					<form
 						onSubmit={e => {
@@ -24,11 +21,7 @@ const EditPayment = ({ show, onHide, onSuccess, setPaymentIndex, paymentMethod, 
 									month: paymentDetails.month,
 									year: paymentDetails.year
 								})
-							).then(() => {
-								onHide()
-								onSuccess('Your card details have been updated successfully!');
-								setPaymentIndex(2);
-							});
+							).then(onSuccess)
 						}}
 					>
 						<div className='row'>
@@ -120,7 +113,7 @@ const EditPayment = ({ show, onHide, onSuccess, setPaymentIndex, paymentMethod, 
 							</div>
 						</div>
 						<div className='d-flex justify-content-end pt-5'>
-							<button className='btn btn-secondary mx-3 rounded-3' style={{ width: '15%' }} onClick={onHide}>
+							<button type="button" className='btn btn-secondary mx-3 rounded-3' style={{ width: '15%' }} onClick={cancel}>
 								Cancel
 							</button>
 							<button className='btn btn-primary mx-3 rounded-3' type='submit' style={{ width: '15%' }}>
@@ -129,13 +122,17 @@ const EditPayment = ({ show, onHide, onSuccess, setPaymentIndex, paymentMethod, 
 						</div>
 					</form>
 				</div>
-			</Modal.Body>
-		</Modal>
+			</div>
+		</div>
 	);
 };
 
-EditPayment.propTypes = {
-	
+EditPaymentMethod.propTypes = {
+	onSuccess: PropTypes.func.isRequired,
+	paymentDetails: PropTypes.object,
+	paymentMethod: PropTypes.object,
+	cancel: PropTypes.func.isRequired,
+	updatePaymentDetails: PropTypes.func.isRequired
 };
 
-export default EditPayment;
+export default EditPaymentMethod;
