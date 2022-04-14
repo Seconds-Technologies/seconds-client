@@ -140,6 +140,7 @@ export function setupSubscription(email, stripeCustomerId, paymentMethodId, look
 			apiCall('POST', '/server/subscription/setup-subscription', { stripeCustomerId, paymentMethodId, lookupKey }, { params: { email }})
 				.then(subscription => {
 					console.table(subscription);
+					dispatch(updateCurrentUser({ subscriptionId: subscription['id'] }))
 					resolve(subscription);
 				})
 				.catch(err => {
@@ -151,10 +152,10 @@ export function setupSubscription(email, stripeCustomerId, paymentMethodId, look
 	}
 }
 
-export function cancelSubscription(email){
+export function cancelSubscription(email, reason){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			apiCall('GET', '/server/subscription/cancel-subscription', null, { params: { email }})
+			apiCall('GET', '/server/subscription/cancel-subscription', null, { params: { email, reason }})
 				.then(({ subscriptionId, cancelDate }) => {
 					console.table({ subscriptionId, cancelDate});
 					resolve(cancelDate);

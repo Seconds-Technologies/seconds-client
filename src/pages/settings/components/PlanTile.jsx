@@ -18,9 +18,9 @@ const PlanTile = ({ selected, name, price = 'Free', description, activePlan, onS
 			<div className='col-3'>
 				{name === SUBSCRIPTION_PLANS.ENTERPRISE.name ? (
 					<div className='d-flex justify-content-center align-items-center h-100'>
-						<button className='btn btn-outline-dark' style={{ width: 150 }}>
+						<a href="https://calendly.com/seconds-demo/30min?month=2022-04" target="_blank" className='btn btn-outline-dark'  style={{ width: 150 }}>
 							<span>{price}</span>
-						</button>
+						</a>
 					</div>
 				) : (
 					<div className='d-flex justify-content-center align-items-center border h-100'>

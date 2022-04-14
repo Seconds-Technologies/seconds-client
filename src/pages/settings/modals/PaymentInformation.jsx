@@ -13,10 +13,6 @@ const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
 const PaymentInformation = ({ show, onHide, newPlan, isLoading, onSubscribe }) => {
 	const [toastMessage, setShowToast] = useState('');
 
-	useEffect(() => {
-		console.log(newPlan)
-	}, [newPlan])
-
 	const priceText = useMemo(() => {
 		if (newPlan) {
 			const price = SUBSCRIPTION_PLANS[newPlan.toUpperCase()].price

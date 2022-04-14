@@ -226,7 +226,7 @@ const CardSetupForm = ({ isComponent, showToast, lookupKey, loading, onSubscribe
 							className='btn btn-lg btn-primary mx-2 d-flex justify-content-center align-items-center'
 							onClick={onSubscribe}
 						>
-							<span className={loading ? 'mx-3' : undefined}>Upgrade</span>
+							<span className={loading ? 'mx-3' : undefined}>Confirm</span>
 							<ClipLoader color='white' loading={loading} size={20} />
 						</button>
 					</div>

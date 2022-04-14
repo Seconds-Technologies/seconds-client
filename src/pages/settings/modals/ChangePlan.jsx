@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import PlanTile from '../components/PlanTile';
@@ -9,6 +9,19 @@ import { SUBSCRIPTION_PLANS } from '../../../constants';
 const ChangePlan = ({ show, onHide, centered, onChange }) => {
 	const [selectedPlan, setSelectedPlan] = useState('');
 	const { subscriptionPlan } = useSelector(state => state['currentUser'].user);
+
+	const confirmText = useMemo(() => {
+		console.log(selectedPlan)
+		const currentPrice = subscriptionPlan ? SUBSCRIPTION_PLANS[subscriptionPlan.toUpperCase()].price : -1
+		if (selectedPlan && SUBSCRIPTION_PLANS[selectedPlan.toUpperCase()].price <= currentPrice) {
+			return 'Downgrade';
+		}
+		return "Upgrade"
+	}, [subscriptionPlan, selectedPlan])
+
+	useEffect(() => {
+		console.log(confirmText)
+	}, [confirmText]);
 
 	return (
 		<Modal centered={centered} show={show} onHide={onHide} size='lg' scrollable>
@@ -71,7 +84,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 					Cancel
 				</Button>
 				<Button onClick={() => onChange(selectedPlan)} disabled={!selectedPlan}>
-					Upgrade
+					<span>{confirmText}</span>
 				</Button>
 			</Modal.Footer>
 		</Modal>
