@@ -185,7 +185,7 @@ export default function Orders(props) {
 									showAssignModal(true);
 								}}
 							>
-								Assign
+								Dispatch
 							</StyledButton>
 						)}
 					</div>

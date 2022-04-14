@@ -9,6 +9,7 @@ import { removeError } from '../../store/actions/errors';
 import PasswordField from '../../components/PasswordField';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Mixpanel } from '../../config/mixpanel';
+import { PATHS } from '../../constants';
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -67,7 +68,7 @@ const Login = props => {
 											$subscribed: false
 										});
 										setLoading(false);
-										props.history.push('/');
+										props.history.push(PATHS.HOME);
 									})
 									.catch(err => {
 										Mixpanel.track('Unsuccessful login');

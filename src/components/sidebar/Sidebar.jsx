@@ -38,7 +38,7 @@ export default function Sidebar() {
 		<div ref={launcherRef} className='sidebar bg-light'>
 			<div className='mb-1 d-flex flex-column ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto me-0'>
-					<Link to='/' className='navbar-brand mt-2 ' href=''>
+					<Link to={PATHS.HOME} className='navbar-brand mt-2 ' href=''>
 						<span className='logo'>
 							<img src={logo} alt='' width={120} />
 						</span>
