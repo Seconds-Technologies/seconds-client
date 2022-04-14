@@ -138,9 +138,9 @@ export function setupSubscription(email, stripeCustomerId, paymentMethodId, look
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			apiCall('POST', '/server/subscription/setup-subscription', { stripeCustomerId, paymentMethodId, lookupKey }, { params: { email }})
-				.then(({ id }) => {
-					console.table({ subscriptionId: id});
-					resolve(id);
+				.then(subscription => {
+					console.table(subscription);
+					resolve(subscription);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
