@@ -30,6 +30,10 @@
   border: pink solid 4px;
 }
 
+.font-normal {
+  font-family: 'Inter-Regular', sans-serif;
+}
+
 .font-medium {
   font-family: 'Inter-Medium', sans-serif;
 }

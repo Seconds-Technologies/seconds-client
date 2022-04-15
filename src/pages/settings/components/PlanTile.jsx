@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Chip from '@mui/material/Chip';
 import { SUBSCRIPTION_PLANS } from '../../../constants';
-import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import { styled } from '@mui/material/styles';
@@ -18,15 +18,17 @@ const PlanTile = ({ selected, name, price = 'Free', description, features, activ
 		<div className={`row w-100 rounded-3 p-3 ${selected && 'border-2 border-primary'} plan-tile`} role={role} onClick={onSelect}>
 			<div className='col-9'>
 				<div className='d-flex align-items-center'>
-					<span className='fs-3 text-capitalize me-2 font-semibold'>{name}</span>
+					<span className='fs-3 text-capitalize me-1 font-semibold'>{name}</span>
 					<CustomWidthTooltip
 						className='me-2'
 						title={
 							<pre>
-								<span className='fw-bold fs-6'>
+								<span className='font-medium fw-bold fs-6'>
 									What is included in<span className='text-capitalize'>&nbsp;{name} Plan?</span>
 								</span>
+								<span className="font-normal" style={{fontSize: "1.2em"}}>
 								{`\n${features}`}
+								</span>
 							</pre>
 						}
 						placement='right-start'
