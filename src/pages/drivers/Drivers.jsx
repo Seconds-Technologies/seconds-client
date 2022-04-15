@@ -1,19 +1,24 @@
 import './drivers.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import DriverModal from './modals/DriverModal';
-import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
-import { changeDriver, createDriver, deleteDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
-import SuccessToast from '../../modals/SuccessToast';
-import Switch from 'react-switch';
-import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
-import { Mixpanel } from '../../config/mixpanel';
-import CustomFooter from '../../components/CustomFooter';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
+import moment from 'moment';
+import Switch from 'react-switch';
+import { Mixpanel } from '../../config/mixpanel';
+// images
+import driverAvatar from '../../assets/img/driver-profile.svg'
+// redux
+import { useDispatch, useSelector } from 'react-redux';
+import { changeDriver, createDriver, deleteDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
+// modals & components
+import SuccessToast from '../../modals/SuccessToast';
+import CustomFooter from '../../components/CustomFooter';
+import DriverModal from './modals/DriverModal';
 import DeleteModal from './modals/DeleteModal';
+// constants
 import { DELETE_TYPES } from './constants';
+import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
 
 const Drivers = props => {
 	const dispatch = useDispatch();
@@ -34,6 +39,7 @@ const Drivers = props => {
 			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);
 			return {
 				id: driver.id,
+				fullName: `${driver.firstname} ${driver.lastname}`,
 				firstname: driver.firstname,
 				lastname: driver.lastname,
 				phone: driver.phone,
@@ -77,11 +83,15 @@ const Drivers = props => {
 
 	const columns = [
 		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
-		{ field: 'firstname', headerName: 'First Name', width: 150, flex: 0.5 },
-		{ field: 'lastname', headerName: 'Last Name', width: 150, flex: 0.5 },
-		{ field: 'phone', headerName: 'Phone Number', width: 150 },
+		{ field: 'fullName', headerName: 'Name', width: 150, flex: 0.3, renderCell: params => (
+			<div className="d-flex align-items-center justify-content-center">
+				<img src={driverAvatar} alt='' width={25} height={25} className="img-fluid" />
+				<span className="ms-3">{params.value}</span>
+			</div>
+			) },
+		{ field: 'phone', headerName: 'Phone Number', width: 150, flex: 0.2 },
 		{ field: 'vehicleCode', headerName: 'Vehicle Code', hide: true },
-		{ field: 'vehicleName', headerName: 'Vehicle', width: 150 },
+		{ field: 'vehicleName', headerName: 'Vehicle', width: 150, flex: 0.2 },
 		{
 			field: 'status',
 			headerName: 'Job Status',
@@ -154,9 +164,10 @@ const Drivers = props => {
 			field: 'action',
 			headerName: 'Action',
 			width: 150,
+			flex: 0.2,
 			renderCell: params => {
 				return (
-					<div className='d-flex align-items-center justify-content-between'>
+					<div className='d-flex align-items-center justify-content-center'>
 						<button
 							className='d-flex justify-content-center align-items-center table-edit-btn'
 							onClick={() => {

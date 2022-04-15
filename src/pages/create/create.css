@@ -15,6 +15,10 @@
     display: flex;
 }
 
+/*.create_loader_overlay {
+    backdrop-filter: blur(10px);
+}*/
+
 .accordion {
     background-color: #fff;
     color: #444;

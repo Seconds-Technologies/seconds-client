@@ -214,12 +214,12 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
+		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
 	useEffect(() => {
-		Mixpanel.people.increment('page_views');
 		dispatch(removeError());
 	}, [props.location]);
 
