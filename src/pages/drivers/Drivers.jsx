@@ -200,7 +200,7 @@ const Drivers = props => {
 				onConfirm={confirmDelete}
 			/>
 			<div className='d-flex mx-3 justify-content-between '>
-				<h3>Your Drivers</h3>
+				<h3>Drivers</h3>
 				<button
 					className='btn btn-primary btn-lg'
 					style={{ width: 150 }}

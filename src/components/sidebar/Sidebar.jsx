@@ -9,7 +9,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/secondsapp.svg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { logout } from '../../store/actions/auth';
@@ -33,6 +33,10 @@ export default function Sidebar() {
 			top: 2,
 		}
 	}));
+
+	const isSettings = useMemo(() => {
+		return [PATHS.SETTINGS, PATHS.INTEGRATE, PATHS.SHOPIFY, PATHS.HUBRISE, PATHS.WOOCOMMERCE, PATHS.SQUARESPACE, PATHS.SQUARE].includes(location['pathname'])
+	}, [location])
 
 	return (
 		<div ref={launcherRef} className='sidebar bg-light'>
@@ -118,9 +122,9 @@ export default function Sidebar() {
 						</li>
 					</div>
 					<Link to={PATHS.SETTINGS} className='link text-black'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.SETTINGS && 'currentLink'}`}>
+						<li className={`sidebarListItem ${isSettings && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.SETTINGS && 'currentIcon'}`}
+								className={`sidebarIcon item-hover ${isSettings && 'currentIcon'}`}
 								src={settingsIcon}
 								alt={''}
 								width={25}

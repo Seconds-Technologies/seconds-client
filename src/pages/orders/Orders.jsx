@@ -214,12 +214,12 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
-		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
 	}, []);
 
 	useEffect(() => {
+		Mixpanel.people.increment('page_views');
 		dispatch(removeError());
 	}, [props.location]);
 
@@ -268,6 +268,12 @@ export default function Orders(props) {
 					return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 			  })
 			: false;
+	}, [selectionModel]);
+
+	const canDelete = useMemo(() => {
+		return allJobs
+			.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber))
+			.every(({ selectedConfiguration: { providerId } }) => providerId === PROVIDERS.UNASSIGNED);
 	}, [selectionModel]);
 
 	const dispatchJob = useCallback(() => {
@@ -358,12 +364,6 @@ export default function Orders(props) {
 	const confirmDelete = useCallback(() => {
 		dispatch(deleteJobs(email, selectionModel)).then(res => console.log(res));
 		handleClose();
-	}, [selectionModel]);
-
-	const canDelete = useMemo(() => {
-		return allJobs
-			.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber))
-			.every(({ selectedConfiguration: { providerId } }) => providerId === PROVIDERS.UNASSIGNED);
 	}, [selectionModel]);
 
 	return (
@@ -464,7 +464,7 @@ export default function Orders(props) {
 					centered
 					onConfirm={confirmDelete}
 				/>
-				<h3 className='ms-3'>Your Orders</h3>
+				<h3 className='ms-3'>Orders</h3>
 				<DataGrid
 					sx={{
 						'& .MuiDataGrid-cell:focus': {

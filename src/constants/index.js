@@ -36,7 +36,8 @@ export const SUBSCRIPTION_PLANS = {
 		name: 'starter',
 		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.',
 		price: 0,
-		priceLabel: "Free"
+		priceLabel: "Free",
+		features: ['']
 	},
 	GROWTH: {
 		name: 'growth',

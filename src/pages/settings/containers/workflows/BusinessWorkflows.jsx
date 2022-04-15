@@ -64,7 +64,7 @@ const BusinessWorkflows = props => {
 						<div className='row pb-4'>
 							<div>
 								<h1 className='workflow-header fs-4'>Set Delivery Time</h1>
-								<p className='text-muted'>Let us know the times you want to provide Same Day Delivery</p>
+								<p className='text-muted'> Update your opening times</p>
 								<div className=''>
 									<button
 										type='button'

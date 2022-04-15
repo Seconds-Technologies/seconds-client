@@ -29,6 +29,7 @@ const Dashboard = props => {
 				}));
 			})
 	);
+
 	const activeCouriers = useSelector(state =>
 		state['deliveryJobs'].allJobs
 			.filter(item => ![STATUS.CANCELLED, STATUS.COMPLETED, STATUS.NEW].includes(item.status))
@@ -70,14 +71,14 @@ const Dashboard = props => {
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
 		dispatch(removeError());
-	}, []);
+	}, [props.location]);
 
 	return (
 		<div className='page-container'>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>
-						<span className='bold-text'>{`Hey ${company},`}</span>&nbsp;here is your delivery overview
+						<span className='bold-text'>{`Hey ${company},`}</span>&nbsp;your delivery overview
 					</span>
 				</div>
 				<TimeFilter current={active} onSelect={setActive} />
