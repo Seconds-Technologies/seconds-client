@@ -8,7 +8,7 @@ import moment from 'moment';
 import Switch from 'react-switch';
 import { Mixpanel } from '../../config/mixpanel';
 // images
-import driverAvatar from '../../assets/img/driver-profile.svg'
+import driverAvatar from '../../assets/img/driver-profile.svg';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { changeDriver, createDriver, deleteDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
@@ -73,23 +73,26 @@ const Drivers = props => {
 	const handleOpen = (type, ids) => setDeleteModal(prevState => ({ show: true, type, ids }));
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
-	const confirmDelete = useCallback(
-		() => {
-			console.log(deleteModal)
-			dispatch(deleteDrivers(email, deleteModal.ids)).then(() => console.log("Drivers deleted successfully!"));
-			handleClose()
-		},
-		[selectionModel, deleteModal.ids]
-	);
+	const confirmDelete = useCallback(() => {
+		console.log(deleteModal);
+		dispatch(deleteDrivers(email, deleteModal.ids)).then(() => console.log('Drivers deleted successfully!'));
+		handleClose();
+	}, [selectionModel, deleteModal.ids]);
 
 	const columns = [
 		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
-		{ field: 'fullName', headerName: 'Name', width: 150, flex: 0.3, renderCell: params => (
-			<div className="d-flex align-items-center justify-content-center">
-				<img src={driverAvatar} alt='' width={25} height={25} className="img-fluid" />
-				<span className="ms-3">{params.value}</span>
-			</div>
-			) },
+		{
+			field: 'fullName',
+			headerName: 'Name',
+			width: 150,
+			flex: 0.3,
+			renderCell: params => (
+				<div className='d-flex align-items-center justify-content-center'>
+					<img src={driverAvatar} alt='' width={25} height={25} className='img-fluid' />
+					<span className='ms-3'>{params.value}</span>
+				</div>
+			)
+		},
 		{ field: 'phone', headerName: 'Phone Number', width: 150, flex: 0.2 },
 		{ field: 'vehicleCode', headerName: 'Vehicle Code', hide: true },
 		{ field: 'vehicleName', headerName: 'Vehicle', width: 150, flex: 0.2 },
@@ -178,7 +181,13 @@ const Drivers = props => {
 						>
 							<span className='text-decoration-none'>Edit</span>
 						</button>
-						<IconButton className="ms-3" color='error' size='small' aria-label="delete" onClick={() => handleOpen(DELETE_TYPES.SINGLE, [params.row.id])}>
+						<IconButton
+							className='ms-3'
+							color='error'
+							size='small'
+							aria-label='delete'
+							onClick={() => handleOpen(DELETE_TYPES.SINGLE, [params.row.id])}
+						>
 							<DeleteIcon />
 						</IconButton>
 					</div>
@@ -198,11 +207,11 @@ const Drivers = props => {
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<DeleteModal
-				data={drivers.filter(({ id }) => deleteModal.ids.includes(id)).map(({firstname, lastname}) => `${firstname} ${lastname}`)}
+				data={drivers.filter(({ id }) => deleteModal.ids.includes(id)).map(({ firstname, lastname }) => `${firstname} ${lastname}`)}
 				show={deleteModal.show}
 				onHide={handleClose}
-				title="Delete Drivers"
-				description="The following drivers will be deleted"
+				title='Delete Drivers'
+				description='The following drivers will be deleted'
 				centered
 				onConfirm={confirmDelete}
 			/>
@@ -260,7 +269,13 @@ const Drivers = props => {
 				components={
 					selectionModel.length
 						? {
-								Footer: () => <CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} title="Bulk Delete"/>
+								Footer: () => (
+									<CustomFooter
+										onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)}
+										title='Bulk Delete'
+										canDelete
+									/>
+								)
 						  }
 						: undefined
 				}
