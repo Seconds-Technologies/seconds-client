@@ -15,6 +15,7 @@ import Developers from './containers/developers/Developers';
 import TabContext from '../../context/TabContext';
 import AppBar from '@mui/material/AppBar';
 import Branding from './containers/branding/Branding';
+import Payroll from './containers/payroll/Payroll';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
@@ -90,9 +91,10 @@ const Settings = props => {
 						<AntTab label='Billing' {...a11yProps(1)} />
 						<AntTab label='Business Workflows' {...a11yProps(2)} />
 						<AntTab label="Branding" {...a11yProps(3)} />
-						<AntTab label='Third Party Providers' {...a11yProps(4)} />
-						<AntTab label='Integrations' {...a11yProps(5)} />
-						<AntTab label='Developers' {...a11yProps(6)} />
+						<AntTab label="Driver Payroll" {...a11yProps(4)} />
+						<AntTab label='Third Party Providers' {...a11yProps(5)} />
+						<AntTab label='Integrations' {...a11yProps(6)} />
+						<AntTab label='Developers' {...a11yProps(7)} />
 					</Tabs>
 				</AppBar>
 				<TabPanel value={index} index={0}>
@@ -108,12 +110,15 @@ const Settings = props => {
 					<Branding setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={4}>
-					<Couriers setNavColor={setNavColor} />
+					<Payroll setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={5}>
-					<Integrations setNavColor={setNavColor} {...props} />
+					<Couriers setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={6}>
+					<Integrations setNavColor={setNavColor} {...props} />
+				</TabPanel>
+				<TabPanel value={index} index={7}>
 					<Developers setNavColor={setNavColor} {...props} />
 				</TabPanel>
 			</Box>

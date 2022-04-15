@@ -95,7 +95,7 @@ export default function Sidebar() {
 							<div className='item-hover'>Drivers</div>
 						</li>
 					</Link>
-					<div className='link text-black mt-4' onClick={() => setAlerts(true)}>
+					<div className='link text-black' onClick={() => setAlerts(true)}>
 						<li className={`sidebarListItem`}>
 							<FloatingNotificationInbox
 								isOpen={isOpen}

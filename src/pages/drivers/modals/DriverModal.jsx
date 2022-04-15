@@ -10,11 +10,6 @@ import van from '../../../assets/img/van.svg';
 import { VEHICLE_TYPES } from '../../../constants';
 
 const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
-
-	useEffect(() => {
-		console.log(details);
-	}, [details]);
-
 	return (
 		<Modal show={show} onHide={() => toggleShow('')} size='lg' centered>
 			<Modal.Header className='border-0 pb-0' closeButton />
