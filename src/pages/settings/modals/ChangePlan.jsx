@@ -39,6 +39,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)
 							}
+							features={SUBSCRIPTION_PLANS.STARTER.features.join('\n')}
 							role={'button'}
 						/>
 					</div>
@@ -52,6 +53,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)
 							}
+							features={SUBSCRIPTION_PLANS.GROWTH.features.join('\n')}
 							role={'button'}
 						/>
 					</div>
@@ -65,6 +67,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)
 							}
+							features={SUBSCRIPTION_PLANS.PRO.features.join('\n')}
 							role={'button'}
 						/>
 					</div>
@@ -74,6 +77,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.ENTERPRISE.name}
 							description={SUBSCRIPTION_PLANS.ENTERPRISE.description}
 							price={'Book Demo'}
+							features={SUBSCRIPTION_PLANS.ENTERPRISE.features.join('\n')}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.ENTERPRISE.name}
 						/>
 					</div>

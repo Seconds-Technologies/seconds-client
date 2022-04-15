@@ -1,6 +1,7 @@
 import './drivers.css';
 import React, { useCallback, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import moment from 'moment';
@@ -177,9 +178,9 @@ const Drivers = props => {
 						>
 							<span className='text-decoration-none'>Edit</span>
 						</button>
-						<Button color='error' size='small' onClick={() => handleOpen(DELETE_TYPES.SINGLE, [params.row.id])}>
+						<IconButton className="ms-3" color='error' size='small' aria-label="delete" onClick={() => handleOpen(DELETE_TYPES.SINGLE, [params.row.id])}>
 							<DeleteIcon />
-						</Button>
+						</IconButton>
 					</div>
 				);
 			}

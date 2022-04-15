@@ -36,28 +36,63 @@ export const SUBSCRIPTION_PLANS = {
 		name: 'starter',
 		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.',
 		price: 0,
-		priceLabel: "Free",
-		features: ['']
+		priceLabel: 'Free',
+		features: [
+			'Access third-party delivery services',
+			'Connect your online stores',
+			'Automated order creation',
+			'Automated dispatch',
+			'Automated orchestration',
+			'Manual instant order creation',
+			'Manual scheduled order creation',
+			'Track and manage all deliveries',
+			'Real-time location tracking',
+			'Keep customers notified',
+			'Build business workflows',
+			'Delivery reports',
+			'Live support'
+		]
 	},
 	GROWTH: {
 		name: 'growth',
 		description: 'Great for small businesses with mild delivery volume and manage their own team.',
 		price: 49,
-		priceLabel: "49",
+		priceLabel: '49',
+		features: [
+			'Everything in Starter',
+			'Add and manage internal drivers',
+			'Automated driver dispatch',
+			'Driver application',
+			'Manual route batching',
+			'Manual route optimization',
+			'SMS notifications to customers',
+			'Live customer ETA',
+			'Proof of delivery'
+		]
 	},
 	PRO: {
 		name: 'pro',
 		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.',
 		price: 89,
-		priceLabel: "89"
+		priceLabel: '89',
+		features: [
+			'Everything in Growth',
+			'API integration',
+			'Automated route batching',
+			'Automated route optimization',
+			'Manage internal fleet payroll',
+			'Branded delivery tracking for customers with live ETA',
+			'Customized Live customer ETA'
+		]
 	},
 	ENTERPRISE: {
 		name: 'enterprise',
 		description: 'Built for large organisations looking for the most advanced technology to manage their entire last mile.',
-		price: "Custom",
-		priceLabel: "Custom"
+		price: 'Custom',
+		priceLabel: 'Custom',
+		features: ['Everything in Pro', 'Fully customised for your organisation', 'Best support SLA', 'Dedicated onboarding']
 	}
-}
+};
 
 export const STATUS_COLOURS = {
 	NEW: '#F44336',
@@ -92,8 +127,8 @@ export const DRIVER_STATUS = {
 	AVAILABLE: 'AVAILABLE',
 	BUSY: 'BUSY',
 	ASSIGNED: 'ASSIGNED',
-	OFFLINE: 'OFFLINE',
-}
+	OFFLINE: 'OFFLINE'
+};
 
 export const PLACE_TYPES = {
 	ESTABLISHMENT: 'establishment',
@@ -116,9 +151,9 @@ export const SUBMISSION_TYPES = {
 export const PROVIDER_TYPES = {
 	COURIER: 'courier',
 	DRIVER: 'driver'
-}
+};
 
-export const VEHICLE_CODES = ['BIC', 'MTB', 'CGB', 'CAR', 'VAN']
+export const VEHICLE_CODES = ['BIC', 'MTB', 'CGB', 'CAR', 'VAN'];
 
 export const VEHICLE_TYPES = [
 	{
@@ -155,7 +190,7 @@ export const PROVIDERS = {
 	ECOFLEET: 'ecofleet',
 	ADDISON_LEE: 'addison_lee',
 	PRIVATE: 'private',
-	UNASSIGNED: 'unassigned',
+	UNASSIGNED: 'unassigned'
 };
 
 export const DELIVERY_TYPES = {
@@ -166,28 +201,28 @@ export const DELIVERY_TYPES = {
 };
 
 export const DISPATCH_MODES = {
-	AUTO: "AUTO",
-	MANUAL: "MANUAL"
-}
+	AUTO: 'AUTO',
+	MANUAL: 'MANUAL'
+};
 
 export const DISPATCH_TYPES = {
-	DRIVER: "DRIVER",
-	COURIER: "COURIER"
-}
+	DRIVER: 'DRIVER',
+	COURIER: 'COURIER'
+};
 
 export const BATCH_TYPES = {
-	INCREMENTAL: "INCREMENTAL",
-	DAILY: "DAILY"
-}
+	INCREMENTAL: 'INCREMENTAL',
+	DAILY: 'DAILY'
+};
 
 export const DELIVERY_STRATEGIES = {
-	ETA: "eta",
-	PRICE: "price",
-	RATING: "rating"
+	ETA: 'eta',
+	PRICE: 'price',
+	RATING: 'rating'
 };
 
 export const OPTIMIZATION_OBJECTIVES = {
-	DURATION: "less_duration",
-	MILEAGE: "less_mileage",
-	COST: "minimize_cost"
-}
+	DURATION: 'less_duration',
+	MILEAGE: 'less_mileage',
+	COST: 'minimize_cost'
+};
