@@ -26,7 +26,7 @@ const PlanTile = ({ selected, name, price = 'Free', description, features, activ
 								<span className='font-medium fw-bold fs-6'>
 									What is included in<span className='text-capitalize'>&nbsp;{name} Plan?</span>
 								</span>
-								<span className="font-normal" style={{fontSize: "1.2em"}}>
+								<span className="font-normal" style={{fontSize: "1.25em"}}>
 								{`\n${features}`}
 								</span>
 							</pre>

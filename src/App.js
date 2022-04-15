@@ -32,7 +32,10 @@ function App() {
 
 	const theme = createTheme({
 		palette: {
-			neutral: grey,
+			neutral: {
+				main: grey,
+				contrastText: '#fff',
+			},
 		},
 	});
 
