@@ -167,6 +167,14 @@ export default function Orders(props) {
 		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
 		{ field: 'address', headerName: 'Address', flex: 0.3, width: 200 },
 		{
+			field: 'platform',
+			headerName: 'Platform',
+			width: 100,
+			renderCell: params => {
+				return <img src={secondsLogo} width={25} height={25} alt="logo"/>
+			}
+		},
+		{
 			field: 'provider',
 			headerName: 'Delivery Provider',
 			width: 200,
@@ -205,14 +213,6 @@ export default function Orders(props) {
 						)}
 					</div>
 				);
-			}
-		},
-		{
-			field: 'platform',
-			headerName: 'Platform',
-			width: 100,
-			renderCell: params => {
-				return <img src={secondsLogo} width={25} height={25} alt="logo"/>
 			}
 		},
 		{
