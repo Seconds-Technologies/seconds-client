@@ -4,7 +4,16 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, DISPATCH_MODES, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
+import {
+	BACKGROUND,
+	DISPATCH_MODES,
+	PLATFORMS,
+	PATHS,
+	PROVIDERS,
+	STATUS,
+	STATUS_COLOURS,
+	VEHICLE_TYPES
+} from '../../constants';
 import {
 	getAllQuotes,
 	manuallyDispatchJob,
@@ -24,6 +33,7 @@ import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
 import infinityIcon from '../../assets/img/infinity.svg';
+import secondsLogo from '../../assets/img/logo.svg';
 // components & modals
 import CustomToolbar from '../../components/CustomToolbar';
 import RouteOptimization from './modals/RouteOptimization';
@@ -95,6 +105,11 @@ export default function Orders(props) {
 			hide: true
 		},
 		{
+			field: 'pickupTime',
+			headerName: 'Pickup Time',
+			flex: 0.4,
+		},
+		{
 			field: 'status',
 			headerName: 'Status',
 			type: 'singleSelect',
@@ -148,12 +163,12 @@ export default function Orders(props) {
 				</div>
 			)
 		},
-		{ field: 'customerName', headerName: 'Customer', flex: 0.4, width: 150 },
+		{ field: 'customerName', headerName: 'Customer', flex: 0.3, width: 150 },
 		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
-		{ field: 'address', headerName: 'Address', flex: 0.6, width: 250 },
+		{ field: 'address', headerName: 'Address', flex: 0.3, width: 200 },
 		{
-			field: 'driver',
-			headerName: 'Driver',
+			field: 'provider',
+			headerName: 'Delivery Provider',
 			width: 200,
 			type: 'singleSelect',
 			valueOptions: Object.values(PROVIDERS),
@@ -173,12 +188,12 @@ export default function Orders(props) {
 									: privateCourier
 							}
 							alt=''
-							className={`${params.row.driver === PROVIDERS.UNASSIGNED && 'img-red'} me-3`}
+							className={`${params.row.provider === PROVIDERS.UNASSIGNED && 'img-red'} me-3`}
 							width={25}
 							height={25}
 						/>
 						{params.row.routeOptimization && <img src={infinityIcon} alt='' width={25} height={25} />}
-						{params.row.driver === PROVIDERS.UNASSIGNED && (
+						{params.row.provider === PROVIDERS.UNASSIGNED && (
 							<StyledButton
 								onClick={() => {
 									selectProvider(prevState => ({ ...prevState, orderNumber: params.row.id }));
@@ -190,6 +205,14 @@ export default function Orders(props) {
 						)}
 					</div>
 				);
+			}
+		},
+		{
+			field: 'platform',
+			headerName: 'Platform',
+			width: 100,
+			renderCell: params => {
+				return <img src={secondsLogo} width={25} height={25} alt="logo"/>
 			}
 		},
 		{
@@ -229,7 +252,7 @@ export default function Orders(props) {
 				({
 					_id,
 					status,
-					jobSpecification: { orderNumber, deliveries },
+					jobSpecification: { orderNumber, deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
 					createdAt,
 					routeOptimization
@@ -239,14 +262,17 @@ export default function Orders(props) {
 					} = deliveries[0];
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
-					let driver = providerId;
+					let provider = providerId;
+					const pickupTime = moment(pickupStartTime).calendar();
 					return {
 						id: orderNumber,
+						pickupTime,
 						status,
 						customerName,
 						phoneNumber,
 						address,
-						driver,
+						provider,
+						platform: PLATFORMS.DASHBOARD,
 						createdAt,
 						routeOptimization
 					};

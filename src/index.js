@@ -16,6 +16,17 @@ import "bootstrap/dist/js/bootstrap.min";
 import moment from 'moment-timezone';
 moment.tz.setDefault('Europe/London');
 
+moment.locale('en', {
+	calendar : {
+		lastDay : 'LT [, Yesterday]',
+		sameDay : 'LT [, Today]',
+		nextDay : 'LT [, Tomorrow]',
+		lastWeek : 'LT [last] ddd',
+		nextWeek : 'LT [next] ddd',
+		sameElse : 'L'
+	}
+});
+
 const theme = createTheme();
 
 ReactDOM.render(

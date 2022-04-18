@@ -216,6 +216,11 @@ export const BATCH_TYPES = {
 	DAILY: 'DAILY'
 };
 
+export const PLATFORMS = {
+	SHOPIFY: 'SHOPIFY',
+	DASHBOARD: 'DASHBOARD'
+}
+
 export const DELIVERY_STRATEGIES = {
 	ETA: 'eta',
 	PRICE: 'price',

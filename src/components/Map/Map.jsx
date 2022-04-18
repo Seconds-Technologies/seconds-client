@@ -32,6 +32,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 	const onLoaded = map => {
 		map.resize();
 	};
+
 	const [geoJSON, setGeoJSON] = useState({
 		type: 'FeatureCollection',
 		features: [
