@@ -35,6 +35,7 @@ const Drivers = props => {
 		vehicle: ''
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
+
 	const drivers = useSelector(state => {
 		return state['driversStore'].map(driver => {
 			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);
@@ -44,6 +45,7 @@ const Drivers = props => {
 				firstname: driver.firstname,
 				lastname: driver.lastname,
 				phone: driver.phone,
+				createdAt: driver.createdAt,
 				email: driver.email,
 				vehicleCode: driver.vehicle,
 				vehicleName: vehicleType ? vehicleType.label : driver.vehicle,
@@ -53,6 +55,7 @@ const Drivers = props => {
 			};
 		});
 	});
+
 	const saveDriver = useCallback(values => {
 		console.log(values);
 		values.type === 'create'
@@ -82,6 +85,11 @@ const Drivers = props => {
 	const columns = [
 		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
 		{
+			field: 'createdAt',
+			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
+			hide: true
+		},
+		{
 			field: 'fullName',
 			headerName: 'Name',
 			width: 150,
@@ -94,7 +102,6 @@ const Drivers = props => {
 			)
 		},
 		{ field: 'phone', headerName: 'Phone Number', width: 150, flex: 0.2 },
-		{ field: 'vehicleCode', headerName: 'Vehicle Code', hide: true },
 		{ field: 'vehicleName', headerName: 'Vehicle', width: 150, flex: 0.2 },
 		{
 			field: 'status',
@@ -157,11 +164,6 @@ const Drivers = props => {
 					/>
 				);
 			}
-		},
-		{
-			field: 'createdAt',
-			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
-			hide: true
 		},
 		{ field: 'verified', headerName: 'Verified', type: 'boolean', width: 120 },
 		{
