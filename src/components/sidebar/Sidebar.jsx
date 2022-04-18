@@ -1,5 +1,5 @@
 import './Sidebar.css';
-import orderIcon from '../../assets/img/orders1.svg';
+import orderIcon from '../../assets/img/orders.svg';
 import settingsIcon from '../../assets/img/settings.svg';
 import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create.svg';
