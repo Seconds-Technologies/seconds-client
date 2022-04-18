@@ -5,7 +5,9 @@ export const PATHS = {
 	RESET: '/reset',
 	HOME: '/home',
 	ORDERS: '/orders',
-	VIEW_ORDER: '/view-orders',
+	DRIVERS: '/drivers',
+	ANALYTICS: '/analytics',
+	VIEW_ORDER: '/orders',
 	CREATE: '/create',
 	MULTI: '/create/multi',
 	TRACK: '/track',
@@ -28,7 +30,6 @@ export const PATHS = {
 	SIGNUP_1: '/signup/1',
 	SIGNUP_2: '/signup/2',
 	SIGNUP_3: '/signup/3',
-	DRIVERS: '/drivers'
 };
 
 export const SUBSCRIPTION_PLANS = {

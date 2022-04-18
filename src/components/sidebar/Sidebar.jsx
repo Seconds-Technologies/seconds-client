@@ -2,8 +2,9 @@ import './Sidebar.css';
 import orderIcon from '../../assets/img/orders1.svg';
 import settingsIcon from '../../assets/img/settings.svg';
 import dashboardIcon from '../../assets/img/dashboard.svg';
-import createIcon from '../../assets/img/create1.svg';
+import createIcon from '../../assets/img/create.svg';
 import driversIcon from '../../assets/img/driver.svg';
+import analyticsIcon from '../../assets/img/analytics.svg';
 import bellIcon from '../../assets/img/bell.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -95,6 +96,18 @@ export default function Sidebar() {
 							<div className='item-hover'>Drivers</div>
 						</li>
 					</Link>
+					<Link to={PATHS.ANALYTICS} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.ANALYTICS && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.ANALYTICS && 'currentIcon'}`}
+								src={analyticsIcon}
+								alt={''}
+								width={25}
+								height={25}
+							/>
+							<div className='item-hover'>Analytics</div>
+						</li>
+					</Link>
 					<div className='link text-black' onClick={() => setAlerts(true)}>
 						<li className={`sidebarListItem`}>
 							<FloatingNotificationInbox
@@ -137,11 +150,11 @@ export default function Sidebar() {
 						<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
 							{profileImageData ? (
 								<img
-									className={`border rounded-circle me-3`}
+									className={`border rounded-circle sidebarIcon`}
 									src={`data:image/jpeg;base64,${profileImageData}`}
 									alt=''
-									width={29}
-									height={29}
+									width={26}
+									height={26}
 								/>
 							) : (
 								<Avatar

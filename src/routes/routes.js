@@ -27,6 +27,7 @@ import SquareSpace from '../pages/squarespace/SquareSpace';
 import HubRise from '../pages/hubrise/HubRise';
 import Catalog from '../pages/catalog/Catalog';
 import Drivers from '../pages/drivers/Drivers';
+import Analytics from '../pages/analytics/Analytics';
 
 const routes = (
 	<Switch>
@@ -45,7 +46,8 @@ const routes = (
 		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />
 		<PrivateRoute exact path={PATHS.HUBRISE} component={HubRise} />
 		<PrivateRoute exact path={PATHS.HUBRISE_CATALOG} component={Catalog} />
-		<PrivateRoute path={PATHS.ORDERS} component={Orders} />
+		<PrivateRoute exact path={PATHS.ORDERS} component={Orders} />
+		<PrivateRoute exact path={PATHS.ANALYTICS} component={Analytics}/>
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />

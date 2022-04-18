@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Button from '@mui/material/Button';
 import moment from 'moment';
 import Switch from 'react-switch';
 import { Mixpanel } from '../../config/mixpanel';

@@ -464,7 +464,9 @@ export default function Orders(props) {
 					centered
 					onConfirm={confirmDelete}
 				/>
-				<h3 className='ms-3'>Orders</h3>
+				<div className="d-flex justify-content-between">
+					<h3 className='ms-3'>Orders</h3>
+				</div>
 				<DataGrid
 					sx={{
 						'& .MuiDataGrid-cell:focus': {
