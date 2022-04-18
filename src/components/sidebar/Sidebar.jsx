@@ -5,14 +5,13 @@ import dashboardIcon from '../../assets/img/dashboard.svg';
 import createIcon from '../../assets/img/create.svg';
 import driversIcon from '../../assets/img/driver.svg';
 import analyticsIcon from '../../assets/img/analytics.svg';
+import defaultAvatar from '../../assets/img/profile-avatar.svg';
 import bellIcon from '../../assets/img/bell.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/secondsapp.svg';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { logout } from '../../store/actions/auth';
 import { useNotifications } from '@magicbell/magicbell-react';
 import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
@@ -39,6 +38,10 @@ export default function Sidebar() {
 		return [PATHS.SETTINGS, PATHS.INTEGRATE, PATHS.SHOPIFY, PATHS.HUBRISE, PATHS.WOOCOMMERCE, PATHS.SQUARESPACE, PATHS.SQUARE].includes(location['pathname'])
 	}, [location])
 
+	const isOrder = useMemo(() => {
+		return [PATHS.ORDERS, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path))
+	}, [location])
+
 	return (
 		<div ref={launcherRef} className='sidebar bg-light'>
 			<div className='mb-1 d-flex flex-column ps-3 pe-2'>
@@ -61,9 +64,9 @@ export default function Sidebar() {
 						</li>
 					</Link>
 					<Link to={PATHS.ORDERS} className='link text-black'>
-						<li className={`sidebarListItem ${location['pathname'] === PATHS.ORDERS && 'currentLink'}`}>
+						<li className={`sidebarListItem ${isOrder && 'currentLink'}`}>
 							<img
-								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.ORDERS && 'currentIcon'}`}
+								className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`}
 								src={orderIcon}
 								alt={''}
 								width={25}
@@ -157,10 +160,12 @@ export default function Sidebar() {
 									height={26}
 								/>
 							) : (
-								<Avatar
-									className={`ms-1 item-hover me-1 ${location['pathname'] === PATHS.PROFILE && 'currentIcon'}`}
-									size={32}
-									icon={<UserOutlined />}
+								<img
+									className={`sidebarIcon`}
+									src={defaultAvatar}
+									alt=''
+									width={26}
+									height={26}
 								/>
 							)}
 							<span className={`item-hover ${location['pathname'] === PATHS.PROFILE && 'currentLink'}`}>Profile</span>

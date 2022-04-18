@@ -7,7 +7,7 @@ import moment from 'moment';
 import Switch from 'react-switch';
 import { Mixpanel } from '../../config/mixpanel';
 // images
-import driverAvatar from '../../assets/img/driver-profile.svg';
+import driverAvatar from '../../assets/img/profile-avatar.svg';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { changeDriver, createDriver, deleteDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
