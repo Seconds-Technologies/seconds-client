@@ -33,7 +33,7 @@ import streetStream from '../../assets/img/street-stream.svg';
 import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
 import infinityIcon from '../../assets/img/infinity.svg';
-import secondsLogo from '../../assets/img/logo.svg';
+import secondsPlatform from '../../assets/img/platform.svg';
 // components & modals
 import CustomToolbar from '../../components/CustomToolbar';
 import RouteOptimization from './modals/RouteOptimization';
@@ -171,7 +171,7 @@ export default function Orders(props) {
 			headerName: 'Platform',
 			width: 100,
 			renderCell: params => {
-				return <img src={secondsLogo} width={25} height={25} alt="logo"/>
+				return <img src={secondsPlatform} width={25} height={25} alt="logo"/>
 			}
 		},
 		{
@@ -263,7 +263,7 @@ export default function Orders(props) {
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let provider = providerId;
-					const pickupTime = moment(pickupStartTime).calendar();
+					const pickupTime = moment(pickupStartTime).format("HH:mm a");
 					return {
 						id: orderNumber,
 						pickupTime,
