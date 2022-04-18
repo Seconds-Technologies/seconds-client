@@ -7,7 +7,7 @@ export const PATHS = {
 	ORDERS: '/orders',
 	DRIVERS: '/drivers',
 	ANALYTICS: '/analytics',
-	VIEW_ORDER: '/orders',
+	VIEW_ORDER: '/order',
 	CREATE: '/create',
 	MULTI: '/create/multi',
 	TRACK: '/track',
