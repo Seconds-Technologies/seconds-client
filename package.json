@@ -38,6 +38,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
     "bootstrap-input-spinner": "^3.0.2",
+    "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
     "clsx": "^1.1.1",
     "formik": "^2.2.9",
@@ -54,6 +55,7 @@
     "react": "^17.0.2",
     "react-avatar-edit": "^1.0.0",
     "react-bootstrap": "^2.0.0-beta.6",
+    "react-chartjs-2": "^4.1.0",
     "react-color": "^2.19.3",
     "react-color-palette": "^6.2.0",
     "react-credit-cards": "^0.8.3",
@@ -115,6 +117,7 @@
     ]
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.1.2",
     "prettier": "^2.3.1"
   }
 }
