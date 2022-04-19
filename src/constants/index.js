@@ -194,6 +194,8 @@ export const PROVIDERS = {
 	UNASSIGNED: 'unassigned'
 };
 
+export const FLEET_PROVIDERS = ['stuart', 'gophr', 'street_stream', 'ecofleet', 'addison_lee']
+
 export const DELIVERY_TYPES = {
 	ON_DEMAND: 'ON_DEMAND',
 	SAME_DAY: 'SAME_DAY',

@@ -9,6 +9,9 @@ import DeliveryCost from '../../components/charts/DeliveryCost';
 import DeliveryVolume from '../../components/charts/DeliveryVolume';
 import DriverPerformance from '../../components/charts/DriverPerformance';
 import { useSelector } from 'react-redux';
+import DeliveryOverview from '../../components/charts/DeliveryOverview';
+import { FLEET_PROVIDERS } from '../../constants';
+import { capitalize } from '../../helpers';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
@@ -29,7 +32,7 @@ const options = [
 
 const Analytics = props => {
 	const dimensions = useWindowSize();
-	const drivers = useSelector(state => state['driversStore'])
+	const drivers = useSelector(state => state['driversStore']);
 	const [active, setActive] = useState({ id: 'week', name: 'Last 7 days' });
 
 	const generateLabels = useCallback(period => {
@@ -58,68 +61,21 @@ const Analytics = props => {
 		}
 	}, []);
 
-	const genDriverLabels = useCallback(() => {
-		let values = drivers.map(({ id }) => id)
-		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`)
-		return { values, labels }
-	}, [drivers])
-
-	const barData = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		datasets: [
-			{
-				label: 'Third Party Providers',
-				data: ['January', 'February', 'March', 'April', 'May', 'June', 'July'].map(() => faker.datatype.number({ min: 0, max: 1000 })),
-				backgroundColor: 'rgba(255, 99, 132, 0.5)'
-			},
-			{
-				label: 'Internal Drivers',
-				data: ['January', 'February', 'March', 'April', 'May', 'June', 'July'].map(() => faker.datatype.number({ min: 0, max: 1000 })),
-				backgroundColor: 'rgba(53, 162, 235, 0.5)'
-			}
-		]
-	};
-
-	const lineData = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		datasets: [
-			{
-				label: 'Dataset 1',
-				data: ['January', 'February', 'March', 'April', 'May', 'June', 'July'].map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132, 0.5)'
-			},
-			{
-				label: 'Dataset 2',
-				data: ['January', 'February', 'March', 'April', 'May', 'June', 'July'].map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 0.5)'
-			}
-		]
-	};
+	const genPerformanceLabels = useCallback(() => {
+		let driverIds = drivers.map(({ id }) => id);
+		let providers = FLEET_PROVIDERS.map(provider => capitalize(provider).replaceAll("_", " "))
+		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`).concat(providers);
+		return { driverIds, providerIds: FLEET_PROVIDERS, labels };
+	}, [drivers]);
 
 	const pieData = {
-		labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+		labels: ['Completed', 'Uncompleted', 'Cancelled', 'Unassigned'],
 		datasets: [
 			{
 				label: '# of Votes',
-				data: [12, 19, 3, 5, 2, 3],
-				backgroundColor: [
-					'rgba(255, 99, 132, 0.2)',
-					'rgba(54, 162, 235, 0.2)',
-					'rgba(255, 206, 86, 0.2)',
-					'rgba(75, 192, 192, 0.2)',
-					'rgba(153, 102, 255, 0.2)',
-					'rgba(255, 159, 64, 0.2)'
-				],
-				borderColor: [
-					'rgba(255, 99, 132, 1)',
-					'rgba(54, 162, 235, 1)',
-					'rgba(255, 206, 86, 1)',
-					'rgba(75, 192, 192, 1)',
-					'rgba(153, 102, 255, 1)',
-					'rgba(255, 159, 64, 1)'
-				],
+				data: [12, 19, 3, 5],
+				backgroundColor: ['rgba(101, 188, 85, 0.2)', 'rgba(255, 105, 57, 0.2)', 'rgba(154, 154, 154, 0.2)', 'rgba(157, 61, 61, 0.2)'],
+				borderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
 				borderWidth: 1
 			}
 		]
@@ -140,12 +96,20 @@ const Analytics = props => {
 				<div className='row gy-3'>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
+							<DeliveryOverview interval={active.id} />
+						</div>
+					</div>
+					<div className='col-sm-12 col-md-6'>
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
 							<DeliveryCost
 								interval={active.id}
 								genLabels={generateLabels}
 								options={{
 									scales: {
 										y: {
+											grid:{
+												display: false
+											},
 											ticks: {
 												callback: (value, index, ticks) => '£' + value
 											}
@@ -166,14 +130,42 @@ const Analytics = props => {
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
+							<DriverPerformance options={{
+								maintainAspectRatio: false,
+								scales: {
+									y: {
+										grid:{
+											display: false
+										},
+										ticks: {
+											// forces step size to be 50 units
+											stepSize: 1
+										}
+									}
+								}
+							}} interval={active.id} genLabels={genPerformanceLabels} />
+						</div>
+					</div>
+					<div className='col-sm-12 col-md-6'>
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
 							<DeliveryVolume
 								interval={active.id}
 								genLabels={generateLabels}
 								options={{
+									scales: {
+										y: {
+											grid:{
+												display: false
+											},
+											ticks: {
+												stepSize: 1
+											}
+										}
+									},
 									maintainAspectRatio: false,
 									elements: {
 										line: {
-											borderWidth: 2,
+											borderWidth: 2
 										},
 										point: {
 											radius: 0
@@ -181,16 +173,6 @@ const Analytics = props => {
 									}
 								}}
 							/>
-						</div>
-					</div>
-					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
-							<DriverPerformance interval={active.id} genLabels={genDriverLabels} data={barData}/>
-						</div>
-					</div>
-					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
-							<Doughnut options={{ maintainAspectRatio: false }} data={pieData} />
 						</div>
 					</div>
 				</div>
