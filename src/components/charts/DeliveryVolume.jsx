@@ -31,7 +31,6 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).day() === day).length
 						}
 					});
-					console.log(totalVolume);
 					totalVolume.reverse();
 					return totalVolume;
 				case 'month':
@@ -48,7 +47,6 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).date() === date).length
 						}
 					});
-					console.log(totalVolume);
 					totalVolume.reverse();
 					return totalVolume;
 				case 'year':
@@ -65,7 +63,6 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length
 						}
 					});
-					console.log(totalVolume);
 					totalVolume.reverse();
 					return totalVolume;
 				default:

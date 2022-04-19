@@ -7,6 +7,7 @@ import { pickupFilter } from '../../helpers';
 
 const DeliveryCost = ({ genLabels, interval, options }) => {
 	const filterByInterval = useCallback(pickupFilter, [interval]);
+
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
 		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
@@ -40,7 +41,6 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 								}, 0);
 						}
 					});
-					console.log(totalFees);
 					totalFees.reverse();
 					return totalFees;
 				case 'month':
@@ -66,7 +66,6 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 								}, 0);
 						}
 					});
-					console.log(totalFees);
 					totalFees.reverse();
 					return totalFees;
 				case 'year':
@@ -92,7 +91,6 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 								}, 0);
 						}
 					});
-					console.log(totalFees);
 					totalFees.reverse();
 					return totalFees;
 				default:
@@ -128,24 +126,7 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 
 	return (
 		<Line
-			options={{
-				scales: {
-					y: {
-						ticks: {
-							callback: (value, index, ticks) => '£' + value
-						}
-					}
-				},
-				maintainAspectRatio: false,
-				elements: {
-					line: {
-						borderWidth: 2
-					},
-					point: {
-						radius: 0
-					}
-				}
-			}}
+			options={options}
 			data={data}
 		/>
 	);

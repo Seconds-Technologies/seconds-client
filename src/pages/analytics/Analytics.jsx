@@ -7,6 +7,8 @@ import { faker } from '@faker-js/faker';
 import moment from 'moment';
 import DeliveryCost from '../../components/charts/DeliveryCost';
 import DeliveryVolume from '../../components/charts/DeliveryVolume';
+import DriverPerformance from '../../components/charts/DriverPerformance';
+import { useSelector } from 'react-redux';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
@@ -27,6 +29,7 @@ const options = [
 
 const Analytics = props => {
 	const dimensions = useWindowSize();
+	const drivers = useSelector(state => state['driversStore'])
 	const [active, setActive] = useState({ id: 'week', name: 'Last 7 days' });
 
 	const generateLabels = useCallback(period => {
@@ -54,6 +57,12 @@ const Analytics = props => {
 				return { values, labels };
 		}
 	}, []);
+
+	const genDriverLabels = useCallback(() => {
+		let values = drivers.map(({ id }) => id)
+		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`)
+		return { values, labels }
+	}, [drivers])
 
 	const barData = {
 		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -135,10 +144,17 @@ const Analytics = props => {
 								interval={active.id}
 								genLabels={generateLabels}
 								options={{
+									scales: {
+										y: {
+											ticks: {
+												callback: (value, index, ticks) => '£' + value
+											}
+										}
+									},
 									maintainAspectRatio: false,
 									elements: {
 										line: {
-											borderWidth: 2,
+											borderWidth: 2
 										},
 										point: {
 											radius: 0
@@ -169,7 +185,7 @@ const Analytics = props => {
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
-							<Bar options={{ maintainAspectRatio: false }} data={barData} />
+							<DriverPerformance interval={active.id} genLabels={genDriverLabels} data={barData}/>
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
