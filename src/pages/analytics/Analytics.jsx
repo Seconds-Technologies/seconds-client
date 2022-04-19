@@ -77,7 +77,7 @@ const Analytics = props => {
 	};
 
 	const size = useMemo(() => {
-		return { height: (dimensions.height - 115) / 2, width: (dimensions.width - 60) / 2 };
+		return { height: (dimensions.height - 114) / 2, width: (dimensions.width - 60) / 2 };
 	}, [dimensions]);
 
 	useEffect(() => {
@@ -95,17 +95,17 @@ const Analytics = props => {
 				<div className='row gy-3'>
 					<div className='col-sm-12 col-md-6'>
 							<div style={{ height: size.height }} className="border border-2 rounded-3 p-3">
-							<Line data={lineData} />
+							<Line options={{ maintainAspectRatio: false }} data={lineData} />
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className="border border-2 rounded-3 p-3">
-							<Line data={lineData} />
+							<Line options={{ maintainAspectRatio: false }} data={lineData} />
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className="border border-2 rounded-3 p-3">
-							<Bar data={barData} />
+							<Bar options={{ maintainAspectRatio: false }} data={barData} />
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
