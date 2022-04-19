@@ -17,6 +17,7 @@ const Track = props => {
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const filterByInterval = useCallback(dateFilter,[active.id])
+
 	const orders = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return filterByInterval(allJobs, active.id).map(

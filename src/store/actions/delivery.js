@@ -11,7 +11,6 @@ import {
 	SET_BATCH,
 	TIMER_START,
 	TIMER_STOP,
-	UPDATE_COMPLETED_JOBS,
 	UPDATE_DELIVERY_JOB
 } from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
@@ -43,11 +42,6 @@ export const setAllJobs = jobs => ({
 export const setCompletedJobs = jobs => ({
 	type: SET_COMPLETED_JOBS,
 	jobs
-});
-
-export const addCompletedJob = job => ({
-	type: UPDATE_COMPLETED_JOBS,
-	job
 });
 
 export const newDeliveryJob = job => ({
@@ -249,16 +243,7 @@ export function getAllJobs(apiKey, email) {
 			})
 				.then(jobs => {
 					dispatch(setAllJobs(jobs));
-					dispatch(
-						setCompletedJobs(
-							jobs.map(({ _id: id, createdAt, selectedConfiguration: { deliveryFee }, status }) => ({
-								id,
-								createdAt,
-								deliveryFee,
-								status
-							}))
-						)
-					);
+					dispatch(setCompletedJobs(jobs));
 					dispatch(removeError());
 					resolve(jobs);
 				})

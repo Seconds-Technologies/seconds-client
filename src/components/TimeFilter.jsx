@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const TimeFilter = ({ current, onSelect }) => {
-	const [options] = useState([
+const TimeFilter = ({
+	current,
+	onSelect,
+	initialOptions = [
 		{
 			id: 'day',
 			name: 'Last 24 hrs'
@@ -19,7 +21,9 @@ const TimeFilter = ({ current, onSelect }) => {
 			id: 'year',
 			name: 'Last Year'
 		}
-	]);
+	]
+}) => {
+	const [options] = useState(initialOptions);
 	return (
 		<div className='dropdown'>
 			<button

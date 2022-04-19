@@ -95,6 +95,33 @@ export function dateFilter(data, interval) {
 	}
 }
 
+export function pickupFilter(data, interval) {
+	switch (interval) {
+		case 'day':
+			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
+				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('day');
+				return duration < 1;
+			});
+		case 'week':
+			return data.filter(({  jobSpecification: { pickupStartTime } }) => {
+				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('week');
+				return duration < 1;
+			});
+		case 'month':
+			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
+				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('month');
+				return duration < 1;
+			});
+		case 'year':
+			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
+				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('year');
+				return duration < 1;
+			});
+		default:
+			return data;
+	}
+}
+
 export function capitalize(str) {
 	let start = str[0].toUpperCase()
 	const lower = str.slice(1).toLowerCase()
@@ -140,6 +167,7 @@ export function assemblePayload({ jobSpecification, vehicleType }) {
 	console.log(payload);
 	return payload;
 }
+
 
 /*
 export function stuartWidget(intercomSettings) {

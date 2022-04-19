@@ -106,7 +106,7 @@ export default function Orders(props) {
 		},
 		{
 			field: 'pickupTime',
-			headerName: 'Pickup Time',
+			headerName: 'Pickup',
 			flex: 0.4,
 		},
 		{
