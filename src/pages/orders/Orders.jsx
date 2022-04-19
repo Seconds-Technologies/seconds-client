@@ -322,9 +322,14 @@ export default function Orders(props) {
 		const job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === provider.orderNumber);
 		const payload = assemblePayload(job);
 		setDeliveryParams(prevState => ({ ...payload }));
-		const { quotes } = await dispatch(getAllQuotes(apiKey, payload));
-		setJobLoader(prevState => ({ ...prevState, loading: false }));
-		setQuotes(prevState => ({ show: true, values: quotes }));
+		try {
+			const { quotes } = await dispatch(getAllQuotes(apiKey, payload));
+			setJobLoader(prevState => ({ ...prevState, loading: false }));
+			setQuotes(prevState => ({ show: true, values: quotes }));
+		} catch (err) {
+			setJobLoader(prevState => ({ ...prevState, loading: false }));
+			console.error(err)
+		}
 	}, [provider]);
 
 	const validateTimeWindows = useCallback(
