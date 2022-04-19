@@ -13,19 +13,16 @@ const DeliveryOverview = ({ interval }) => {
 		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
 	});
 
-	const getOverviewDetails = useCallback(
-		() => {
-			const numCompleted = completed.length;
-			const numUncompleted = total.filter(
-				({ status, selectedConfiguration: { providerId } }) =>
-					![STATUS.COMPLETED, STATUS.CANCELLED].includes(status) && providerId !== PROVIDERS.UNASSIGNED
-			).length;
-			const numCancelled = total.filter(({ status }) => status === STATUS.CANCELLED).length;
-			const numUnassigned = total.filter(({ selectedConfiguration: { providerId } }) => providerId !== PROVIDERS.UNASSIGNED).length;
-			return [numCompleted, numUncompleted, numCancelled, numUnassigned];
-		},
-		[interval, total, completed]
-	);
+	const getOverviewDetails = useCallback(() => {
+		const numCompleted = completed.length;
+		const numUncompleted = total.filter(
+			({ status, selectedConfiguration: { providerId } }) =>
+				![STATUS.COMPLETED, STATUS.CANCELLED].includes(status) && providerId !== PROVIDERS.UNASSIGNED
+		).length;
+		const numCancelled = total.filter(({ status }) => status === STATUS.CANCELLED).length;
+		const numUnassigned = total.filter(({ selectedConfiguration: { providerId } }) => providerId !== PROVIDERS.UNASSIGNED).length;
+		return [numCompleted, numUncompleted, numCancelled, numUnassigned];
+	}, [interval, total, completed]);
 
 	const data = useMemo(() => {
 		const labels = ['Completed', 'Uncompleted', 'Cancelled', 'Unassigned'];
@@ -44,7 +41,20 @@ const DeliveryOverview = ({ interval }) => {
 		};
 	}, [interval]);
 
-	return <Doughnut options={{ maintainAspectRatio: false }} data={data} />;
+	return (
+		<Doughnut
+			options={{
+				maintainAspectRatio: false,
+				plugins: {
+					title: {
+						display: true,
+						text: 'Delivery Overview'
+					}
+				}
+			}}
+			data={data}
+		/>
+	);
 };
 
 DeliveryOverview.propTypes = {};

@@ -40,7 +40,7 @@ const Analytics = props => {
 		let labels;
 		const week = new Array(7).fill(0);
 		const month = new Array(moment().date()).fill(0);
-		const year = new Array(7).fill(0);
+		const year = new Array(12).fill(0);
 		switch (period) {
 			case 'week':
 				values = week.map((_, index) => moment().subtract(index, 'd').day());
