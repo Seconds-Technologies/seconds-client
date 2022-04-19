@@ -6,6 +6,7 @@ import useWindowSize from '../../hooks/useWindowSize';
 import { faker } from '@faker-js/faker';
 import moment from 'moment';
 import DeliveryCost from '../../components/charts/DeliveryCost';
+import DeliveryVolume from '../../components/charts/DeliveryVolume';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
@@ -119,10 +120,6 @@ const Analytics = props => {
 		return { height: (dimensions.height - 114) / 2, width: (dimensions.width - 60) / 2 };
 	}, [dimensions]);
 
-	useEffect(() => {
-		console.log(active);
-	}, [active]);
-
 	return (
 		<div className='page-container px-2 py-4'>
 			<div className='d-flex mx-3 mb-2 justify-content-between'>
@@ -150,7 +147,18 @@ const Analytics = props => {
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
-							<Line options={{ maintainAspectRatio: false }} data={lineData} />
+							<DeliveryVolume
+								interval={active.id}
+								genLabels={generateLabels}
+								options={{
+									maintainAspectRatio: false,
+									elements: {
+										point: {
+											radius: 0
+										}
+									}
+								}}
+							/>
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
