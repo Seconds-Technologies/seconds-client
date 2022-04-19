@@ -137,6 +137,9 @@ const Analytics = props => {
 								options={{
 									maintainAspectRatio: false,
 									elements: {
+										line: {
+											borderWidth: 2,
+										},
 										point: {
 											radius: 0
 										}
@@ -153,6 +156,9 @@ const Analytics = props => {
 								options={{
 									maintainAspectRatio: false,
 									elements: {
+										line: {
+											borderWidth: 2,
+										},
 										point: {
 											radius: 0
 										}

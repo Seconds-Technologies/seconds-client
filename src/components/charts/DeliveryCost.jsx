@@ -22,7 +22,7 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 							// filter only for jobs completed by internal drivers
 							return completed
 								.filter(({ selectedConfiguration }) => selectedConfiguration.providerId === PROVIDERS.PRIVATE)
-								.reduce((prev, curr, index) => {
+								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
 									return moment(curr['jobSpecification'].pickupStartTime).day() === day
 										? prev + curr['selectedConfiguration'].deliveryFee
@@ -32,7 +32,7 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 							// filter only jobs completed by third party couriers
 							return completed
 								.filter(({ selectedConfiguration }) => selectedConfiguration.providerId !== PROVIDERS.PRIVATE)
-								.reduce((prev, curr, index) => {
+								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
 									return moment(curr['jobSpecification'].pickupStartTime).day() === day
 										? prev + curr['selectedConfiguration'].deliveryFee
@@ -128,7 +128,24 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 
 	return (
 		<Line
-			options={options}
+			options={{
+				scales: {
+					y: {
+						ticks: {
+							callback: (value, index, ticks) => '£' + value
+						}
+					}
+				},
+				maintainAspectRatio: false,
+				elements: {
+					line: {
+						borderWidth: 2
+					},
+					point: {
+						radius: 0
+					}
+				}
+			}}
 			data={data}
 		/>
 	);
