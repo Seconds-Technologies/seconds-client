@@ -136,7 +136,8 @@ const DeliveryCost = ({ genLabels, interval }) => {
 					subtitle: {
 						align: "start",
 						font: {
-							size: 20
+							weight: 500,
+							size: 24
 						},
 						display: true,
 						text: `£${totalCost}`
@@ -145,7 +146,7 @@ const DeliveryCost = ({ genLabels, interval }) => {
 						color: '#212529',
 						font: {
 							weight: 500,
-							size: 18
+							size: 17
 						},
 						align: "start",
 						display: true,

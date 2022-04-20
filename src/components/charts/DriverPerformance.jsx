@@ -46,7 +46,7 @@ const DriverPerformance = ({ interval, genLabels }) => {
 				color: '#212529',
 				font: {
 					weight: 500,
-					size: 18
+					size: 17
 				},
 				align: "start",
 				display: true,

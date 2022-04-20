@@ -111,7 +111,8 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 					subtitle: {
 						align: "start",
 						font: {
-							size: 20
+							weight: 500,
+							size: 24
 						},
 						display: true,
 						text: `${totalVolume}`
@@ -120,7 +121,7 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 						color: '#212529',
 						font: {
 							weight: 500,
-							size: 18
+							size: 17
 						},
 						align: 'start',
 						display: true,
