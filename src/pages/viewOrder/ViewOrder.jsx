@@ -341,14 +341,15 @@ const ViewOrder = props => {
 					deliveryDetails={delivery}
 					show={updateModal}
 					onHide={() => showUpdateModal(false)}
-					onSubmit={data =>
+					onSubmit={data => {
+						data.fullAddress = `${data.addressLine1} ${data.addressLine2} ${data.city} ${data.postcode}`
 						dispatch(updateDelivery(apiKey, order.id, data))
 							.then(res => {
 								showUpdateModal(false);
 								showMessage('Job Updated Successfully!')
 							})
 							.catch(err => showUpdateModal(false))
-					}
+					}}
 				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 				<DeliveryProof show={proofModal} onHide={showProofModal} signature={deliverySignature} photo={deliveryPhoto} />

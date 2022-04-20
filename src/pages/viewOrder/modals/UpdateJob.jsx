@@ -19,7 +19,8 @@ const UpdateJob = ({ deliveryDetails, show, onHide, onSubmit }) => {
 						addressLine1: deliveryDetails.streetAddress,
 						addressLine2: '',
 						city: deliveryDetails.city,
-						postcode: deliveryDetails.postcode
+						postcode: deliveryDetails.postcode,
+						fullAddress: deliveryDetails.fullAddress
 					}}
 					onSubmit={onSubmit}
 				>
