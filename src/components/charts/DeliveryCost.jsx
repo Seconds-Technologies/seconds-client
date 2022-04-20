@@ -210,7 +210,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 	*/
 
 	return (
-		<div className='border rounded-3 p-3 position-relative'>
+		<div className='border border-2 rounded-3 p-3 position-relative'>
 			<MuiTooltip
 				className='position-absolute mt-2 me-3 end-0'
 				title='Track how much money you are spending on deliveries'
