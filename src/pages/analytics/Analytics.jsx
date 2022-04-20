@@ -1,6 +1,18 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import TimeFilter from '../../components/TimeFilter';
-import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, SubTitle, Tooltip,  } from 'chart.js';
+import {
+	ArcElement,
+	BarElement,
+	CategoryScale,
+	Chart as ChartJS,
+	Legend,
+	LinearScale,
+	LineElement,
+	PointElement,
+	Title,
+	SubTitle,
+	Tooltip
+} from 'chart.js';
 import useWindowSize from '../../hooks/useWindowSize';
 import moment from 'moment';
 import DeliveryCost from '../../components/charts/DeliveryCost';
@@ -64,13 +76,13 @@ const Analytics = props => {
 
 	const genPerformanceLabels = useCallback(() => {
 		let driverIds = drivers.map(({ id }) => id);
-		let providers = FLEET_PROVIDERS.map(provider => capitalize(provider).replaceAll("_", " "))
+		let providers = FLEET_PROVIDERS.map(provider => capitalize(provider).replaceAll('_', ' '));
 		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`).concat(providers);
 		return { driverIds, providerIds: FLEET_PROVIDERS, labels };
-	}, [drivers])
+	}, [drivers]);
 
 	const size = useMemo(() => {
-		return { height: (dimensions.height - 114) / 2, width: (dimensions.width - 60) / 2 };
+		return { height: (dimensions.height - 150) / 2, width: (dimensions.width - 60) / 2 };
 	}, [dimensions]);
 
 	return (
@@ -84,7 +96,11 @@ const Analytics = props => {
 				<div className='row gy-3'>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
-							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Overview of all your orders and their current status' placement='right-start'>
+							<MuiTooltip
+								className='position-absolute mt-2 me-3 end-0'
+								title='Overview of all your orders and their current status'
+								placement='right-start'
+							>
 								<IconButton size='small'>
 									<BsInfoCircle size={15} />
 								</IconButton>
@@ -94,20 +110,11 @@ const Analytics = props => {
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
-							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Track how much money you are spending on deliveries' placement='right-start'>
-								<IconButton size='small'>
-									<BsInfoCircle size={15} />
-								</IconButton>
-							</MuiTooltip>
-							<DeliveryCost
-								interval={active.id}
-								genLabels={generateLabels}
-							/>
-						</div>
-					</div>
-					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
-							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title="Track the performance of your internal drivers and fleet providers" placement='right-start'>
+							<MuiTooltip
+								className='position-absolute mt-2 me-3 end-0'
+								title='Track the performance of your internal drivers and fleet providers'
+								placement='right-start'
+							>
 								<IconButton size='small'>
 									<BsInfoCircle size={15} />
 								</IconButton>
@@ -116,17 +123,10 @@ const Analytics = props => {
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
-							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Track how many orders are being completed' placement='right-start'>
-								<IconButton size='small'>
-									<BsInfoCircle size={15} />
-								</IconButton>
-							</MuiTooltip>
-							<DeliveryVolume
-								interval={active.id}
-								genLabels={generateLabels}
-							/>
-						</div>
+						<DeliveryCost interval={active.id} intervalLabel={active.name} genLabels={generateLabels} />
+					</div>
+					<div className='col-sm-12 col-md-6'>
+						<DeliveryVolume interval={active.id} intervalLabel={active.name} genLabels={generateLabels} />
 					</div>
 				</div>
 			</div>

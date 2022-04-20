@@ -36,10 +36,15 @@
 
 .font-medium {
   font-family: 'Inter-Medium', sans-serif;
+  font-weight: 500;
 }
 
 .font-semibold {
   font-family: 'Inter-SemiBold', sans-serif;
+}
+
+.font-bold {
+  font-family: 'Inter-Bold', sans-serif;
 }
 
 .page-container {
