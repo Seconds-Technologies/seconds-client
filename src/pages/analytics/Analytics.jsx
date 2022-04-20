@@ -1,9 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import TimeFilter from '../../components/TimeFilter';
-import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, LinearScale, LineElement, PointElement, Legend, Title, Tooltip } from 'chart.js';
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, SubTitle, Tooltip } from 'chart.js';
 import useWindowSize from '../../hooks/useWindowSize';
-import { faker } from '@faker-js/faker';
 import moment from 'moment';
 import DeliveryCost from '../../components/charts/DeliveryCost';
 import DeliveryVolume from '../../components/charts/DeliveryVolume';
@@ -13,7 +11,7 @@ import DeliveryOverview from '../../components/charts/DeliveryOverview';
 import { FLEET_PROVIDERS } from '../../constants';
 import { capitalize } from '../../helpers';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, PointElement, LineElement, Legend, ArcElement);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, SubTitle, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
 const options = [
 	{
@@ -91,33 +89,22 @@ const Analytics = props => {
 							<DeliveryCost
 								interval={active.id}
 								genLabels={generateLabels}
-								options={{
-									scales: {
-										y: {
-											grid:{
-												display: false
-											},
-											ticks: {
-												callback: (value, index, ticks) => '£' + value
-											}
-										}
-									},
-									maintainAspectRatio: false,
-									elements: {
-										line: {
-											borderWidth: 2
-										},
-										point: {
-											radius: 0
-										}
-									}
-								}}
 							/>
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
 							<DriverPerformance options={{
+								plugins: {
+									title: {
+										font: {
+											size: 18
+										},
+										align: "start",
+										display: true,
+										text: 'Driver Performance'
+									}
+								},
 								maintainAspectRatio: false,
 								scales: {
 									y: {
@@ -138,27 +125,6 @@ const Analytics = props => {
 							<DeliveryVolume
 								interval={active.id}
 								genLabels={generateLabels}
-								options={{
-									scales: {
-										y: {
-											grid:{
-												display: false
-											},
-											ticks: {
-												stepSize: 1
-											}
-										}
-									},
-									maintainAspectRatio: false,
-									elements: {
-										line: {
-											borderWidth: 2
-										},
-										point: {
-											radius: 0
-										}
-									}
-								}}
 							/>
 						</div>
 					</div>

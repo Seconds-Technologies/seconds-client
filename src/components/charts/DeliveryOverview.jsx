@@ -46,7 +46,14 @@ const DeliveryOverview = ({ interval }) => {
 			options={{
 				maintainAspectRatio: false,
 				plugins: {
+					legend: {
+						position: "right",
+					},
 					title: {
+						font: {
+							size: 18
+						},
+						align: "start",
 						display: true,
 						text: 'Delivery Overview'
 					}

@@ -18,9 +18,7 @@ const DriverPerformance = ({ interval, genLabels, options }) => {
 			let courierVolume = providers.map(provider => {
 				return completed.filter(({ selectedConfiguration }) => selectedConfiguration.providerId === provider).length;
 			});
-			const totalVolume = driverVolume.concat(courierVolume);
-			console.log(totalVolume)
-			return totalVolume
+			return driverVolume.concat(courierVolume);
 		},
 		[completed]
 	);

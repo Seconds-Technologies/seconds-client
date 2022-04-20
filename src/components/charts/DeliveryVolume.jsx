@@ -6,7 +6,7 @@ import { pickupFilter } from '../../helpers';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-const DeliveryVolume = ({ interval, genLabels, options }) => {
+const DeliveryVolume = ({ interval, genLabels }) => {
 	const filterByInterval = useCallback(pickupFilter, [interval]);
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -28,7 +28,7 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 							// filter only jobs completed by third party couriers
 							return completed
 								.filter(({ selectedConfiguration }) => selectedConfiguration.providerId !== PROVIDERS.PRIVATE)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).day() === day).length
+								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).day() === day).length;
 						}
 					});
 					totalVolume.reverse();
@@ -44,7 +44,7 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 							// filter only jobs completed by third party couriers
 							return completed
 								.filter(({ selectedConfiguration }) => selectedConfiguration.providerId !== PROVIDERS.PRIVATE)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).date() === date).length
+								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).date() === date).length;
 						}
 					});
 					totalVolume.reverse();
@@ -60,7 +60,7 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 							// filter only jobs completed by third party couriers
 							return completed
 								.filter(({ selectedConfiguration }) => selectedConfiguration.providerId !== PROVIDERS.PRIVATE)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length
+								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length;
 						}
 					});
 					totalVolume.reverse();
@@ -72,37 +72,80 @@ const DeliveryVolume = ({ interval, genLabels, options }) => {
 		[completed, interval]
 	);
 
-	const data = useMemo(() => {
+	const { data, totalVolume } = useMemo(() => {
 		let { values, labels } = genLabels(interval);
-
+		let courierVolume = calculateDeliveryVolume(PROVIDER_TYPES.COURIER, values);
+		let driverVolume = calculateDeliveryVolume(PROVIDER_TYPES.DRIVER, values);
 		let datasets = [
 			{
 				label: 'Third Party Providers',
-				data: calculateDeliveryVolume(PROVIDER_TYPES.COURIER, values),
-				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132, 1)'
+				data: courierVolume,
+				borderColor: 'rgba(154, 154, 154, 1)',
+				backgroundColor: 'rgba(154, 154, 154, 1)'
 			},
 			{
 				label: 'Internal Drivers',
-				data: calculateDeliveryVolume(PROVIDER_TYPES.DRIVER, values),
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 1)'
+				data: driverVolume,
+				borderColor: '#AD73FF',
+				backgroundColor: '#AD73FF'
 			}
 		];
-
+		const totalVolume = courierVolume.concat(driverVolume).reduce((a, b) => a + b, 0);
 		labels.reverse();
-		return {
+		let data = {
 			labels,
 			datasets
 		};
+		return { data, totalVolume };
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);
 	}, [completed, interval]);
 
-	return <Line options={options} data={data} />;
+	return (
+		<Line
+			options={{
+				plugins: {
+					subtitle: {
+						align: "start",
+						font: {
+							size: 20
+						},
+						display: true,
+						text: `${totalVolume}`
+					},
+					title: {
+						font: {
+							size: 18
+						},
+						align: 'start',
+						display: true,
+						text: 'Delivery Volume'
+					}
+				},
+				scales: {
+					y: {
+						grid: {
+							display: false
+						},
+						ticks: {
+							stepSize: 1
+						}
+					}
+				},
+				maintainAspectRatio: false,
+				elements: {
+					line: {
+						borderWidth: 2
+					},
+					point: {
+						radius: 0
+					}
+				}
+			}}
+			data={data}
+		/>
+	);
 };
 
-DeliveryVolume.propTypes = {
-	
-};
+DeliveryVolume.propTypes = {};
 
 export default DeliveryVolume;

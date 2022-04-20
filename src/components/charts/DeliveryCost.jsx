@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useSelector } from 'react-redux';
 import { pickupFilter } from '../../helpers';
 
-const DeliveryCost = ({ genLabels, interval, options }) => {
+const DeliveryCost = ({ genLabels, interval }) => {
 	const filterByInterval = useCallback(pickupFilter, [interval]);
 
 	const { total, completed } = useSelector(state => {
@@ -15,7 +15,7 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 
 	const calculateDeliveryFees = useCallback(
 		(type, values) => {
-			let totalFees;
+			let totalFees = [];
 			switch (interval) {
 				case 'week':
 					totalFees = values.map(day => {
@@ -100,33 +100,77 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 		[completed, interval]
 	);
 
-	const data = useMemo(() => {
+	const { data, totalCost } = useMemo(() => {
 		let { values, labels } = genLabels(interval);
+		let courierCosts = calculateDeliveryFees(PROVIDER_TYPES.COURIER, values)
+		let driverCosts = calculateDeliveryFees(PROVIDER_TYPES.DRIVER, values)
 		let datasets = [
 			{
 				label: 'Third Party Providers',
-				data: calculateDeliveryFees(PROVIDER_TYPES.COURIER, values),
-				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132, 1)'
+				data: courierCosts,
+				borderColor: 'rgba(154, 154, 154, 1)',
+				backgroundColor: 'rgba(154, 154, 154, 1)'
 			},
 			{
 				label: 'Internal Drivers',
-				data: calculateDeliveryFees(PROVIDER_TYPES.DRIVER, values),
-				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 1)'
+				data: driverCosts,
+				borderColor: '#AD73FF',
+				backgroundColor: '#AD73FF'
 			}
 		];
-		labels.reverse();
-		return {
+		let data = {
 			labels,
 			datasets
-		};
+		}
+		let totalCost = courierCosts.concat(driverCosts).reduce((a,b) => a + b, 0)
+		console.log(totalCost)
+		labels.reverse();
+		return { data, totalCost }
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);
 	}, [completed, interval]);
 
 	return (
 		<Line
-			options={options}
+			options={{
+				plugins: {
+					subtitle: {
+						align: "start",
+						font: {
+							size: 20
+						},
+						display: true,
+						text: `£${totalCost}`
+					},
+					title: {
+						font: {
+							size: 18
+						},
+						align: "start",
+						display: true,
+						text: 'Delivery Costs'
+					}
+				},
+				scales: {
+					y: {
+						grid:{
+							display: false
+						},
+						ticks: {
+							callback: (value, index, ticks) => '£' + value
+						}
+					}
+				},
+				maintainAspectRatio: false,
+				elements: {
+					line: {
+						borderWidth: 2
+					},
+					point: {
+						radius: 0,
+						hoverRadius: 5
+					}
+				}
+			}}
 			data={data}
 		/>
 	);

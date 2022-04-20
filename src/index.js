@@ -8,10 +8,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { persistor, store } from "./store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { ThemeProvider, createTheme, makeStyles } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material';
 
-//import "bootstrap/dist/css/bootstrap.min.css";
-import './style.scss';
+import './scss/style.scss';
 import "bootstrap/dist/js/bootstrap.min";
 import moment from 'moment-timezone';
 moment.tz.setDefault('Europe/London');
