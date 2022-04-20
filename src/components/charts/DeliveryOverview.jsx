@@ -40,8 +40,8 @@ const DeliveryOverview = ({ interval }) => {
 				data: getOverviewDetails(),
 				hoverBackgroundColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
 				hoverBorderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
-				borderColor: ['#43CB2B', '#FF6939', '#9A9A9A', '#9D3D3D'],
-				backgroundColor: ['#43CB2B', '#FF6939', '#9A9A9A', '#9D3D3D'],
+				borderColor: ['#43CB2B', '#9D3D3D', '#9A9A9A', '#FF6939'],
+				backgroundColor: ['#43CB2B', '#9D3D3D', '#9A9A9A', '#FF6939'],
 				borderWidth: 1
 			}
 		];
