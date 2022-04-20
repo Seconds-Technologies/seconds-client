@@ -106,6 +106,11 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 			options={{
 				plugins: {
 					legend: {
+						labels: {
+							boxWidth: 5,
+							usePointStyle: true,
+							pointStyle: "circle"
+						},
 						position: 'bottom'
 					},
 					subtitle: {

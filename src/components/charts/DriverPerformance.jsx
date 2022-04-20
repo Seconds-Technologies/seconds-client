@@ -27,12 +27,12 @@ const DriverPerformance = ({ interval, genLabels }) => {
 		let { driverIds, providerIds, labels } = genLabels();
 		let datasets = [
 			{
-				label: 'Completed Orders',
+				label: 'Third Party Provider',
 				data: calcDriverPerformance(driverIds, providerIds),
 				backgroundColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
 				borderColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
 				borderWidth: 1
-			}
+			},
 		];
 		return {
 			labels,
@@ -43,6 +43,7 @@ const DriverPerformance = ({ interval, genLabels }) => {
 	return <Bar options={{
 		plugins: {
 			legend: {
+				display: false,
 				labels: {
 					padding: 0
 				},

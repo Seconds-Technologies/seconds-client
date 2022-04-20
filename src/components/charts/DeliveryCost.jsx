@@ -149,6 +149,11 @@ const DeliveryCost = ({ genLabels, interval }) => {
 			options={{
 				plugins: {
 					legend: {
+						labels: {
+							boxWidth: 5,
+							usePointStyle: true,
+							pointStyle: "circle"
+						},
 						position: 'bottom'
 					},
 					subtitle: {
