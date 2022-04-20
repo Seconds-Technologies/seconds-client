@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 import { PERIOD_TYPE, PROVIDER_TYPES, PROVIDERS } from '../../constants';
@@ -15,6 +15,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 	const size = useMemo(() => {
 		return { height: (dimensions.height - 320) / 2, width: dimensions.width / 2 };
 	}, [dimensions]);
+
 	const filterCurrent = useCallback(analyticsFilterCurrent, [interval]);
 	const filterPrevious = useCallback(analyticsFilterPrevious, [interval]);
 
@@ -155,7 +156,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 					<BsInfoCircle size={15} />
 				</IconButton>
 			</MuiTooltip>
-			<div className="d-flex flex-column">
+			<div className='d-flex flex-column'>
 				<span className='font-semibold'>Delivery Volume</span>
 				<span className='fs-4'>{totalVolume}</span>
 				<small className='text-lowercase font-medium text-muted'>
@@ -169,41 +170,43 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 					from the&nbsp;{intervalLabel}
 				</small>
 			</div>
-			<Line
-				height={size.height}
-				options={{
-					plugins: {
-						legend: {
-							labels: {
-								boxWidth: 5,
-								usePointStyle: true,
-								pointStyle: 'circle'
+			<div>
+				<Line
+					height={size.height}
+					options={{
+						maintainAspectRatio: false,
+						plugins: {
+							legend: {
+								labels: {
+									boxWidth: 5,
+									usePointStyle: true,
+									pointStyle: 'circle'
+								},
+								position: 'bottom'
+							}
+						},
+						scales: {
+							y: {
+								grid: {
+									display: false
+								},
+								ticks: {
+									stepSize: 1
+								}
+							}
+						},
+						elements: {
+							line: {
+								borderWidth: 2
 							},
-							position: 'bottom'
-						}
-					},
-					scales: {
-						y: {
-							grid: {
-								display: false
-							},
-							ticks: {
-								stepSize: 1
+							point: {
+								radius: 0
 							}
 						}
-					},
-					maintainAspectRatio: false,
-					elements: {
-						line: {
-							borderWidth: 2
-						},
-						point: {
-							radius: 0
-						}
-					}
-				}}
-				data={data}
-			/>
+					}}
+					data={data}
+				/>
+			</div>
 		</div>
 	);
 };
