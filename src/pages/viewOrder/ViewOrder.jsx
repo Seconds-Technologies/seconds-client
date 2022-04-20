@@ -2,7 +2,7 @@ import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { assignDriver, createDeliveryJob, subscribe, unsubscribe } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, subscribe, unsubscribe, updateCustomerInfo, updateDelivery } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
@@ -24,6 +24,7 @@ import ConfirmProvider from '../../modals/ConfirmProvider';
 import DeliveryProof from './modals/DeliveryProof';
 import { downloadDeliveryProof } from '../../store/actions/auth';
 import SuccessMessage from '../../modals/SuccessMessage';
+import UpdateJob from './modals/UpdateJob';
 
 const ViewOrder = props => {
 	const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const ViewOrder = props => {
 	const [loadingText, setLoadingText] = useState('');
 	const [jobModal, showJobModal] = useState(false);
 	const [driversModal, showDriversModal] = useState(false);
+	const [updateModal, showUpdateModal] = useState(false);
 	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const [deliveryParams, setDeliveryParams] = useState({
@@ -95,6 +97,9 @@ const ViewOrder = props => {
 					longitude: dropoffLocation.longitude,
 					phoneNumber: dropoffLocation.phoneNumber,
 					address: dropoffLocation.fullAddress,
+					streetAddress: dropoffLocation.streetAddress,
+					city: dropoffLocation.city,
+					postcode: dropoffLocation.postcode,
 					proofOfDelivery,
 					orderReference,
 					trackingURL,
@@ -211,7 +216,7 @@ const ViewOrder = props => {
 		[getParsedAddress, validateAddresses]
 	);
 
-	const handleSubmit = async (values) => {
+	const handleSubmit = async values => {
 		showReOrderForm(false);
 		try {
 			if (values.type === SUBMISSION_TYPES.ASSIGN_DRIVER) {
@@ -270,7 +275,7 @@ const ViewOrder = props => {
 		setLoadingText('Creating Order');
 		showConfirmDialog(false);
 		setLoading(true);
-		assign(provider.id)
+		assign(provider.id);
 	};
 
 	const assign = useCallback(
@@ -280,15 +285,15 @@ const ViewOrder = props => {
 			dispatch(assignDriver(deliveryParams, apiKey, driverId))
 				.then(
 					({
-						 jobSpecification: {
-							 deliveries,
-							 orderNumber,
-							 pickupLocation: { fullAddress: pickupAddress },
-							 pickupStartTime
-						 },
-						 selectedConfiguration: { deliveryFee },
-						 driverInformation: { name }
-					 }) => {
+						jobSpecification: {
+							deliveries,
+							orderNumber,
+							pickupLocation: { fullAddress: pickupAddress },
+							pickupStartTime
+						},
+						selectedConfiguration: { deliveryFee },
+						driverInformation: { name }
+					}) => {
 						let {
 							dropoffLocation: { fullAddress: dropoffAddress },
 							dropoffEndTime,
@@ -332,22 +337,43 @@ const ViewOrder = props => {
 					showConfirmDialog={showConfirmDialog}
 					createUnassigned={assign}
 				/>
+				<UpdateJob
+					deliveryDetails={delivery}
+					show={updateModal}
+					onHide={() => showUpdateModal(false)}
+					onSubmit={data =>
+						dispatch(updateDelivery(apiKey, order.id, data))
+							.then(res => {
+								showUpdateModal(false);
+								showMessage('Job Updated Successfully!')
+							})
+							.catch(err => showUpdateModal(false))
+					}
+				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
 				<DeliveryProof show={proofModal} onHide={showProofModal} signature={deliverySignature} photo={deliveryPhoto} />
-				<SuccessMessage ref={modalRef} show={!!message} onHide={() => showMessage('')} message={message}/>
+				<SuccessMessage ref={modalRef} show={!!message} onHide={() => showMessage('')} message={message} />
 				{errorModal}
 				<div className='row mx-5'>
 					<div className='col-4'>
 						<div className='row d-flex justify-content-end'>
-							<Card styles="border">
+							<Card styles='border position-relative'>
 								<Item label='Customer name' value={`${delivery.firstName} ${delivery.lastName}`} styles='my-2' />
 								<Item label='Address' value={delivery.address} styles='my-2' />
 								<Item label='Email' value={delivery.email} styles='my-2' />
 								<Item label='Phone number' value={delivery.phoneNumber} styles='my-2' />
+								{![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status) &&
+									[PROVIDERS.PRIVATE, PROVIDERS.UNASSIGNED].includes(order.providerId) && (
+										<div className='position-absolute bottom-0 end-0 p-3'>
+											<button className='btn btn-outline-info' onClick={() => showUpdateModal(true)}>
+												Update
+											</button>
+										</div>
+									)}
 							</Card>
 						</div>
 						<div className='row d-flex justify-content-end'>
-							<Card styles='mt-3 border'>
+							<Card styles='mt-3 border position-relative'>
 								<Item
 									label='Delivery provider'
 									value={order.providerId}
@@ -358,7 +384,7 @@ const ViewOrder = props => {
 								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
 								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
 								{order.status === STATUS.COMPLETED && order.providerId === PROVIDERS.PRIVATE && (
-									<div className='d-flex justify-content-end'>
+									<div className='position-absolute bottom-0 end-0 p-3'>
 										<button className='btn btn-outline-success' onClick={() => showProofModal(true)}>
 											Proof of Delivery
 										</button>
@@ -368,7 +394,7 @@ const ViewOrder = props => {
 						</div>
 					</div>
 					<div className='col-8'>
-						<Card styles="border-top border-end border-start">
+						<Card styles='border-top border-end border-start'>
 							<div className='d-flex justify-content-between my-2'>
 								<Item label='Job Reference' value={order.reference} />
 								<div>
@@ -392,7 +418,7 @@ const ViewOrder = props => {
 								<Panel
 									label='Delivery ETA'
 									value={
-										!delivery.dropoffEndTime
+										!delivery.dropoffEndTime || order.providerId === PROVIDERS.UNASSIGNED
 											? 'Estimating...'
 											: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
 											? `Delivered`
@@ -404,7 +430,7 @@ const ViewOrder = props => {
 								<Panel label='Status' value={capitalize(order.status)} styles='ms-1' />
 							</div>
 						</Card>
-						<Map height={340} markers={markers} />
+						<Map height={358} markers={markers} />
 					</div>
 				</div>
 			</div>
