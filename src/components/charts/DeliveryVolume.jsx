@@ -80,7 +80,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 				case 'year':
 					totalVolume = values.map(month => {
 						if (period === PERIOD_TYPE.CURRENT) {
-							// filter only for jobs completed by internal drivers
+							// filter only completed jobs for the current time frame
 							return currCompleted
 								.filter(({ selectedConfiguration }) =>
 									isDriver
@@ -89,7 +89,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 								)
 								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length;
 						} else {
-							// filter only jobs completed by third party couriers
+							// filter only completed jobs for the previous time frame
 							return prevCompleted
 								.filter(({ selectedConfiguration }) =>
 									isDriver
@@ -143,7 +143,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 		let percentageChange = prevTotalVolume ? (increase / prevTotalVolume) * 100 : 100;
 		console.table({ increase, percentageChange });
 
-		let percentageChangeString = percentageChange > 0 ? '+'.concat(percentageChange.toFixed(2).toString()) : percentageChange.toFixed(2).toString();
+		let percentageChangeString = percentageChange > 0 ? '+'.concat(percentageChange.toFixed(1).toString()) : percentageChange.toFixed(1).toString();
 		console.log(percentageChangeString);
 		return { data, totalVolume: currTotalVolume, percentageChange, percentageChangeString };
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);
