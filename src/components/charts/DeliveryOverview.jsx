@@ -50,7 +50,9 @@ const DeliveryOverview = ({ interval }) => {
 						position: "right",
 					},
 					title: {
+						color: '#212529',
 						font: {
+							weight: 500,
 							size: 18
 						},
 						align: "start",

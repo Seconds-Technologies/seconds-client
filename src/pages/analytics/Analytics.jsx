@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import TimeFilter from '../../components/TimeFilter';
-import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, SubTitle, Tooltip } from 'chart.js';
+import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, SubTitle, Tooltip,  } from 'chart.js';
 import useWindowSize from '../../hooks/useWindowSize';
 import moment from 'moment';
 import DeliveryCost from '../../components/charts/DeliveryCost';
@@ -10,6 +10,9 @@ import { useSelector } from 'react-redux';
 import DeliveryOverview from '../../components/charts/DeliveryOverview';
 import { FLEET_PROVIDERS } from '../../constants';
 import { capitalize } from '../../helpers';
+import MuiTooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import { BsInfoCircle } from 'react-icons/bs';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, SubTitle, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
@@ -80,12 +83,22 @@ const Analytics = props => {
 			<div className='container-fluid'>
 				<div className='row gy-3'>
 					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Overview of all your orders and their current status' placement='right-start'>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
 							<DeliveryOverview interval={active.id} />
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Track how much money you are spending on deliveries' placement='right-start'>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
 							<DeliveryCost
 								interval={active.id}
 								genLabels={generateLabels}
@@ -93,35 +106,22 @@ const Analytics = props => {
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
-							<DriverPerformance options={{
-								plugins: {
-									title: {
-										font: {
-											size: 18
-										},
-										align: "start",
-										display: true,
-										text: 'Driver Performance'
-									}
-								},
-								maintainAspectRatio: false,
-								scales: {
-									y: {
-										grid:{
-											display: false
-										},
-										ticks: {
-											// forces step size to be 50 units
-											stepSize: 1
-										}
-									}
-								}
-							}} interval={active.id} genLabels={genPerformanceLabels} />
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title="Track the performance of your internal drivers and fleet providers" placement='right-start'>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
+							<DriverPerformance interval={active.id} genLabels={genPerformanceLabels} />
 						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
-						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3'>
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip className="position-absolute mt-2 me-3 end-0" title='Track how many orders are being completed' placement='right-start'>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
 							<DeliveryVolume
 								interval={active.id}
 								genLabels={generateLabels}

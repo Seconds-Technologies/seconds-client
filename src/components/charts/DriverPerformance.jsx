@@ -3,7 +3,7 @@ import { Bar } from 'react-chartjs-2';
 import { pickupFilter } from '../../helpers';
 import { useSelector } from 'react-redux';
 
-const DriverPerformance = ({ interval, genLabels, options }) => {
+const DriverPerformance = ({ interval, genLabels }) => {
 	const filterByInterval = useCallback(pickupFilter, [interval]);
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -40,7 +40,32 @@ const DriverPerformance = ({ interval, genLabels, options }) => {
 		};
 	}, [completed]);
 
-	return <Bar options={options} data={data} />;
+	return <Bar options={{
+		plugins: {
+			title: {
+				color: '#212529',
+				font: {
+					weight: 500,
+					size: 18
+				},
+				align: "start",
+				display: true,
+				text: 'Driver Performance'
+			}
+		},
+		maintainAspectRatio: false,
+		scales: {
+			y: {
+				grid:{
+					display: false
+				},
+				ticks: {
+					// forces step size to be 50 units
+					stepSize: 1
+				}
+			}
+		}
+	}} data={data} />;
 };
 
 DriverPerformance.propTypes = {};

@@ -8,6 +8,7 @@ import moment from 'moment';
 
 const DeliveryVolume = ({ interval, genLabels }) => {
 	const filterByInterval = useCallback(pickupFilter, [interval]);
+
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
 		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
@@ -104,6 +105,9 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 		<Line
 			options={{
 				plugins: {
+					tooltip: {
+						enabled: true
+					},
 					subtitle: {
 						align: "start",
 						font: {
@@ -113,7 +117,9 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 						text: `${totalVolume}`
 					},
 					title: {
+						color: '#212529',
 						font: {
+							weight: 500,
 							size: 18
 						},
 						align: 'start',

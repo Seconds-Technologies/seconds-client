@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Switch from 'react-switch';
 import Slider from '@mui/material/Slider';
 import DeliveryTimes from '../deliveryTimes/DeliveryTimes';
-import { Form, FieldArray, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import { BsInfoCircle } from 'react-icons/bs';
 import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES, VEHICLE_CODES, VEHICLE_TYPES } from '../../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
