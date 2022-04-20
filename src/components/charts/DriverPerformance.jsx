@@ -2,8 +2,16 @@ import React, { useCallback, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { analyticsFilterCurrent } from '../../helpers';
 import { useSelector } from 'react-redux';
+import MuiTooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import { BsInfoCircle } from 'react-icons/bs';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const DriverPerformance = ({ interval, genLabels }) => {
+	const dimensions = useWindowSize();
+	const size = useMemo(() => {
+		return { height: (dimensions.height - 280) / 2, width: dimensions.width / 2 };
+	}, [dimensions]);
 	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -32,7 +40,7 @@ const DriverPerformance = ({ interval, genLabels }) => {
 				backgroundColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
 				borderColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
 				borderWidth: 1
-			},
+			}
 		];
 		return {
 			labels,
@@ -40,43 +48,51 @@ const DriverPerformance = ({ interval, genLabels }) => {
 		};
 	}, [completed]);
 
-	return <Bar options={{
-		plugins: {
-			legend: {
-				display: false,
-				labels: {
-					padding: 0
-				},
-				position: 'bottom'
-			},
-			title: {
-				padding: {
-					top: 5,
-					bottom: 20
-				},
-				color: '#212529',
-				font: {
-					weight: 500,
-					size: 17
-				},
-				align: "start",
-				display: true,
-				text: 'Driver Performance'
-			}
-		},
-		maintainAspectRatio: false,
-		scales: {
-			y: {
-				grid:{
-					display: false
-				},
-				ticks: {
-					// forces step size to be 50 units
-					stepSize: 1
-				}
-			}
-		}
-	}} data={data} />;
+	return (
+		<div className='border rounded-3 p-3 position-relative'>
+			<MuiTooltip
+				className='position-absolute me-3 end-0'
+				title='Track the performance of your internal drivers and fleet providers'
+				placement='right-start'
+			>
+				<IconButton size='small'>
+					<BsInfoCircle size={15} />
+				</IconButton>
+			</MuiTooltip>
+			<div className="d-flex flex-column mb-2">
+				<span className='font-semibold'>Driver Performance</span>
+			</div>
+			<div>
+				<Bar
+					height={size.height}
+					options={{
+						plugins: {
+							legend: {
+								display: false,
+								labels: {
+									padding: 0
+								},
+								position: 'bottom'
+							}
+						},
+						maintainAspectRatio: false,
+						scales: {
+							y: {
+								grid: {
+									display: false
+								},
+								ticks: {
+									// forces step size to be 50 units
+									stepSize: 1
+								}
+							}
+						}
+					}}
+					data={data}
+				/>
+			</div>
+		</div>
+	);
 };
 
 DriverPerformance.propTypes = {};

@@ -4,10 +4,18 @@ import { Doughnut } from 'react-chartjs-2';
 import { analyticsFilterCurrent } from '../../helpers';
 import { useSelector } from 'react-redux';
 import { PROVIDERS, STATUS } from '../../constants';
+import MuiTooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import { BsInfoCircle } from 'react-icons/bs';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const DeliveryOverview = ({ interval }) => {
-	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
+	const dimensions = useWindowSize();
+	const size = useMemo(() => {
+		return { height: (dimensions.height - 280) / 2, width: dimensions.width / 2 };
+	}, [dimensions]);
 
+	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
 		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
@@ -30,8 +38,10 @@ const DeliveryOverview = ({ interval }) => {
 			{
 				label: '# of Votes',
 				data: getOverviewDetails(),
-				backgroundColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
-				borderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
+				hoverBackgroundColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
+				hoverBorderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
+				borderColor: ['#43CB2B', '#FF6939', '#9A9A9A', '#9D3D3D'],
+				backgroundColor: ['#43CB2B', '#FF6939', '#9A9A9A', '#9D3D3D'],
 				borderWidth: 1
 			}
 		];
@@ -42,36 +52,39 @@ const DeliveryOverview = ({ interval }) => {
 	}, [interval]);
 
 	return (
-		<Doughnut
-			options={{
-				maintainAspectRatio: false,
-				plugins: {
-					legend: {
-						labels: {
-							boxWidth: 5,
-							usePointStyle: true,
-							pointStyle: "circle"
-						},
-						position: "right",
-					},
-					title: {
-						padding: {
-							top: 5,
-							bottom: 6
-						},
-						color: '#212529',
-						font: {
-							weight: 500,
-							size: 17
-						},
-						align: "start",
-						display: true,
-						text: 'Delivery Overview'
-					}
-				}
-			}}
-			data={data}
-		/>
+		<div className='border border-light-grey rounded-3 p-3 position-relative'>
+			<MuiTooltip
+				className='position-absolute me-3 end-0'
+				title='Overview of all your orders and their current status'
+				placement='right-start'
+			>
+				<IconButton size='small'>
+					<BsInfoCircle size={15} />
+				</IconButton>
+			</MuiTooltip>
+			<div className="d-flex flex-column mb-2">
+				<span className='font-semibold'>Delivery Overview</span>
+			</div>
+			<div>
+				<Doughnut
+					height={size.height}
+					options={{
+						maintainAspectRatio: false,
+						plugins: {
+							legend: {
+								labels: {
+									boxWidth: 5,
+									usePointStyle: true,
+									pointStyle: 'circle'
+								},
+								position: 'right'
+							}
+						}
+					}}
+					data={data}
+				/>
+			</div>
+		</div>
 	);
 };
 
