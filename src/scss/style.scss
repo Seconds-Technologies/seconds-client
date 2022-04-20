@@ -2,12 +2,13 @@ $primary: #9400D3; //#9400d3;
 $edit: #EEEEEE;
 $light: #F9F9F9;
 $grey: #888888;
-$light-grey: #bebebe;
+$light-grey: #E0E0E0;
 $success-light: #d1e7dd;
 
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/utilities";
+@import "../../node_modules/bootstrap/scss/mixins";
 
 $custom-colors: (
         "edit": $edit,
@@ -26,6 +27,8 @@ $utilities-colors: map-merge(
                         "black": to-rgb($black),
                         "white": to-rgb($white),
                         "edit": to-rgb($edit),
+                        "grey": to-rgb($grey),
+                        "light-grey": to-rgb($light-grey),
                         "success-light": to-rgb($success-light)
                 )
 );
