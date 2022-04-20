@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	BACKGROUND,
+	DISPATCH_MODES,
 	PLATFORMS,
 	PATHS,
 	PROVIDERS,
