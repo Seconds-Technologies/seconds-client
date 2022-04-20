@@ -418,7 +418,7 @@ const Create = props => {
 						>
 							<div className='row mx-1'>
 								<div className={`${values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP ? 'col-12' : 'col-6'}`}>
-									<div className='border border-light-grey rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
+									<div className='border border-2 rounded-3 d-flex flex-column px-4 pt-3 pb-4'>
 										<h4>Delivery Type</h4>
 										<div className='d-flex mt-2 justify-content-center'>
 											<div className='form-check mb-2'>
@@ -707,7 +707,7 @@ const Create = props => {
 									</div>
 								) : (
 									<div className='col-6'>
-										<div className='border rounded-3 d-flex flex-column px-4 py-3'>
+										<div className='border border-2 rounded-3 d-flex flex-column px-4 py-3'>
 											<h4>Dropoff</h4>
 											<div className='my-2'>
 												<div className='row'>

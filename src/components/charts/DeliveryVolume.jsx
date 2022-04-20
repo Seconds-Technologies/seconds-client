@@ -150,7 +150,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 	}, [interval]);
 
 	return (
-		<div className='border rounded-3 p-3 position-relative'>
+		<div className='border border-2 rounded-3 p-3 position-relative'>
 			<MuiTooltip className='position-absolute mt-2 me-3 end-0' title='Track how many orders are being completed' placement='right-start'>
 				<IconButton size='small'>
 					<BsInfoCircle size={15} />

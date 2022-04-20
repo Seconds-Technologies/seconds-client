@@ -95,10 +95,32 @@ const Analytics = props => {
 			<div className='container-fluid'>
 				<div className='row gy-3'>
 					<div className='col-sm-12 col-md-6'>
-						<DeliveryOverview interval={active.id} />
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip
+								className='position-absolute mt-2 me-3 end-0'
+								title='Overview of all your orders and their current status'
+								placement='right-start'
+							>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
+							<DeliveryOverview interval={active.id} />
+						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
-						<DriverPerformance interval={active.id} genLabels={genPerformanceLabels} />
+						<div style={{ height: size.height }} className='border border-2 rounded-3 p-3 position-relative'>
+							<MuiTooltip
+								className='position-absolute mt-2 me-3 end-0'
+								title='Track the performance of your internal drivers and fleet providers'
+								placement='right-start'
+							>
+								<IconButton size='small'>
+									<BsInfoCircle size={15} />
+								</IconButton>
+							</MuiTooltip>
+							<DriverPerformance interval={active.id} genLabels={genPerformanceLabels} />
+						</div>
 					</div>
 					<div className='col-sm-12 col-md-6'>
 						<DeliveryCost interval={active.id} intervalLabel={active.name} genLabels={generateLabels} />
