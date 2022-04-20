@@ -30,7 +30,7 @@ const DeliveryOverview = ({ interval }) => {
 			{
 				label: '# of Votes',
 				data: getOverviewDetails(),
-				backgroundColor: ['rgba(101, 188, 85, 0.2)', 'rgba(255, 105, 57, 0.2)', 'rgba(154, 154, 154, 0.2)', 'rgba(157, 61, 61, 0.2)'],
+				backgroundColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
 				borderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
 				borderWidth: 1
 			}

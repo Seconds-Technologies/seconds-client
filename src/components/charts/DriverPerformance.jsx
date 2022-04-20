@@ -16,26 +16,28 @@ const DriverPerformance = ({ interval, genLabels, options }) => {
 				return completed.filter(({ driverInformation }) => driverInformation.id === driverId).length;
 			});
 			let courierVolume = providers.map(provider => {
-				return completed.filter(({ selectedConfiguration }) => selectedConfiguration.providerId === provider);
+				return completed.filter(({ selectedConfiguration }) => selectedConfiguration.providerId === provider).length;
 			});
-			return driverVolume.concat(courierVolume);
+			const totalVolume = driverVolume.concat(courierVolume);
+			console.log(totalVolume)
+			return totalVolume
 		},
 		[completed]
 	);
 
 	const data = useMemo(() => {
-		let info = genLabels();
+		let { driverIds, providerIds, labels } = genLabels();
 		let datasets = [
 			{
 				label: 'Completed Orders',
-				data: calcDriverPerformance(info.driverIds, info.providerIds),
-				backgroundColor: 'rgba(255, 105, 57, 0.5)',
-				borderColor: 'rgba(255, 105, 57, 1.0)',
+				data: calcDriverPerformance(driverIds, providerIds),
+				backgroundColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
+				borderColor: new Array(driverIds.length).fill('#AD73FF').concat(new Array(providerIds.length).fill('#57C6F7')),
 				borderWidth: 1
 			}
 		];
 		return {
-			labels: info.labels,
+			labels,
 			datasets
 		};
 	}, [completed]);

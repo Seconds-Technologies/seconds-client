@@ -66,20 +66,7 @@ const Analytics = props => {
 		let providers = FLEET_PROVIDERS.map(provider => capitalize(provider).replaceAll("_", " "))
 		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`).concat(providers);
 		return { driverIds, providerIds: FLEET_PROVIDERS, labels };
-	}, [drivers]);
-
-	const pieData = {
-		labels: ['Completed', 'Uncompleted', 'Cancelled', 'Unassigned'],
-		datasets: [
-			{
-				label: '# of Votes',
-				data: [12, 19, 3, 5],
-				backgroundColor: ['rgba(101, 188, 85, 0.2)', 'rgba(255, 105, 57, 0.2)', 'rgba(154, 154, 154, 0.2)', 'rgba(157, 61, 61, 0.2)'],
-				borderColor: ['rgba(101, 188, 85, 1)', 'rgba(255, 105, 57, 1)', 'rgba(154, 154, 154, 1)', 'rgba(157, 61, 61, 1)'],
-				borderWidth: 1
-			}
-		]
-	};
+	}, [drivers])
 
 	const size = useMemo(() => {
 		return { height: (dimensions.height - 114) / 2, width: (dimensions.width - 60) / 2 };

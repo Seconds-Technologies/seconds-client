@@ -107,13 +107,13 @@ const DeliveryCost = ({ genLabels, interval, options }) => {
 				label: 'Third Party Providers',
 				data: calculateDeliveryFees(PROVIDER_TYPES.COURIER, values),
 				borderColor: 'rgb(255, 99, 132)',
-				backgroundColor: 'rgba(255, 99, 132, 0.5)'
+				backgroundColor: 'rgba(255, 99, 132, 1)'
 			},
 			{
 				label: 'Internal Drivers',
 				data: calculateDeliveryFees(PROVIDER_TYPES.DRIVER, values),
 				borderColor: 'rgb(53, 162, 235)',
-				backgroundColor: 'rgba(53, 162, 235, 0.5)'
+				backgroundColor: 'rgba(53, 162, 235, 1)'
 			}
 		];
 		labels.reverse();
