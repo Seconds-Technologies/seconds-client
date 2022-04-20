@@ -2,12 +2,12 @@ import React, { useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Line } from 'react-chartjs-2';
 import { PROVIDER_TYPES, PROVIDERS } from '../../constants';
-import { pickupFilter } from '../../helpers';
+import { analyticsFilterCurrent } from '../../helpers';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 const DeliveryVolume = ({ interval, genLabels }) => {
-	const filterByInterval = useCallback(pickupFilter, [interval]);
+	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
 
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -105,11 +105,15 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 		<Line
 			options={{
 				plugins: {
-					tooltip: {
-						enabled: true
+					legend: {
+						position: 'bottom'
 					},
 					subtitle: {
-						align: "start",
+						padding: {
+							top: 0,
+							bottom: 15
+						},
+						align: 'start',
 						font: {
 							weight: 500,
 							size: 24
@@ -118,6 +122,10 @@ const DeliveryVolume = ({ interval, genLabels }) => {
 						text: `${totalVolume}`
 					},
 					title: {
+						padding: {
+							top: 5,
+							bottom: 6
+						},
 						color: '#212529',
 						font: {
 							weight: 500,

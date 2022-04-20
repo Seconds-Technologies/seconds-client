@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { pickupFilter } from '../../helpers';
+import { analyticsFilterCurrent } from '../../helpers';
 import { useSelector } from 'react-redux';
 
 const DriverPerformance = ({ interval, genLabels }) => {
-	const filterByInterval = useCallback(pickupFilter, [interval]);
+	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
 		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
@@ -42,7 +42,17 @@ const DriverPerformance = ({ interval, genLabels }) => {
 
 	return <Bar options={{
 		plugins: {
+			legend: {
+				labels: {
+					padding: 0
+				},
+				position: 'bottom'
+			},
 			title: {
+				padding: {
+					top: 5,
+					bottom: 20
+				},
 				color: '#212529',
 				font: {
 					weight: 500,

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Doughnut } from 'react-chartjs-2';
-import { pickupFilter } from '../../helpers';
+import { analyticsFilterCurrent } from '../../helpers';
 import { useSelector } from 'react-redux';
 import { PROVIDERS, STATUS } from '../../constants';
 
 const DeliveryOverview = ({ interval }) => {
-	const filterByInterval = useCallback(pickupFilter, [interval]);
+	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
 
 	const { total, completed } = useSelector(state => {
 		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
@@ -47,9 +47,18 @@ const DeliveryOverview = ({ interval }) => {
 				maintainAspectRatio: false,
 				plugins: {
 					legend: {
+						labels: {
+							boxWidth: 5,
+							usePointStyle: true,
+							pointStyle: "circle"
+						},
 						position: "right",
 					},
 					title: {
+						padding: {
+							top: 5,
+							bottom: 6
+						},
 						color: '#212529',
 						font: {
 							weight: 500,

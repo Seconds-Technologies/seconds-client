@@ -234,3 +234,8 @@ export const OPTIMIZATION_OBJECTIVES = {
 	MILEAGE: 'less_mileage',
 	COST: 'minimize_cost'
 };
+
+export const PERIOD_TYPE = {
+	CURRENT: 'current',
+	PREVIOUS: 'previous',
+}
