@@ -172,7 +172,8 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 		let increase = currTotalCost - prevTotalCost;
 		let percentageChange = prevTotalCost ? (increase / prevTotalCost) * 100 : 100;
 		console.table({ increase, percentageChange });
-		let percentageChangeString = percentageChange > 0 ? "+".concat(percentageChange.toString()) : String(percentageChange)
+
+		let percentageChangeString = percentageChange > 0 ? '+'.concat(percentageChange.toFixed(2).toString()) : percentageChange.toFixed(2).toString();
 		console.log(percentageChangeString)
 		return { data, totalCost: currTotalCost.toFixed(2), percentageChange, percentageChangeString };
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);

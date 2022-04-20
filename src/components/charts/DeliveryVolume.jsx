@@ -143,7 +143,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 		let percentageChange = prevTotalVolume ? (increase / prevTotalVolume) * 100 : 100;
 		console.table({ increase, percentageChange });
 
-		let percentageChangeString = percentageChange > 0 ? '+'.concat(percentageChange.toString()) : String(percentageChange);
+		let percentageChangeString = percentageChange > 0 ? '+'.concat(percentageChange.toFixed(2).toString()) : percentageChange.toFixed(2).toString();
 		console.log(percentageChangeString);
 		return { data, totalVolume: currTotalVolume, percentageChange, percentageChangeString };
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);
