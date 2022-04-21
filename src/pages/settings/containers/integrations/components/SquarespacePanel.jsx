@@ -13,7 +13,7 @@ const SquarespacePanel = ({ wrapper, toggle }) => {
 	const { isActive } = useSelector(state => state['squarespaceStore'])
 	const history = useHistory()
 	return (
-		<div onClick={() => history.push(PATHS.SQUARESPACE)} role='button' className={wrapper}>
+		<div role='button' className={wrapper}>
 			<div className='d-flex justify-content-end position-absolute p-3'>
 				<Switch
 					onColor={'#9FEA86'}
@@ -28,7 +28,7 @@ const SquarespacePanel = ({ wrapper, toggle }) => {
 					className='switch-text'
 				/>
 			</div>
-			<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
+			<div onClick={() => history.push(PATHS.SQUARESPACE)} className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 				<img className='img-fluid' width={250} src={squarespaceLogo} alt='squarespace logo' />
 			</div>
 		</div>

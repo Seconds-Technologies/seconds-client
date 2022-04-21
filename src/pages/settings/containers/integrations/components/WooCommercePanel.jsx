@@ -13,7 +13,7 @@ const WooCommercePanel = ({ wrapper, toggle }) => {
 	const { isActive } = useSelector(state => state['wooCommerceStore'])
 	const history = useHistory()
 	return (
-		<div onClick={() => history.push(PATHS.WOOCOMMERCE)} role='button' className={wrapper}>
+		<div role='button' className={wrapper}>
 			<div className='d-flex justify-content-end position-absolute p-3'>
 				<Switch
 					onColor={'#9FEA86'}
@@ -28,7 +28,7 @@ const WooCommercePanel = ({ wrapper, toggle }) => {
 					className='switch-text'
 				/>
 			</div>
-			<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
+			<div onClick={() => history.push(PATHS.WOOCOMMERCE)} className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
 				<img className='img-fluid' width={175} src={woocommerceLogo} alt='woocommerce logo' />
 			</div>
 		</div>

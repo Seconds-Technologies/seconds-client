@@ -13,7 +13,7 @@ const HubrisePanel = ({ wrapper, toggle }) => {
 	const { isActive } = useSelector(state => state['hubriseStore']);
 	const history = useHistory();
 	return (
-		<div onClick={() => history.push(PATHS.HUBRISE)} role='button' className={wrapper}>
+		<div role='button' className={wrapper}>
 			<div className='d-flex justify-content-end position-absolute p-3' style={{zIndex: 100}}>
 				<Switch
 					onColor={'#9FEA86'}
@@ -28,7 +28,7 @@ const HubrisePanel = ({ wrapper, toggle }) => {
 					className='switch-text'
 				/>
 			</div>
-			<div className='d-flex justify-content-center align-items-center bg-white border p-5 api-wrapper'>
+			<div onClick={() => history.push(PATHS.HUBRISE)} className='d-flex justify-content-center align-items-center bg-white border p-5 api-wrapper'>
 				<img className='img-fluid' width={300} src={hubriseLogo} alt='square logo' />
 			</div>
 		</div>

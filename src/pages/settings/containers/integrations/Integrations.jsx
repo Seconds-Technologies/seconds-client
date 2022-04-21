@@ -1,5 +1,5 @@
 import './integrations.css';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import magentoLogo from '../../../../assets/img/magento-vector-logo.svg';
 import flipdishLogo from '../../../../assets/img/flipdish.svg';
 import squareLogo from '../../../../assets/img/square.svg';
@@ -13,14 +13,21 @@ import WooCommercePanel from './components/WooCommercePanel';
 import SquarespacePanel from './components/SquarespacePanel';
 import HubrisePanel from './components/HubrisePanel';
 import { updateIntegrationStatus } from '../../../../store/actions/settings';
+import SuccessToast from '../../../../modals/SuccessToast';
+import { capitalize } from '../../../../helpers';
 
 export default function Integrations(props) {
+	const [successMessage, setSuccess] = useState('')
+	const error = useSelector(state => state['errors'])
 	const { email } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
+	const errorRef = useRef(null)
 
 	const toggleIntegration = useCallback(payload => {
-		dispatch(updateIntegrationStatus(email, payload)).then(() =>
-			alert(`Status for ${payload.platform} is now ${payload.status ? 'active' : 'inactive'}`)
+		dispatch(updateIntegrationStatus(email, payload)).then(() => {
+				const message = `${capitalize(payload.platform)} integration is now ${payload.status ? 'enabled' : 'disabled'}`
+				setSuccess(message)
+			}
 		);
 	}, []);
 
@@ -38,7 +45,8 @@ export default function Integrations(props) {
 	}, [props.location]);
 
 	return (
-		<div className='tab-container container-fluid py-3 px-4'>
+		<div ref={errorRef} className='tab-container container-fluid py-3 px-4'>
+			<SuccessToast message={successMessage} toggleShow={setSuccess}/>
 			<div className='container'>
 				<div className='row'>
 					<div role='button' className={IntegrationLinkBtn}>
