@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelSubscription } from '../../../store/actions/stripe';
+import { cancelSubscription } from '../../../../../store/actions/stripe';
 
 const CancelPlan = ({ show, onHide, centered, onComplete }) => {
 	const dispatch = useDispatch();

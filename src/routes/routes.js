@@ -6,7 +6,7 @@ import Orders from '../pages/orders/Orders';
 import Track from '../pages/track/Track';
 import Create from '../pages/create/Create';
 import ViewOrder from '../pages/viewOrder/ViewOrder';
-import Integrations from '../pages/integration/Integrations';
+import Integrations from '../pages/settings/containers/integrations/Integrations';
 import PrivateRoute from './PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Signup1 from '../pages/signup/Signup1';
@@ -15,7 +15,6 @@ import Signup3 from '../pages/signup/Signup3';
 import Login from '../pages/login/Login';
 import Profile from '../pages/settings/containers/profile/Profile';
 import Settings from '../pages/settings/Settings';
-import CustomerSupport from '../pages/settings/containers/CustomerSupport';
 import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import Subscription from '../pages/settings/containers/billing/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
@@ -54,7 +53,6 @@ const routes = (
 		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
-		<PrivateRoute path={PATHS.HELP} component={CustomerSupport} />
 		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
 		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
 	</Switch>

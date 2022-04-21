@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import PlanTile from '../components/PlanTile';
 import Button from 'react-bootstrap/Button';
 import { useSelector } from 'react-redux';
-import { SUBSCRIPTION_PLANS } from '../../../constants';
+import { SUBSCRIPTION_PLANS } from '../../../../../constants';
 
 const ChangePlan = ({ show, onHide, centered, onChange }) => {
 	const [selectedPlan, setSelectedPlan] = useState('');

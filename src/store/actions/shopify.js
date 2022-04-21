@@ -3,13 +3,18 @@ import { addError, removeError } from "./errors";
 import {
 	CLEAR_PRODUCTS,
 	SET_PRODUCTS,
-	SET_SHOPIFY,
-} from "../actionTypes";
+	SET_SHOPIFY, UPDATE_SHOPIFY
+} from '../actionTypes';
 import { Mixpanel } from '../../config/mixpanel';
 
 export const setShopify = credentials => ({
 	type: SET_SHOPIFY,
 	credentials,
+});
+
+export const updateShopify = data => ({
+	type: UPDATE_SHOPIFY,
+	data,
 });
 
 export const clearAllProducts = () => ({

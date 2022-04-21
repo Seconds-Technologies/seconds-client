@@ -6,7 +6,7 @@ import streetStream from '../../../../assets/img/street-stream.svg';
 import ecofleet from '../../../../assets/img/ecofleet.svg';
 import addisonLee from '../../../../assets/img/addison_lee_logo_resized.svg';
 import classnames from 'classnames';
-import CourierPanel from '../../components/CourierPanel';
+import CourierPanel from './components/CourierPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateFleetProviders } from '../../../../store/actions/settings';
 import { PROVIDERS } from '../../../../constants';
@@ -25,7 +25,7 @@ const Couriers = () => {
 	const toggleProvider = useCallback((provider) => {
 		let data = {...activeFleetProviders, ...provider}
 		console.log(data)
-		dispatch(updateFleetProviders(email, data))
+		dispatch(updateFleetProviders(email, data)).then(() => console.log("Fleet provider updated successfully!"))
 	}, [activeFleetProviders])
 
 	return (

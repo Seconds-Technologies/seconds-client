@@ -1,11 +1,16 @@
 import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError, removeError } from './errors';
-import { SET_SQUARESPACE } from '../actionTypes';
+import { SET_SQUARESPACE, UPDATE_SQUARESPACE } from '../actionTypes';
 
 export const setSquareSpace = credentials => ({
 	type: SET_SQUARESPACE,
 	credentials,
+});
+
+export const updateSquareSpace = data => ({
+	type: UPDATE_SQUARESPACE,
+	data,
 });
 
 export function connectSquarespace(data){

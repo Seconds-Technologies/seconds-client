@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { EditableInput } from 'react-color/lib/components/common';
-import BrandColorPicker from '../../components/BrandColorPicker';
+import BrandColorPicker from './components/BrandColorPicker';
 
 const Branding = props => {
 	const [brandColor, setBrandColor] = useState('#9400D3');

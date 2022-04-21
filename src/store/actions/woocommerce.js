@@ -1,4 +1,4 @@
-import { SET_WOOCOMMERCE } from '../actionTypes';
+import { SET_WOOCOMMERCE, UPDATE_WOOCOMMERCE } from '../actionTypes';
 import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError, removeError } from './errors';
@@ -6,6 +6,11 @@ import { addError, removeError } from './errors';
 export const setWoo = credentials => ({
 	type: SET_WOOCOMMERCE,
 	credentials,
+});
+
+export const updateWoo = data => ({
+	type: UPDATE_WOOCOMMERCE,
+	data,
 });
 
 export function validateWoocommerce(email) {

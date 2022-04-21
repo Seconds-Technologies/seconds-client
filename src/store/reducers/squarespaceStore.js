@@ -1,7 +1,8 @@
-import { SET_SQUARESPACE } from '../actionTypes';
+import { SET_SQUARESPACE, UPDATE_SQUARESPACE } from '../actionTypes';
 
 const DEFAULT_STATE = {
 	isIntegrated: false,
+	isActive: false,
 	credentials: {
 		siteId: "",
 		storeName: "",
@@ -17,6 +18,8 @@ export default (state = DEFAULT_STATE, action) => {
 				isIntegrated: Object.keys(action.credentials).length > 0,
 				credentials: action.credentials
 			};
+		case UPDATE_SQUARESPACE:
+			return { ...state, ...action.data };
 		default:
 			return state;
 	}

@@ -22,7 +22,6 @@ const persistConfig = {
 };
 
 const appReducer = combineReducers({
-    shopifyProducts,
     currentUser,
     shopifyStore,
     squareStore,

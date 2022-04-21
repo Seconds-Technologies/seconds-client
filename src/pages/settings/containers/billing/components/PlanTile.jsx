@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Chip from '@mui/material/Chip';
-import { SUBSCRIPTION_PLANS } from '../../../constants';
+import { SUBSCRIPTION_PLANS } from '../../../../../constants';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';

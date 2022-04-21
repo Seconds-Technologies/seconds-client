@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Profile from './containers/profile/Profile';
 import Couriers from './containers/couriers/Couriers';
-import Integrations from '../integration/Integrations';
+import Integrations from './containers/integrations/Integrations';
 import Subscription from './containers/billing/Subscription';
 import TabPanel from '../../components/TabPanel';
 import BusinessWorkflows from './containers/workflows/BusinessWorkflows';

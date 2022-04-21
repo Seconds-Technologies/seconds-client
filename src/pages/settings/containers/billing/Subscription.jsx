@@ -5,14 +5,14 @@ import { checkSubscriptionStatus, fetchInvoices, setupSubscription } from '../..
 import { Mixpanel } from '../../../../config/mixpanel';
 import classnames from 'classnames';
 import moment from 'moment';
-import CancelPlan from '../../modals/CancelPlan';
+import CancelPlan from './modals/CancelPlan';
 import SuccessModal from '../../modals/SuccessModal';
 import invoice from '../../../../assets/img/invoice.svg';
-import ChangePlan from '../../modals/ChangePlan';
-import PaymentInformation from '../../modals/PaymentInformation';
+import ChangePlan from './modals/ChangePlan';
+import Plan from './components/Plan';
+import PaymentInformation from './modals/PaymentInformation';
 import { SUBSCRIPTION_PLANS } from '../../../../constants';
 import { syncUser } from '../../../../store/actions/auth';
-import Plan from '../../components/Plan';
 
 const InvoiceHistory = ({ invoices }) => (
 	<div className='table-responsive'>

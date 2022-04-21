@@ -1,16 +1,21 @@
 import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError, removeError } from './errors';
-import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE } from '../actionTypes';
+import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE, UPDATE_HUBRISE_CREDENTIALS } from '../actionTypes';
+
+export const setHubrise = hubrise => ({
+	type: SET_HUBRISE,
+	hubrise
+});
 
 export const updateHubrise = data => ({
 	type: UPDATE_HUBRISE,
 	data
 });
 
-export const setHubrise = hubrise => ({
-	type: SET_HUBRISE,
-	hubrise
+export const updateHubriseCredentials = data => ({
+	type: UPDATE_HUBRISE_CREDENTIALS,
+	data
 });
 
 export const clearHubrise = () => ({
@@ -63,7 +68,7 @@ export function pullCatalog(email) {
 			return apiCall('GET', '/server/hubrise/pull-catalog', null, { params: { email } })
 				.then(({ message, catalog, catalogName, catalogId }) => {
 					console.table(catalog)
-					dispatch(updateHubrise({ catalogName, catalogId, catalog }));
+					dispatch(updateHubriseCredentials({ catalogName, catalogId, catalog }));
 					dispatch(removeError());
 					resolve(message);
 				})
@@ -81,7 +86,7 @@ export function fetchCatalog(email) {
 		return new Promise((resolve, reject) => {
 			return apiCall('GET', '/server/hubrise/fetch-catalog', null, { params: { email } })
 				.then(({ message, catalog }) => {
-					dispatch(updateHubrise(catalog));
+					dispatch(updateHubriseCredentials(catalog));
 					dispatch(removeError());
 					resolve(message);
 				})
@@ -99,7 +104,7 @@ export function updateCatalog(email, data) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', '/server/hubrise/update-catalog', { data }, { params: { email } })
 				.then(({ catalog }) => {
-					dispatch(updateHubrise(catalog));
+					dispatch(updateHubriseCredentials(catalog));
 					dispatch(removeError());
 					resolve(catalog);
 				})

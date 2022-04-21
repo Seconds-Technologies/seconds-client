@@ -1,7 +1,8 @@
-import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE } from '../actionTypes';
+import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE, UPDATE_HUBRISE_CREDENTIALS } from '../actionTypes';
 
 const DEFAULT_STATE = {
 	isIntegrated: false,
+	isActive: false,
 	credentials: {
 		accountName: "",
 		locationId: "",
@@ -28,6 +29,8 @@ export default (state = DEFAULT_STATE, action) => {
 				authCode: action.hubrise.authCode
 			};
 		case UPDATE_HUBRISE:
+			return { ...state, ...action.data };
+		case UPDATE_HUBRISE_CREDENTIALS:
 			return {
 				...state,
 				credentials: { ...state.credentials, ...action.data }

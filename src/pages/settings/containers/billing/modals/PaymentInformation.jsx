@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { Elements } from '@stripe/react-stripe-js';
-import CardSetupForm from '../../paymentMethod/CardSetupForm';
+import CardSetupForm from '../../../../paymentMethod/CardSetupForm';
 import { loadStripe } from '@stripe/stripe-js';
 import { useDispatch, useSelector } from 'react-redux';
-import { setupIntent, setupSubscription } from '../../../store/actions/stripe';
-import { SUBSCRIPTION_PLANS } from '../../../constants';
+import { setupIntent, setupSubscription } from '../../../../../store/actions/stripe';
+import { SUBSCRIPTION_PLANS } from '../../../../../constants';
 
 const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
 

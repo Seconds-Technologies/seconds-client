@@ -1,7 +1,8 @@
-import { SET_WOOCOMMERCE } from '../actionTypes';
+import { SET_WOOCOMMERCE, UPDATE_WOOCOMMERCE } from '../actionTypes';
 
 const DEFAULT_STATE = {
 	isIntegrated: false,
+	isActive: false,
 	credentials: {
 		domain: "",
 		consumerKey: "",
@@ -16,6 +17,8 @@ export default (state = DEFAULT_STATE, action) => {
 				isIntegrated: Object.keys(action.credentials).length > 0,
 				credentials: action.credentials
 			};
+		case UPDATE_WOOCOMMERCE:
+			return { ...state, ...action.data };
 		default:
 			return state;
 	}

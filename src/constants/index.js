@@ -239,3 +239,13 @@ export const PERIOD_TYPE = {
 	CURRENT: 'current',
 	PREVIOUS: 'previous',
 }
+
+export const INTEGRATIONS = {
+	SHOPIFY: 'shopify',
+	WOOCOMMERCE: 'woocommerce',
+	SQUARE: 'square',
+	SQUARESPACE: 'squarespace',
+	HUBRISE: 'hubrise',
+	MAGENTO: 'magento',
+	FLIPDISH: 'flipdish',
+}

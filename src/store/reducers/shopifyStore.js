@@ -1,7 +1,8 @@
-import { SET_SHOPIFY } from "../actionTypes";
+import { SET_SHOPIFY, UPDATE_SHOPIFY } from "../actionTypes";
 
 const DEFAULT_STATE = {
 	isIntegrated: false,
+	isActive: false,
 	credentials: {
 		accessToken: "",
 		shopId: "",
@@ -18,6 +19,8 @@ export default (state = DEFAULT_STATE, action) => {
 				isIntegrated: Object.keys(action.credentials).length > 0,
 				credentials: action.credentials
 			};
+		case UPDATE_SHOPIFY:
+			return { ...state, ...action.data };
 		default:
 			return state;
 	}
