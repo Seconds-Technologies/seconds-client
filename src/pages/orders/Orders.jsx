@@ -106,8 +106,7 @@ export default function Orders(props) {
 		},
 		{
 			field: 'pickupTime',
-			headerName: 'Pickup',
-			flex: 0.4,
+			headerName: 'Pickup'
 		},
 		{
 			field: 'status',
@@ -163,9 +162,9 @@ export default function Orders(props) {
 				</div>
 			)
 		},
-		{ field: 'customerName', headerName: 'Customer', flex: 0.3, width: 150 },
+		{ field: 'customerName', headerName: 'Customer', flex: 0.4, width: 150 },
 		{ field: 'phoneNumber', headerName: 'Phone', width: 150 },
-		{ field: 'address', headerName: 'Address', flex: 0.3, width: 200 },
+		{ field: 'address', headerName: 'Address', flex: 0.4, width: 200 },
 		{
 			field: 'platform',
 			headerName: 'Platform',

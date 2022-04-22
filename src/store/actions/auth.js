@@ -60,6 +60,8 @@ export function authUser(type, userData) {
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
+					drivers && dispatch(setDrivers(drivers))
+					settings && dispatch(setSettings(settings));
 					shopify &&
 						apiCall('POST', `/server/shopify`, { email: user.email })
 							.then(shop => {
@@ -89,8 +91,6 @@ export function authUser(type, userData) {
 								resolve(account);
 							})
 							.catch(err => reject(err));
-					drivers && dispatch(setDrivers(drivers))
-					settings && dispatch(setSettings(settings));
 					dispatch(removeError());
 					resolve(user);
 				})
