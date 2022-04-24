@@ -34,6 +34,14 @@ Amplify.configure({
 	}
 });
 
+Storage.configure({
+	customPrefix: {
+		public: '',
+		protected: 'protected/',
+		private: 'private/'
+	}
+});
+
 ReactDOM.render(
 	<React.StrictMode>
 		<Provider store={store}>

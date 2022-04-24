@@ -10,16 +10,8 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
 // functions
-import {
-	assignDriver,
-	removeBatch,
-	createDeliveryJob,
-	createMultiDropJob,
-	getAllQuotes,
-	removeDropoff,
-	setBatch
-} from '../../store/actions/delivery';
-import { getAllDrivers, subscribe, unsubscribe } from '../../store/actions/drivers';
+import { assignDriver, createDeliveryJob, getAllQuotes, removeBatch, setBatch } from '../../store/actions/delivery';
+import { subscribe, unsubscribe } from '../../store/actions/drivers';
 import { parseAddress, validateAddress } from '../../helpers';
 import { addError, removeError } from '../../store/actions/errors';
 //constants
@@ -40,7 +32,6 @@ import Quotes from '../../modals/Quotes';
 import ConfirmProvider from '../../modals/ConfirmProvider';
 import ApiKeyAlert from '../../modals/ApiKeyAlert';
 import DeliveryJob from '../../modals/DeliveryJob';
-import MultiDropQuote from '../../modals/MultiDropQuote';
 import NewDropoffForm from '../../modals/NewDropoffForm';
 import SelectDriver from '../../modals/SelectDriver';
 import BatchCarousel from '../../components/BatchCarousel';
