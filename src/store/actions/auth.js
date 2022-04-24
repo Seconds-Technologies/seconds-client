@@ -14,8 +14,8 @@ import { Mixpanel } from '../../config/mixpanel';
 import { setWoo } from './woocommerce';
 import { setSquareSpace } from './squarespace';
 import { setHubrise } from './hubrise';
-import { setDrivers } from './drivers';
-import { setSettings, updateSettings } from './settings';
+import { setDrivers, updateDrivers } from './drivers';
+import { setSettings } from './settings';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -56,7 +56,7 @@ export function authUser(type, userData) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, drivers, settings, ...user }) => {
-					console.table({message, shopify, woocommerce, hubrise, drivers: drivers, settings})
+					console.table({ message, shopify, woocommerce, hubrise, drivers, settings })
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
@@ -110,7 +110,7 @@ export function syncUser(email, authenticated = true) {
 				.then(({ message, settings, drivers, ...user }) => {
 					if (authenticated) {
 						dispatch(setCurrentUser(user));
-						dispatch(setDrivers(drivers));
+						dispatch(updateDrivers(drivers));
 						settings && dispatch(setSettings(settings))
 					} else {
 						dispatch(setUserDetails(user));

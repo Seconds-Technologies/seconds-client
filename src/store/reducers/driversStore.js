@@ -1,4 +1,4 @@
-import { ADD_DRIVER, UPDATE_DRIVER, SET_DRIVERS } from '../actionTypes';
+import { ADD_DRIVER, SET_DRIVERS, UPDATE_DRIVER, UPDATE_DRIVERS } from '../actionTypes';
 
 export const schema = {
 	id: '',
@@ -8,8 +8,9 @@ export const schema = {
 	phone: '',
 	email: '',
 	vehicle: '',
-	status: '',
-}
+	profileImageKey: '',
+	status: ''
+};
 
 export const DEFAULT_STATE = []
 
@@ -18,6 +19,8 @@ export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
 		case SET_DRIVERS:
 			return [...action.drivers]
+		case UPDATE_DRIVERS:
+			return state.map((item, index) => ({ ...item, ...action.drivers[index] }));
 		case ADD_DRIVER:
 			return [...state, action.driver]
 		case UPDATE_DRIVER:

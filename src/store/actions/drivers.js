@@ -1,9 +1,14 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
-import { SET_DRIVERS, ADD_DRIVER, UPDATE_DRIVER, TIMER_START, TIMER_STOP } from '../actionTypes';
+import { SET_DRIVERS, UPDATE_DRIVERS, ADD_DRIVER, UPDATE_DRIVER, TIMER_START, TIMER_STOP } from '../actionTypes';
 
 export const setDrivers = drivers => ({
 	type: SET_DRIVERS,
+	drivers,
+})
+
+export const updateDrivers = drivers => ({
+	type: UPDATE_DRIVERS,
 	drivers,
 })
 
@@ -20,8 +25,8 @@ const updateDriver = driver => ({
 let timer;
 export const subscribe = (email) => dispatch => {
 	clearInterval(timer);
-	dispatch(getAllDrivers(email));
-	timer = setInterval(() => dispatch(getAllDrivers(email)), 5000);
+	dispatch(fetchDriverUpdates(email));
+	timer = setInterval(() => dispatch(fetchDriverUpdates(email)), 5000);
 	dispatch({ type: TIMER_START, timer });
 };
 
@@ -87,6 +92,23 @@ export function getAllDrivers(email){
 			return apiCall('GET', `/server/main/drivers`, null, { params: { email }})
 				.then(drivers => {
 					dispatch(setDrivers(drivers))
+					resolve(drivers)
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				})
+		})
+	}
+}
+
+export function fetchDriverUpdates(email){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('GET', `/server/main/drivers`, null, { params: { email }})
+				.then(drivers => {
+					dispatch(updateDrivers(drivers))
 					resolve(drivers)
 				})
 				.catch(err => {

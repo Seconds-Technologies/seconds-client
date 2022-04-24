@@ -1,5 +1,6 @@
 import './drivers.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { AmplifyS3Image } from '@aws-amplify/ui-react/legacy';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,9 +20,15 @@ import DeleteModal from './modals/DeleteModal';
 // constants
 import { DELETE_TYPES } from './constants';
 import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
+import { AmplifyContext } from '../../context/AmplifyContext';
+
+const onIcon = <div className='switch-icon'>On</div>;
+const offIcon = <div className='switch-icon'>Off</div>;
 
 const Drivers = props => {
+	const amplify = useContext(AmplifyContext);
 	const dispatch = useDispatch();
+	const { email } = useSelector(state => state['currentUser'].user);
 	const [driverFormType, showDriverForm] = useState('');
 	const [deleteModal, setDeleteModal] = useState({ show: false, type: DELETE_TYPES.BATCH, ids: [] });
 	const [selectionModel, setSelectionModel] = React.useState([]);
@@ -33,10 +40,11 @@ const Drivers = props => {
 		phone: '',
 		vehicle: ''
 	});
-	const { email } = useSelector(state => state['currentUser'].user);
 
-	const drivers = useSelector(state => {
-		return state['driversStore'].map(driver => {
+	const drivers = useSelector(state => state['driversStore']);
+
+	const driverRows = useMemo(() => {
+		return drivers.map(driver => {
 			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);
 			return {
 				id: driver.id,
@@ -45,6 +53,7 @@ const Drivers = props => {
 				lastname: driver.lastname,
 				phone: driver.phone,
 				createdAt: driver.createdAt,
+				imageKey: driver.profileImageKey,
 				email: driver.email,
 				vehicleCode: driver.vehicle,
 				vehicleName: vehicleType ? vehicleType.label : driver.vehicle,
@@ -53,7 +62,7 @@ const Drivers = props => {
 				verified: driver.verified
 			};
 		});
-	});
+	}, [drivers]);
 
 	const saveDriver = useCallback(values => {
 		console.log(values);
@@ -70,8 +79,6 @@ const Drivers = props => {
 			  });
 	}, []);
 
-	const onIcon = <div className='switch-icon'>On</div>;
-	const offIcon = <div className='switch-icon'>Off</div>;
 	const handleOpen = (type, ids) => setDeleteModal(prevState => ({ show: true, type, ids }));
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
@@ -95,7 +102,11 @@ const Drivers = props => {
 			flex: 0.3,
 			renderCell: params => (
 				<div className='d-flex align-items-center justify-content-center'>
-					<img src={driverAvatar} alt='' width={25} height={25} className='img-fluid' />
+					{params.row.imageKey ? (
+						<AmplifyS3Image level='public' imgKey={params.row.imageKey} style={{"--height": "25px", "--width": "25px" }} identityId={amplify.identityId} />
+					) : (
+						<img src={driverAvatar} alt='' width={25} height={25} className='img-fluid' />
+					)}
 					<span className='ms-3'>{params.value}</span>
 				</div>
 			)
@@ -176,6 +187,7 @@ const Drivers = props => {
 						<button
 							className='d-flex justify-content-center align-items-center table-edit-btn'
 							onClick={() => {
+								console.log(params.row.image);
 								selectDriver(params.row);
 								showDriverForm('update');
 							}}
@@ -203,12 +215,16 @@ const Drivers = props => {
 		return () => dispatch(unsubscribe());
 	}, []);
 
+	useEffect(() => {
+		console.log(amplify);
+	}, [amplify]);
+
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />
 			<SuccessToast message={successMessage} toggleShow={setSuccess} delay={5000} position='bottomRight' />
 			<DeleteModal
-				data={drivers.filter(({ id }) => deleteModal.ids.includes(id)).map(({ firstname, lastname }) => `${firstname} ${lastname}`)}
+				data={driverRows.filter(({ id }) => deleteModal.ids.includes(id)).map(({ firstname, lastname }) => `${firstname} ${lastname}`)}
 				show={deleteModal.show}
 				onHide={handleClose}
 				title='Delete Drivers'
@@ -261,7 +277,7 @@ const Drivers = props => {
 				}}
 				autoHeight={false}
 				className='mt-3 mx-3'
-				rows={drivers}
+				rows={driverRows}
 				disableSelectionOnClick
 				columns={columns}
 				checkboxSelection
@@ -271,11 +287,7 @@ const Drivers = props => {
 					selectionModel.length
 						? {
 								Footer: () => (
-									<CustomFooter
-										onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)}
-										title='Bulk Delete'
-										canDelete
-									/>
+									<CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} title='Bulk Delete' canDelete />
 								)
 						  }
 						: undefined

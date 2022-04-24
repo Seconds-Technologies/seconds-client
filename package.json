@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^4.6.4",
+    "@aws-amplify/ui-react": "^2.15.5",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -35,6 +36,7 @@
     "@types/redux-persist": "^4.3.1",
     "@types/yup": "^0.29.13",
     "antd": "^4.16.13",
+    "aws-amplify": "^4.3.20",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.1",
     "bootstrap-input-spinner": "^3.0.2",
