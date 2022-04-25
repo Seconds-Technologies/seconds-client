@@ -10,7 +10,7 @@ const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
 
 const WooCommercePanel = ({ wrapper, toggle }) => {
-	const { isActive } = useSelector(state => state['wooCommerceStore'])
+	const { isActive, credentials } = useSelector(state => state['wooCommerceStore'])
 	const history = useHistory()
 	return (
 		<div role='button' className={wrapper}>
@@ -26,6 +26,7 @@ const WooCommercePanel = ({ wrapper, toggle }) => {
 					handleDiameter={19}
 					checked={isActive}
 					className='switch-text'
+					disabled={!credentials.consumerSecret}
 				/>
 			</div>
 			<div onClick={() => history.push(PATHS.WOOCOMMERCE)} className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>

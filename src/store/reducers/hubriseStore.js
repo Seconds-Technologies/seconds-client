@@ -4,6 +4,7 @@ const DEFAULT_STATE = {
 	isIntegrated: false,
 	isActive: false,
 	credentials: {
+		accessToken: "",
 		accountName: "",
 		locationId: "",
 		locationName: "",
