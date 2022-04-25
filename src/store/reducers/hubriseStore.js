@@ -25,6 +25,7 @@ export default (state = DEFAULT_STATE, action) => {
 		case SET_HUBRISE:
 			return {
 				isIntegrated: Object.keys(action.hubrise.credentials).length > 0,
+				isActive: !!action.hubrise.credentials.active,
 				credentials: action.hubrise.credentials,
 				authCode: action.hubrise.authCode
 			};

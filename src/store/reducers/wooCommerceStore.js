@@ -15,6 +15,7 @@ export default (state = DEFAULT_STATE, action) => {
 		case SET_WOOCOMMERCE:
 			return {
 				isIntegrated: Object.keys(action.credentials).length > 0,
+				isActive: !!action.credentials.active,
 				credentials: action.credentials
 			};
 		case UPDATE_WOOCOMMERCE:
