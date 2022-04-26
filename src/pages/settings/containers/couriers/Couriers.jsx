@@ -6,7 +6,6 @@ import streetStream from '../../../../assets/img/street-stream.svg';
 import ecofleet from '../../../../assets/img/ecofleet.svg';
 import addisonLee from '../../../../assets/img/addison_lee_logo_resized.svg';
 import absolutely from '../../../../assets/img/absolutely-brand.svg';
-import here_now from '../../../../assets/img/here-now.PNG';
 import classnames from 'classnames';
 import CourierPanel from './components/CourierPanel';
 import { useDispatch, useSelector } from 'react-redux';
@@ -123,7 +122,7 @@ const Couriers = () => {
 							comingSoon={true}
 						/>
 					</div>
-					<div className={courierLinkBtn}>
+					{/*<div className={courierLinkBtn}>
 						<CourierPanel
 							id={PROVIDERS.HERE_NOW}
 							name='Here and Now'
@@ -138,7 +137,7 @@ const Couriers = () => {
 							toggle={toggleProvider}
 							comingSoon={true}
 						/>
-					</div>
+					</div>*/}
 				</div>
 			</div>
 		</div>

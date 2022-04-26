@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import { styled } from '@mui/material/styles';
 
-const PlanTile = ({ selected, name, price = 'Free', description, features, activePlan, onSelect, role }) => {
+const PlanTile = ({ selected, name, price, description, features, activePlan, onSelect, role }) => {
 	const CustomWidthTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)({
 		[`& .${tooltipClasses.tooltip}`]: {
 			maxWidth: 500
