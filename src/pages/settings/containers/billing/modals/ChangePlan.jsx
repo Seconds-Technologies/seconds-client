@@ -36,6 +36,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.STARTER.name}
 							description={SUBSCRIPTION_PLANS.STARTER.description}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name}
+							price={SUBSCRIPTION_PLANS.STARTER.price}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)
 							}
@@ -48,7 +49,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							selected={selectedPlan === SUBSCRIPTION_PLANS.GROWTH.name}
 							name={SUBSCRIPTION_PLANS.GROWTH.name}
 							description={SUBSCRIPTION_PLANS.GROWTH.description}
-							price={49}
+							price={SUBSCRIPTION_PLANS.GROWTH.price}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)
@@ -62,7 +63,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							selected={selectedPlan === SUBSCRIPTION_PLANS.PRO.name}
 							name={SUBSCRIPTION_PLANS.PRO.name}
 							description={SUBSCRIPTION_PLANS.PRO.description}
-							price={89}
+							price={SUBSCRIPTION_PLANS.PRO.price}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)
