@@ -9,6 +9,7 @@ import { addError } from '../../store/actions/errors';
 import { PATHS } from '../../constants';
 import Confirm from './modals/Confirm';
 import SuccessToast from '../../modals/SuccessToast';
+import HubriseOptions from './modals/HubriseOptions';
 
 const HubRise = props => {
 	const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const HubRise = props => {
 	const [confirm, setConfirm] = useState(false);
 	const [successMessage, setSuccess] = useState("");
 	const [isLoading, setLoading] = useState(false);
+	const [optionsModal, setShowOptions] = useState(false);
 
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
@@ -40,6 +42,7 @@ const HubRise = props => {
 		<div className='page-container container-fluid p-4 d-flex'>
 			<Confirm onConfirm={disconnect} show={confirm} toggleShow={setConfirm} />
 			<SuccessToast toggleShow={setSuccess} message={successMessage}/>
+			<HubriseOptions show={optionsModal} onHide={() => setShowOptions(false)} centered />
 			<div className='m-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
@@ -72,11 +75,7 @@ const HubRise = props => {
 							}}
 							onSubmit={values => console.log(values)}
 						>
-							{({
-								handleChange,
-								handleBlur
-								/* and other goodies */
-							}) => (
+							{() => (
 								<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/hubrise/authorize`}>
 									<input type='hidden' name='email' value={email} />
 									<div className='text-center d-flex justify-content-around pt-3'>
@@ -91,25 +90,25 @@ const HubRise = props => {
 				) : (
 					<div className='d-flex text-center flex-column'>
 						<p className='lead'>
-							Location:{' '}
+							Account:&nbsp;
+							<span className='fw-bold text-muted'>
+								{credentials.accountName}
+							</span>
+						</p>
+						<p className='lead'>
+							Location:&nbsp;
 							<span className='fw-bold text-muted'>
 								{credentials.locationName} - {credentials.locationId}
 							</span>
 						</p>
 						<p className='lead'>
-							Catalog:{' '}
+							Catalogs:&nbsp;
 							<span className='fw-bold text-muted'>
 								{credentials.catalogName} - {credentials.catalogId}
 							</span>
 						</p>
-						<p className='lead'>
-							Customer List:{' '}
-							<span className='fw-bold text-muted'>
-								{credentials.customerListName} - {credentials.customerListId}
-							</span>
-						</p>
 						<div className='mb-3 d-flex justify-content-evenly'>
-							{!credentials.catalog && <button className='btn btn-outline-info d-flex align-items-center' onClick={() => {
+							{!credentials.catalog && <button className='btn btn-outline-primary d-flex align-items-center' onClick={() => {
 								setLoading(true)
 								dispatch(pullCatalog(email)).then(message => {
 									setLoading(false)
@@ -120,6 +119,9 @@ const HubRise = props => {
 								<span className={isLoading ? 'me-2' : ""}>Pull catalog</span>
 								<ClipLoader color='grey' loading={isLoading} size={16} />
 							</button>}
+							<button className='btn btn-outline-info d-flex align-items-center' onClick={() => setShowOptions(true)}>
+								<span className={isLoading ? 'me-2' : ""}>Options</span>
+							</button>
 							{credentials.catalog && <button className='btn btn-outline-success' onClick={() => props.history.push(PATHS.HUBRISE_CATALOG)}>View catalog</button>}
 						</div>
 						<div className='d-flex justify-content-evenly'>

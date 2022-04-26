@@ -215,10 +215,6 @@ const Drivers = props => {
 		return () => dispatch(unsubscribe());
 	}, []);
 
-	useEffect(() => {
-		console.log(amplify);
-	}, [amplify]);
-
 	return (
 		<div className='page-container d-flex flex-column px-2 py-4'>
 			<DriverModal type={driverFormType} show={!!driverFormType} toggleShow={showDriverForm} onSubmit={saveDriver} details={selectedDriver} />

@@ -4,12 +4,9 @@ const DEFAULT_STATE = {
 	isIntegrated: false,
 	isActive: false,
 	credentials: {
-		accessToken: "",
 		accountName: "",
 		locationId: "",
 		locationName: "",
-		customerListId: "",
-		customerListName: "",
 		catalogId: "",
 		catalogName: "",
 		catalog: {
