@@ -21,7 +21,9 @@ const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
 				<Formik
 					initialValues={{
 						triggers: {
-							enabled: false
+							enabled: false,
+							statuses: [],
+							serviceTypeRefs: [],
 						}
 					}}
 					onSubmit={onSubmit}

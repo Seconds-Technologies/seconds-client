@@ -145,7 +145,7 @@ const BusinessWorkflows = props => {
 										checked={values.defaultDispatch === DISPATCH_TYPES.COURIER}
 									/>
 									<label className='form-check-label' htmlFor='dispatch-radio-2'>
-										Third party couriers
+										Delivery service providers
 									</label>
 								</div>
 							</div>
@@ -389,62 +389,6 @@ const BusinessWorkflows = props => {
 											</label>
 										</div>
 									))}
-									{/*<div className='form-check'>
-												<input
-													defaultChecked={values.routeOptimization.vehicleTypes.includes(VEHICLE_CODES[1]}
-													name='routeOptimization.objectives.mileage'
-													className='form-check-input'
-													type='checkbox'
-													id='criteria-radio-1'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='flexCheckChecked'>
-													Motorbike
-												</label>
-											</div>
-											<div className='form-check'>
-												<input
-													defaultChecked={values.routeOptimization.objectives.mileage}
-													name='routeOptimization.objectives.mileage'
-													className='form-check-input'
-													type='checkbox'
-													id='criteria-radio-1'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='flexCheckChecked'>
-													Car
-												</label>
-											</div>
-											<div className='form-check'>
-												<input
-													defaultChecked={values.routeOptimization.objectives.mileage}
-													name='routeOptimization.objectives.mileage'
-													className='form-check-input'
-													type='checkbox'
-													id='criteria-radio-1'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='flexCheckChecked'>
-													Cargobike
-												</label>
-											</div>
-											<div className='form-check'>
-												<input
-													defaultChecked={values.routeOptimization.objectives.mileage}
-													name='routeOptimization.objectives.mileage'
-													className='form-check-input'
-													type='checkbox'
-													id='criteria-radio-1'
-													onChange={handleChange}
-													onBlur={handleBlur}
-												/>
-												<label className='form-check-label' htmlFor='flexCheckChecked'>
-													Van
-												</label>
-											</div>*/}
 								</div>
 							</div>
 							<div className='col-sm-12 col-md-3'>
@@ -528,8 +472,8 @@ const BusinessWorkflows = props => {
 							</div>
 						</div>
 						<div className='row pb-4'>
-							<h1 className='workflow-header fs-4'>Third Party Provider Preferences</h1>
-							<p className='text-muted'>Communicate your selection criteria</p>
+							<h1 className='workflow-header fs-4'>Delivery Service Provider Preferences</h1>
+							<p className='text-muted'>Communicate your selection criteria in case of a quote tie-breaker</p>
 							<div>
 								<div className='form-check'>
 									<input
@@ -574,10 +518,56 @@ const BusinessWorkflows = props => {
 									</label>
 								</div>
 							</div>
+							<div className='d-flex flex-column mt-4'>
+								<div className='my-2 align-items-center'>
+									<span className='me-2 workflow-header fs-6'>Min Dispatch Order Amount</span>
+									<div className='input-group mt-2' style={{ width: 200 }}>
+										<span className='input-group-text'>£</span>
+										<input
+											defaultValue={0}
+											type='number'
+											min={0}
+											max={100}
+											className='form-control'
+											aria-label="Amount (to the nearest dollar)"
+										/>
+									</div>
+								</div>
+								<div className='align-items-center my-2'>
+									<span className='me-2 workflow-header fs-6'>Max Dispatch Order Amount</span>
+									<div className='input-group mt-2' style={{ width: 200 }}>
+										<span className='input-group-text'>£</span>
+										<input
+											defaultValue={100}
+											type='number'
+											min={0}
+											max={100}
+											className='form-control'
+											aria-label="Amount (to the nearest dollar)"
+										/>
+									</div>
+								</div>
+							</div>
+							<div className="mt-4">
+								<span className='me-2 workflow-header fs-6'>Allowed Delivery Vehicles</span>
+								<div className='d-flex flex-column mt-2'>
+									{VEHICLE_TYPES.map(({ value, label }, index) => (
+										<div key={index} className='form-check'>
+											<input
+												className='form-check-input'
+												type='checkbox'
+											/>
+											<label className='form-check-label' htmlFor='flexCheckDefault'>
+												{label}
+											</label>
+										</div>
+									))}
+								</div>
+							</div>
 							<div className='mt-4'>
 								<div className='d-flex align-items-center mb-2'>
 									<label htmlFor='customRange2' className='d-flex me-2'>
-										Price Threshold
+										Max Dispatch Delivery Fee
 									</label>
 									<Tooltip
 										title='Set this price to receive alerts whenever third party couriers charge you more'

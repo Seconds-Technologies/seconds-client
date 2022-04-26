@@ -92,7 +92,7 @@ const Settings = props => {
 						<AntTab label='Business Workflows' {...a11yProps(2)} />
 						<AntTab label="Branding" {...a11yProps(3)} />
 						<AntTab label="Driver Payroll" {...a11yProps(4)} />
-						<AntTab label='Third Party Providers' {...a11yProps(5)} />
+						<AntTab label='Delivery Service Providers' {...a11yProps(5)} />
 						<AntTab label='Integrations' {...a11yProps(6)} />
 						<AntTab label='Developers' {...a11yProps(7)} />
 					</Tabs>

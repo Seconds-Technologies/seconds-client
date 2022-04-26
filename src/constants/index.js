@@ -36,8 +36,8 @@ export const SUBSCRIPTION_PLANS = {
 	STARTER: {
 		name: 'starter',
 		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.',
-		price: 0,
-		priceLabel: 'Free',
+		price: 80,
+		priceLabel: '80',
 		features: [
 			'Access third-party delivery services',
 			'Connect your online stores',
@@ -57,8 +57,8 @@ export const SUBSCRIPTION_PLANS = {
 	GROWTH: {
 		name: 'growth',
 		description: 'Great for small businesses with mild delivery volume and manage their own team.',
-		price: 49,
-		priceLabel: '49',
+		price: 140,
+		priceLabel: '140',
 		features: [
 			'Everything in Starter',
 			'Add and manage internal drivers',
@@ -74,8 +74,8 @@ export const SUBSCRIPTION_PLANS = {
 	PRO: {
 		name: 'pro',
 		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.',
-		price: 89,
-		priceLabel: '89',
+		price: 200,
+		priceLabel: '200',
 		features: [
 			'Everything in Growth',
 			'API integration',
@@ -190,8 +190,10 @@ export const PROVIDERS = {
 	STREET_STREAM: 'street_stream',
 	ECOFLEET: 'ecofleet',
 	ADDISON_LEE: 'addison_lee',
+	ABSOLUTELY: 'absolutely',
+	HERE_NOW: 'here_now',
 	PRIVATE: 'private',
-	UNASSIGNED: 'unassigned'
+	UNASSIGNED: 'unassigned',
 };
 
 export const FLEET_PROVIDERS = ['stuart', 'gophr', 'street_stream', 'ecofleet', 'addison_lee']
