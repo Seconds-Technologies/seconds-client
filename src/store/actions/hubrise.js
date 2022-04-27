@@ -1,7 +1,14 @@
 import { apiCall } from '../../api';
 import { Mixpanel } from '../../config/mixpanel';
 import { addError, removeError } from './errors';
-import { SET_HUBRISE, UPDATE_HUBRISE, CLEAR_HUBRISE, UPDATE_HUBRISE_CREDENTIALS } from '../actionTypes';
+import {
+	SET_HUBRISE,
+	UPDATE_HUBRISE,
+	CLEAR_HUBRISE,
+	UPDATE_HUBRISE_CREDENTIALS,
+	UPDATE_HUBRISE_CATALOG,
+	UPDATE_HUBRISE_OPTIONS
+} from '../actionTypes';
 
 export const setHubrise = hubrise => ({
 	type: SET_HUBRISE,
@@ -17,6 +24,16 @@ export const updateHubriseCredentials = data => ({
 	type: UPDATE_HUBRISE_CREDENTIALS,
 	data
 });
+
+export const updateHubriseCatalog = data => ({
+	type: UPDATE_HUBRISE_CATALOG,
+	data
+})
+
+export const updateHubriseOptions = data => ({
+	type: UPDATE_HUBRISE_OPTIONS,
+	data
+})
 
 export const clearHubrise = () => ({
 	type: CLEAR_HUBRISE,
@@ -68,7 +85,8 @@ export function pullCatalog(email) {
 			return apiCall('GET', '/server/hubrise/pull-catalog', null, { params: { email } })
 				.then(({ message, catalog, catalogName, catalogId }) => {
 					console.table(catalog)
-					dispatch(updateHubriseCredentials({ catalogName, catalogId, catalog }));
+					dispatch(updateHubriseCredentials({ catalogName, catalogId }));
+					dispatch(updateHubriseCatalog(catalog))
 					dispatch(removeError());
 					resolve(message);
 				})
@@ -102,11 +120,29 @@ export function fetchCatalog(email) {
 export function updateCatalog(email, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall('POST', '/server/hubrise/update-catalog', { data }, { params: { email } })
+			return apiCall('PATCH', '/server/hubrise/update-catalog', data, { params: { email } })
 				.then(({ catalog }) => {
-					dispatch(updateHubriseCredentials(catalog));
+					dispatch(updateHubriseCatalog(catalog));
 					dispatch(removeError());
 					resolve(catalog);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Server is down!'));
+					reject(err);
+				});
+		});
+	};
+}
+
+export function configureHubrise(email, data) {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', '/server/hubrise/update-hubrise', data, { params: { email } })
+				.then(({ message }) => {
+					dispatch(updateHubriseOptions(data));
+					dispatch(removeError());
+					resolve(message);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

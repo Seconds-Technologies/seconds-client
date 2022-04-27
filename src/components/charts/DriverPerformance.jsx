@@ -13,9 +13,9 @@ const DriverPerformance = ({ interval, genLabels }) => {
 		return { height: (dimensions.height - 280) / 2, width: dimensions.width / 2 };
 	}, [dimensions]);
 	const filterByInterval = useCallback(analyticsFilterCurrent, [interval]);
-	const { total, completed } = useSelector(state => {
-		const { allJobs: total, completedJobs: completed } = state['deliveryJobs'];
-		return { total: filterByInterval(total, interval), completed: filterByInterval(completed, interval) };
+	const { completed } = useSelector(state => {
+		const { completedJobs: completed } = state['deliveryJobs'];
+		return { completed: filterByInterval(completed, interval) };
 	});
 
 	const calcDriverPerformance = useCallback(

@@ -1,7 +1,6 @@
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
-import shopifyProducts from "./shopifyProducts";
 import shopifyStore from "./shopifyStore";
 import squareStore from './squareStore';
 import wooCommerceStore from './wooCommerceStore';

@@ -42,7 +42,6 @@ const Create = props => {
 	const [jobModal, showJobModal] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [confirmDialog, showConfirmDialog] = useState(false);
-	const [multiDropDialog, showMultiDropDialog] = useState(false);
 	const [dropoffModal, showDropoffModal] = useState(false);
 	const [pickupDatetime, setPickupDatetime] = useState('');
 	const [deliveryParams, setDeliveryParams] = useState({
@@ -58,7 +57,6 @@ const Create = props => {
 	const [isLocked, setLock] = useState(true);
 	const [batchSuccessModal, showBatchModal] = useState(false);
 	// handlers
-	const handleClose = () => showJobModal(false);
 	const handleOpen = () => showJobModal(true);
 	// redux slices
 	const { firstname, lastname, email, company, apiKey, phone, address } = useSelector(state => state['currentUser'].user);

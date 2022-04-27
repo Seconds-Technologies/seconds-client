@@ -1,12 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {
-	GridToolbarColumnsButton,
-	GridToolbarContainer,
-	GridToolbarDensitySelector,
-	GridToolbarExport,
-	GridToolbarFilterButton
-} from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { PATHS } from '../constants';
 import { useHistory } from 'react-router-dom';

@@ -10,7 +10,7 @@ const Catalog = () => {
 	const [editCellsCommit, setEditCellsCommit] = useState({});
 	const [successMessage, setSuccess] = useState('');
 	const [newWeights, mergeWeights] = useState([]);
-	const { credentials } = useSelector(state => state['hubriseStore']);
+	const { catalog } = useSelector(state => state['hubriseStore']);
 	const { email } = useSelector(state => state['currentUser'].user);
 
 	const debounceSave = useRef(
@@ -27,7 +27,7 @@ const Catalog = () => {
 
 	const products = useMemo(() => {
 		let result = [];
-		let { categories, products } = credentials.catalog;
+		let { categories, products } = catalog;
 		products.forEach(product => {
 			product.variants.forEach(variant => {
 				let record = {
@@ -110,7 +110,7 @@ const Catalog = () => {
 					<span className='btn-text'>Save</span>
 				</button>
 			</div>
-			{credentials.catalog && (
+			{catalog && (
 				<DataGrid
 					sortingOrder={['desc', 'asc']}
 					sortModel={[

@@ -10,7 +10,7 @@ const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
 
 const HubrisePanel = ({ wrapper, toggle }) => {
-	const { isActive, credentials } = useSelector(state => state['hubriseStore']);
+	const { isActive, isIntegrated } = useSelector(state => state['hubriseStore']);
 	const history = useHistory();
 	return (
 		<div role='button' className={wrapper}>
@@ -26,7 +26,7 @@ const HubrisePanel = ({ wrapper, toggle }) => {
 					handleDiameter={19}
 					checked={isActive}
 					className='switch-text'
-					disabled={!credentials.accessToken}
+					disabled={!isIntegrated}
 				/>
 			</div>
 			<div onClick={() => history.push(PATHS.HUBRISE)} className='d-flex justify-content-center align-items-center bg-white border p-5 api-wrapper'>

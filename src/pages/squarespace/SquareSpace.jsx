@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import squarespaceLogo from '../../assets/img/squarespace-logo.png';
 import { Formik } from 'formik';
 import { PATHS } from '../../constants';

@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Carousel from 'react-bootstrap/Carousel';
-import shopifyLogo from '../assets/img/shopify.svg';
 import moment from 'moment';
-import { STATUS } from '../constants';
 
 const BatchCarousel = ({ show, onHide, orders }) => {
 	const [index, setIndex] = useState(0);

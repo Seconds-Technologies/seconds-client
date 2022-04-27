@@ -2,7 +2,7 @@ import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { assignDriver, createDeliveryJob, subscribe, unsubscribe, updateCustomerInfo, updateDelivery } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';

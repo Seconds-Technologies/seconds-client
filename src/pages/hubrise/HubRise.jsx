@@ -4,7 +4,7 @@ import hubriseLogo from '../../assets/img/hubrise-logo.png';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { connectHubrise, disconnectHubrise, pullCatalog } from '../../store/actions/hubrise';
+import { connectHubrise, disconnectHubrise, pullCatalog, configureHubrise } from '../../store/actions/hubrise';
 import { addError } from '../../store/actions/errors';
 import { PATHS } from '../../constants';
 import Confirm from './modals/Confirm';
@@ -15,9 +15,9 @@ const HubRise = props => {
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const error = useSelector(state => state['errors']);
-	const { isIntegrated, credentials, authCode } = useSelector(state => state['hubriseStore']);
+	const { isIntegrated, credentials, authCode, catalog } = useSelector(state => state['hubriseStore']);
 	const [confirm, setConfirm] = useState(false);
-	const [successMessage, setSuccess] = useState("");
+	const [successMessage, setSuccess] = useState('');
 	const [isLoading, setLoading] = useState(false);
 	const [optionsModal, setShowOptions] = useState(false);
 
@@ -34,15 +34,24 @@ const HubRise = props => {
 	}, [props.location]);
 
 	const disconnect = useCallback(() => {
-		setConfirm(false)
-		dispatch(disconnectHubrise(email)).then(message => console.log(message));
+		setConfirm(false);
+		dispatch(disconnectHubrise(email)).then(message => setSuccess(message));
 	}, [isIntegrated]);
+
+	const handleSubmit = useCallback(values => {
+		dispatch(configureHubrise(email, values)).then(message => setSuccess(message));
+	}, []);
 
 	return (
 		<div className='page-container container-fluid p-4 d-flex'>
 			<Confirm onConfirm={disconnect} show={confirm} toggleShow={setConfirm} />
-			<SuccessToast toggleShow={setSuccess} message={successMessage}/>
-			<HubriseOptions show={optionsModal} onHide={() => setShowOptions(false)} centered />
+			<SuccessToast toggleShow={setSuccess} message={successMessage} />
+			<HubriseOptions
+				show={optionsModal}
+				onSubmit={handleSubmit}
+				onHide={() => setShowOptions(false)}
+				centered
+			/>
 			<div className='m-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
@@ -91,9 +100,7 @@ const HubRise = props => {
 					<div className='d-flex text-center flex-column'>
 						<p className='lead'>
 							Account:&nbsp;
-							<span className='fw-bold text-muted'>
-								{credentials.accountName}
-							</span>
+							<span className='fw-bold text-muted'>{credentials.accountName}</span>
 						</p>
 						<p className='lead'>
 							Location:&nbsp;
@@ -108,21 +115,30 @@ const HubRise = props => {
 							</span>
 						</p>
 						<div className='mb-3 d-flex justify-content-evenly'>
-							{!credentials.catalog && <button className='btn btn-outline-primary d-flex align-items-center' onClick={() => {
-								setLoading(true)
-								dispatch(pullCatalog(email)).then(message => {
-									setLoading(false)
-									console.log(message)
-									setSuccess(message)
-								})
-							}}>
-								<span className={isLoading ? 'me-2' : ""}>Pull catalog</span>
-								<ClipLoader color='grey' loading={isLoading} size={16} />
-							</button>}
+							{!credentials.catalog && (
+								<button
+									className='btn btn-outline-primary d-flex align-items-center'
+									onClick={() => {
+										setLoading(true);
+										dispatch(pullCatalog(email)).then(message => {
+											setLoading(false);
+											console.log(message);
+											setSuccess(message);
+										});
+									}}
+								>
+									<span className={isLoading ? 'me-2' : ''}>Pull catalog</span>
+									<ClipLoader color='grey' loading={isLoading} size={16} />
+								</button>
+							)}
 							<button className='btn btn-outline-info d-flex align-items-center' onClick={() => setShowOptions(true)}>
-								<span className={isLoading ? 'me-2' : ""}>Options</span>
+								<span className={isLoading ? 'me-2' : ''}>Options</span>
 							</button>
-							{credentials.catalog && <button className='btn btn-outline-success' onClick={() => props.history.push(PATHS.HUBRISE_CATALOG)}>View catalog</button>}
+							{catalog && (
+								<button className='btn btn-outline-success' onClick={() => props.history.push(PATHS.HUBRISE_CATALOG)}>
+									View catalog
+								</button>
+							)}
 						</div>
 						<div className='d-flex justify-content-evenly'>
 							<a href='https://manager.hubrise.com/dashboard' target='_blank' className='text-hubrise'>
@@ -132,7 +148,11 @@ const HubRise = props => {
 								Disconnect
 							</span>
 						</div>
-						<button type='button' className='mt-4 btn btn-secondary btn-lg connectButton' onClick={() => props.history.push(PATHS.INTEGRATE)}>
+						<button
+							type='button'
+							className='mt-4 btn btn-secondary btn-lg connectButton'
+							onClick={() => props.history.push(PATHS.INTEGRATE)}
+						>
 							<span>Go Back</span>
 						</button>
 					</div>

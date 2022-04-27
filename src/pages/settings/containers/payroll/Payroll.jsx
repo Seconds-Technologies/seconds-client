@@ -1,6 +1,5 @@
 import './payroll.css';
-import React, { useEffect, useMemo, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import CustomNoRowsOverlay from '../../../../components/CustomNoRowsOverlay';
@@ -30,7 +29,6 @@ const Payroll = props => {
 
 	const gbpPrice = {
 		type: 'number',
-		width: 130,
 		valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
 		cellClassName: 'font-tabular-nums',
 	};
@@ -166,7 +164,7 @@ const Payroll = props => {
 						Pay all
 					</button>
 					<div className="d-flex flex-column">
-						<span className="fs-3">£{invoices[0].subtotal * 4}</span>
+						<span className="fs-3">£1396.24</span>
 						<span className="fs-6">Total Payment</span>
 					</div>
 				</div>

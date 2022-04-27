@@ -7,7 +7,6 @@ import backArrow from '../../assets/img/noun-go-back-vector.svg';
 
 const Signup3 = props => {
 	const dispatch = useDispatch();
-	const [isLoading, setLoading] = useState(false);
 	const { user } = useSelector(state => state['currentUser']);
 
 	const signup = async () => {
@@ -20,7 +19,7 @@ const Signup3 = props => {
 	};
 
 	return (
-		<LoadingOverlay active={isLoading} spinner text='Hold tight, signing you up...'>
+		<LoadingOverlay active={false} spinner text='Hold tight, signing you up...'>
 			<div className='container mx-auto my-auto py-4 signupPage'>
 				<div className='top-0 w-md' role='button' onClick={() => props.history.goBack()}>
 					<img src={backArrow} alt='Go back button' width={40} height={40} />

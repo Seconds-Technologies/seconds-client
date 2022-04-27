@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import woocommerceLogo from '../../assets/img/woocommerce-logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import { PATHS } from '../../constants';
-import { addError, removeError } from '../../store/actions/errors';
+import { addError } from '../../store/actions/errors';
 import { validateWoocommerce } from '../../store/actions/woocommerce';
 import { Mixpanel } from '../../config/mixpanel';
 
