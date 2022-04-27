@@ -3,6 +3,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import magentoLogo from '../../../../assets/img/magento-vector-logo.svg';
 import flipdishLogo from '../../../../assets/img/flipdish.svg';
 import squareLogo from '../../../../assets/img/square.svg';
+import deliverooLogo from '../../../../assets/img/deliveroo.svg'
+import justEatLogo from '../../../../assets/img/just-eat.svg'
+import uberEatsLogo from '../../../../assets/img/uber-eats.svg'
 import classnames from 'classnames';
 import { Mixpanel } from '../../../../config/mixpanel';
 import { removeError } from '../../../../store/actions/errors';
@@ -98,6 +101,51 @@ export default function Integrations(props) {
 					<WooCommercePanel wrapper={IntegrationLinkBtn} toggle={toggleIntegration} />
 					<SquarespacePanel wrapper={IntegrationLinkBtn} toggle={toggleIntegration} />
 					<HubrisePanel wrapper={IntegrationLinkBtn} toggle={toggleIntegration} />
+					<div role='button' className={IntegrationLinkBtn}>
+						<div className='d-flex justify-content-end position-absolute p-3'>
+							<Chip
+								label='Coming Soon'
+								sx={{
+									backgroundColor: '#DDF8D3',
+									color: '#05CC79',
+									fontWeight: 'bold'
+								}}
+							/>
+						</div>
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
+							<img className='img-fluid' width={250} src={deliverooLogo} alt='magento logo' />
+						</div>
+					</div>
+					<div role='button' className={IntegrationLinkBtn}>
+						<div className='d-flex justify-content-end position-absolute p-3'>
+							<Chip
+								label='Coming Soon'
+								sx={{
+									backgroundColor: '#DDF8D3',
+									color: '#05CC79',
+									fontWeight: 'bold'
+								}}
+							/>
+						</div>
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
+							<img className='img-fluid' width={250} src={uberEatsLogo} alt='magento logo' />
+						</div>
+					</div>
+					<div role='button' className={IntegrationLinkBtn} style={{height: 250}}>
+						<div className='d-flex justify-content-end position-absolute p-3'>
+							<Chip
+								label='Coming Soon'
+								sx={{
+									backgroundColor: '#DDF8D3',
+									color: '#05CC79',
+									fontWeight: 'bold'
+								}}
+							/>
+						</div>
+						<div className='d-flex justify-content-center align-items-center bg-white h-100 border p-1 api-wrapper'>
+							<img className='img-fluid' width={250} src={justEatLogo} alt='magento logo' />
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
