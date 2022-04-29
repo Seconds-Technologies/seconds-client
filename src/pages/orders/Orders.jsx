@@ -252,7 +252,7 @@ export default function Orders(props) {
 					_id,
 					status,
 					dispatchMode,
-					jobSpecification: { orderNumber, deliveries, pickupStartTime },
+					jobSpecification: { shopifyId, wooCommerceId, hubriseId, squarespaceId, orderNumber, deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
 					createdAt,
 					routeOptimization
@@ -263,7 +263,7 @@ export default function Orders(props) {
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let provider = providerId;
-					const pickupTime = moment(pickupStartTime).format("HH:mm a");
+					const pickupTime = moment(pickupStartTime).isValid() ? moment(pickupStartTime).format("HH:mm a") : "Estimating...";
 					return {
 						id: orderNumber,
 						pickupTime,
