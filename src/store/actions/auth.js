@@ -40,11 +40,6 @@ export const updateCurrentUser = data => ({
 	data
 });
 
-export const setApiKey = apiKey => ({
-	type: SET_API_KEY,
-	apiKey
-});
-
 export const setAuthorizationToken = token => setTokenHeader(token);
 
 export const logout = () => ({

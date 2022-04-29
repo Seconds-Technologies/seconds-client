@@ -21,6 +21,7 @@ import DeleteModal from './modals/DeleteModal';
 import { DELETE_TYPES } from './constants';
 import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
 import { AmplifyContext } from '../../context/AmplifyContext';
+import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
@@ -103,7 +104,12 @@ const Drivers = props => {
 			renderCell: params => (
 				<div className='d-flex align-items-center justify-content-center'>
 					{params.row.imageKey ? (
-						<AmplifyS3Image level='public' imgKey={params.row.imageKey} style={{"--height": "25px", "--width": "25px", "--borderRadius": "25px" }} identityId={amplify.identityId} />
+						<AmplifyS3Image
+							level='public'
+							imgKey={params.row.imageKey}
+							style={{ '--height': '25px', '--width': '25px', '--borderRadius': '25px' }}
+							identityId={amplify.identityId}
+						/>
 					) : (
 						<img src={driverAvatar} alt='' width={25} height={25} className='img-fluid' />
 					)}
@@ -279,15 +285,17 @@ const Drivers = props => {
 				checkboxSelection
 				autoPageSize
 				pagination
-				components={
-					selectionModel.length
-						? {
-								Footer: () => (
-									<CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} title='Bulk Delete' canDelete />
-								)
-						  }
-						: undefined
-				}
+				components={{
+					NoRowsOverlay: CustomNoRowsOverlay,
+					...(selectionModel.length && {
+						Footer: () => <CustomFooter onDelete={() => handleOpen(DELETE_TYPES.BATCH, selectionModel)} title='Bulk Delete' canDelete />
+					})
+				}}
+				componentsProps={{
+					noRowsOverlay: {
+						title: "No Drivers"
+					}
+				}}
 			/>
 		</div>
 	);

@@ -26,7 +26,7 @@ const StyledGridOverlay = styled('div')(({ theme }) => ({
 	}
 }));
 
-function CustomNoRowsOverlay() {
+const CustomNoRowsOverlay = ({title="No Rows", subtitle=""}) => {
 	return (
 		<StyledGridOverlay>
 			<svg
@@ -68,7 +68,10 @@ function CustomNoRowsOverlay() {
 					</g>
 				</g>
 			</svg>
-			<Box sx={{ mt: 1 }}>No Rows</Box>
+			<Box sx={{ mt: 1 }} className="d-flex flex-column text-center">
+				<span className="fs-6 font-medium">{title}</span>
+				<span>{subtitle}</span>
+			</Box>
 		</StyledGridOverlay>
 	);
 }

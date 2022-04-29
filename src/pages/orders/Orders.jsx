@@ -53,6 +53,7 @@ import { DELETE_TYPES } from '../drivers/constants';
 import DeleteModal from '../drivers/modals/DeleteModal';
 import { deleteJobs } from '../../store/actions/delivery';
 import { assemblePayload } from '../../helpers';
+import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
@@ -250,6 +251,7 @@ export default function Orders(props) {
 				({
 					_id,
 					status,
+					dispatchMode,
 					jobSpecification: { orderNumber, deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
 					createdAt,
@@ -530,10 +532,15 @@ export default function Orders(props) {
 					}}
 					selectionModel={selectionModel}
 					components={{
+						NoRowsOverlay: CustomNoRowsOverlay,
 						Toolbar: CustomToolbar,
 						...(selectionModel.length && { Footer: CustomFooter })
 					}}
 					componentsProps={{
+						noRowsOverlay: {
+							title: "No Orders",
+							subtitle: "To create an order, navigate to the 'Create' page"
+						},
 						toolbar: {
 							toggleShow: () => {
 								showOptRoutes(true);
