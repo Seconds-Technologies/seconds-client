@@ -151,7 +151,7 @@ const HubRise = props => {
 						<button
 							type='button'
 							className='mt-4 btn btn-secondary btn-lg connectButton'
-							onClick={() => props.history.push(PATHS.INTEGRATE)}
+							onClick={() => props.history.push(PATHS.SETTINGS)}
 						>
 							<span>Go Back</span>
 						</button>

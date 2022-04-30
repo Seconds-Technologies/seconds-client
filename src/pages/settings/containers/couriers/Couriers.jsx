@@ -1,5 +1,5 @@
 import './couriers.css';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import stuart from '../../../../assets/img/stuart.svg';
 import gophr from '../../../../assets/img/gophr.svg';
 import streetStream from '../../../../assets/img/street-stream.svg';
@@ -12,6 +12,8 @@ import CourierPanel from './components/CourierPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateFleetProviders } from '../../../../store/actions/settings';
 import { PROVIDERS } from '../../../../constants';
+import SuccessMessage from '../../../../modals/SuccessMessage';
+import SuccessToast from '../../../../modals/SuccessToast';
 
 const Couriers = () => {
 	const dispatch = useDispatch();
@@ -23,18 +25,24 @@ const Couriers = () => {
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
 	const { activeFleetProviders } = useSelector(state => state['settingsStore']);
+	const [successMessage, setSuccess] = useState("")
 
 	const toggleProvider = useCallback(
 		provider => {
 			let data = { ...activeFleetProviders, ...provider };
 			console.log(data);
-			dispatch(updateFleetProviders(email, data)).then(() => console.log('Fleet provider updated successfully!'));
+			dispatch(updateFleetProviders(email, data)).then(() => {
+				let providerId = Object.keys(provider)[0]
+				console.log(`${providerId} is now ${provider[providerId]}`)
+				setSuccess(`${providerId} is now ${provider[providerId]}`)
+			});
 		},
 		[activeFleetProviders]
 	);
 
 	return (
 		<div className='tab-container container-fluid p-5'>
+			<SuccessToast message={successMessage} toggleShow={setSuccess}/>
 			<div className='container'>
 				<div className='row gy-5 gx-4 d-flex justify-content-center'>
 					<div className={courierLinkBtn}>
