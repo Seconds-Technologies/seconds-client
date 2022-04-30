@@ -9,7 +9,7 @@ const Plan = ({ isSubscribed, isComponent, stripeCustomerId, description, subscr
 				<div className='d-flex flex-column px-4'>
 					<div className='d-flex justify-content-between align-items-center py-2'>
 						<span className='display-5 text-capitalize plan-text'>{subscriptionPlan}</span>
-						{price !== undefined &&<span className='display-6 price-text'>{`£${price}/mo`}</span>}
+						{price !== undefined && <span className='display-6 price-text'>{`£${price}/mo`}</span>}
 					</div>
 					<p>{description}</p>
 				</div>

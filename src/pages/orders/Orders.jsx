@@ -4,15 +4,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	BACKGROUND,
-	PLATFORMS,
-	PATHS,
-	PROVIDERS,
-	STATUS,
-	STATUS_COLOURS,
-	VEHICLE_TYPES
-} from '../../constants';
+import { BACKGROUND, PLATFORMS, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
 import {
 	getAllQuotes,
 	manuallyDispatchJob,
@@ -33,6 +25,9 @@ import ecofleet from '../../assets/img/ecofleet.svg';
 import privateCourier from '../../assets/img/courier.svg';
 import infinityIcon from '../../assets/img/infinity.svg';
 import secondsPlatform from '../../assets/img/platform.svg';
+import hubrise from '../../assets/img/hubrise.svg';
+import shopify from '../../assets/img/shopify.svg';
+import woocommerce from '../../assets/img/woocommerce-logo.svg';
 // components & modals
 import CustomToolbar from '../../components/CustomToolbar';
 import RouteOptimization from './modals/RouteOptimization';
@@ -170,7 +165,22 @@ export default function Orders(props) {
 			headerName: 'Platform',
 			width: 100,
 			renderCell: params => {
-				return <img src={secondsPlatform} width={25} height={25} alt="logo"/>
+				return (
+					<img
+						src={
+							params.value === PLATFORMS.SHOPIFY
+								? shopify
+								: params.value === PLATFORMS.WOOCOMMERCE
+								? woocommerce
+								: params.value === PLATFORMS.HUBRISE
+								? hubrise
+								: secondsPlatform
+						}
+						width={25}
+						height={25}
+						alt='logo'
+					/>
+				);
 			}
 		},
 		{
@@ -252,7 +262,8 @@ export default function Orders(props) {
 					_id,
 					status,
 					dispatchMode,
-					jobSpecification: { shopifyId, wooCommerceId, hubriseId, squarespaceId, orderNumber, deliveries, pickupStartTime },
+					platform,
+					jobSpecification: { orderNumber, deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
 					createdAt,
 					routeOptimization
@@ -263,7 +274,7 @@ export default function Orders(props) {
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let provider = providerId;
-					const pickupTime = moment(pickupStartTime).isValid() ? moment(pickupStartTime).format("HH:mm a") : "Estimating...";
+					const pickupTime = moment(pickupStartTime).isValid() ? moment(pickupStartTime).format('HH:mm a') : 'Estimating...';
 					return {
 						id: orderNumber,
 						pickupTime,
@@ -272,7 +283,7 @@ export default function Orders(props) {
 						phoneNumber,
 						address,
 						provider,
-						platform: PLATFORMS.DASHBOARD,
+						platform,
 						createdAt,
 						routeOptimization
 					};
@@ -328,7 +339,7 @@ export default function Orders(props) {
 			setQuotes(prevState => ({ show: true, values: quotes }));
 		} catch (err) {
 			setJobLoader(prevState => ({ ...prevState, loading: false }));
-			console.error(err)
+			console.error(err);
 		}
 	}, [provider]);
 
@@ -495,7 +506,7 @@ export default function Orders(props) {
 					centered
 					onConfirm={confirmDelete}
 				/>
-				<div className="d-flex justify-content-between">
+				<div className='d-flex justify-content-between'>
 					<h3 className='ms-3'>Orders</h3>
 				</div>
 				<DataGrid
@@ -538,7 +549,7 @@ export default function Orders(props) {
 					}}
 					componentsProps={{
 						noRowsOverlay: {
-							title: "No Orders",
+							title: 'No Orders',
 							subtitle: "To create an order, navigate to the 'Create' page"
 						},
 						toolbar: {

@@ -221,8 +221,12 @@ export const BATCH_TYPES = {
 };
 
 export const PLATFORMS = {
-	SHOPIFY: 'SHOPIFY',
-	DASHBOARD: 'DASHBOARD'
+	SHOPIFY: 'shopify',
+	WOOCOMMERCE: 'woocommerce',
+	SQUARESPACE: 'squarespace',
+	SQUARE: 'square',
+	HUBRISE: 'hubrise',
+	SECONDS: 'seconds'
 }
 
 export const DELIVERY_STRATEGIES = {
