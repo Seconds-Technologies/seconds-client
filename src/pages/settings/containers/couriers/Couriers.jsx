@@ -12,8 +12,8 @@ import CourierPanel from './components/CourierPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateFleetProviders } from '../../../../store/actions/settings';
 import { PROVIDERS } from '../../../../constants';
-import SuccessMessage from '../../../../modals/SuccessMessage';
 import SuccessToast from '../../../../modals/SuccessToast';
+import { capitalize } from '../../../../helpers';
 
 const Couriers = () => {
 	const dispatch = useDispatch();
@@ -33,8 +33,10 @@ const Couriers = () => {
 			console.log(data);
 			dispatch(updateFleetProviders(email, data)).then(() => {
 				let providerId = Object.keys(provider)[0]
-				console.log(`${providerId} is now ${provider[providerId]}`)
-				setSuccess(`${providerId} is now ${provider[providerId]}`)
+				let status = provider[providerId] ? 'enabled' : 'disabled';
+				let message = `${capitalize(providerId)} is now ${status}`
+				console.log(message)
+				setSuccess(message)
 			});
 		},
 		[activeFleetProviders]
