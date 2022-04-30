@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import { styled } from '@mui/material/styles';
 
-const PlanTile = ({ selected, name, price, description, features, activePlan, onSelect, role }) => {
+const PlanTile = ({ selected, name, price, priceLabel, description, features, activePlan, onSelect, role }) => {
 	const CustomWidthTooltip = styled(({ className, ...props }) => <Tooltip {...props} classes={{ popper: className }} />)({
 		[`& .${tooltipClasses.tooltip}`]: {
 			maxWidth: 500
@@ -57,13 +57,13 @@ const PlanTile = ({ selected, name, price, description, features, activePlan, on
 					</div>
 				) : (
 					<div className='d-flex justify-content-center align-items-center border h-100'>
-						{typeof price === 'number' ? (
+						{price ? (
 							<span className='fs-4'>
-								£{price}
+								{priceLabel}
 								<small className='text-muted fs-6'>/Month</small>
 							</span>
 						) : (
-							<span className='fs-5'>{price}</span>
+							<span className='fs-5'>{priceLabel}</span>
 						)}
 					</div>
 				)}

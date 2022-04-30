@@ -37,6 +37,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							description={SUBSCRIPTION_PLANS.STARTER.description}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name}
 							price={SUBSCRIPTION_PLANS.STARTER.price}
+							priceLabel={SUBSCRIPTION_PLANS.STARTER.priceLabel}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)
 							}
@@ -50,6 +51,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.GROWTH.name}
 							description={SUBSCRIPTION_PLANS.GROWTH.description}
 							price={SUBSCRIPTION_PLANS.GROWTH.price}
+							priceLabel={SUBSCRIPTION_PLANS.GROWTH.priceLabel}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.GROWTH.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.GROWTH.name)
@@ -64,6 +66,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.PRO.name}
 							description={SUBSCRIPTION_PLANS.PRO.description}
 							price={SUBSCRIPTION_PLANS.PRO.price}
+							priceLabel={SUBSCRIPTION_PLANS.PRO.priceLabel}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name}
 							onSelect={() =>
 								subscriptionPlan === SUBSCRIPTION_PLANS.PRO.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.PRO.name)
@@ -78,6 +81,7 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 							name={SUBSCRIPTION_PLANS.ENTERPRISE.name}
 							description={SUBSCRIPTION_PLANS.ENTERPRISE.description}
 							price={'Book Demo'}
+							priceLabel={SUBSCRIPTION_PLANS.ENTERPRISE.priceLabel}
 							features={SUBSCRIPTION_PLANS.ENTERPRISE.features.join('\n')}
 							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.ENTERPRISE.name}
 						/>
