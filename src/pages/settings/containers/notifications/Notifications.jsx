@@ -61,7 +61,7 @@ const Notifications = props => {
 							</div>
 						</div>
 						<div className='row pb-4'>
-							<h1 className='workflow-header fs-4'>Job Alerts</h1>
+							<h1 className='workflow-header fs-4'>New Job Alerts</h1>
 							<p className='text-muted'>Turn on emails for new delivery jobs</p>
 							<div className='d-flex flex-grow-1 align-items-center'>
 								<Switch
@@ -71,6 +71,24 @@ const Notifications = props => {
 									onChange={() => setFieldValue('jobAlerts.new', !values.jobAlerts.new)}
 									handleDiameter={19}
 									checked={values.jobAlerts.new}
+									className='switch-text'
+								/>
+								<div className='d-flex align-items-center'>
+									<span className='ms-3 me-2 workflow-header fs-6'>Email notification</span>
+								</div>
+							</div>
+						</div>
+						<div className='row pb-4'>
+							<h1 className='workflow-header fs-4'>Cancelled Job Alerts</h1>
+							<p className='text-muted'>Turn on emails for any job that has been canceled either by the store or delivery service provider</p>
+							<div className='d-flex flex-grow-1 align-items-center'>
+								<Switch
+									onColor={'#9FEA86'}
+									checkedIcon={onIcon}
+									uncheckedIcon={offIcon}
+									onChange={() => setFieldValue('jobAlerts.cancelled', !values.jobAlerts.cancelled)}
+									handleDiameter={19}
+									checked={values.jobAlerts.cancelled}
 									className='switch-text'
 								/>
 								<div className='d-flex align-items-center'>

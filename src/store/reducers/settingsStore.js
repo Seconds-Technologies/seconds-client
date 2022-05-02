@@ -7,6 +7,7 @@ export const DEFAULT_STATE = {
 	sms: false, //be true when user logged in
 	jobAlerts: {
 		new: false,
+		cancelled: false,
 		expired: false
 	},
 	autoDispatch: {
@@ -42,14 +43,42 @@ export const DEFAULT_STATE = {
 	driverResponseTime: 5,
 	driverDeliveryFee: 5,
 	courierSelectionCriteria: 'eta',
-	courierPriceThreshold: 10,
+	courierVehicles: {
+		BIC: {
+			enabled: true,
+			minDispatchAmount: 0,
+			maxDispatchAmount: 100,
+		},
+		MTB: {
+			enabled: true,
+			minDispatchAmount: 0,
+			maxDispatchAmount: 100,
+		},
+		CGB: {
+			enabled: true,
+			minDispatchAmount: 0,
+			maxDispatchAmount: 100,
+		},
+		CAR: {
+			enabled: true,
+			minDispatchAmount: 0,
+			maxDispatchAmount: 100,
+		},
+		VAN: {
+			enabled: true,
+			minDispatchAmount: 0,
+			maxDispatchAmount: 100,
+		},
+	},
 	activeFleetProviders: {
 		stuart: true,
 		gophr: true,
 		street_stream: true,
 		ecofleet: true,
 		addison_lee: true
-	}
+	},
+	dispatchSupportTeam: [],
+	pickupInstructions: ""
 };
 
 export default (state = DEFAULT_STATE, action) => {

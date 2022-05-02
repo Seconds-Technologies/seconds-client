@@ -14,9 +14,8 @@ const DispatchRules = props => {
 	const dispatch = useDispatch();
 	const [message, setMessage] = useState('');
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, courierSelectionCriteria, courierPriceThreshold } = useSelector(
-		state => state['settingsStore']
-	);
+	const { jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, courierSelectionCriteria, courierPriceThreshold, courierVehicles } =
+		useSelector(state => state['settingsStore']);
 	return (
 		<div className='tab-container px-3'>
 			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={'bottomRight'} />
@@ -28,7 +27,8 @@ const DispatchRules = props => {
 					autoDispatch,
 					driverResponseTime,
 					courierSelectionCriteria,
-					courierPriceThreshold
+					courierPriceThreshold,
+					courierVehicles
 				}}
 				onSubmit={values => {
 					console.log(values);
@@ -224,18 +224,52 @@ const DispatchRules = props => {
 										/>
 									</div>
 								</div>
+								<div className='align-items-center my-2'>
+									<span className='me-2 workflow-header fs-6'>Max Transit time</span>
+									<div className='input-group mt-2' style={{ width: 200 }}>
+										<input
+											defaultValue={100}
+											type='number'
+											min={0}
+											max={100}
+											className='form-control'
+											aria-label='Amount (to the nearest dollar)'
+										/>
+										<span className='input-group-text'>mins</span>
+									</div>
+								</div>
 							</div>
 							<div className='mt-4'>
 								<span className='me-2 workflow-header fs-6'>Allowed Delivery Vehicles</span>
 								<div className='d-flex flex-column mt-2'>
 									{VEHICLE_TYPES.map(({ value, label }, index) => (
-										<div key={index} className='form-check'>
-											<input className='form-check-input' type='checkbox' />
-											<label className='form-check-label' htmlFor='flexCheckDefault'>
-												{label}
-											</label>
+										<div className='row ms-1 mb-1'>
+											<div key={index} className='form-check col-1'>
+												<input className='form-check-input' type='checkbox' />
+												<label className='form-check-label' htmlFor='flexCheckDefault'>
+													{label}
+												</label>
+											</div>
+											<div className='col-1'>
+												<button type='button' className='btn btn-sm btn-outline-primary' onClick={() => console.log('hello')}>
+													customize
+												</button>
+											</div>
 										</div>
 									))}
+								</div>
+							</div>
+							<div className='mt-4 col-md-3'>
+								<div className='d-flex align-items-center'>
+									<span className='me-2 workflow-header fs-6'>Pickup Instructions</span>
+									<Tooltip title='Instructions presented to the delivery courier through their app (max 125 characters)' placement='right-start'>
+										<IconButton size='small'>
+											<BsInfoCircle />
+										</IconButton>
+									</Tooltip>
+								</div>
+								<div className='d-flex flex-column mt-2'>
+									<input type='text' className='form-control rounded-3 mb-1' name='pickupInstructions' maxLength={125} />
 								</div>
 							</div>
 						</div>

@@ -11,7 +11,7 @@ const BusinessSettings = props => {
 	const [showModal, setShowModal] = useState(false);
 	const [message, setMessage] = useState('');
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { driverDeliveryFee } = useSelector(state => state['settingsStore']);
+	const { driverDeliveryFee, dispatchSupportTeam } = useSelector(state => state['settingsStore']);
 
 	return (
 		<div className='tab-container px-3'>
@@ -20,7 +20,8 @@ const BusinessSettings = props => {
 			<Formik
 				enableReinitialize
 				initialValues={{
-					driverDeliveryFee
+					driverDeliveryFee,
+					dispatchSupportTeam
 				}}
 				onSubmit={values => {
 					console.log(values);
@@ -62,6 +63,15 @@ const BusinessSettings = props => {
 									aria-label='Amount in pounds (with dot and two decimal places)'
 								/>
 							</div>
+						</div>
+						<div className='row pb-4'>
+							<h1 className='workflow-header fs-4'>Dispatch Support Team</h1>
+							<p className='text-muted'>Use this setting to cc specific email addresses on every order dispatch</p>
+							<div className="d-flex flex-column col-sm-12 col-md-4">
+								<label htmlFor='' className="workflow-header fs-6 mb-1">Please enter a comma separated list</label>
+								<input type='text' className="form-control rounded-3" name="dispatchSupportTeam"/>
+							</div>
+
 						</div>
 						<div className='row py-4'>
 							<div className='d-flex'>
