@@ -1,9 +1,10 @@
 $primary: #9400D3; //#9400d3;
 $edit: #EEEEEE;
-$light: #F9F9F9;
+$light: #F4F4F5;
 $grey: #888888;
 $light-grey: #E0E0E0;
 $success-light: #d1e7dd;
+$zindex-dropdown: 1000000;
 
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/variables";

@@ -42,7 +42,6 @@
 
 .sidebar-container {
   display: flex;
-  width: 240px;
   height: 100vh;
   position: sticky;
   top: 0;

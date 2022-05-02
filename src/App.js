@@ -2,7 +2,8 @@ import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useEffect, useReducer } from 'react';
 import routes from './routes/routes';
-import Sidebar from './components/sidebar/Sidebar';
+import Sidebar from './layout/sidebar/Sidebar';
+import Sidebar2 from './layout/sidebarNew/Sidebar2';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthorizationToken, syncUser } from './store/actions/auth';
@@ -92,8 +93,9 @@ function App() {
 											baseUrl='https://app.papercups.io'
 											styles={{
 												toggleButton: {
-													width: 60,
-													height: 60
+													width: 50,
+													height: 50,
+													marginRight: 10
 												},
 												toggleContainer: {
 													zIndex: 1000000,

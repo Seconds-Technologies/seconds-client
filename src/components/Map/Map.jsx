@@ -2,7 +2,7 @@ import './map.css';
 import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mbxClient from '@mapbox/mapbox-sdk';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactMapboxGl, { GeoJSONLayer, Marker, Popup } from 'react-mapbox-gl';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
 import assignedDropoffMarker from '../../assets/img/dropoff-icon-green.svg';
@@ -12,7 +12,7 @@ import { PATHS, PROVIDERS } from '../../constants';
 import { useHistory } from 'react-router-dom';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
 
-const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
+const Map = ({ zIndex, styles, height, location, markers, couriers, customers, busy }) => {
 	const history = useHistory();
 	const baseClient = mbxClient({
 		accessToken:
@@ -29,10 +29,10 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 		[]
 	);
 
-	const onLoaded = map => {
-		map.addControl(new mapboxgl.FullscreenControl());
+	const onLoaded = useCallback(map => {
+		map.addControl(new mapboxgl.FullscreenControl(), "bottom-left");
 		map.resize();
-	};
+	}, []);
 
 	const [geoJSON, setGeoJSON] = useState({
 		type: 'FeatureCollection',
@@ -111,7 +111,7 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 	};
 
 	return (
-		<div className={`${styles} map-container`}>
+		<div className={`${styles} map-container`} style={{ zIndex }}>
 			<Mapbox
 				zoom={location && !busy ? [13] : undefined}
 				containerStyle={{

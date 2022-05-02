@@ -10,7 +10,7 @@ import bellIcon from '../../assets/img/bell.svg';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
-import logo from '../../assets/img/secondsapp.svg';
+import logo from '../../assets/img/logo.svg';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { logout } from '../../store/actions/auth';
 import { useNotifications } from '@magicbell/magicbell-react';
@@ -20,7 +20,7 @@ import styled from '@mui/material/styles/styled';
 
 export default function Sidebar() {
 	const [isOpen, setAlerts] = useState(false);
-	const { profileImageData, email } = useSelector(state => state['currentUser'].user);
+	const { profileImageData } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
@@ -30,26 +30,27 @@ export default function Sidebar() {
 	const StyledBadge = styled(Badge)(({ theme }) => ({
 		'& .MuiBadge-badge': {
 			right: 19,
-			top: 2,
+			top: 2
 		}
 	}));
 
 	const isSettings = useMemo(() => {
-		return [PATHS.SETTINGS, PATHS.INTEGRATE, PATHS.SHOPIFY, PATHS.HUBRISE, PATHS.WOOCOMMERCE, PATHS.SQUARESPACE, PATHS.SQUARE].includes(location['pathname'])
-	}, [location])
+		return [PATHS.SETTINGS, PATHS.INTEGRATE, PATHS.SHOPIFY, PATHS.HUBRISE, PATHS.WOOCOMMERCE, PATHS.SQUARESPACE, PATHS.SQUARE].includes(
+			location['pathname']
+		);
+	}, [location]);
 
 	const isOrder = useMemo(() => {
-		return [PATHS.ORDERS, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path))
-	}, [location])
+		return [PATHS.ORDERS, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path));
+	}, [location]);
 
 	return (
 		<div ref={launcherRef} className='sidebar-container bg-light'>
 			<div className='mb-1 d-flex flex-column ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto me-0'>
-					<Link to={PATHS.HOME} className='navbar-brand mt-2 ' href=''>
-						<span className='logo'>
-							<img src={logo} alt='' width={120} />
-						</span>
+					<Link to={PATHS.HOME} className='navbar-brand mt-3
+					 ' href='src/layout/sidebar/Sidebar'>
+						<img src={logo} alt='' width={35} height={35} />
 					</Link>
 					<Link to={PATHS.HOME} className='link text-black mt-3'>
 						<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
@@ -60,19 +61,11 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Dashboard</div>
 						</li>
 					</Link>
 					<Link to={PATHS.ORDERS} className='link text-black'>
 						<li className={`sidebarListItem ${isOrder && 'currentLink'}`}>
-							<img
-								className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`}
-								src={orderIcon}
-								alt={''}
-								width={25}
-								height={25}
-							/>
-							<div className='item-hover'>Orders</div>
+							<img className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`} src={orderIcon} alt={''} width={25} height={25} />
 						</li>
 					</Link>
 					<Link to={PATHS.CREATE} className='link text-black'>
@@ -84,7 +77,6 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Create</div>
 						</li>
 					</Link>
 					<Link to={PATHS.DRIVERS} className='link text-black'>
@@ -96,7 +88,6 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Drivers</div>
 						</li>
 					</Link>
 					<Link to={PATHS.ANALYTICS} className='link text-black'>
@@ -108,7 +99,6 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Analytics</div>
 						</li>
 					</Link>
 					<div className='link text-black' onClick={() => setAlerts(true)}>
@@ -122,7 +112,7 @@ export default function Sidebar() {
 								launcherRef={launcherRef.current}
 							/>
 							<StyledBadge
-								variant="dot"
+								variant='dot'
 								overlap='circular'
 								anchorOrigin={{
 									vertical: 'top',
@@ -134,7 +124,6 @@ export default function Sidebar() {
 							>
 								<img className={`sidebarIcon item-hover`} src={bellIcon} alt={''} width={25} height={25} />
 							</StyledBadge>
-							<div className='item-hover'>Alerts</div>
 						</li>
 					</div>
 					<Link to={PATHS.SETTINGS} className='link text-black'>
@@ -146,11 +135,10 @@ export default function Sidebar() {
 								width={25}
 								height={25}
 							/>
-							<div className='item-hover'>Settings</div>
 						</li>
 					</Link>
-					<div className='link dropdown'>
-						<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
+					<div className='link dropdown' style={{ zIndex: 10000000 }}>
+						<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown' style={{ zIndex: 10000000 }}>
 							{profileImageData ? (
 								<img
 									className={`border rounded-circle sidebarIcon`}
@@ -160,17 +148,10 @@ export default function Sidebar() {
 									height={26}
 								/>
 							) : (
-								<img
-									className={`sidebarIcon`}
-									src={defaultAvatar}
-									alt=''
-									width={26}
-									height={26}
-								/>
+								<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} style={{ zIndex: 10000000 }} />
 							)}
-							<span className={`item-hover ${location['pathname'] === PATHS.PROFILE && 'currentLink'}`}>Profile</span>
 						</div>
-						<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
+						<ul className='dropdown-menu' aria-labelledby='main-dropdown' style={{ zIndex: 10000000 }}>
 							<li>
 								<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
 									Profile
