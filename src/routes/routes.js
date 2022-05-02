@@ -27,6 +27,11 @@ import HubRise from '../pages/hubrise/HubRise';
 import Catalog from '../pages/catalog/Catalog';
 import Drivers from '../pages/drivers/Drivers';
 import Analytics from '../pages/analytics/Analytics';
+import Stuart from '../pages/couriers/Stuart';
+import Gophr from '../pages/couriers/Gophr';
+import StreetStream from '../pages/couriers/StreetStream';
+import Ecofleet from '../pages/couriers/Ecofleet';
+import AddisonLee from '../pages/couriers/AddisonLee';
 
 const routes = (
 	<Switch>
@@ -40,13 +45,18 @@ const routes = (
 		<PrivateRoute exact path={['/', PATHS.HOME]} component={Dashboard} />
 		<PrivateRoute exact path={PATHS.INTEGRATE} component={Integrations} />
 		<PrivateRoute exact path={PATHS.SHOPIFY} component={Shopify} />
+		<PrivateRoute exact path={PATHS.STUART} component={Stuart} />
+		<PrivateRoute exact path={PATHS.GOPHR} component={Gophr} />
+		<PrivateRoute exact path={PATHS.STREET_STREAM} component={StreetStream} />
+		<PrivateRoute exact path={PATHS.ECOFLEET} component={Ecofleet} />
+		<PrivateRoute exact path={PATHS.ADDISON_LEE} component={AddisonLee} />
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
 		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />
 		<PrivateRoute exact path={PATHS.HUBRISE} component={HubRise} />
 		<PrivateRoute exact path={PATHS.HUBRISE_CATALOG} component={Catalog} />
 		<PrivateRoute exact path={PATHS.ORDERS} component={Orders} />
-		<PrivateRoute exact path={PATHS.ANALYTICS} component={Analytics}/>
+		<PrivateRoute exact path={PATHS.ANALYTICS} component={Analytics} />
 		<PrivateRoute path={`${PATHS.VIEW_ORDER}/:orderId`} component={ViewOrder} />
 		<PrivateRoute path={PATHS.CREATE} component={Create} />
 		<PrivateRoute path={PATHS.TRACK} component={Track} />
