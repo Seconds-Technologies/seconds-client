@@ -12,7 +12,7 @@ import { PATHS, PROVIDERS } from '../../constants';
 import { useHistory } from 'react-router-dom';
 import { BsArrowRightCircleFill } from 'react-icons/bs';
 
-const Map = ({ zIndex, styles, height, location, markers, couriers, customers, busy }) => {
+const Map = ({ styles, height, location, markers, couriers, customers, busy }) => {
 	const history = useHistory();
 	const baseClient = mbxClient({
 		accessToken:
@@ -111,7 +111,7 @@ const Map = ({ zIndex, styles, height, location, markers, couriers, customers, b
 	};
 
 	return (
-		<div className={`${styles} map-container`} style={{ zIndex }}>
+		<div className={`${styles} map-container`}>
 			<Mapbox
 				zoom={location && !busy ? [13] : undefined}
 				containerStyle={{

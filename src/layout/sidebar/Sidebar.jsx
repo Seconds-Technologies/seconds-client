@@ -11,7 +11,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/logo.svg';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { logout } from '../../store/actions/auth';
 import { useNotifications } from '@magicbell/magicbell-react';
 import { FloatingNotificationInbox } from '@magicbell/magicbell-react';

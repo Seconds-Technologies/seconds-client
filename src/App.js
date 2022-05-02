@@ -3,7 +3,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useEffect, useReducer } from 'react';
 import routes from './routes/routes';
 import Sidebar from './layout/sidebar/Sidebar';
-import Sidebar2 from './layout/sidebarNew/Sidebar2';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthorizationToken, syncUser } from './store/actions/auth';
