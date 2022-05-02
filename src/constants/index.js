@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const PATHS = {
 	SIGNUP: '/signup',
 	LOGIN: '/login',
@@ -269,3 +271,6 @@ export const HUBRISE_ORDER_STATUSES = {
 	CANCELLED: 'cancelled',
 	DELIVERY_FAILED: 'delivery_failed'
 }
+
+export const onIcon = <div className='switch-icon'>On</div>;
+export const offIcon = <div className='switch-icon'>Off</div>;

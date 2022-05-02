@@ -43,7 +43,7 @@ export default function Sidebar() {
 	}, [location])
 
 	return (
-		<div ref={launcherRef} className='sidebar bg-light'>
+		<div ref={launcherRef} className='sidebar-container bg-light'>
 			<div className='mb-1 d-flex flex-column ps-3 pe-2'>
 				<ul className='nav nav-pills flex-column mb-auto me-0'>
 					<Link to={PATHS.HOME} className='navbar-brand mt-2 ' href=''>

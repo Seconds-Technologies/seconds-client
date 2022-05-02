@@ -2,13 +2,6 @@
   display: flex;
 }
 
-.sidebar {
-  flex: 0.5;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-}
-
 .link {
   text-decoration: none;
   color: inherit;
@@ -47,13 +40,21 @@
   font-family: 'Inter-Bold', sans-serif;
 }
 
+.sidebar-container {
+  display: flex;
+  width: 240px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
 .page-container {
-  flex: 9;
+  flex: 1;
   min-height: 100vh
 }
 
 .tab-container {
-  flex: 9;
+  flex: 1;
 }
 
 .help-text {

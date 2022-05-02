@@ -33,8 +33,6 @@ const Branding = props => {
 					<h1 className='workflow-header fs-4'>Primary brand colour</h1>
 					<p className='text-muted'>Your primary colour will be in the dashboard and customer tracking link</p>
 					<div className='d-flex' role='button' onClick={() => toggleColorPicker(true)}>
-						{/*<div style={{ backgroundColor: brandColor, width: 20, height: 20 }} />
-					<span>{brandColor}</span>*/}
 						<EditableInput style={{ input: styles.input }} value={brandColor} onChange={setBrandColor} />
 						<div style={styles.swatch} />
 					</div>
@@ -52,19 +50,13 @@ const Branding = props => {
 				<div className='d-flex'>
 					<button
 						className='btn btn-dark me-5'
-						style={{
-							height: 50,
-							width: 150
-						}}
+						style={{ height: 45, width: 150 }}
 					>
 						Cancel
 					</button>
 					<button
 						className='btn btn-primary'
-						style={{
-							height: 50,
-							width: 150
-						}}
+						style={{ height: 45, width: 150 }}
 					>
 						Save
 					</button>

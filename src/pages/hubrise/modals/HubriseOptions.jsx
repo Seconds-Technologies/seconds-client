@@ -160,14 +160,6 @@ const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
 											))}
 										</Select>
 									</FormControl>
-									{/*{Object.values(HUBRISE_ORDER_STATUSES).map((status, index) => (
-												<div key={index} className='form-check'>
-													<input className='form-check-input' type='checkbox' disabled={!values.triggers.enabled} />
-													<label className='form-check-label' htmlFor='flexCheckDefault'>
-														{status}
-													</label>
-												</div>
-											))}*/}
 								</div>
 							</div>
 							<div className='d-flex py-2'>

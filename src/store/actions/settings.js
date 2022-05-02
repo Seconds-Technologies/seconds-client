@@ -61,7 +61,7 @@ export function updateDeliveryTimes(email, deliveryHours) {
 export function updateFleetProviders(email, data){
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			return apiCall('PATCH', '/server/settings/update-providers', data, { params: { email } })
+			return apiCall('PATCH', '/server/settings/toggle-provider-status', data, { params: { email } })
 				.then(({ message, ...activeFleetProviders }) => {
 					dispatch(updateSettings(activeFleetProviders))
 					resolve(message);

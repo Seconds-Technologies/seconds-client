@@ -1,4 +1,4 @@
-import { SET_BUSINESS_WORKFLOW, UPDATE_FLEET_PROVIDERS } from '../actionTypes';
+import { SET_BUSINESS_WORKFLOW, UPDATE_BUSINESS_WORKFLOW, UPDATE_FLEET_PROVIDERS } from '../actionTypes';
 import { BATCH_TYPES, DISPATCH_TYPES } from '../../constants';
 
 export const DEFAULT_STATE = {
@@ -62,6 +62,8 @@ export default (state = DEFAULT_STATE, action) => {
 				...workflowSetting
 			} = action.settings;
 			return workflowSetting;
+		case UPDATE_BUSINESS_WORKFLOW:
+			return { ...state, ...action.settings }
 		case UPDATE_FLEET_PROVIDERS:
 			return { ...state, activeFleetProviders: { ...action.providers } };
 		default:

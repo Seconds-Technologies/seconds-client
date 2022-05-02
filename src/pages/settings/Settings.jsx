@@ -10,12 +10,15 @@ import Couriers from './containers/couriers/Couriers';
 import Integrations from './containers/integrations/Integrations';
 import Subscription from './containers/billing/Subscription';
 import TabPanel from '../../components/TabPanel';
-import BusinessWorkflows from './containers/workflows/BusinessWorkflows';
+import BusinessSettings from './containers/business/BusinessSettings';
 import Developers from './containers/developers/Developers';
 import TabContext from '../../context/TabContext';
 import AppBar from '@mui/material/AppBar';
 import Branding from './containers/branding/Branding';
 import Payroll from './containers/payroll/Payroll';
+import DispatchRules from './containers/dispatchRules/DispatchRules';
+import RoutingRules from './containers/routingRules/RoutingRules';
+import Notifications from './containers/notifications/Notifications';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
@@ -89,12 +92,13 @@ const Settings = props => {
 					>
 						<AntTab label='Account Settings' {...a11yProps(0)} />
 						<AntTab label='Billing' {...a11yProps(1)} />
-						<AntTab label='Business Workflows' {...a11yProps(2)} />
-						<AntTab label="Branding" {...a11yProps(3)} />
-						<AntTab label="Driver Payroll" {...a11yProps(4)} />
-						<AntTab label='Delivery Service Providers' {...a11yProps(5)} />
-						<AntTab label='Integrations' {...a11yProps(6)} />
-						<AntTab label='Developers' {...a11yProps(7)} />
+						<AntTab label='Business Settings' {...a11yProps(2)} />
+						<AntTab label='Dispatch Rules' {...a11yProps(3)} />
+						<AntTab label='Routing' {...a11yProps(4)} />
+						<AntTab label='Notifications' {...a11yProps(5)} />
+						<AntTab label="Branding" {...a11yProps(6)} />
+						<AntTab label='Integrations' {...a11yProps(7)} />
+						<AntTab label='Developers' {...a11yProps(8)} />
 					</Tabs>
 				</AppBar>
 				<TabPanel value={index} index={0}>
@@ -104,21 +108,24 @@ const Settings = props => {
 					<Subscription setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={2}>
-					<BusinessWorkflows setNavColor={setNavColor} {...props} />
+					<BusinessSettings setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={3}>
-					<Branding setNavColor={setNavColor} />
+					<DispatchRules setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={4}>
-					<Payroll setNavColor={setNavColor} />
+					<RoutingRules setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={5}>
-					<Couriers setNavColor={setNavColor} />
+					<Notifications setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={6}>
-					<Integrations setNavColor={setNavColor} {...props} />
+					<Branding setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={7}>
+					<Integrations setNavColor={setNavColor} {...props} />
+				</TabPanel>
+				<TabPanel value={index} index={8}>
 					<Developers setNavColor={setNavColor} {...props} />
 				</TabPanel>
 			</Box>
