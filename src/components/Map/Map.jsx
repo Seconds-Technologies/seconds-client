@@ -30,8 +30,8 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 	);
 
 	const onLoaded = map => {
-		map.resize();
 		map.addControl(new mapboxgl.FullscreenControl());
+		map.resize();
 	};
 
 	const [geoJSON, setGeoJSON] = useState({
