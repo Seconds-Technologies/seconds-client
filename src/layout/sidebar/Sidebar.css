@@ -5,9 +5,10 @@
 }
 
 .sidebarListItem {
-    padding: 5px;
+    padding: 5px 0;
     cursor: pointer;
     display: flex;
+    justify-content: center;
     align-items: center;
     border-radius: 5px;
     margin-top: 15px;
@@ -23,7 +24,6 @@
 }
 
 .sidebarIcon {
-    margin-right: 15px;
     font-size: 20px !important;
 }
 

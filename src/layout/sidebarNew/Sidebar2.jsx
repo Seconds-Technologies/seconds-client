@@ -1,54 +1,183 @@
-import React from 'react';
-import { CDBSidebar, CDBSidebarContent, CDBSidebarFooter, CDBSidebarHeader, CDBSidebarMenu, CDBSidebarMenuItem } from 'cdbreact';
-import { Link, NavLink } from 'react-router-dom';
+import './Sidebar.css';
+import orderIcon from '../../assets/img/orders.svg';
+import settingsIcon from '../../assets/img/settings.svg';
+import dashboardIcon from '../../assets/img/dashboard.svg';
+import createIcon from '../../assets/img/create.svg';
+import driversIcon from '../../assets/img/driver.svg';
+import analyticsIcon from '../../assets/img/analytics.svg';
+import defaultAvatar from '../../assets/img/profile-avatar.svg';
+import bellIcon from '../../assets/img/bell.svg';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
-import logo from '../../assets/img/secondsapp.svg';
-import openIcon from '../../assets/img/open-sidebar.svg'
+import logo from '../../assets/img/logo.svg';
+import React, { useMemo, useRef, useState } from 'react';
+import { logout } from '../../store/actions/auth';
+import { useNotifications } from '@magicbell/magicbell-react';
+import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+import Badge from '@mui/material/Badge';
+import styled from '@mui/material/styles/styled';
+import List from '@mui/material/List';
 
-const Sidebar2 = () => {
+export default function Sidebar2() {
+	const [isOpen, setAlerts] = useState(false);
+	const { profileImageData } = useSelector(state => state['currentUser'].user);
+	const dispatch = useDispatch();
+	const history = useHistory();
+	const location = useLocation();
+	const launcherRef = useRef(null);
+	const notificationStore = useNotifications();
+
+	const StyledBadge = styled(Badge)(({ theme }) => ({
+		'& .MuiBadge-badge': {
+			right: 19,
+			top: 2
+		}
+	}));
+
+	const isSettings = useMemo(() => {
+		return [PATHS.SETTINGS, PATHS.INTEGRATE, PATHS.SHOPIFY, PATHS.HUBRISE, PATHS.WOOCOMMERCE, PATHS.SQUARESPACE, PATHS.SQUARE].includes(
+			location['pathname']
+		);
+	}, [location]);
+
+	const isOrder = useMemo(() => {
+		return [PATHS.ORDERS, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path));
+	}, [location]);
+
 	return (
-		<div className='d-flex min-vh-100 bg-light top-0 position-sticky text-dark' style={{ overflow: 'scroll initial' }}>
-			<CDBSidebar textColor='#000' backgroundColor='#F4F4F5'>
-				<CDBSidebarHeader prefix={<img src={openIcon} width={20} height={20} alt='' />}>
-					<Link to={PATHS.HOME} className='navbar-brand mt-2 ' href='src/layout/sidebar/Sidebar'>
-						<span className='logo'>
-							<img src={logo} alt='' width={120} />
-						</span>
-					</Link>
-				</CDBSidebarHeader>
-				<CDBSidebarContent className='sidebar-content'>
-					<CDBSidebarMenu>
-						<NavLink exact to='/' activeClassName='activeClicked'>
-							<CDBSidebarMenuItem icon='columns'>Dashboard</CDBSidebarMenuItem>
-						</NavLink>
-						<NavLink exact to='/tables' activeClassName='activeClicked'>
-							<CDBSidebarMenuItem icon='table'>Tables</CDBSidebarMenuItem>
-						</NavLink>
-						<NavLink exact to='/profile' activeClassName='activeClicked'>
-							<CDBSidebarMenuItem icon='user'>Profile page</CDBSidebarMenuItem>
-						</NavLink>
-						<NavLink exact to='/analytics' activeClassName='activeClicked'>
-							<CDBSidebarMenuItem icon='chart-line'>Analytics</CDBSidebarMenuItem>
-						</NavLink>
-
-						<NavLink exact to='/hero404' target='_blank' activeClassName='activeClicked'>
-							<CDBSidebarMenuItem icon='exclamation-circle'>404 page</CDBSidebarMenuItem>
-						</NavLink>
-					</CDBSidebarMenu>
-				</CDBSidebarContent>
-
-				<CDBSidebarFooter style={{ textAlign: 'center' }}>
-					<div
-						style={{
-							padding: '20px 5px'
-						}}
-					>
-						Sidebar Footer
+		<div ref={launcherRef} className='sidebar-container bg-light border border-1'>
+			<div className='mb-1 d-flex flex-column w-100'>
+				<List className='nav nav-pills flex-column align-items-center mb-auto me-0'>
+					<div className='d-flex justify-content-center mt-3'>
+						<Link
+							to={PATHS.HOME}
+							href='src/layout/sidebar/Sidebar'
+						>
+							<img src={logo} alt='' width={40} height={40} />
+						</Link>
 					</div>
-				</CDBSidebarFooter>
-			</CDBSidebar>
+					<Link to={PATHS.HOME} className='link text-black mt-3'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.HOME && 'currentIcon'}`}
+								src={dashboardIcon}
+								alt={''}
+								width={22}
+								height={22}
+							/>
+						</li>
+					</Link>
+					<Link to={PATHS.ORDERS} className='link text-black'>
+						<li className={`sidebarListItem ${isOrder && 'currentLink'}`}>
+							<img className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`} src={orderIcon} alt={''} width={22} height={22} />
+						</li>
+					</Link>
+					<Link to={PATHS.CREATE} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.CREATE && 'currentIcon'}`}
+								src={createIcon}
+								alt={''}
+								width={22}
+								height={22}
+							/>
+						</li>
+					</Link>
+					<Link to={PATHS.DRIVERS} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}
+								src={driversIcon}
+								alt={''}
+								width={22}
+								height={22}
+							/>
+						</li>
+					</Link>
+					<Link to={PATHS.ANALYTICS} className='link text-black'>
+						<li className={`sidebarListItem ${location['pathname'] === PATHS.ANALYTICS && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${location['pathname'] === PATHS.ANALYTICS && 'currentIcon'}`}
+								src={analyticsIcon}
+								alt={''}
+								width={22}
+								height={22}
+							/>
+						</li>
+					</Link>
+					<div className='link text-black' onClick={() => setAlerts(true)}>
+						<li className={`sidebarListItem`}>
+							<FloatingNotificationInbox
+								isOpen={isOpen}
+								toggle={() => setAlerts(!isOpen)}
+								width={350}
+								height={500}
+								isheight={500}
+								launcherRef={launcherRef.current}
+							/>
+							<StyledBadge
+								variant='dot'
+								overlap='circular'
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'right'
+								}}
+								showZero={false}
+								badgeContent={notificationStore.unreadCount}
+								color='secondary'
+							>
+								<img className={`sidebarIcon item-hover`} src={bellIcon} alt={''} width={22} height={22} />
+							</StyledBadge>
+						</li>
+					</div>
+					<Link to={PATHS.SETTINGS} className='link text-black'>
+						<li className={`sidebarListItem ${isSettings && 'currentLink'}`}>
+							<img
+								className={`sidebarIcon item-hover ${isSettings && 'currentIcon'}`}
+								src={settingsIcon}
+								alt={''}
+								width={22}
+								height={22}
+							/>
+						</li>
+					</Link>
+					<div className='link dropdown' style={{ zIndex: 10000000 }}>
+						<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown' style={{ zIndex: 10000000 }}>
+							{profileImageData ? (
+								<img
+									className={`border rounded-circle sidebarIcon`}
+									src={`data:image/jpeg;base64,${profileImageData}`}
+									alt=''
+									width={26}
+									height={26}
+								/>
+							) : (
+								<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} style={{ zIndex: 10000000 }} />
+							)}
+						</div>
+						<ul className='dropdown-menu' aria-labelledby='main-dropdown' style={{ zIndex: 10000000 }}>
+							<li>
+								<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
+									Profile
+								</div>
+							</li>
+							<li>
+								<div
+									role='button'
+									className='dropdown-item'
+									onClick={() => {
+										dispatch(logout());
+										history.push(PATHS.LOGIN);
+									}}
+								>
+									Logout
+								</div>
+							</li>
+						</ul>
+					</div>
+				</List>
+			</div>
 		</div>
 	);
-};
-
-export default Sidebar2;
+}
