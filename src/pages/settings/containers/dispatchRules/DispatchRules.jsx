@@ -15,7 +15,11 @@ const DispatchRules = props => {
 	const [message, setMessage] = useState('');
 	const [vehicleOption, showVehicleOption] = useState({
 		show: false,
-		vehicleCode: ''
+		code: '',
+		label: '',
+		minDispatchAmount: 0,
+		maxDispatchAmount: 100,
+		maxTransitTime: 100
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
 	const { jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, courierSelectionCriteria, courierPriceThreshold, courierVehicles } =
@@ -23,7 +27,6 @@ const DispatchRules = props => {
 	return (
 		<div className='tab-container px-3'>
 			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={'bottomRight'} />
-			<VehicleSettings open={vehicleOption.show} onClose={() => showVehicleOption(prevState => ({ ...prevState, show: false }))} />
 			<Formik
 				enableReinitialize
 				initialValues={{
@@ -42,6 +45,16 @@ const DispatchRules = props => {
 			>
 				{({ values, handleSubmit, handleChange, handleBlur, handleReset, setFieldValue }) => (
 					<Form className='container-fluid'>
+						<VehicleSettings
+							open={vehicleOption.show}
+							onClose={() => showVehicleOption(prevState => ({ ...prevState, show: false }))}
+							code={vehicleOption.code}
+							label={vehicleOption.label}
+							defaultMinDispatch={vehicleOption.minDispatchAmount}
+							defaultMaxDispatch={vehicleOption.maxDispatchAmount}
+							defaultMaxTransitTime={vehicleOption.maxTransitTime}
+							onChange={handleChange}
+						/>
 						<div className='row pb-4 w-75'>
 							<h1 className='workflow-header fs-4'>Auto dispatch</h1>
 							<p className='text-muted'>Decide who we should prioritise to carry out your deliveries</p>
@@ -212,7 +225,20 @@ const DispatchRules = props => {
 												</label>
 											</div>
 											<div className='col-1'>
-												<button type='button' className='btn btn-sm btn-outline-primary' onClick={() => console.log('hello')}>
+												<button
+													type='button'
+													className='btn btn-sm btn-outline-primary'
+													onClick={() =>
+														showVehicleOption(prevState => ({
+															show: true,
+															code: value,
+															label,
+															minDispatchAmount: values.courierVehicles[value].minDispatchAmount,
+															maxDispatchAmount: values.courierVehicles[value].maxDispatchAmount,
+															maxTransitTime: values.courierVehicles[value].maxTransitTime
+														}))
+													}
+												>
 													customize
 												</button>
 											</div>

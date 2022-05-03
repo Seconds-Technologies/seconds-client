@@ -2,10 +2,11 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import awsconfig from './aws-exports';
 import './assets/fonts/Roboto/Roboto-Regular.ttf';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Amplify, { Auth, Storage } from 'aws-amplify';
+import Amplify, { Storage } from 'aws-amplify';
 import '@aws-amplify/ui/dist/style.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { persistor, store } from './store';

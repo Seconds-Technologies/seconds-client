@@ -25,6 +25,7 @@ const BusinessSettings = props => {
 				}}
 				onSubmit={values => {
 					console.log(values);
+					values.dispatchSupportTeam = values.dispatchSupportTeam.split(",")
 					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message));
 				}}
 			>

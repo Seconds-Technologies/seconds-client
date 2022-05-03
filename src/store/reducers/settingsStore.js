@@ -48,26 +48,31 @@ export const DEFAULT_STATE = {
 			enabled: true,
 			minDispatchAmount: 0,
 			maxDispatchAmount: 100,
+			maxTransitTime: 720
 		},
 		MTB: {
 			enabled: true,
 			minDispatchAmount: 0,
 			maxDispatchAmount: 100,
+			maxTransitTime: 720
 		},
 		CGB: {
 			enabled: true,
 			minDispatchAmount: 0,
 			maxDispatchAmount: 100,
+			maxTransitTime: 720
 		},
 		CAR: {
 			enabled: true,
 			minDispatchAmount: 0,
 			maxDispatchAmount: 100,
+			maxTransitTime: 720
 		},
 		VAN: {
 			enabled: true,
 			minDispatchAmount: 0,
 			maxDispatchAmount: 100,
+			maxTransitTime: 720
 		},
 	},
 	activeFleetProviders: {
