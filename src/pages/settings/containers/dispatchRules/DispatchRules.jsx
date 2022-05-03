@@ -226,7 +226,7 @@ const DispatchRules = props => {
 								<span className='me-2 workflow-header fs-6'>Allowed Delivery Vehicles</span>
 								<div className='d-flex flex-column mt-2'>
 									{VEHICLE_TYPES.map(({ value, label }, index) => (
-										<div className='row ms-1 mb-1'>
+										<div className='row ms-1 mb-1 d-flex align-items-center'>
 											<div key={index} className='form-check col-1'>
 												<input
 													defaultChecked={values.courierVehicles[value].enabled}
@@ -275,7 +275,15 @@ const DispatchRules = props => {
 									</Tooltip>
 								</div>
 								<div className='d-flex flex-column mt-2'>
-									<input type='text' className='form-control rounded-3 mb-1' name='pickupInstructions' maxLength={125} onChange={handleChange} onBlur={handleBlur} />
+									<input
+										defaultValue={values.pickupInstructions}
+										type='text'
+										className='form-control rounded-3 mb-1'
+										name='pickupInstructions'
+										maxLength={125}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
 								</div>
 							</div>
 						</div>
