@@ -70,7 +70,7 @@ const BusinessSettings = props => {
 							<p className='text-muted'>Use this setting to cc specific email addresses on every order dispatch</p>
 							<div className="d-flex flex-column col-sm-12 col-md-4">
 								<label htmlFor='' className="workflow-header fs-6 mb-1">Please enter a comma separated list</label>
-								<input type='text' className="form-control rounded-3" name="dispatchSupportTeam"/>
+								<input type='text' className="form-control rounded-3" name="dispatchSupportTeam" onChange={handleChange} onBlur={handleBlur}/>
 							</div>
 
 						</div>

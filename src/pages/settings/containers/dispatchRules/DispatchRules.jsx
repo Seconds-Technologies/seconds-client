@@ -275,7 +275,7 @@ const DispatchRules = props => {
 									</Tooltip>
 								</div>
 								<div className='d-flex flex-column mt-2'>
-									<input type='text' className='form-control rounded-3 mb-1' name='pickupInstructions' maxLength={125} />
+									<input type='text' className='form-control rounded-3 mb-1' name='pickupInstructions' maxLength={125} onChange={handleChange} onBlur={handleBlur} />
 								</div>
 							</div>
 						</div>
