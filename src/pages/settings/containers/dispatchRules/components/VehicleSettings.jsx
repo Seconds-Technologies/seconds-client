@@ -21,16 +21,15 @@ const style = {
 	p: 4
 };
 
-const VehicleSettings = ({ open, onClose, code, label, onChange, defaultMinDispatch=0, defaultMaxDispatch=100, defaultMaxTransitTime=100 }) => {
+const VehicleSettings = ({ open, onClose, code, label, onChange, defaultMinDispatch = 0, defaultMaxDispatch = 100, defaultMaxTransitTime = 100 }) => {
 	return (
 		<Modal open={open} onClose={onClose} aria-labelledby='modal-modal-title' aria-describedby='modal-modal-description'>
 			<Box sx={style}>
-				<div className='py-3 d-flex flex-grow flex-row justify-content-between'>
-					<div/>
-					<h1 className='text-center fs-4'>{label}</h1>
-					<div
-						className="ms-auto"
-					>
+				<div className='pb-3 d-flex flex-row justify-content-between w-100'>
+					<header>
+						<h1 className='text-center fs-4'>{label}</h1>
+					</header>
+					<div className='ms-auto'>
 						<IconButton size='small' onClick={onClose}>
 							<CloseIcon />
 						</IconButton>

@@ -22,8 +22,16 @@ const DispatchRules = props => {
 		maxTransitTime: 100
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, courierSelectionCriteria, courierPriceThreshold, courierVehicles } =
-		useSelector(state => state['settingsStore']);
+	const {
+		jobAlerts,
+		defaultDispatch,
+		autoDispatch,
+		driverResponseTime,
+		courierSelectionCriteria,
+		courierPriceThreshold,
+		courierVehicles,
+		pickupInstructions
+	} = useSelector(state => state['settingsStore']);
 	return (
 		<div className='tab-container px-3'>
 			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={'bottomRight'} />
@@ -36,7 +44,8 @@ const DispatchRules = props => {
 					driverResponseTime,
 					courierSelectionCriteria,
 					courierPriceThreshold,
-					courierVehicles
+					courierVehicles,
+					pickupInstructions
 				}}
 				onSubmit={values => {
 					console.log(values);
@@ -219,7 +228,14 @@ const DispatchRules = props => {
 									{VEHICLE_TYPES.map(({ value, label }, index) => (
 										<div className='row ms-1 mb-1'>
 											<div key={index} className='form-check col-1'>
-												<input className='form-check-input' type='checkbox' />
+												<input
+													defaultChecked={values.courierVehicles[value].enabled}
+													name={`courierVehicles.${value}.enabled`}
+													className='form-check-input'
+													type='checkbox'
+													onChange={handleChange}
+													onBlur={handleBlur}
+												/>
 												<label className='form-check-label' htmlFor='flexCheckDefault'>
 													{label}
 												</label>
