@@ -4,6 +4,8 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import Tooltip from '@mui/material/Tooltip';
+import { BsInfoCircle } from 'react-icons/bs';
 
 const style = {
 	position: 'absolute',
@@ -36,8 +38,15 @@ const VehicleSettings = ({ open, onClose, code, label, onChange, defaultMinDispa
 					</div>
 				</div>
 				<div className='my-2 align-items-center'>
-					<span className='me-2 workflow-header fs-6'>Min Dispatch Order Amount</span>
-					<div className='input-group mt-2' style={{ width: 200 }}>
+					<header className='d-flex align-items-center'>
+						<span className='me-2 workflow-header fs-6'>Min Dispatch Order Amount</span>
+						<Tooltip title='Minimum order subtotal required to qualify for a Dispatch delivery order.' placement='right-start'>
+							<IconButton size='small'>
+								<BsInfoCircle />
+							</IconButton>
+						</Tooltip>
+					</header>
+					<div className='input-group mt-2' style={{ width: 250 }}>
 						<span className='input-group-text'>£</span>
 						<input
 							defaultValue={defaultMinDispatch}
@@ -52,8 +61,15 @@ const VehicleSettings = ({ open, onClose, code, label, onChange, defaultMinDispa
 					</div>
 				</div>
 				<div className='align-items-center my-2'>
-					<span className='me-2 workflow-header fs-6'>Max Dispatch Order Amount</span>
-					<div className='input-group mt-2' style={{ width: 200 }}>
+					<header className='d-flex align-items-center'>
+						<span className='me-2 workflow-header fs-6'>Max Dispatch Order Amount</span>
+						<Tooltip title='Maximum order subtotal required to qualify for a Dispatch delivery order.' placement='right-start'>
+							<IconButton size='small'>
+								<BsInfoCircle />
+							</IconButton>
+						</Tooltip>
+					</header>
+					<div className='input-group mt-2' style={{ width: 250 }}>
 						<span className='input-group-text'>£</span>
 						<input
 							defaultValue={defaultMaxDispatch}
@@ -67,9 +83,19 @@ const VehicleSettings = ({ open, onClose, code, label, onChange, defaultMinDispa
 						/>
 					</div>
 				</div>
-				<div className='align-items-center my-2'>
-					<span className='me-2 workflow-header fs-6'>Max Transit time</span>
-					<div className='input-group mt-2' style={{ width: 200 }}>
+				<div className='align-items-center my-2' style={{ width: 250 }}>
+					<header className='d-flex align-items-center'>
+						<span className='me-2 workflow-header fs-6'>Max Transit time</span>
+						<Tooltip
+							title='Maximum transit time allowed to deliver food to the customer. Quotes will be rejected by Dispatch if transit time quoted by the DSP is greater than this value'
+							placement='right-start'
+						>
+							<IconButton size='small'>
+								<BsInfoCircle />
+							</IconButton>
+						</Tooltip>
+					</header>
+					<div className='input-group mt-2'>
 						<input
 							defaultValue={defaultMaxTransitTime}
 							name={`courierVehicles.${code}.maxTransitTime`}

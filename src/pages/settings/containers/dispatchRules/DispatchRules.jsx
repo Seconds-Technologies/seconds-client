@@ -19,7 +19,7 @@ const DispatchRules = props => {
 		label: '',
 		minDispatchAmount: 0,
 		maxDispatchAmount: 100,
-		maxTransitTime: 100
+		maxTransitTime: 720
 	});
 	const { email } = useSelector(state => state['currentUser'].user);
 	const {
