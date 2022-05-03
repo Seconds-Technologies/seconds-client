@@ -161,8 +161,8 @@ export default function Sidebar() {
 						</Link>
 					</Tooltip>
 					<Tooltip title='Profile' arrow placement='right-end'>
-						<div className='link dropdown' style={{ zIndex: 10000000 }}>
-							<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown' style={{ zIndex: 100000 }}>
+						<div className='link dropdown'>
+							<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
 								{profileImageData ? (
 									<img
 										className={`border rounded-circle sidebarIcon`}
@@ -170,13 +170,12 @@ export default function Sidebar() {
 										alt=''
 										width={26}
 										height={26}
-										style={{ zIndex: 100000 }}
 									/>
 								) : (
-									<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} style={{ zIndex: 100000 }} />
+									<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} />
 								)}
 							</div>
-							<ul className='dropdown-menu' aria-labelledby='main-dropdown' style={{ zIndex: 100000 }}>
+							<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 								<li>
 									<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
 										Profile
