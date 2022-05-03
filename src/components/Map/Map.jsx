@@ -116,7 +116,8 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 				zoom={location && !busy ? [13] : undefined}
 				containerStyle={{
 					height: `calc(100vh - ${height}px)`,
-					width: '100%'
+					width: '100%',
+					overflow: 'visible'
 				}}
 				onStyleLoad={map => onLoaded(map)}
 				maxZoom={20}

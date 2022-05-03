@@ -18,6 +18,7 @@ import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
 import Badge from '@mui/material/Badge';
 import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
+import Divider from '@mui/material/Divider';
 
 export default function Sidebar() {
 	const [isOpen, setAlerts] = useState(false);
@@ -51,7 +52,7 @@ export default function Sidebar() {
 				<ul className='nav nav-pills flex-column align-items-center mb-auto me-0'>
 					<div className='d-flex justify-content-center mt-3'>
 						<Link to={PATHS.HOME} href='src/layout/sidebar/Sidebar'>
-							<img src={logo} alt='' width={40} height={40} />
+							<img src={logo} alt='' width={30} height={30} />
 						</Link>
 					</div>
 					<Tooltip title='Dashboard' arrow placement='right-end'>
@@ -161,13 +162,7 @@ export default function Sidebar() {
 					</Tooltip>
 					<Tooltip title='Profile' arrow placement='right-end'>
 						<div className='link dropdown' style={{ zIndex: 10000000 }}>
-							<div
-								className='sidebarProfileItem'
-								role='button'
-								id='main-dropdown'
-								data-bs-toggle='dropdown'
-								style={{ zIndex: 10000000 }}
-							>
+							<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown' style={{ zIndex: 100000 }}>
 								{profileImageData ? (
 									<img
 										className={`border rounded-circle sidebarIcon`}
@@ -175,12 +170,13 @@ export default function Sidebar() {
 										alt=''
 										width={26}
 										height={26}
+										style={{ zIndex: 100000 }}
 									/>
 								) : (
-									<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} style={{ zIndex: 10000000 }} />
+									<img className={`sidebarIcon`} src={defaultAvatar} alt='' width={26} height={26} style={{ zIndex: 100000 }} />
 								)}
 							</div>
-							<ul className='dropdown-menu' aria-labelledby='main-dropdown' style={{ zIndex: 10000000 }}>
+							<ul className='dropdown-menu' aria-labelledby='main-dropdown' style={{ zIndex: 100000 }}>
 								<li>
 									<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
 										Profile
