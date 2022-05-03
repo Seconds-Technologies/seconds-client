@@ -25,7 +25,10 @@ const BusinessSettings = props => {
 				}}
 				onSubmit={values => {
 					console.log(values);
-					values.dispatchSupportTeam = values.dispatchSupportTeam.split(',');
+					values.dispatchSupportTeam = values.dispatchSupportTeam
+						.split(',')
+						.map(element => element.trim())
+						.filter(element => element !== '');
 					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message));
 				}}
 			>
@@ -53,9 +56,9 @@ const BusinessSettings = props => {
 							<div className='input-group' style={{ width: 200 }}>
 								<span className='input-group-text'>£</span>
 								<input
+									defaultValue={values.driverDeliveryFee}
 									name='driverDeliveryFee'
 									className='form-control'
-									defaultValue={values.driverDeliveryFee}
 									type='number'
 									min={0}
 									max={60}
