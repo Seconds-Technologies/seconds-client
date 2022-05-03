@@ -1,14 +1,12 @@
 import React from 'react';
-import trackIcon from '../../../../../assets/img/track1.svg';
-import serviceIcon from '../../../../../assets/img/service.svg';
-import vehicleIcon from '../../../../../assets/img/vehicle.svg';
+import trackIcon from '../assets/img/track1.svg';
+import serviceIcon from '../assets/img/service.svg';
+import vehicleIcon from '../assets/img/vehicle.svg';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { useSelector } from 'react-redux';
 import Chip from '@mui/material/Chip';
-
-const onIcon = <div className='switch-icon'>On</div>;
-const offIcon = <div className='switch-icon'>Off</div>;
+import { offIcon, onIcon } from '../constants';
 
 const CourierPanel = ({
 	id,

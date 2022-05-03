@@ -25,6 +25,8 @@ export const PATHS = {
 	STREET_STREAM: '/integrate/street-stream',
 	ECOFLEET: '/integrate/ecofleet',
 	ADDISON_LEE: '/integrate/addison-lee',
+	ABSOLUTELY: '/integrate/absolutely',
+	HERE_NOW: '/integrate/here-now',
 	HUBRISE_CATALOG: '/integrate/hubrise/catalog',
 	API_KEY: '/integrate/api',
 	PROFILE: '/profile',
@@ -36,7 +38,9 @@ export const PATHS = {
 	DELIVERY_TIMES: '/delivery-times',
 	SIGNUP_1: '/signup/1',
 	SIGNUP_2: '/signup/2',
-	SIGNUP_3: '/signup/3',
+	SIGNUP_3: '/signup/3'
+
+
 };
 
 export const SUBSCRIPTION_PLANS = {

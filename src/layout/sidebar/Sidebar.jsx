@@ -52,7 +52,7 @@ export default function Sidebar() {
 				<ul className='nav nav-pills flex-column align-items-center mb-auto me-0'>
 					<div className='d-flex justify-content-center mt-3'>
 						<Link to={PATHS.HOME} href='src/layout/sidebar/Sidebar'>
-							<img src={logo} alt='' width={30} height={30} />
+							<img src={logo} alt='' width={27} height={27} />
 						</Link>
 					</div>
 					<Tooltip title='Dashboard' arrow placement='right-end'>

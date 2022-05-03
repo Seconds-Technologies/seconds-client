@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import CourierPanel from '../settings/containers/couriers/components/CourierPanel';
+import CourierPanel from '../../components/CourierPanel';
 import { PROVIDERS } from '../../constants';
 import stuart from '../../assets/img/stuart.svg';
 import { updateFleetProviders } from '../../store/actions/settings';

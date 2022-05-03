@@ -32,6 +32,8 @@ import Gophr from '../pages/couriers/Gophr';
 import StreetStream from '../pages/couriers/StreetStream';
 import Ecofleet from '../pages/couriers/Ecofleet';
 import AddisonLee from '../pages/couriers/AddisonLee';
+import Absolutely from '../pages/couriers/Absolutely';
+import HereAndNow from '../pages/couriers/HereAndNow';
 
 const routes = (
 	<Switch>
@@ -50,6 +52,8 @@ const routes = (
 		<PrivateRoute exact path={PATHS.STREET_STREAM} component={StreetStream} />
 		<PrivateRoute exact path={PATHS.ECOFLEET} component={Ecofleet} />
 		<PrivateRoute exact path={PATHS.ADDISON_LEE} component={AddisonLee} />
+		<PrivateRoute exact path={PATHS.ABSOLUTELY} component={Absolutely} />
+		<PrivateRoute exact path={PATHS.HERE_NOW} component={HereAndNow} />
 		<PrivateRoute path={PATHS.SQUARE} component={Square} />
 		<PrivateRoute path={PATHS.WOOCOMMERCE} component={WooCommerce} />
 		<PrivateRoute path={PATHS.SQUARESPACE} component={SquareSpace} />

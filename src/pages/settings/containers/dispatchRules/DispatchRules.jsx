@@ -5,20 +5,25 @@ import Switch from 'react-switch';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
-import Slider from '@mui/material/Slider';
 import { Form, Formik } from 'formik';
 import { updateBusinessWorkflow } from '../../../../store/actions/settings';
 import SuccessToast from '../../../../modals/SuccessToast';
+import VehicleSettings from './components/VehicleSettings';
 
 const DispatchRules = props => {
 	const dispatch = useDispatch();
 	const [message, setMessage] = useState('');
+	const [vehicleOption, showVehicleOption] = useState({
+		show: false,
+		vehicleCode: ''
+	});
 	const { email } = useSelector(state => state['currentUser'].user);
 	const { jobAlerts, defaultDispatch, autoDispatch, driverResponseTime, courierSelectionCriteria, courierPriceThreshold, courierVehicles } =
 		useSelector(state => state['settingsStore']);
 	return (
 		<div className='tab-container px-3'>
 			<SuccessToast toggleShow={setMessage} message={message} delay={2000} position={'bottomRight'} />
+			<VehicleSettings open={vehicleOption.show} onClose={() => showVehicleOption(prevState => ({ ...prevState, show: false }))} />
 			<Formik
 				enableReinitialize
 				initialValues={{
@@ -195,50 +200,6 @@ const DispatchRules = props => {
 									</label>
 								</div>
 							</div>
-							<div className='d-flex flex-column mt-4'>
-								<div className='my-2 align-items-center'>
-									<span className='me-2 workflow-header fs-6'>Min Dispatch Order Amount</span>
-									<div className='input-group mt-2' style={{ width: 200 }}>
-										<span className='input-group-text'>£</span>
-										<input
-											defaultValue={0}
-											type='number'
-											min={0}
-											max={100}
-											className='form-control'
-											aria-label='Amount (to the nearest dollar)'
-										/>
-									</div>
-								</div>
-								<div className='align-items-center my-2'>
-									<span className='me-2 workflow-header fs-6'>Max Dispatch Order Amount</span>
-									<div className='input-group mt-2' style={{ width: 200 }}>
-										<span className='input-group-text'>£</span>
-										<input
-											defaultValue={100}
-											type='number'
-											min={0}
-											max={100}
-											className='form-control'
-											aria-label='Amount (to the nearest dollar)'
-										/>
-									</div>
-								</div>
-								<div className='align-items-center my-2'>
-									<span className='me-2 workflow-header fs-6'>Max Transit time</span>
-									<div className='input-group mt-2' style={{ width: 200 }}>
-										<input
-											defaultValue={100}
-											type='number'
-											min={0}
-											max={100}
-											className='form-control'
-											aria-label='Amount (to the nearest dollar)'
-										/>
-										<span className='input-group-text'>mins</span>
-									</div>
-								</div>
-							</div>
 							<div className='mt-4'>
 								<span className='me-2 workflow-header fs-6'>Allowed Delivery Vehicles</span>
 								<div className='d-flex flex-column mt-2'>
@@ -262,7 +223,10 @@ const DispatchRules = props => {
 							<div className='mt-4 col-md-3'>
 								<div className='d-flex align-items-center'>
 									<span className='me-2 workflow-header fs-6'>Pickup Instructions</span>
-									<Tooltip title='Instructions presented to the delivery courier through their app (max 125 characters)' placement='right-start'>
+									<Tooltip
+										title='Instructions presented to the delivery courier through their app (max 125 characters)'
+										placement='right-start'
+									>
 										<IconButton size='small'>
 											<BsInfoCircle />
 										</IconButton>

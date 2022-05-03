@@ -6,7 +6,6 @@ import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Profile from './containers/profile/Profile';
-import Couriers from './containers/couriers/Couriers';
 import Integrations from './containers/integrations/Integrations';
 import Subscription from './containers/billing/Subscription';
 import TabPanel from '../../components/TabPanel';
@@ -15,17 +14,14 @@ import Developers from './containers/developers/Developers';
 import TabContext from '../../context/TabContext';
 import AppBar from '@mui/material/AppBar';
 import Branding from './containers/branding/Branding';
-import Payroll from './containers/payroll/Payroll';
 import DispatchRules from './containers/dispatchRules/DispatchRules';
 import RoutingRules from './containers/routingRules/RoutingRules';
 import Notifications from './containers/notifications/Notifications';
+import Couriers from './containers/couriers/Couriers';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
 	const [navColor, setNavColor] = useState("white")
-
-	const setWhite = () => setNavColor("white")
-	const setTransparent = () => setNavColor("transparent")
 
 	const handleChange = (event, newValue) => {
 		dispatch({type: 'setIndex', index: newValue})
@@ -97,8 +93,9 @@ const Settings = props => {
 						<AntTab label='Routing' {...a11yProps(4)} />
 						<AntTab label='Notifications' {...a11yProps(5)} />
 						<AntTab label="Branding" {...a11yProps(6)} />
-						<AntTab label='Integrations' {...a11yProps(7)} />
-						<AntTab label='Developers' {...a11yProps(8)} />
+						<AntTab label='Delivery Service Providers' {...a11yProps(7)} />
+						<AntTab label='Integrations' {...a11yProps(8)} />
+						<AntTab label='Developers' {...a11yProps(9)} />
 					</Tabs>
 				</AppBar>
 				<TabPanel value={index} index={0}>
@@ -123,9 +120,12 @@ const Settings = props => {
 					<Branding setNavColor={setNavColor} />
 				</TabPanel>
 				<TabPanel value={index} index={7}>
-					<Integrations setNavColor={setNavColor} {...props} />
+					<Couriers setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={8}>
+					<Integrations setNavColor={setNavColor} {...props} />
+				</TabPanel>
+				<TabPanel value={index} index={9}>
 					<Developers setNavColor={setNavColor} {...props} />
 				</TabPanel>
 			</Box>

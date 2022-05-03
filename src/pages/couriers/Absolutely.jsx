@@ -1,19 +1,17 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
 import CourierPanel from '../../components/CourierPanel';
 import { PROVIDERS } from '../../constants';
-import stuart from '../../assets/img/stuart.svg';
 import { updateFleetProviders } from '../../store/actions/settings';
 import { capitalize } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import SuccessToast from '../../modals/SuccessToast';
-import streetStream from '../../assets/img/street-stream.svg';
+import absolutely from '../../assets/img/absolutely-brand.svg';
 
-const StreetStream = props => {
+const Absolutely = props => {
 	const dispatch = useDispatch();
-	const { email } = useSelector(state => state['currentUser'].user)
+	const { email } = useSelector(state => state['currentUser'].user);
 	const { activeFleetProviders } = useSelector(state => state['settingsStore']);
-	const [successMessage, setSuccess] = useState('')
+	const [successMessage, setSuccess] = useState('');
 
 	const toggleProvider = useCallback(
 		provider => {
@@ -32,26 +30,27 @@ const StreetStream = props => {
 
 	return (
 		<div className='page-container container-fluid d-flex justify-content-center align-items-center'>
-			<SuccessToast message={successMessage} toggleShow={setSuccess}/>
+			<SuccessToast message={successMessage} toggleShow={setSuccess} />
 			<div className='d-flex flex-grow justify-content-center' style={{width: 500}}>
 				<div className='text-decoration-none my-2' />
 				<CourierPanel
-					id={PROVIDERS.STREET_STREAM}
-					name='Street Stream'
-					img={streetStream}
-					description='Street Stream are a London based Same-Day courier Service.'
-					link='https://streetstream.co.uk'
-					linkText='streetstream.co.uk'
+					id={PROVIDERS.ABSOLUTELY}
+					name='Absolutely Couriers'
+					img={absolutely}
+					description="Absolutely provides a full range of services to meet the demands of London's diverse economy, including same day temperature-controlled courier services."
+					link='https://absolutelycourier.com'
+					linkText='absolutelycourier.com'
 					locations='London'
-					services='Service Level: Same-Day On-demand and Scheduled delivery'
-					vehicles='Bicycle, Motorcycle, Cargobike, Car and Van'
+					services='Service Level: Overnight, Temperature-Controlled'
+					vehicles='Bicycle, Motorbike, Cargobike, Small Van and Large Van'
 					toggle={toggleProvider}
+					comingSoon={true}
 				/>
 			</div>
 		</div>
 	);
 };
 
-StreetStream.propTypes = {};
+Absolutely.propTypes = {};
 
-export default StreetStream;
+export default Absolutely;

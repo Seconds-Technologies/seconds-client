@@ -14,24 +14,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { capitalize } from '../../../../helpers';
 import Chip from '@mui/material/Chip';
 // modals
-import { updateFleetProviders, updateIntegrationStatus } from '../../../../store/actions/settings';
+import { updateIntegrationStatus } from '../../../../store/actions/settings';
 import SuccessToast from '../../../../modals/SuccessToast';
 // components
 import ShopifyPanel from './components/ShopifyPanel';
 import WooCommercePanel from './components/WooCommercePanel';
 import SquarespacePanel from './components/SquarespacePanel';
 import HubrisePanel from './components/HubrisePanel';
-import StuartPanel from './components/StuartPanel';
-import GophrPanel from './components/GophrPanel';
-import StreetStreamPanel from './components/StreetStreamPanel';
-import EcofleetPanel from './components/EcofleetPanel';
-import AddisonLeePanel from './components/AddisonLeePanel';
 
 export default function Integrations(props) {
 	const [successMessage, setSuccess] = useState('');
 	const error = useSelector(state => state['errors']);
 	const { email } = useSelector(state => state['currentUser'].user);
-	const { activeFleetProviders } = useSelector(state => state['settingsStore']);
 	const dispatch = useDispatch();
 	const errorRef = useRef(null);
 
@@ -41,21 +35,6 @@ export default function Integrations(props) {
 			setSuccess(message);
 		});
 	}, []);
-
-	const toggleProvider = useCallback(
-		provider => {
-			let data = { ...activeFleetProviders, ...provider };
-			console.log(data);
-			dispatch(updateFleetProviders(email, data)).then(() => {
-				let providerId = Object.keys(provider)[0];
-				let status = provider[providerId] ? 'enabled' : 'disabled';
-				let message = `${capitalize(providerId)} is now ${status}`;
-				console.log(message);
-				setSuccess(message);
-			});
-		},
-		[activeFleetProviders]
-	);
 
 	const IntegrationLinkBtn = classnames({
 		'col-sm-12': true,
@@ -168,11 +147,6 @@ export default function Integrations(props) {
 							<img className='img-fluid' width={250} src={justEatLogo} alt='magento logo' />
 						</div>
 					</div>
-					<StuartPanel wrapper={IntegrationLinkBtn} toggle={toggleProvider} />
-					<GophrPanel wrapper={IntegrationLinkBtn} toggle={toggleProvider} />
-					<StreetStreamPanel wrapper={IntegrationLinkBtn} toggle={toggleProvider} />
-					<EcofleetPanel wrapper={IntegrationLinkBtn} toggle={toggleProvider} />
-					<AddisonLeePanel wrapper={IntegrationLinkBtn} toggle={toggleProvider} />
 				</div>
 			</div>
 		</div>
