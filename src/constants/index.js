@@ -44,9 +44,10 @@ export const PATHS = {
 };
 
 export const SUBSCRIPTION_PLANS = {
-	STARTER: {
-		name: 'starter',
+	CONNECT: {
+		name: 'connect',
 		description: 'Ideal for small businesses with small delivery volume who want to outsource their deliveries.',
+		billingInterval: 'week',
 		price: 0,
 		priceLabel: 'Free',
 		features: [
@@ -68,6 +69,7 @@ export const SUBSCRIPTION_PLANS = {
 	GROWTH: {
 		name: 'growth',
 		description: 'Great for small businesses with mild delivery volume and manage their own team.',
+		billingInterval: 'month',
 		price: 99,
 		priceLabel: '£99',
 		features: [
@@ -85,6 +87,7 @@ export const SUBSCRIPTION_PLANS = {
 	PRO: {
 		name: 'pro',
 		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.',
+		billingInterval: 'month',
 		price: 140,
 		priceLabel: '£140',
 		features: [
@@ -100,6 +103,7 @@ export const SUBSCRIPTION_PLANS = {
 	ENTERPRISE: {
 		name: 'enterprise',
 		description: 'Built for large organisations looking for the most advanced technology to manage their entire last mile.',
+		billingInterval: 'month',
 		price: 'Contact Us',
 		priceLabel: 'Contact Us',
 		features: ['Everything in Pro', 'Fully customised for your organisation', 'Best support SLA', 'Dedicated onboarding']

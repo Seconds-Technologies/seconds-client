@@ -32,16 +32,16 @@ const ChangePlan = ({ show, onHide, centered, onChange }) => {
 				<div className='ms-3 row gy-3'>
 					<div className='col-12'>
 						<PlanTile
-							selected={selectedPlan === SUBSCRIPTION_PLANS.STARTER.name}
-							name={SUBSCRIPTION_PLANS.STARTER.name}
-							description={SUBSCRIPTION_PLANS.STARTER.description}
-							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name}
-							price={SUBSCRIPTION_PLANS.STARTER.price}
-							priceLabel={SUBSCRIPTION_PLANS.STARTER.priceLabel}
+							selected={selectedPlan === SUBSCRIPTION_PLANS.CONNECT.name}
+							name={SUBSCRIPTION_PLANS.CONNECT.name}
+							description={SUBSCRIPTION_PLANS.CONNECT.description}
+							activePlan={subscriptionPlan === SUBSCRIPTION_PLANS.CONNECT.name}
+							price={SUBSCRIPTION_PLANS.CONNECT.price}
+							priceLabel={SUBSCRIPTION_PLANS.CONNECT.priceLabel}
 							onSelect={() =>
-								subscriptionPlan === SUBSCRIPTION_PLANS.STARTER.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.STARTER.name)
+								subscriptionPlan === SUBSCRIPTION_PLANS.CONNECT.name ? undefined : setSelectedPlan(SUBSCRIPTION_PLANS.CONNECT.name)
 							}
-							features={SUBSCRIPTION_PLANS.STARTER.features.join('\n')}
+							features={SUBSCRIPTION_PLANS.CONNECT.features.join('\n')}
 							role={'button'}
 						/>
 					</div>

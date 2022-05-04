@@ -14,8 +14,9 @@ const PaymentInformation = ({ show, onHide, newPlan, isLoading, onSubscribe }) =
 	const priceText = useMemo(() => {
 		if (newPlan) {
 			const price = SUBSCRIPTION_PLANS[newPlan.toUpperCase()].price
+			const interval = SUBSCRIPTION_PLANS[newPlan.toUpperCase()].billingInterval
 			if (typeof price === "number") {
-				return `£${price}/month`
+				return `£${price}/${interval}`
 			}
 		}
 		return ""
