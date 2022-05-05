@@ -39,7 +39,7 @@ const FeaturedInfo = ({ interval }) => {
 	}, [total, completed]);
 
 	return (
-		<div className='featured'>
+		<div className='featured-container'>
 			<div className='featuredItem py-1'>
 				<Link to={PATHS.ORDERS} className='ordersLink d-flex flex-column align-items-center justify-content-center'>
 					{/*<div className="px-4">

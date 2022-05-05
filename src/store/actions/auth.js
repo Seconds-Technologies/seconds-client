@@ -16,6 +16,7 @@ import { setSquareSpace } from './squarespace';
 import { setHubrise } from './hubrise';
 import { setDrivers, updateDrivers } from './drivers';
 import { setSettings } from './settings';
+import { AUTH_TYPE } from '../../constants';
 
 export const removeUser = () => ({
 	type: REMOVE_CURRENT_USER
@@ -87,6 +88,18 @@ export function authUser(type, userData) {
 							})
 							.catch(err => reject(err));
 					dispatch(removeError());
+					if (type === AUTH_TYPE.REGISTER) {
+						Mixpanel.identify(user.id);
+						Mixpanel.track('Successful Registration');
+						Mixpanel.people.set({
+							$first_name: user.firstname,
+							$last_name: user.lastname,
+							$email: user.email,
+							$company: user.company,
+							$apiKey: false,
+							$subscribed: false
+						});
+					}
 					resolve(user);
 				})
 				.catch(err => {

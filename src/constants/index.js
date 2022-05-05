@@ -1,5 +1,10 @@
 import React from 'react';
 
+export const AUTH_TYPE = {
+	LOGIN: 'login',
+	REGISTER: 'register'
+}
+
 export const PATHS = {
 	SIGNUP: '/signup',
 	LOGIN: '/login',

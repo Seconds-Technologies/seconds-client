@@ -18,7 +18,9 @@
 }
 
 .login-aside-header {
-  font-weight: 700;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 32px;
+  font-weight: 600;
 }
 
 .loginLogo {

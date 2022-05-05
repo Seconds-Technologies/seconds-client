@@ -1,11 +1,16 @@
 import './Signup.css';
+import React, { useCallback, useEffect, useState } from 'react';
 import logo from '../../assets/img/seconds-logo-black.svg';
 import { Formik, Field } from 'formik';
 import { Link } from 'react-router-dom';
-import { authUser, validateRegistration } from '../../store/actions/auth';
+import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { addError, removeError } from '../../store/actions/errors';
-import React, { useCallback, useEffect, useState } from 'react';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { geocodeByAddress } from 'react-google-places-autocomplete';
 import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
@@ -13,6 +18,7 @@ import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
 import { Mixpanel } from '../../config/mixpanel';
 import { parseAddress } from '../../helpers';
+import valuesIcon from '../../assets/img/signup-aside-icon.svg';
 
 export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);
@@ -47,33 +53,41 @@ export default function Signup(props) {
 			<div className='row h-100'>
 				<div className='col-md-3 d-none d-md-block h-100 p-4 signup-aside'>
 					<div className='d-flex flex-column h-100'>
-						<img src={logo} alt='' className='img-fluid' width={150} />
-						<div className='d-flex flex-grow-1 flex-column mt-4'>
-							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Scale your revenue and business</h1>
-								<p className='text-wrap signup-aside-text'>
-									With our delivery network, delivery management software and post-purchase customer experiences, your business can
-									grow more rapidly than ever.
-								</p>
-							</div>
-							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Automate and Optimize</h1>
-								<p className='text-wrap signup-aside-text'>
-									Save operational time and money by 20% by optimizing and automating your operations.
-								</p>
-							</div>
-							<div className='mt-4'>
-								<h1 className='signup-aside-header'>Improve your customer experience and loyalty</h1>
-								<p className='text-wrap signup-aside-text'>
-									With our world class SMS notification and live tracking, your customers will be closer than ever.
-								</p>
-							</div>
-							<div className='mt-4'>
-								<p className='text-wrap signup-aside-text'>
-									Thank you for choosing us. We look forward to being a reliable partner to your
-									business.
-								</p>
-							</div>
+						<div className='position-absolute top-0 start-0 p-4'>
+							<img src={logo} alt='' className='img-fluid' width={150} />
+						</div>
+						<div className='d-flex flex-grow-1 flex-column justify-content-center '>
+							<header className='mb-4'>
+								<span className='login-aside-header' style={{ lineHeight: 1.1 }}>
+									Supercharge your deliveries
+								</span>
+							</header>
+							<List disablePadding>
+								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+									<ListItemIcon>
+										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
+									</ListItemIcon>
+									<ListItemText primary='Tap into any delivery network' />
+								</ListItem>
+								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+									<ListItemIcon>
+										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
+									</ListItemIcon>
+									<ListItemText primary='Manage your deliveries in one place' />
+								</ListItem>
+								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+									<ListItemIcon>
+										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
+									</ListItemIcon>
+									<ListItemText primary='Provide customers great experience' />
+								</ListItem>
+								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+									<ListItemIcon>
+										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
+									</ListItemIcon>
+									<ListItemText primary='Gain insights about deliveries' />
+								</ListItem>
+							</List>
 						</div>
 					</div>
 				</div>
@@ -81,16 +95,11 @@ export default function Signup(props) {
 					<div className='d-flex flex-grow-1 justify-content-center flex-column'>
 						<div className='py-4'>
 							<h2 className='signup-header pb-2'>Sign up for your account</h2>
-							<span className='text-muted'>Lets get you all set up so you can get started</span>
 						</div>
 						{errors.message && (
 							<div className='alert alert-danger alert-dismissible' role='alert'>
 								<span>{errors.message}</span>
-								<button
-									onClick={() => dispatch(removeError())}
-									type='button'
-									className='btn btn-close'
-								/>
+								<button onClick={() => dispatch(removeError())} type='button' className='btn btn-close' />
 							</div>
 						)}
 						<Formik
@@ -101,11 +110,6 @@ export default function Signup(props) {
 								company: '',
 								password: '',
 								phone: '',
-								address: {
-									addressLine1: '',
-									city: '',
-									postcode: ''
-								},
 								terms: false
 							}}
 							enableReinitialize
@@ -119,14 +123,6 @@ export default function Signup(props) {
 								company: '',
 								password: '',
 								phone: '',
-								fullAddress: '',
-								address: {
-									addressLine1: '',
-									addressLine2: '',
-									city: '',
-									postcode: '',
-									countryCode: 'GB'
-								},
 								terms: false
 							}}
 							onSubmit={async (values, actions) => {
@@ -140,18 +136,7 @@ export default function Signup(props) {
 									values.address.postcode = inputPostcode;
 									validateAddress(values.address);
 									console.table({ address: values.address, fullAddress: values.fullAddress });
-									const user = await dispatch(authUser('register', values));
-									Mixpanel.identify(user.id);
-									Mixpanel.track('Successful Registration');
-									Mixpanel.people.set({
-										$first_name: user.firstname,
-										$last_name: user.lastname,
-										$email: user.email,
-										$company: user.company,
-										$address: user.fullAddress,
-										$apiKey: false,
-										$subscribed: false
-									});
+									await dispatch(authUser('register', values));
 									setLoading(false);
 									props.history.push('/signup/1');
 								} catch (err) {
@@ -162,154 +147,42 @@ export default function Signup(props) {
 							}}
 						>
 							{({
-								  values,
-								  errors,
-								  touched,
-								  handleChange,
-								  handleBlur,
-								  handleSubmit,
-								  isSubmitting,
-								  setFieldValue
-								  /* and other goodies */
-							  }) => (
+								values,
+								errors,
+								touched,
+								handleChange,
+								handleBlur,
+								handleSubmit,
+								isSubmitting,
+								setFieldValue
+								/* and other goodies */
+							}) => (
 								<form onSubmit={handleSubmit} className='signupForm'>
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												<span>
-													{errors['firstname'] && <span className='text-danger'>*</span>}First
-													Name
-												</span>
+												<span>{errors['firstname'] && <span className='text-danger'>*</span>}First Name</span>
 											</label>
 											<input
 												autoComplete='given-name'
 												type='text'
 												id='firstname'
 												name='firstname'
-												className='form-control rounded-3'
+												className='form-control signup-aside'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
 										</div>
 										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
-												<span>
-													{errors['lastname'] && <span className='text-danger'>*</span>}Last
-													Name
-												</span>
+												<span>{errors['lastname'] && <span className='text-danger'>*</span>}Last Name</span>
 											</label>
 											<input
 												autoComplete='family-name'
 												type='text'
 												id='lastname'
 												name='lastname'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-									</div>
-									<div className='row mt-3'>
-										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='company'>
-												<span>
-													{errors['company'] && <span className='text-danger'>*</span>}Company
-												</span>
-											</label>
-											<input
-												autoComplete='organization'
-												type='text'
-												id='company'
-												name='company'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-										<div className='col-md-6 col-lg-6 pb-xs-4 mt-md-0 mt-sm-2'>
-											<label className='mb-2' htmlFor='company'>
-												<span>
-													{errors['phone'] && <span className='text-danger'>*</span>}Phone
-												</span>
-											</label>
-											<input
-												autoComplete='tel'
-												type='tel'
-												id='phone'
-												name='phone'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-									</div>
-									<div className='row mt-3'>
-										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='company-address'>
-												<span>
-													{errors['address'] && errors['address']['addressLine1'] && <span className='text-danger'>*</span>}
-													Address line 1
-												</span>
-											</label>
-											<input
-												autoComplete='address-line1'
-												type='text'
-												id='address-line-1'
-												name='address.addressLine1'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='company-address'>
-												<span>
-													{errors['address'] && errors['address']['addressLine2'] && <span className='text-danger'>*</span>}
-													Address line 2
-												</span>
-											</label>
-											<input
-												autoComplete='address-line2'
-												type='text'
-												id='address-line-2'
-												name='address.addressLine2'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-									</div>
-									<div className='row mt-3'>
-										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='city'>
-												<span>
-													{errors['address'] && errors['address']['city'] && <span className='text-danger'>*</span>}
-													City
-												</span>
-											</label>
-											<input
-												autoComplete='address-level2'
-												type='text'
-												id='city'
-												name='address.city'
-												className='form-control rounded-3'
-												onBlur={handleBlur}
-												onChange={handleChange}
-											/>
-										</div>
-										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='company-address'>
-												<span>
-													{errors['address'] && errors['address']['postcode'] && <span className='text-danger'>*</span>}
-													Postcode
-												</span>
-											</label>
-											<input
-												autoComplete='postal-code'
-												type='text'
-												id='postcode'
-												name='address.postcode'
-												className='form-control rounded-3'
+												className='form-control signup-aside'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -317,31 +190,55 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>
-											<span>
-												{errors['email'] && <span className='text-danger'>*</span>}Email Address
-											</span>
+											<span>{errors['email'] && <span className='text-danger'>*</span>}Email Address</span>
 										</label>
 										<input
 											autoComplete='email'
 											type='email'
 											id='email'
 											name='email'
-											className='form-control rounded-3'
+											className='form-control signup-aside'
+											onBlur={handleBlur}
+											onChange={handleChange}
+										/>
+									</div>
+									<div className='mt-3'>
+										<label className='mb-2' htmlFor='company'>
+											<span>{errors['company'] && <span className='text-danger'>*</span>}Business Name</span>
+										</label>
+										<input
+											autoComplete='organization'
+											type='text'
+											id='company'
+											name='company'
+											className='form-control signup-aside'
+											onBlur={handleBlur}
+											onChange={handleChange}
+										/>
+									</div>
+									<div className='mt-3'>
+										<label className='mb-2' htmlFor='company'>
+											<span>{errors['phone'] && <span className='text-danger'>*</span>}Phone Number</span>
+										</label>
+										<input
+											autoComplete='tel'
+											type='tel'
+											id='phone'
+											name='phone'
+											className='form-control signup-aside'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='password'>
-											<span>
-												{errors['password'] && <span className='text-danger'>*</span>}Password
-											</span>
+											<span>{errors['password'] && <span className='text-danger'>*</span>}Password</span>
 										</label>
 										<PasswordField
 											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
-											classNames='form-control rounded-3'
+											classNames='form-control signup-aside'
 											min={8}
 											max={50}
 										/>
@@ -349,7 +246,7 @@ export default function Signup(props) {
 									<div className='d-flex justify-content-between mt-3 form-check'>
 										<div>
 											<Field
-												className='form-check-input me-2'
+												className='form-check-input me-2 rounded-0'
 												type='checkbox'
 												id='terms'
 												name='terms'
@@ -358,10 +255,7 @@ export default function Signup(props) {
 											/>
 											<label htmlFor='terms'>
 												I agree to the&nbsp;
-												<a
-													href={process.env.REACT_APP_TERMS_OF_SERVICE_URL}
-													target='_blank'
-												>
+												<a href={process.env.REACT_APP_TERMS_OF_SERVICE_URL} target='_blank'>
 													terms of service
 												</a>
 											</label>
@@ -369,7 +263,7 @@ export default function Signup(props) {
 										<ErrorField name='terms' />
 									</div>
 									<div>
-										<button type='submit' className='btn btn-dark btn-lg w-100 mt-4'>
+										<button type='submit' className='btn btn-dark btn-lg w-100 mt-4 rounded-0'>
 											Sign Up
 										</button>
 									</div>
