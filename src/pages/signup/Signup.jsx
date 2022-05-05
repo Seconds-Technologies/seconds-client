@@ -62,26 +62,26 @@ export default function Signup(props) {
 									Supercharge your deliveries
 								</span>
 							</header>
-							<List disablePadding>
-								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+							<List disablePadding sx={{marginBottom: 5}}>
+								<ListItem disablePadding sx={{ marginBottom: 2 }}>
 									<ListItemIcon>
 										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
 									</ListItemIcon>
 									<ListItemText primary='Tap into any delivery network' />
 								</ListItem>
-								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+								<ListItem disablePadding sx={{ marginBottom: 2 }}>
 									<ListItemIcon>
 										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
 									</ListItemIcon>
 									<ListItemText primary='Manage your deliveries in one place' />
 								</ListItem>
-								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+								<ListItem disablePadding sx={{ marginBottom: 2 }}>
 									<ListItemIcon>
 										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
 									</ListItemIcon>
 									<ListItemText primary='Provide customers great experience' />
 								</ListItem>
-								<ListItem disablePadding sx={{ marginBottom: 1 }}>
+								<ListItem disablePadding sx={{ marginBottom: 2 }}>
 									<ListItemIcon>
 										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
 									</ListItemIcon>
@@ -94,7 +94,7 @@ export default function Signup(props) {
 				<div className='col-sm-12 col-md-9 w-sm mx-auto my-auto py-sm-4 px-md-5 px-sm-3'>
 					<div className='d-flex flex-grow-1 justify-content-center flex-column'>
 						<div className='py-4'>
-							<h2 className='signup-header pb-2'>Sign up for your account</h2>
+							<h2 className='text-center signup-header pb-2'>Sign up for your account!</h2>
 						</div>
 						{errors.message && (
 							<div className='alert alert-danger alert-dismissible' role='alert'>
@@ -161,28 +161,28 @@ export default function Signup(props) {
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												<span>{errors['firstname'] && <span className='text-danger'>*</span>}First Name</span>
+												<span className="text-muted signup-form-label">{errors['firstname'] && <span className='text-danger'>*</span>}FIRST NAME</span>
 											</label>
 											<input
 												autoComplete='given-name'
 												type='text'
 												id='firstname'
 												name='firstname'
-												className='form-control signup-aside'
+												className='form-control border-0 signup-aside py-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
 										</div>
 										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
-												<span>{errors['lastname'] && <span className='text-danger'>*</span>}Last Name</span>
+												<span className="text-muted signup-form-label">{errors['lastname'] && <span className='text-danger'>*</span>}LAST NAME</span>
 											</label>
 											<input
 												autoComplete='family-name'
 												type='text'
 												id='lastname'
 												name='lastname'
-												className='form-control signup-aside'
+												className='form-control border-0 signup-aside py-2'
 												onBlur={handleBlur}
 												onChange={handleChange}
 											/>
@@ -190,55 +190,55 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>
-											<span>{errors['email'] && <span className='text-danger'>*</span>}Email Address</span>
+											<span className="text-muted signup-form-label">{errors['email'] && <span className='text-danger'>*</span>}EMAIL ADDRESS</span>
 										</label>
 										<input
 											autoComplete='email'
 											type='email'
 											id='email'
 											name='email'
-											className='form-control signup-aside'
+											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company'>
-											<span>{errors['company'] && <span className='text-danger'>*</span>}Business Name</span>
+											<span className="text-muted signup-form-label">{errors['company'] && <span className='text-danger'>*</span>}BUSINESS NAME</span>
 										</label>
 										<input
 											autoComplete='organization'
 											type='text'
 											id='company'
 											name='company'
-											className='form-control signup-aside'
+											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company'>
-											<span>{errors['phone'] && <span className='text-danger'>*</span>}Phone Number</span>
+											<span className="text-muted signup-form-label">{errors['phone'] && <span className='text-danger'>*</span>}PHONE NUMBER</span>
 										</label>
 										<input
 											autoComplete='tel'
 											type='tel'
 											id='phone'
 											name='phone'
-											className='form-control signup-aside'
+											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
 											onChange={handleChange}
 										/>
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='password'>
-											<span>{errors['password'] && <span className='text-danger'>*</span>}Password</span>
+											<span className="text-muted signup-form-label">{errors['password'] && <span className='text-danger'>*</span>}PASSWORD</span>
 										</label>
 										<PasswordField
 											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
-											classNames='form-control signup-aside'
+											classNames='form-control border-0 signup-aside py-2'
 											min={8}
 											max={50}
 										/>
@@ -246,7 +246,7 @@ export default function Signup(props) {
 									<div className='d-flex justify-content-between mt-3 form-check'>
 										<div>
 											<Field
-												className='form-check-input me-2 rounded-0'
+												className='form-check-input me-2 rounded-0 py-2'
 												type='checkbox'
 												id='terms'
 												name='terms'

@@ -7,6 +7,10 @@
   background-color: #EEEEEE !important;
 }
 
+.signup-form-label {
+  font-size: 13px;
+}
+
 .signupLogo {
   align-items: center;
   display: block;
