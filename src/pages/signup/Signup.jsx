@@ -29,25 +29,6 @@ export default function Signup(props) {
 		dispatch(removeError());
 	}, [props.location]);
 
-	const validateAddress = useCallback(address => {
-		let err;
-		const types = ['street address', 'city', 'postcode'];
-		Object.values(address).forEach((item, index) => {
-			if (!item) {
-				err = `Address does not include a '${types[index]}'. Please add all parts of the address and try again`;
-				dispatch(addError(err));
-				throw new Error(err);
-			} else if (index === 2 && item.length < 6) {
-				err = `Postcode,' ${item}', is not complete. Please include a full UK postcode in your address`;
-				dispatch(addError(err));
-				throw new Error(err);
-			}
-		});
-		return true;
-	}, []);
-
-	const getParsedAddress = useCallback(parseAddress, []);
-
 	return (
 		<LoadingOverlay active={isLoading} spinner text='Checking your details...' classNamePrefix='signup_loader_'>
 			<div className='row h-100'>
@@ -129,13 +110,6 @@ export default function Signup(props) {
 								try {
 									setLoading(true);
 									console.log(values);
-									values.fullAddress = `${values.address.addressLine1} ${values.address.addressLine2} ${values.address.city} ${values.address.postcode}`;
-									let inputPostcode = values.address.postcode; // store postcode entered by the user during signup
-									let addressComponents = await geocodeByAddress(values.fullAddress);
-									values.address = getParsedAddress(addressComponents, true);
-									values.address.postcode = inputPostcode;
-									validateAddress(values.address);
-									console.table({ address: values.address, fullAddress: values.fullAddress });
 									await dispatch(authUser('register', values));
 									setLoading(false);
 									props.history.push('/signup/1');
