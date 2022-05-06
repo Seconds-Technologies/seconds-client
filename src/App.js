@@ -16,6 +16,7 @@ import grey from '@mui/material/colors/grey';
 import TabContext, { indexReducer } from './context/TabContext';
 import AmplifyContextProvider from './context/AmplifyContext';
 import ProductContextProvider from './context/ProductContext';
+import CreateLocation from './modals/CreateLocation';
 
 if (localStorage.getItem('jwt_token')) {
 	setAuthorizationToken(localStorage.getItem('jwt_token'));
@@ -27,7 +28,7 @@ function App() {
 	const dispatch = useDispatch();
 	const {
 		isAuthenticated,
-		user: { id, firstname, lastname, email, subscriptionPlan }
+		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress }
 	} = useSelector(state => state['currentUser']);
 	const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
 	const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
@@ -71,6 +72,7 @@ function App() {
 									<Router>
 										<div className='app-container'>
 											{isAuthenticated && <Sidebar />}
+											{isAuthenticated && !fullAddress && <CreateLocation open={true} onClose={() => console.log("closing modal...")}/>}
 											{routes}
 										</div>
 										{isAuthenticated && (

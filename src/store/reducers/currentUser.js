@@ -14,6 +14,14 @@ export const DEFAULT_STATE = {
 			price: false,
 			rating: false
 		},
+		fullAddress: '',
+		address: {
+			street: "",
+			city: "",
+			postcode: "",
+			countryCode: "",
+			geolocation: null
+		},
 		selectionStrategy: '',
 		profileImageData: '',
 		stripeCustomerId: '',

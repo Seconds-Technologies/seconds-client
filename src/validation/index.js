@@ -50,6 +50,16 @@ export const ReOrderSchema = Yup.object().shape({
 	drops: Yup.array().of(dropsSchema)
 });
 
+export const createLocationSchema = Yup.object().shape({
+	locationName: Yup.string().required('* Required'),
+	businessName: Yup.string().required('*Required'),
+	streetNumber: Yup.string().required('*Required'),
+	streetAddress: Yup.string().required('*Required'),
+	city: Yup.string().required('* Required'),
+	postcode: Yup.string().required('* Required'),
+	country: Yup.string().required('* Required'),
+})
+
 export const ResetPasswordSchema = Yup.object().shape({
 	password: Yup.string().required('Password is required'),
 	confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),

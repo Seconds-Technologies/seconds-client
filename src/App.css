@@ -34,6 +34,7 @@
 
 .font-semibold {
   font-family: 'Inter-SemiBold', sans-serif;
+  font-weight: 600;
 }
 
 .font-bold {
@@ -58,6 +59,10 @@
 .page-container {
   flex: 1;
   min-height: 100vh
+}
+
+.form-label {
+  font-size: 13px;
 }
 
 .tab-container {

@@ -53,7 +53,7 @@ const Signup2 = props => {
 					<div className='d-flex flex-column px-5'>
 						<div className='py-4'>
 							<h2 className='signup-header pb-2'>Payment details</h2>
-							<span className='text-muted'>You will be charged an invoice every month based on your number of deliveries</span>
+							<span className='text-muted'>{`You will be charged an invoice every ${hasFreeTrial ? "month" : "week"} based on your number of deliveries`}</span>
 						</div>
 						<Elements stripe={stripePromise}>
 							<Payment onSuccess={signup}/>

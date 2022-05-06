@@ -21,8 +21,6 @@ const Payment = ({ onSuccess }) => {
 	const elements = useElements();
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
-	const [fullName, setFullName] = useState("")
-	const [emailAddress, setEmailAddress] = useState("")
 
 	const handleError = e => {
 		setError(e.error);
