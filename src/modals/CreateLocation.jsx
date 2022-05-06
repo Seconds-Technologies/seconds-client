@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import { Formik } from 'formik';
 import { createLocationSchema } from '../validation';
 import { parseAddress } from '../helpers';
@@ -204,6 +203,7 @@ const CreateLocation = ({ open, onClose }) => {
 											Country
 										</label>
 										<input
+											defaultValue={values.country}
 											id='country'
 											name='country'
 											type='text'
