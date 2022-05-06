@@ -138,8 +138,8 @@ export default function Signup(props) {
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												<span className='text-muted signup-form-label'>
-													{errors['firstname'] && <span className='text-danger'>*</span>}FIRST NAME
+												<span className='text-muted signup-form-label text-uppercase'>
+													{errors['firstname'] && <span className='text-danger'>*</span>}First Name
 												</span>
 											</label>
 											<input

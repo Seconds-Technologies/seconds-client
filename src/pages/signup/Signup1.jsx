@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { authenticateUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import LoadingOverlay from 'react-loading-overlay';
-import Subscription from '../settings/containers/billing/Subscription';
-import backArrow from '../../assets/img/noun-go-back-vector.svg';
 import Products from './components/Products';
 
 const Signup1 = props => {
@@ -23,7 +20,6 @@ const Signup1 = props => {
 		<div className='container-fluid d-flex flex-column align-items-center mx-auto my-auto py-4 signupPage'>
 			<span className='fs-4 text-primary'>2/3</span>
 			<h2 className='display-3 font-medium pb-2'>Choose your product</h2>
-
 			<Products />
 		</div>
 	);
