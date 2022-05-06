@@ -1,13 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { PATHS, SUBSCRIPTION_PLANS } from '../../constants';
 import { authenticateUser } from '../../store/actions/auth';
-import { CardElement, CardNumberElement, Elements, useElements, useStripe } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { ProductContext } from '../../context/ProductContext';
-import { addPaymentMethod, setupIntent } from '../../store/actions/stripe';
-import { Mixpanel } from '../../config/mixpanel';
-import ClipLoader from 'react-spinners/ClipLoader';
 import SuccessToast from '../../modals/SuccessToast';
 import Payment from './components/Payment';
 

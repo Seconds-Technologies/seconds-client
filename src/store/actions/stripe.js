@@ -46,7 +46,7 @@ export function addPaymentMethod(email, stripeCustomerId, paymentMethodId) {
 				.then(res => {
 					console.log(paymentMethodId);
 					dispatch(updateCurrentUser({ paymentMethodId: paymentMethodId }));
-					resolve(null);
+					resolve(paymentMethodId);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Mixpanel } from '../../../config/mixpanel';
-import { addPaymentMethod, setupIntent } from '../../../store/actions/stripe';
+import { addPaymentMethod, setupIntent, setupSubscription } from '../../../store/actions/stripe';
 import { useDispatch, useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { ProductContext } from '../../../context/ProductContext';
 
 const ErrorMessage = ({ children }) => (
 	<div className='text-danger' role='alert'>
@@ -15,10 +16,13 @@ const Payment = ({ onSuccess }) => {
 	const [error, setError] = useState(null);
 	const [cardComplete, setCardComplete] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const { key: lookupKey } = useContext(ProductContext)
 	const stripe = useStripe();
 	const elements = useElements();
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
+	const [fullName, setFullName] = useState("")
+	const [emailAddress, setEmailAddress] = useState("")
 
 	const handleError = e => {
 		setError(e.error);
@@ -61,6 +65,7 @@ const Payment = ({ onSuccess }) => {
 					$type: 'SUCCESS'
 				});
 				await dispatch(addPaymentMethod(user.email, user.stripeCustomerId, result.setupIntent.payment_method));
+				await dispatch(setupSubscription(user.email, user.stripeCustomerId, result.setupIntent.payment_method, lookupKey))
 				onSuccess()
 			}
 		},
@@ -68,7 +73,7 @@ const Payment = ({ onSuccess }) => {
 	);
 
 	return (
-		<form action='' onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit}>
 			<div className='row'>
 				<div className='col-12 mb-3'>
 					<label htmlFor='' className='text-muted signup-form-label text-uppercase mb-2'>
@@ -89,30 +94,6 @@ const Payment = ({ onSuccess }) => {
 					<CardElement className='form-control form-border rounded-0 py-3' onChange={handleError} />
 				</div>
 				{error && <ErrorMessage>{error.message}</ErrorMessage>}
-				{/*<div className='col-12 mb-3'>
-										<div className='form-group'>
-											<label htmlFor='cardNumber' className='text-muted signup-form-label text-uppercase mb-2'>
-												Card Number
-											</label>
-											<CardNumberElement className='form-control form-border py-2 rounded-0' />
-										</div>
-									</div>
-									<div className='col-6 col-lg-6 mb-3'>
-										<div className='form-group'>
-											<label htmlFor='expiry' className='text-muted signup-form-label text-uppercase mb-2'>
-												Expiry Date
-											</label>
-											<CardExpiryElement className='form-control form-border py-2 rounded-0' />
-										</div>
-									</div>
-									<div className='col-6 col-lg-6 mb-3'>
-										<div className='form-group'>
-											<label htmlFor='securityCode' className='text-muted signup-form-label text-uppercase mb-2'>
-												CVV
-											</label>
-											<CardCvcElement className='form-control form-border py-2 rounded-0' onChange={handleError} />
-										</div>
-									</div>*/}
 			</div>
 			<div className='mt-4 d-flex flex-column justify-content-center align-items-center px-5'>
 				<button type="submit" className='btn btn-dark btn-lg mt-4 rounded-0 w-100'>
