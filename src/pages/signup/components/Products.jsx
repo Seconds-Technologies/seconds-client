@@ -15,7 +15,7 @@ const Products = props => {
 						lookupKey={connect}
 						title='Connect'
 						description='Access any delivery fleet'
-						price={`${SUBSCRIPTION_PLANS[connect.toUpperCase()].priceLabel}*`}
+						price={`Free*`}
 						commission='We charge you 10% commission from delivery fees'
 						caption="Get started in delivery for your business"
 					/>
@@ -25,7 +25,7 @@ const Products = props => {
 						lookupKey={growth}
 						title='Growth'
 						description='Manage your own fleet'
-						price={`${SUBSCRIPTION_PLANS[growth.toUpperCase()].priceLabel}*`}
+						price={`£99*`}
 						commission='We charge you 0.25p per delivery'
 						caption="Make delivery your competitive advantage"
 					/>
@@ -35,7 +35,7 @@ const Products = props => {
 						lookupKey={pro}
 						title='Pro'
 						description='Scale your own fleet'
-						price={`${SUBSCRIPTION_PLANS[pro.toUpperCase()].priceLabel}*`}
+						price={`£149*`}
 						commission='We charge you 0.15p per delivery'
 						caption="Optimize your entire delivery operations"
 					/>

@@ -12,7 +12,7 @@ const Dashboard = props => {
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const {
 		company,
-		address: { geolocation }
+		address,
 	} = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 
@@ -43,11 +43,11 @@ const Dashboard = props => {
 	);
 
 	const { longitude, latitude } = useMemo(() => {
-		if (geolocation && geolocation.coordinates && geolocation.coordinates.length === 2) {
-			return { longitude: geolocation.coordinates[0], latitude: geolocation.coordinates[1] };
+		if (address && address.geolocation && address.geolocation.coordinates && address.geolocation.coordinates.length === 2) {
+			return { longitude: address.geolocation.coordinates[0], latitude: address.geolocation.coordinates[1] };
 		}
 		return { longitude: Number(localStorage.getItem('longitude')), latitude: Number(localStorage.getItem('latitude')) };
-	}, [geolocation]);
+	}, [address]);
 
 	const courierLocations = useMemo(() => activeCouriers.map(({ location }) => location.coordinates), [activeCouriers]);
 
