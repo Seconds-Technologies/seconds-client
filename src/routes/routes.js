@@ -14,7 +14,6 @@ import Signup2 from '../pages/signup/Signup2';
 import Login from '../pages/login/Login';
 import Profile from '../pages/settings/containers/profile/Profile';
 import Settings from '../pages/settings/Settings';
-import PaymentMethod from '../pages/paymentMethod/PaymentMethod';
 import Subscription from '../pages/settings/containers/billing/Subscription';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
@@ -65,7 +64,6 @@ const routes = (
 		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
-		<PrivateRoute path={PATHS.PAYMENT} component={PaymentMethod} />
 		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
 	</Switch>
 );

@@ -71,12 +71,12 @@ export default function Signup(props) {
 					</div>
 				</div>
 				<div className='col-sm-12 col-md-9 w-sm mx-auto my-auto py-sm-4 px-md-5 px-sm-3'>
+					<div className="position-absolute flex-end px-4">
+						<button className="btn rounded-0 btn-sm btn-primary" onClick={() => props.history.push(PATHS.SIGNUP_1)}>
+							<span>Show Products</span>
+						</button>
+					</div>
 					<div className='d-flex flex-grow-1 justify-content-center flex-column'>
-						<div className="position-absolute end-100 px-4">
-							<button className="btn btn-sm btn-info" onClick={() => props.history.push(PATHS.SIGNUP_1)}>
-								<span>Show Products</span>
-							</button>
-						</div>
 						<div className='py-4'>
 							<h2 className='text-center signup-header pb-2'>Sign up for your account!</h2>
 						</div>
@@ -134,7 +134,7 @@ export default function Signup(props) {
 								setFieldValue
 								/* and other goodies */
 							}) => (
-								<form onSubmit={handleSubmit} className='signupForm'>
+								<form onSubmit={handleSubmit}>
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
