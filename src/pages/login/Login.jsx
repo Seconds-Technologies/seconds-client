@@ -57,16 +57,7 @@ const Login = props => {
 							onSubmit={(values, actions) => {
 								setLoading(true);
 								dispatch(authUser('login', values))
-									.then((user) => {
-										Mixpanel.identify(user.id);
-										Mixpanel.track('Successful login');
-										Mixpanel.people.set({
-											$first_name: user.firstname,
-											$last_name: user.lastname,
-											$email: user.email,
-											$apiKey: false,
-											$subscribed: false
-										});
+									.then(() => {
 										setLoading(false);
 										props.history.push(PATHS.HOME);
 									})

@@ -64,9 +64,6 @@
   font-weight: 700;
 }
 
-.signup-aside-text {
-}
-
 .pass-wrapper {
   position: relative;
   display: flex;
@@ -76,4 +73,16 @@
 
 .eye-icon {
   position: absolute;
+}
+
+.product-title {
+  font-weight: 500;
+}
+
+.product-description {
+  font-weight: 600;
+}
+
+.product-price {
+  font-size: 60px;
 }

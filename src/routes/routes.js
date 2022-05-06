@@ -11,7 +11,6 @@ import PrivateRoute from './PrivateRoute';
 import Signup from '../pages/signup/Signup';
 import Signup1 from '../pages/signup/Signup1';
 import Signup2 from '../pages/signup/Signup2';
-import Signup3 from '../pages/signup/Signup3';
 import Login from '../pages/login/Login';
 import Profile from '../pages/settings/containers/profile/Profile';
 import Settings from '../pages/settings/Settings';
@@ -40,7 +39,6 @@ const routes = (
 		<Route exact path={PATHS.SIGNUP} component={Signup} />
 		<Route path={PATHS.SIGNUP_1} component={Signup1} />
 		<Route path={PATHS.SIGNUP_2} component={Signup2} />
-		<Route path={PATHS.SIGNUP_3} component={Signup3} />
 		<Route exact path={PATHS.LOGIN} component={Login} />
 		<Route exact path={PATHS.FORGOT} component={ForgotPassword} />
 		<Route exact path={PATHS.RESET} component={ResetPassword} />

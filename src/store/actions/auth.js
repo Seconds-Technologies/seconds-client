@@ -96,8 +96,17 @@ export function authUser(type, userData) {
 							$last_name: user.lastname,
 							$email: user.email,
 							$company: user.company,
-							$apiKey: false,
 							$subscribed: false
+						});
+					} else {
+						Mixpanel.identify(user.id);
+						Mixpanel.track('Successful Login');
+						Mixpanel.people.set({
+							$first_name: user.firstname,
+							$last_name: user.lastname,
+							$email: user.email,
+							$company: user.company,
+							$subscribed: !!user.subscriptionId
 						});
 					}
 					resolve(user);
