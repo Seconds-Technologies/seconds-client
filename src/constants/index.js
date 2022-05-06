@@ -93,8 +93,8 @@ export const SUBSCRIPTION_PLANS = {
 		name: 'pro',
 		description: 'Designed for small to medium-sized businesses with high delivery volume requirements.',
 		billingInterval: 'month',
-		price: 140,
-		priceLabel: '£140',
+		price: 149,
+		priceLabel: '£149',
 		features: [
 			'Everything in Growth',
 			'API integration',

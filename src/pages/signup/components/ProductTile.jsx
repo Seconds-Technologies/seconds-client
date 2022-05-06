@@ -1,12 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { PATHS } from '../../../constants';
+import { ProductContext } from '../../../context/ProductContext';
 
-const ProductTile = ({ title, description, price, commission, caption }) => {
+const ProductTile = ({ lookupKey, title, description, price, commission, caption }) => {
+	const { key, dispatch } = useContext(ProductContext);
 	const history = useHistory()
 	return (
-		<div className='border px-3 py-5 d-flex flex-column justify-content-around align-items-center h-100 tile' role="button" onClick={() => history.push(PATHS.SIGNUP_2)}>
+		<div className='border px-3 py-5 d-flex flex-column justify-content-around align-items-center h-100 tile' role="button" onClick={() => {
+			dispatch({type: 'setProductKey', key: lookupKey})
+			history.push(PATHS.SIGNUP_2)
+		}}>
 			<header className='py-2 fs-1 product-title font-semibold'>
 				<span>{title}</span>
 			</header>
