@@ -12,10 +12,9 @@ const ErrorMessage = ({ children }) => (
 	</div>
 );
 
-const Payment = ({ onSuccess }) => {
+const Payment = ({ setLoading, onSuccess }) => {
 	const [error, setError] = useState(null);
 	const [cardComplete, setCardComplete] = useState(false);
-	const [loading, setLoading] = useState(false);
 	const { key: lookupKey } = useContext(ProductContext)
 	const stripe = useStripe();
 	const elements = useElements();
@@ -37,11 +36,10 @@ const Payment = ({ onSuccess }) => {
 			if (error) {
 				return;
 			}
-
-			if (cardComplete) {
-				setLoading(true);
-			}
-
+			setLoading(prevState => ({
+				show: true,
+				text: "Checking your card ..."
+			}));
 			const intent = await dispatch(setupIntent(user.stripeCustomerId));
 			console.log(intent)
 			const result = await stripe.confirmCardSetup(intent.client_secret, {
@@ -50,18 +48,25 @@ const Payment = ({ onSuccess }) => {
 					billing_details: { name: `${user.firstname} ${user.lastname}`, email: user.email }
 				}
 			});
-			setLoading(false);
 			if (result.error) {
 				console.log(result.error);
 				setError(result.error);
 				Mixpanel.track('Add payment method', {
 					$type: 'FAILURE'
 				});
+				setLoading(prevState => ({
+					...prevState,
+					show: false
+				}))
 			} else {
 				console.log('success', result.setupIntent.payment_method);
 				Mixpanel.track('Add payment method', {
 					$type: 'SUCCESS'
 				});
+				setLoading(prevState => ({
+					show: true,
+					text: "Setting up subscription ..."
+				}))
 				await dispatch(addPaymentMethod(user.email, user.stripeCustomerId, result.setupIntent.payment_method));
 				await dispatch(setupSubscription(user.email, user.stripeCustomerId, result.setupIntent.payment_method, lookupKey))
 				onSuccess()
@@ -96,7 +101,6 @@ const Payment = ({ onSuccess }) => {
 			<div className='mt-4 d-flex flex-column justify-content-center align-items-center px-5'>
 				<button type="submit" className='btn btn-dark btn-lg mt-4 rounded-0 w-100'>
 					<span className='me-3'>Complete</span>
-					<ClipLoader color='white' loading={loading} size={20} />
 				</button>
 			</div>
 		</form>
