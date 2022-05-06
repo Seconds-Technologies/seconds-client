@@ -102,7 +102,7 @@
     width: 100vw;
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 992px) {
     .payment-wrapper {
         width: calc(100vw - 800px)
     }

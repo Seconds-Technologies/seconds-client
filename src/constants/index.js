@@ -44,8 +44,6 @@ export const PATHS = {
 	SIGNUP_1: '/signup/1',
 	SIGNUP_2: '/signup/2',
 	SIGNUP_3: '/signup/3'
-
-
 };
 
 export const SUBSCRIPTION_PLANS = {

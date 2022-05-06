@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import ProductTile from './ProductTile';
-import { ProductContext } from '../../../context/ProductContext';
 import { SUBSCRIPTION_PLANS } from '../../../constants';
 
-const connect = String(process.env.REACT_APP_STRIPE_CONNECT_KEY)
-const growth = String(String(process.env.REACT_APP_STRIPE_GROWTH_KEY))
+const connect = String(process.env.REACT_APP_STRIPE_CONNECT_KEY);
+const growth = String(process.env.REACT_APP_STRIPE_GROWTH_KEY)
 const pro = String(process.env.REACT_APP_STRIPE_PRO_KEY)
 
 const Products = props => {
