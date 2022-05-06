@@ -20,22 +20,12 @@ const Signup1 = props => {
 	};
 
 	return (
-		<LoadingOverlay active={false} spinner text='Hold tight, signing you up...'>
-			<div className='container mx-auto my-auto py-4 signupPage'>
-				<div className='text-center mx-auto w-100'>
-					<span className="fs-4 text-primary">2/3</span>
-				</div>
-				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column mb-3'>
-					<h2 className='display-3 font-medium pb-2'>Choose your product</h2>
-				</div>
-				<Products/>
-				<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
-					<button type='submit' className='btn btn-dark btn-lg w-sm mt-4'>
-						Continue
-					</button>
-				</div>
-			</div>
-		</LoadingOverlay>
+		<div className='container-fluid d-flex flex-column align-items-center mx-auto my-auto py-4 signupPage'>
+			<span className='fs-4 text-primary'>2/3</span>
+			<h2 className='display-3 font-medium pb-2'>Choose your product</h2>
+
+			<Products />
+		</div>
 	);
 };
 

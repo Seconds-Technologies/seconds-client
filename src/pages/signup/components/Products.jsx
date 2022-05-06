@@ -4,9 +4,9 @@ import ProductTile from './ProductTile';
 
 const Products = props => {
 	return (
-		<div className='container py-4'>
-			<div className='row gx-4'>
-				<div className='col-xs-12 col md 4'>
+		<div className="container d-flex flex-column flex-grow-1 py-4">
+			<div className='row gx-4 flex-grow-1'>
+				<div className='col-xs-12 col-md-4'>
 					<ProductTile
 						title='Connect'
 						description='Access any delivery fleet'
@@ -15,7 +15,7 @@ const Products = props => {
 						caption="Get started in delivery for your business"
 					/>
 				</div>
-				<div className='col-xs-12 col md 4'>
+				<div className='col-xs-12 col-md-4'>
 					<ProductTile
 						title='Growth'
 						description='Manage your own fleet'
@@ -24,7 +24,7 @@ const Products = props => {
 						caption="Make delivery your competitive advantage"
 					/>
 				</div>
-				<div className='col-xs-12 col md 4'>
+				<div className='col-xs-12 col-md-4'>
 					<ProductTile
 						title='Pro'
 						description='Scale your own fleet'

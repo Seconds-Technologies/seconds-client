@@ -20,11 +20,12 @@ const Signup2 = props => {
 	};
 
 	return (
-		<div className='container mx-auto my-auto py-4 signupPage'>
+		<div className='mx-auto my-auto py-5 signupPage bg-light'>
+			<div className='top-0 w-md p-5 position-absolute' role='button' onClick={() => props.history.goBack()}>
+				<img src={backArrow} alt='Go back button' width={40} height={40} />
+			</div>
 			<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
-				<div className='top-0 w-md' role='button' onClick={() => props.history.goBack()}>
-					<img src={backArrow} alt='Go back button' width={40} height={40} />
-				</div>
+
 				<div className='py-4'>
 					<h2 className='signup-header pb-2'>Add your payment details</h2>
 					<span className='text-muted'>
@@ -32,10 +33,9 @@ const Signup2 = props => {
 					</span>
 				</div>
 			</div>
-			<PaymentMethod isComponent isValid={cardValid} setCardValid={setCardValid} />
-			<div className='d-flex flex-grow-1 justify-content-center align-items-center flex-column'>
+			<div className='d-flex flex-column justify-content-center align-items-center'>
 				<button disabled={!userData.paymentMethodId} onClick={signup} className='btn btn-dark btn-lg w-sm mt-4'>
-					Show My Dashboard
+					Complete
 				</button>
 			</div>
 		</div>
