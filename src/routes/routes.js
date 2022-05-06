@@ -14,7 +14,7 @@ import Signup2 from '../pages/signup/Signup2';
 import Login from '../pages/login/Login';
 import Profile from '../pages/settings/containers/profile/Profile';
 import Settings from '../pages/settings/Settings';
-import Subscription from '../pages/settings/containers/billing/Subscription';
+import Billing from '../pages/settings/containers/billing/Billing';
 import ForgotPassword from '../pages/forgotPassword/ForgotPassword';
 import ResetPassword from '../pages/resetPassword/ResetPassword';
 import Shopify from '../pages/shopify/Shopify';
@@ -64,7 +64,7 @@ const routes = (
 		<PrivateRoute path={PATHS.DRIVERS} component={Drivers} />
 		<PrivateRoute path={PATHS.SETTINGS} component={Settings} />
 		<PrivateRoute path={PATHS.PROFILE} component={Profile} />
-		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Subscription} />
+		<PrivateRoute path={PATHS.SUBSCRIPTION} component={Billing} />
 	</Switch>
 );
 

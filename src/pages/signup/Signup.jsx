@@ -16,7 +16,6 @@ import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
 import { Mixpanel } from '../../config/mixpanel';
 import valuesIcon from '../../assets/img/signup-aside-icon.svg';
-import { PATHS } from '../../constants';
 
 export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);

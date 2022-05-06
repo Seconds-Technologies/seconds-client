@@ -7,7 +7,7 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Profile from './containers/profile/Profile';
 import Integrations from './containers/integrations/Integrations';
-import Subscription from './containers/billing/Subscription';
+import Billing from './containers/billing/Billing';
 import TabPanel from '../../components/TabPanel';
 import BusinessSettings from './containers/business/BusinessSettings';
 import Developers from './containers/developers/Developers';
@@ -102,7 +102,7 @@ const Settings = props => {
 					<Profile setNavColor={setNavColor}/>
 				</TabPanel>
 				<TabPanel value={index} index={1}>
-					<Subscription setNavColor={setNavColor} {...props} />
+					<Billing setNavColor={setNavColor} {...props} />
 				</TabPanel>
 				<TabPanel value={index} index={2}>
 					<BusinessSettings setNavColor={setNavColor} {...props} />

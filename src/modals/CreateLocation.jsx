@@ -215,7 +215,7 @@ const CreateLocation = ({ open, onClose }) => {
 								</div>
 							</section>
 							<footer className='d-flex justify-content-center my-4 px-5'>
-								<button type="submit" className='btn btn-lg btn-primary rounded-0 w-100' style={{ height: 50 }}>
+								<button type="submit" className='d-flex justify-content-center align-items-center btn btn-lg btn-primary rounded-0 w-100' style={{ height: 50 }}>
 									<span className='font-semibold me-3'>Create Location</span>
 									<ClipLoader color='white' loading={loading} size={20} />
 								</button>

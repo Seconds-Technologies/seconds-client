@@ -1,4 +1,4 @@
-import './subscription.css';
+import './billing.css';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkSubscriptionStatus, fetchInvoices, setupSubscription } from '../../../../store/actions/stripe';
@@ -14,30 +14,32 @@ import PaymentInformation from './modals/PaymentInformation';
 import { SUBSCRIPTION_PLANS } from '../../../../constants';
 import { syncUser } from '../../../../store/actions/auth';
 
-const InvoiceHistory = ({ invoices }) => (
-	<div className='table-responsive'>
-		<h1 className='fs-3 py-2'>Invoice History</h1>
-		<div className='table table-borderless d-flex flex-column border p-3 w-100'>
-			{invoices.map(({ created, total, status, hosted_invoice_url }, index) => (
-				<a
-					key={index}
-					href={hosted_invoice_url}
-					target='_blank'
-					role='button'
-					className='d-flex justify-content-evenly py-3 my-2 border rounded-3 text-decoration-none text-dark'
-				>
-					<img src={invoice} className='img-fluid' width={20} height={30} alt='' />
-					<span>{moment.unix(created).format('DD MMM YYYY')}</span>
-					<span>£{total / 100}</span>
-					<span className='text-capitalize'>{status}</span>
-					<span>Growth Commission</span>
-				</a>
-			))}
+const InvoiceHistory = ({ invoices }) => {
+	return (
+		<div className='table-responsive'>
+			<h1 className='fs-3 py-2'>Invoice History</h1>
+			<div className='table table-borderless d-flex flex-column border p-3 w-100'>
+				{invoices.map(({ created, total, status, hosted_invoice_url, lines }, index) => (
+					<a
+						key={index}
+						href={hosted_invoice_url}
+						target='_blank'
+						role='button'
+						className='d-flex justify-content-evenly py-3 my-2 border rounded-3 text-decoration-none text-dark'
+					>
+						<img src={invoice} className='img-fluid' width={20} height={30} alt='' />
+						<span>{moment.unix(created).format('DD MMM YYYY')}</span>
+						<span>£{total / 100}</span>
+						<span className='text-capitalize'>{status}</span>
+						<span>{lines.data[0].plan.nickname}</span>
+					</a>
+				))}
+			</div>
 		</div>
-	</div>
-);
+	);
+}
 
-const Subscription = props => {
+const Billing = props => {
 	const { email, stripeCustomerId, paymentMethodId, subscriptionId, subscriptionPlan } = useSelector(state => state['currentUser'].user);
 	const dispatch = useDispatch();
 	let [successMessage, setSuccessMessage] = useState('');
@@ -162,4 +164,4 @@ const Subscription = props => {
 	);
 };
 
-export default Subscription;
+export default Billing;
