@@ -1,23 +1,20 @@
 import './Signup.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../../assets/img/seconds-logo-black.svg';
-import { Formik, Field } from 'formik';
+import { Field, Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { addError, removeError } from '../../store/actions/errors';
+import { removeError } from '../../store/actions/errors';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { geocodeByAddress } from 'react-google-places-autocomplete';
 import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
 import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
 import { Mixpanel } from '../../config/mixpanel';
-import { parseAddress } from '../../helpers';
 import valuesIcon from '../../assets/img/signup-aside-icon.svg';
 
 export default function Signup(props) {
@@ -43,7 +40,7 @@ export default function Signup(props) {
 									Supercharge your deliveries
 								</span>
 							</header>
-							<List disablePadding sx={{marginBottom: 5}}>
+							<List disablePadding sx={{ marginBottom: 5 }}>
 								<ListItem disablePadding sx={{ marginBottom: 2 }}>
 									<ListItemIcon>
 										<img className='img-fluid' src={valuesIcon} alt='' width={20} height={20} />
@@ -135,7 +132,9 @@ export default function Signup(props) {
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='firstname'>
-												<span className="text-muted signup-form-label">{errors['firstname'] && <span className='text-danger'>*</span>}FIRST NAME</span>
+												<span className='text-muted signup-form-label'>
+													{errors['firstname'] && <span className='text-danger'>*</span>}FIRST NAME
+												</span>
 											</label>
 											<input
 												autoComplete='given-name'
@@ -149,7 +148,9 @@ export default function Signup(props) {
 										</div>
 										<div className='col-md-6 col-lg-6 mt-md-0 mt-sm-2'>
 											<label className='mb-2' htmlFor='lastname'>
-												<span className="text-muted signup-form-label">{errors['lastname'] && <span className='text-danger'>*</span>}LAST NAME</span>
+												<span className='text-muted signup-form-label'>
+													{errors['lastname'] && <span className='text-danger'>*</span>}LAST NAME
+												</span>
 											</label>
 											<input
 												autoComplete='family-name'
@@ -164,7 +165,9 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='email'>
-											<span className="text-muted signup-form-label">{errors['email'] && <span className='text-danger'>*</span>}EMAIL ADDRESS</span>
+											<span className='text-muted signup-form-label'>
+												{errors['email'] && <span className='text-danger'>*</span>}EMAIL ADDRESS
+											</span>
 										</label>
 										<input
 											autoComplete='email'
@@ -178,7 +181,9 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company'>
-											<span className="text-muted signup-form-label">{errors['company'] && <span className='text-danger'>*</span>}BUSINESS NAME</span>
+											<span className='text-muted signup-form-label'>
+												{errors['company'] && <span className='text-danger'>*</span>}BUSINESS NAME
+											</span>
 										</label>
 										<input
 											autoComplete='organization'
@@ -192,7 +197,9 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='company'>
-											<span className="text-muted signup-form-label">{errors['phone'] && <span className='text-danger'>*</span>}PHONE NUMBER</span>
+											<span className='text-muted signup-form-label'>
+												{errors['phone'] && <span className='text-danger'>*</span>}PHONE NUMBER
+											</span>
 										</label>
 										<input
 											autoComplete='tel'
@@ -206,7 +213,9 @@ export default function Signup(props) {
 									</div>
 									<div className='mt-3'>
 										<label className='mb-2' htmlFor='password'>
-											<span className="text-muted signup-form-label">{errors['password'] && <span className='text-danger'>*</span>}PASSWORD</span>
+											<span className='text-muted signup-form-label'>
+												{errors['password'] && <span className='text-danger'>*</span>}PASSWORD
+											</span>
 										</label>
 										<PasswordField
 											name='password'
