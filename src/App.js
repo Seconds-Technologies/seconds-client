@@ -79,10 +79,6 @@ function App() {
 			if (nextStepIndex === 4) {
 				setHintsEnabled(true)
 				stepsRef.current.updateStepElement(nextStepIndex);
-			} else if (nextStepIndex === 5) {
-				history.push(PATHS.ORDERS);
-				stepsRef.current.updateStepElement(nextStepIndex);
-				setHintsEnabled(false)
 			}
 		},
 		[stepsRef]
