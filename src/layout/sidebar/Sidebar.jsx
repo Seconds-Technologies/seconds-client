@@ -18,11 +18,18 @@ import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
 import Badge from '@mui/material/Badge';
 import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
-import Divider from '@mui/material/Divider';
+import { Hints } from 'intro.js-react';
 
 export default function Sidebar() {
+	const [hints, setHints] = useState([
+		{
+			element: '#orders-link',
+			hint: "Click here to go to the Order's page",
+			hintPosition: 'middle-right'
+		}
+	]);
 	const [isOpen, setAlerts] = useState(false);
-	const { profileImageData } = useSelector(state => state['currentUser'].user);
+	const { user, isAuthenticated } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
@@ -48,6 +55,13 @@ export default function Sidebar() {
 
 	return (
 		<div ref={launcherRef} className='sidebar-container bg-light border border-1'>
+			<Hints
+				enabled={isAuthenticated}
+				hints={hints}
+				options={{
+					hintAnimation: true
+				}}
+			/>
 			<div className='mb-1 d-flex flex-column w-100'>
 				<ul className='nav nav-pills flex-column align-items-center mb-auto me-0'>
 					<div className='d-flex justify-content-center mt-3'>
@@ -70,7 +84,7 @@ export default function Sidebar() {
 					</Tooltip>
 					<Tooltip title='Orders' arrow placement='right-end'>
 						<Link to={PATHS.ORDERS} className='link text-black'>
-							<li className={`sidebarListItem ${isOrder && 'currentLink'}`}>
+							<li id='orders-link' className={`sidebarListItem ${isOrder && 'currentLink'}`}>
 								<img
 									className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`}
 									src={orderIcon}
@@ -163,10 +177,10 @@ export default function Sidebar() {
 					<Tooltip title='Profile' arrow placement='right-end'>
 						<div className='link dropdown'>
 							<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
-								{profileImageData ? (
+								{user.profileImageData ? (
 									<img
 										className={`border rounded-circle sidebarIcon`}
-										src={`data:image/jpeg;base64,${profileImageData}`}
+										src={`data:image/jpeg;base64,${user.profileImageData}`}
 										alt=''
 										width={26}
 										height={26}

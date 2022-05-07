@@ -1,22 +1,25 @@
 import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, { useEffect, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import routes from './routes/routes';
 import Sidebar from './layout/sidebar/Sidebar';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthorizationToken, syncUser } from './store/actions/auth';
+import { setAuthorizationToken, syncUser, updateCurrentUser, updateProfile } from './store/actions/auth';
 import GeolocationContextProvider from './context/GeolocationContext';
 import { ChatWidget } from '@papercups-io/chat-widget';
 import { IntercomProvider } from 'react-use-intercom';
 import { MagicBellProvider } from '@magicbell/magicbell-react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import grey from '@mui/material/colors/grey';
+import { Hints, Steps } from 'intro.js-react';
+import moment from 'moment';
 // contexts
 import TabContext, { indexReducer } from './context/TabContext';
 import AmplifyContextProvider from './context/AmplifyContext';
 import ProductContextProvider from './context/ProductContext';
 import CreateLocation from './modals/CreateLocation';
+import { PATHS } from './constants';
 
 if (localStorage.getItem('jwt_token')) {
 	setAuthorizationToken(localStorage.getItem('jwt_token'));
@@ -24,15 +27,42 @@ if (localStorage.getItem('jwt_token')) {
 
 function App() {
 	const [val, setVal] = useReducer(indexReducer, 0, () => 0);
+	const history = useHistory();
 	const location = useLocation();
 	const dispatch = useDispatch();
+	const [steps, setSteps] = useState([
+		{
+			intro: 'Welcome to the Seconds dashboard. Lets walk you through the basics'
+		},
+		{
+			element: '.featured-container',
+			intro: 'Here you can see your delivery overview with all the essential information'
+		},
+		{
+			element: '#time-filter',
+			intro: 'You can filter the stats based on time period here'
+		},
+		{
+			element: '.map-container',
+			intro: "Here we show an interactive map of your store's location. The map will populate with markers as new orders come in"
+		},
+		{
+			intro: "Click 'Next' to continue the tour"
+		},
+		{
+			element: '.MuiDataGrid-root',
+			intro: 'This is the orders page. Each order is displayed as a new row in the table'
+		}
+	]);
+
 	const {
 		isAuthenticated,
-		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress }
+		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress, lastLogin }
 	} = useSelector(state => state['currentUser']);
 	const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
 	const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
 	const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
+	const stepsRef = useRef(null);
 
 	const theme = createTheme({
 		palette: {
@@ -43,7 +73,22 @@ function App() {
 		}
 	});
 
+	const stepsEnabled = useMemo(() => {
+		return Boolean(isAuthenticated && !lastLogin);
+	}, [isAuthenticated, lastLogin]);
+
+	const onBeforeChange = useCallback(
+		nextStepIndex => {
+			if (nextStepIndex === 5) {
+				history.push(PATHS.ORDERS);
+				stepsRef.current.updateStepElement(nextStepIndex);
+			}
+		},
+		[stepsRef]
+	);
+
 	useEffect(() => {
+		console.log(stepsRef);
 		isAuthenticated &&
 			dispatch(syncUser(email))
 				.then(() => console.log('USER SYNCED'))
@@ -72,7 +117,31 @@ function App() {
 									<Router>
 										<div className='app-container'>
 											{isAuthenticated && <Sidebar />}
-											{isAuthenticated && !fullAddress && <CreateLocation open={true} onClose={() => console.log("closing modal...")}/>}
+											{isAuthenticated && !fullAddress && lastLogin && (
+												<CreateLocation open={true} onClose={() => console.log('closing modal...')} />
+											)}
+											<Steps
+												ref={stepsRef}
+												enabled={stepsEnabled}
+												steps={steps}
+												initialStep={0}
+												onBeforeChange={onBeforeChange}
+												onExit={() => {
+													dispatch(
+														updateProfile({
+															id,
+															lastLogin: moment().format()
+														})
+													).then(() => dispatch(updateCurrentUser({ lastLogin: moment().format() })));
+												}}
+												options={{
+													exitOnOverlayClick: false,
+													showStepNumbers: true,
+													showBullets: false,
+													showProgress: true,
+													skipLabel: "Skip"
+												}}
+											/>
 											{routes}
 										</div>
 										{isAuthenticated && (

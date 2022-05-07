@@ -261,7 +261,6 @@ export default function Orders(props) {
 				({
 					_id,
 					status,
-					dispatchMode,
 					platform,
 					jobSpecification: { orderNumber, deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
@@ -530,7 +529,7 @@ export default function Orders(props) {
 						}
 					}}
 					autoHeight={false}
-					className='mt-3 mx-3'
+					className='mt-3 mx-3 orders-table'
 					rows={jobs}
 					disableSelectionOnClick
 					columns={columns}

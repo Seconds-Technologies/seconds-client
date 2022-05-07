@@ -3,6 +3,7 @@ import { REMOVE_CURRENT_USER, SET_API_KEY, SET_CURRENT_USER, AUTHENTICATE_USER, 
 export const DEFAULT_STATE = {
 	isAuthenticated: false, //be true when user logged in
 	user: {
+		lastLogin: null,
 		firstname: '',
 		lastname: '',
 		company: '',

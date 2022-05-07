@@ -11,24 +11,6 @@ import { Steps } from 'intro.js-react';
 
 const Dashboard = props => {
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const [stepsEnabled, setStepsEnabled] = useState(false)
-	const [steps, setSteps] = useState([
-		{
-			intro: "Welcome to the Seconds dashboard. Lets walk you through the basics"
-		},
-		{
-			element: ".featured-container",
-			intro: "Here you can see your delivery overview with all the essential information"
-		},
-		{
-			element: "#time-filter",
-			intro: "You can filter the stats based on time period here"
-		},
-		{
-			element: ".map-container",
-			intro: "Here we show an interactive map. As new orders come in, you'll be able to see the delivery address'"
-		}
-	])
 	const {
 		company,
 		address,
@@ -94,12 +76,6 @@ const Dashboard = props => {
 
 	return (
 		<div className='page-container'>
-			<Steps
-				enabled={stepsEnabled}
-				steps={steps}
-				initialStep={0}
-				onExit={() => setStepsEnabled(false)}
-			/>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>

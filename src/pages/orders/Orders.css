@@ -1,3 +1,7 @@
+.orders-table {
+    border-top: 2px solid blue;
+}
+
 .totalOrders {
     font-weight: bold;
 }
