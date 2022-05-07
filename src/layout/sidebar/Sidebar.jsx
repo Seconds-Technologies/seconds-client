@@ -20,7 +20,7 @@ import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
 import { Hints } from 'intro.js-react';
 
-export default function Sidebar() {
+export default function Sidebar({ hintsEnabled }) {
 	const [hints, setHints] = useState([
 		{
 			element: '#orders-link',
@@ -56,7 +56,7 @@ export default function Sidebar() {
 	return (
 		<div ref={launcherRef} className='sidebar-container bg-light border border-1'>
 			<Hints
-				enabled={isAuthenticated}
+				enabled={hintsEnabled}
 				hints={hints}
 				options={{
 					hintAnimation: true

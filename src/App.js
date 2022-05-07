@@ -30,6 +30,7 @@ function App() {
 	const history = useHistory();
 	const location = useLocation();
 	const dispatch = useDispatch();
+	const [hintsEnabled, setHintsEnabled] = useState(false);
 	const [steps, setSteps] = useState([
 		{
 			intro: 'Welcome to the Seconds dashboard. Lets walk you through the basics'
@@ -47,11 +48,7 @@ function App() {
 			intro: "Here we show an interactive map of your store's location. The map will populate with markers as new orders come in"
 		},
 		{
-			intro: "Click 'Next' to continue the tour"
-		},
-		{
-			element: '.MuiDataGrid-root',
-			intro: 'This is the orders page. Each order is displayed as a new row in the table'
+			intro: "Click the 'Orders' icon in the sidebar to continue the tour"
 		}
 	]);
 
@@ -74,21 +71,25 @@ function App() {
 	});
 
 	const stepsEnabled = useMemo(() => {
-		return Boolean(isAuthenticated && !lastLogin);
-	}, [isAuthenticated, lastLogin]);
+		return Boolean(isAuthenticated && !lastLogin && location.pathname === PATHS.HOME);
+	}, [isAuthenticated, lastLogin, location]);
 
 	const onBeforeChange = useCallback(
 		nextStepIndex => {
-			if (nextStepIndex === 5) {
+			if (nextStepIndex === 4) {
+				setHintsEnabled(true)
+				stepsRef.current.updateStepElement(nextStepIndex);
+			} else if (nextStepIndex === 5) {
 				history.push(PATHS.ORDERS);
 				stepsRef.current.updateStepElement(nextStepIndex);
+				setHintsEnabled(false)
 			}
 		},
 		[stepsRef]
 	);
 
 	useEffect(() => {
-		console.log(stepsRef);
+		console.log(stepsRef.current)
 		isAuthenticated &&
 			dispatch(syncUser(email))
 				.then(() => console.log('USER SYNCED'))
@@ -116,7 +117,7 @@ function App() {
 								<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.NODE_ENV === 'production'}>
 									<Router>
 										<div className='app-container'>
-											{isAuthenticated && <Sidebar />}
+											{isAuthenticated && <Sidebar hintsEnabled={hintsEnabled} />}
 											{isAuthenticated && !fullAddress && lastLogin && (
 												<CreateLocation open={true} onClose={() => console.log('closing modal...')} />
 											)}
@@ -127,6 +128,7 @@ function App() {
 												initialStep={0}
 												onBeforeChange={onBeforeChange}
 												onExit={() => {
+													setHintsEnabled(false)
 													dispatch(
 														updateProfile({
 															id,
@@ -135,6 +137,7 @@ function App() {
 													).then(() => dispatch(updateCurrentUser({ lastLogin: moment().format() })));
 												}}
 												options={{
+													hideNext: true,
 													exitOnOverlayClick: false,
 													showStepNumbers: true,
 													showBullets: false,
