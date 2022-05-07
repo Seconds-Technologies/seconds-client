@@ -15,6 +15,7 @@ import { SUBSCRIPTION_PLANS } from '../../../../constants';
 import { syncUser } from '../../../../store/actions/auth';
 
 const InvoiceHistory = ({ invoices }) => {
+	console.log(invoices)
 	return (
 		<div className='table-responsive'>
 			<h1 className='fs-3 py-2'>Invoice History</h1>
@@ -31,7 +32,7 @@ const InvoiceHistory = ({ invoices }) => {
 						<span>{moment.unix(created).format('DD MMM YYYY')}</span>
 						<span>£{total / 100}</span>
 						<span className='text-capitalize'>{status}</span>
-						<span>{lines.data[0].plan.nickname}</span>
+						<span>{lines.data[0].plan.nickname ? lines.data[0].plan.nickname : lines.data[0].price.nickname ? lines.data[0].price.nickname : lines.data[0].price['lookup_key']}</span>
 					</a>
 				))}
 			</div>
