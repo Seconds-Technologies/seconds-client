@@ -14,7 +14,7 @@ import PaymentInformation from './modals/PaymentInformation';
 import { SUBSCRIPTION_PLANS } from '../../../../constants';
 import { syncUser } from '../../../../store/actions/auth';
 
-const InvoiceHistory = ({ invoices }) => {
+const InvoiceHistory = ({ invoices, currentPlan }) => {
 	console.log(invoices)
 	return (
 		<div className='table-responsive'>
@@ -32,7 +32,7 @@ const InvoiceHistory = ({ invoices }) => {
 						<span>{moment.unix(created).format('DD MMM YYYY')}</span>
 						<span>£{total / 100}</span>
 						<span className='text-capitalize'>{status}</span>
-						<span>{lines.data[0].plan.nickname ? lines.data[0].plan.nickname : lines.data[0].price.nickname ? lines.data[0].price.nickname : lines.data[0].price['lookup_key']}</span>
+						<span>{lines.data[0].plan ? lines.data[0].plan.nickname : lines.data[0].price ? lines.data[0].price.nickname : currentPlan}</span>
 					</a>
 				))}
 			</div>
@@ -158,7 +158,7 @@ const Billing = props => {
 					)}
 				</div>
 				<div className='col-md-6 col-sm-12'>
-					<InvoiceHistory invoices={invoiceHistory} />
+					<InvoiceHistory invoices={invoiceHistory} currentPlan={subscriptionPlan} />
 				</div>
 			</div>
 		</div>
