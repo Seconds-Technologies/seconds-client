@@ -25,7 +25,7 @@ const TimeFilter = ({
 }) => {
 	const [options] = useState(initialOptions);
 	return (
-		<div className='dropdown'>
+		<div id="time-filter" className='dropdown'>
 			<button
 				className='btn bg-white dropdown-toggle border border-1 border-grey'
 				type='button'

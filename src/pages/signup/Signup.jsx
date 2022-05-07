@@ -21,6 +21,7 @@ export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);
 	const errors = useSelector(state => state['errors']);
 	const dispatch = useDispatch();
+	const search = props.location.search;
 
 	useEffect(() => {
 		dispatch(removeError());
@@ -81,6 +82,7 @@ export default function Signup(props) {
 							</div>
 						)}
 						<Formik
+							enableReinitialize
 							initialErrors={{
 								firstname: '',
 								lastname: '',
@@ -90,17 +92,16 @@ export default function Signup(props) {
 								phone: '',
 								terms: false
 							}}
-							enableReinitialize
 							validationSchema={SignUpSchema}
 							validateOnChange={false}
 							validateOnBlur={false}
 							initialValues={{
-								firstname: '',
-								lastname: '',
-								email: '',
-								company: '',
+								firstname: new URLSearchParams(search).get('firstname'),
+								lastname: new URLSearchParams(search).get('lastname'),
+								email: new URLSearchParams(search).get('email'),
+								company: new URLSearchParams(search).get('company'),
+								phone: new URLSearchParams(search).get('phone'),
 								password: '',
-								phone: '',
 								terms: false
 							}}
 							onSubmit={async (values, actions) => {
@@ -137,6 +138,7 @@ export default function Signup(props) {
 												</span>
 											</label>
 											<input
+												defaultValue={values.firstname}
 												autoComplete='given-name'
 												type='text'
 												id='firstname'
@@ -153,6 +155,7 @@ export default function Signup(props) {
 												</span>
 											</label>
 											<input
+												defaultValue={values.lastname}
 												autoComplete='family-name'
 												type='text'
 												id='lastname'
@@ -170,6 +173,7 @@ export default function Signup(props) {
 											</span>
 										</label>
 										<input
+											defaultValue={values.email}
 											autoComplete='email'
 											type='email'
 											id='email'
@@ -186,6 +190,7 @@ export default function Signup(props) {
 											</span>
 										</label>
 										<input
+											defaultValue={values.company}
 											autoComplete='organization'
 											type='text'
 											id='company'
@@ -202,6 +207,7 @@ export default function Signup(props) {
 											</span>
 										</label>
 										<input
+											defaultValue={values.phone}
 											autoComplete='tel'
 											type='tel'
 											id='phone'

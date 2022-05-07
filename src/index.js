@@ -1,3 +1,4 @@
+import 'intro.js/introjs.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import awsconfig from './aws-exports';
