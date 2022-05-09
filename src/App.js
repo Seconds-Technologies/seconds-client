@@ -12,7 +12,7 @@ import { IntercomProvider } from 'react-use-intercom';
 import { MagicBellProvider } from '@magicbell/magicbell-react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import grey from '@mui/material/colors/grey';
-import { Hints, Steps } from 'intro.js-react';
+import { Steps } from 'intro.js-react';
 import moment from 'moment';
 // contexts
 import TabContext, { indexReducer } from './context/TabContext';
@@ -27,7 +27,6 @@ if (localStorage.getItem('jwt_token')) {
 
 function App() {
 	const [val, setVal] = useReducer(indexReducer, 0, () => 0);
-	const history = useHistory();
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const [hintsEnabled, setHintsEnabled] = useState(false);
@@ -71,8 +70,8 @@ function App() {
 	});
 
 	const stepsEnabled = useMemo(() => {
-		return Boolean(isAuthenticated && !lastLogin && location.pathname === PATHS.HOME);
-	}, [isAuthenticated, lastLogin, location]);
+		return Boolean(isAuthenticated && fullAddress && !lastLogin && location.pathname === PATHS.HOME);
+	}, [isAuthenticated, fullAddress, lastLogin, location]);
 
 	const onBeforeChange = useCallback(
 		nextStepIndex => {
@@ -85,7 +84,6 @@ function App() {
 	);
 
 	useEffect(() => {
-		console.log(stepsRef.current)
 		isAuthenticated &&
 			dispatch(syncUser(email))
 				.then(() => console.log('USER SYNCED'))
@@ -114,7 +112,7 @@ function App() {
 									<Router>
 										<div className='app-container'>
 											{isAuthenticated && <Sidebar hintsEnabled={hintsEnabled} />}
-											{isAuthenticated && !fullAddress && lastLogin && (
+											{isAuthenticated && !fullAddress && !lastLogin && (
 												<CreateLocation open={true} onClose={() => console.log('closing modal...')} />
 											)}
 											<Steps
