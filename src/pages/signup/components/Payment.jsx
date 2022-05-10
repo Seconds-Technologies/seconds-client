@@ -3,8 +3,7 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Mixpanel } from '../../../config/mixpanel';
 import { addPaymentMethod, setupIntent, setupSubscription } from '../../../store/actions/stripe';
 import { useDispatch, useSelector } from 'react-redux';
-import ClipLoader from 'react-spinners/ClipLoader';
-import { ProductContext } from '../../../context/ProductContext';
+import { ProductContext } from '../../../context';
 
 const ErrorMessage = ({ children }) => (
 	<div className='text-danger' role='alert'>

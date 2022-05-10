@@ -20,16 +20,21 @@ import DeleteModal from './modals/DeleteModal';
 // constants
 import { DELETE_TYPES } from './constants';
 import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../constants';
-import { AmplifyContext } from '../../context/AmplifyContext';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
+// contexts
+import { AmplifyContext, KanaContext } from '../../context';
+import useKana from '../../hooks/useKana';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
 
 const Drivers = props => {
 	const amplify = useContext(AmplifyContext);
+	const kana = useContext(KanaContext);
+	const [features, error] = useKana(kana)
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
+	const drivers = useSelector(state => state['driversStore']);
 	const [driverFormType, showDriverForm] = useState('');
 	const [deleteModal, setDeleteModal] = useState({ show: false, type: DELETE_TYPES.BATCH, ids: [] });
 	const [selectionModel, setSelectionModel] = React.useState([]);
@@ -41,15 +46,17 @@ const Drivers = props => {
 		phone: '',
 		vehicle: ''
 	});
-	// const { data, error } = kana.canUseFeature("additional-drivers")
 
-	const drivers = useSelector(state => state['driversStore']);
+	const disableDriver = useMemo(() => {
+		let isDisabled;
+		isDisabled = Boolean(features && !features.additionalDrivers)
+		return isDisabled
+	}, [features])
 
-	// const disableDriver = useMemo(() => {
-	// 	let isDisabled;
-	// 	isDisabled = Boolean(data && !data.access)
-	// 	return isDisabled
-	// }, [data])
+	useEffect(() => {
+		console.log(features)
+		console.table({disableDriver})
+	}, [disableDriver])
 
 	const driverRows = useMemo(() => {
 		return drivers.map(driver => {
@@ -244,7 +251,7 @@ const Drivers = props => {
 			<div className='d-flex mx-3 justify-content-between'>
 				<h3>Drivers</h3>
 				<button
-					disabled={false}
+					disabled={disableDriver}
 					className='btn btn-primary btn-lg'
 					style={{ width: 150 }}
 					onClick={() => {

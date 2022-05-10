@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { PATHS } from '../../../constants';
-import { ProductContext } from '../../../context/ProductContext';
+import { ProductContext } from '../../../context';
 
 const ProductTile = ({ lookupKey, title, description, price, commission, caption }) => {
-	const { key, dispatch } = useContext(ProductContext);
+	const { dispatch } = useContext(ProductContext);
 	const history = useHistory()
 	return (
 		<div className='border px-3 py-5 d-flex flex-column justify-content-around align-items-center h-100 tile' role="button" onClick={() => {

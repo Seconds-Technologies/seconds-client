@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
-
-export const ProductContext = React.createContext(null);
+import { ProductContext } from './index';
 
 const productReducer = (state, action) => {
 	switch (action.type) {

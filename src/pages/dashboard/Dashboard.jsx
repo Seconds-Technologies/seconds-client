@@ -7,7 +7,6 @@ import { Mixpanel } from '../../config/mixpanel';
 import { STATUS } from '../../constants';
 import { removeError } from '../../store/actions/errors';
 import TimeFilter from '../../components/TimeFilter';
-import { Steps } from 'intro.js-react';
 
 const Dashboard = props => {
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });

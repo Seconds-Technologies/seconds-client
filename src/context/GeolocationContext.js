@@ -1,8 +1,6 @@
-import React, { createContext, useCallback } from 'react';
+import React, { useCallback } from 'react';
+import { GeolocationContext } from './index';
 import useGeolocation from 'react-hook-geolocation';
-
-export const GeolocationContext = createContext(null);
-
 const GeolocationContextProvider = props => {
 
 	const onGeolocationUpdate = useCallback((location) => {

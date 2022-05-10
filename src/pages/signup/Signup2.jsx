@@ -4,7 +4,7 @@ import { PATHS, SUBSCRIPTION_PLANS } from '../../constants';
 import { authenticateUser } from '../../store/actions/auth';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { ProductContext } from '../../context/ProductContext';
+import { ProductContext } from '../../context';
 import LoadingOverlay from 'react-loading-overlay';
 import SuccessToast from '../../modals/SuccessToast';
 import Payment from './components/Payment';

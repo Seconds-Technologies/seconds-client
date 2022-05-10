@@ -28,7 +28,8 @@ export const DEFAULT_STATE = {
 		stripeCustomerId: '',
 		paymentMethodId: '',
 		subscriptionId: '',
-		subscriptionPlan: ''
+		subscriptionPlan: '',
+		kanaAccessToken: '',
 	}, //all user info when logged in
 };
 

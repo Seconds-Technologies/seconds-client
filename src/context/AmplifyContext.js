@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
-
-export const AmplifyContext = React.createContext(null);
+import { AmplifyContext } from './index';
 
 const AmplifyContextProvider = (props) => {
 	const [ credentials, setCredentials ] = useState({ identityId: '' });
