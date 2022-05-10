@@ -3,7 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import routes from './routes/routes';
 import Sidebar from './layout/sidebar/Sidebar';
-import { BrowserRouter as Router, useHistory, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthorizationToken, syncUser, updateCurrentUser, updateProfile } from './store/actions/auth';
 import GeolocationContextProvider from './context/GeolocationContext';
@@ -50,14 +50,22 @@ function App() {
 			intro: "Click the 'Orders' icon in the sidebar to continue the tour"
 		}
 	]);
-
 	const {
 		isAuthenticated,
 		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress, lastLogin }
 	} = useSelector(state => state['currentUser']);
+
+	useEffect(() => {
+		isAuthenticated &&
+		dispatch(syncUser(email))
+			.then(() => console.log('USER SYNCED'))
+			.catch(err => console.error('USER SYNC FAILED!', err));
+	}, [isAuthenticated]);
+
 	const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
 	const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
 	const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
+
 	const stepsRef = useRef(null);
 
 	const theme = createTheme({
@@ -82,13 +90,6 @@ function App() {
 		},
 		[stepsRef]
 	);
-
-	useEffect(() => {
-		isAuthenticated &&
-			dispatch(syncUser(email))
-				.then(() => console.log('USER SYNCED'))
-				.catch(err => console.error('USER SYNC FAILED!', err));
-	}, [isAuthenticated]);
 
 	return (
 		<GeolocationContextProvider>

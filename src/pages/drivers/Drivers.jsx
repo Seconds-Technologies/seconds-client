@@ -41,8 +41,15 @@ const Drivers = props => {
 		phone: '',
 		vehicle: ''
 	});
+	// const { data, error } = kana.canUseFeature("additional-drivers")
 
 	const drivers = useSelector(state => state['driversStore']);
+
+	// const disableDriver = useMemo(() => {
+	// 	let isDisabled;
+	// 	isDisabled = Boolean(data && !data.access)
+	// 	return isDisabled
+	// }, [data])
 
 	const driverRows = useMemo(() => {
 		return drivers.map(driver => {
@@ -237,6 +244,7 @@ const Drivers = props => {
 			<div className='d-flex mx-3 justify-content-between'>
 				<h3>Drivers</h3>
 				<button
+					disabled={false}
 					className='btn btn-primary btn-lg'
 					style={{ width: 150 }}
 					onClick={() => {

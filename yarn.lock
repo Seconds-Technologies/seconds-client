@@ -5804,6 +5804,11 @@
     "@typescript-eslint/types" "4.32.0"
     eslint-visitor-keys "^2.0.0"
 
+"@usekana/client-kana-js@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@usekana/client-kana-js/-/client-kana-js-0.2.1.tgz#792465a1efc21407eb79152332bf77bcf216be4d"
+  integrity sha512-bqEQyui1dgmiG+kHwB39k8omtAUq7iJuxi9inu6OZdRvRRL1GpfCTllAjiY8LyIpoBcEDX+KYIiPXNLcQbC5QQ==
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
