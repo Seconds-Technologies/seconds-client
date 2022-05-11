@@ -1,5 +1,5 @@
 import './Orders.css';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -49,11 +49,14 @@ import DeleteModal from '../drivers/modals/DeleteModal';
 import { deleteJobs } from '../../store/actions/delivery';
 import { assemblePayload } from '../../helpers';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
+import { KanaContext } from '../../context';
+import useKana from '../../hooks/useKana';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
 	const dispatch = useDispatch();
+	const kana = useContext(KanaContext)
 	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const error = useSelector(state => state['errors']);
@@ -87,6 +90,7 @@ export default function Orders(props) {
 	const [message, setMessage] = useState('');
 	const [toast, setToast] = useState('');
 	const [deleteModal, setDeleteModal] = useState({ show: false, ids: [] });
+	const [features, errors] = useKana(kana)
 	const handleOpen = ids => setDeleteModal(prevState => ({ show: true, ids }));
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
@@ -246,6 +250,10 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
+		console.log(features)
+	}, [kana, features]);
+
+	useEffect(() => {
 		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
@@ -298,13 +306,16 @@ export default function Orders(props) {
 	}, [drivers]);
 
 	const canOptimize = useMemo(() => {
-		return selectionModel.length
-			? selectionModel.every(orderNo => {
-					let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
-					return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
-			  })
-			: false;
-	}, [selectionModel]);
+		if(selectionModel.length) {
+			const validPlan = features.routeOptimization;
+			const allUnassigned = selectionModel.every(orderNo => {
+				let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
+				return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
+			})
+			return allUnassigned && validPlan;
+		}
+		return false;
+	}, [selectionModel, features]);
 
 	const canDelete = useMemo(() => {
 		return allJobs

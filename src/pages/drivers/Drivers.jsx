@@ -53,11 +53,6 @@ const Drivers = props => {
 		return isDisabled
 	}, [features])
 
-	useEffect(() => {
-		console.log(features)
-		console.table({disableDriver})
-	}, [disableDriver])
-
 	const driverRows = useMemo(() => {
 		return drivers.map(driver => {
 			let vehicleType = VEHICLE_TYPES.find(({ value }) => value === driver.vehicle);

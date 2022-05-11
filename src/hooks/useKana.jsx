@@ -7,17 +7,19 @@ const useKana = kana => {
 	useEffect(() => {
 		(async () => {
 			if (kana) {
-				const { data, error } = await kana.canUseFeature('additional-drivers');
-				if (data) {
+				const additionalDrivers = await kana.canUseFeature('additional-drivers');
+				const routeOptimization = await kana.canUseFeature('route-optimization');
+				if (additionalDrivers.data && routeOptimization.data) {
 					setFeatures(prevState => ({
-						additionalDrivers: data.access
+						additionalDrivers: additionalDrivers.data.access,
+						routeOptimization: routeOptimization.data.access
 					}));
 				} else {
-					setError(error)
+					setError(additionalDrivers.error)
 				}
 			}
 		})();
-	}, []);
+	}, [kana]);
 
 	return [features, error];
 };
