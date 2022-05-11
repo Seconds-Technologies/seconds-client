@@ -306,8 +306,8 @@ export default function Orders(props) {
 	}, [drivers]);
 
 	const canOptimize = useMemo(() => {
-		if(selectionModel.length) {
-			const validPlan = features.routeOptimization;
+		if (selectionModel.length) {
+			const validPlan = Boolean(features && features.routeOptimization);
 			const allUnassigned = selectionModel.every(orderNo => {
 				let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;

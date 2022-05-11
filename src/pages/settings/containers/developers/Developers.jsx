@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import './developers.css'
 import ApiKey from './ApiKey';
 import { useSelector } from 'react-redux';
+import { KanaContext } from '../../../../context';
+import useKana from '../../../../hooks/useKana';
 
 const Developers = props => {
 	const [show, setShowApiKey] = useState(false);
+	const kana = useContext(KanaContext)
+	const [features, error] = useKana(kana);
 	const { apiKey } = useSelector(state => state['currentUser'].user)
+
+	const isDisabled = useMemo(() => {
+		return features ? Boolean(!features.apiIntegration) : true
+	}, [features])
+
 	return (
 		<div className='container-fluid p-3'>
 			<ApiKey show={show} onHide={() => setShowApiKey(false)} apiKey={apiKey}/>
@@ -17,7 +26,7 @@ const Developers = props => {
 						it will revoke any AKI key you previously generated. You also will only be able to see the key once, so be sure to copy it
 						immediately.
 					</p>
-					<button className="btn btn-primary" onClick={() => setShowApiKey(true)}>View API Key</button>
+					<button className="btn btn-primary" onClick={() => setShowApiKey(true)} disabled={isDisabled}>View API Key</button>
 				</div>
 				<div className='col'>
 					<h1 className='fs-2 dev-header'>Documentation</h1>
