@@ -13,6 +13,7 @@ const KanaProvider = ({ children }) => {
 				const client = new KanaUserClient({
 					userToken: kanaAccessToken
 				})
+				await client.resetCache()
 				console.log(client)
 				setKanaClient(client)
 			}

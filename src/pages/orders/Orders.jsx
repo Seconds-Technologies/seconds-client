@@ -250,10 +250,6 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
-		console.log(features)
-	}, [kana, features]);
-
-	useEffect(() => {
 		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
