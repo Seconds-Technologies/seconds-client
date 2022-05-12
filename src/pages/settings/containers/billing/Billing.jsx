@@ -15,12 +15,11 @@ import { SUBSCRIPTION_PLANS } from '../../../../constants';
 import { syncUser } from '../../../../store/actions/auth';
 
 const InvoiceHistory = ({ invoices, currentPlan }) => {
-	console.log(invoices)
 	return (
 		<div className='table-responsive'>
 			<h1 className='fs-3 py-2'>Invoice History</h1>
 			<div className='table table-borderless d-flex flex-column border p-3 w-100'>
-				{invoices.map(({ created, total, status, hosted_invoice_url, lines }, index) => (
+				{invoices.filter(({ lines }) => lines.data.length).map(({ created, total, status, hosted_invoice_url, lines }, index) => (
 					<a
 						key={index}
 						href={hosted_invoice_url}
@@ -32,7 +31,9 @@ const InvoiceHistory = ({ invoices, currentPlan }) => {
 						<span>{moment.unix(created).format('DD MMM YYYY')}</span>
 						<span>£{total / 100}</span>
 						<span className='text-capitalize'>{status}</span>
-						<span>{lines.data[0].plan ? lines.data[0].plan.nickname : lines.data[0].price ? lines.data[0].price.nickname : currentPlan}</span>
+						<span>
+							{lines.data[0].plan ? lines.data[0].plan.nickname : lines.data[0].price ? lines.data[0].price.nickname : currentPlan}
+						</span>
 					</a>
 				))}
 			</div>
