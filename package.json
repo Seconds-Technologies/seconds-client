@@ -35,7 +35,7 @@
     "@types/prop-types": "^15.7.3",
     "@types/redux-persist": "^4.3.1",
     "@types/yup": "^0.29.13",
-    "@usekana/client-kana-js": "0.2.1",
+    "@usekana/client-kana-js": "^0.2.2",
     "antd": "^4.16.13",
     "aws-amplify": "^4.3.20",
     "axios": "^0.21.1",
