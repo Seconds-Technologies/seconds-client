@@ -1,3 +1,4 @@
+/*
 import React, { useEffect, useState } from 'react';
 
 const useKana = kana => {
@@ -26,4 +27,4 @@ const useKana = kana => {
 	return [features, error];
 };
 
-export default useKana;
+export default useKana;*/

@@ -50,13 +50,12 @@ import { deleteJobs } from '../../store/actions/delivery';
 import { assemblePayload } from '../../helpers';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
-import useKana from '../../hooks/useKana';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
 	const dispatch = useDispatch();
-	const kana = useContext(KanaContext)
+	const { features } = useContext(KanaContext);
 	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const error = useSelector(state => state['errors']);
@@ -90,7 +89,6 @@ export default function Orders(props) {
 	const [message, setMessage] = useState('');
 	const [toast, setToast] = useState('');
 	const [deleteModal, setDeleteModal] = useState({ show: false, ids: [] });
-	const [features, errors] = useKana(kana)
 	const handleOpen = ids => setDeleteModal(prevState => ({ show: true, ids }));
 	const handleClose = () => setDeleteModal(prevState => ({ ...prevState, show: false }));
 
@@ -307,7 +305,7 @@ export default function Orders(props) {
 			const allUnassigned = selectionModel.every(orderNo => {
 				let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
-			})
+			});
 			return allUnassigned && validPlan;
 		}
 		return false;

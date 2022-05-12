@@ -23,15 +23,13 @@ import { BACKGROUND, STATUS_COLOURS, DRIVER_STATUS, VEHICLE_TYPES } from '../../
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 // contexts
 import { AmplifyContext, KanaContext } from '../../context';
-import useKana from '../../hooks/useKana';
 
 const onIcon = <div className='switch-icon'>On</div>;
 const offIcon = <div className='switch-icon'>Off</div>;
 
 const Drivers = props => {
 	const amplify = useContext(AmplifyContext);
-	const kana = useContext(KanaContext);
-	const [features, error] = useKana(kana)
+	const { features } = useContext(KanaContext);
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const drivers = useSelector(state => state['driversStore']);

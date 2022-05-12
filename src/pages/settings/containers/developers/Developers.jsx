@@ -3,12 +3,10 @@ import './developers.css'
 import ApiKey from './ApiKey';
 import { useSelector } from 'react-redux';
 import { KanaContext } from '../../../../context';
-import useKana from '../../../../hooks/useKana';
 
 const Developers = props => {
 	const [show, setShowApiKey] = useState(false);
-	const kana = useContext(KanaContext)
-	const [features, error] = useKana(kana);
+	const { features, error } = useContext(KanaContext);
 	const { apiKey } = useSelector(state => state['currentUser'].user)
 
 	const isDisabled = useMemo(() => {
