@@ -30,6 +30,8 @@ if (localStorage.getItem('jwt_token')) {
 	setAuthorizationToken(localStorage.getItem('jwt_token'));
 }
 
+const MAGICBELL_API_KEY = process.env.REACT_APP_MAGIC_BELL_API_KEY
+
 function App() {
 	const location = useLocation();
 	const dispatch = useDispatch();
@@ -60,6 +62,7 @@ function App() {
 	} = useSelector(state => state['currentUser']);
 
 	useEffect(() => {
+		console.log(MAGICBELL_API_KEY)
 		isAuthenticated &&
 			dispatch(syncUser(email))
 				.then(() => console.log('USER SYNCED'))
@@ -101,7 +104,7 @@ function App() {
 				<KanaProvider>
 					<MagicBellProvider
 						userExternalId={id}
-						apiKey={process.env.REACT_APP_MAGIC_BELL_API_KEY}
+						apiKey={MAGICBELL_API_KEY}
 						theme={{
 							header: {
 								backgroundColor: '#9400D3'
