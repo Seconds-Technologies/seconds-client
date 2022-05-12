@@ -52,7 +52,6 @@ export function authUser(type, userData) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', `/server/auth/${type}`, userData)
 				.then(({ token, message, shopify, woocommerce, squarespace, hubrise, drivers, settings, ...user }) => {
-					console.table({ message, shopify, woocommerce, hubrise, drivers, settings })
 					localStorage.setItem('jwt_token', token);
 					setAuthorizationToken(token);
 					type === 'register' ? dispatch(setUserDetails(user)) : dispatch(setCurrentUser(user));
@@ -146,7 +145,6 @@ export function syncUser(email, authenticated = true) {
 export function validateRegistration(userData) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('User data:', userData);
 			return apiCall('POST', '/server/auth/validate', userData)
 				.then(({ user }) => {
 					dispatch(setUserDetails(user));
@@ -164,14 +162,11 @@ export function validateRegistration(userData) {
 export function updateProfile({ img, id, ...data }) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log('Image:', img);
-			console.log('Data:', data);
 			return apiCall('POST', '/server/main/update-profile', { img, id, data })
 				.then(({ message, ...data }) => {
 					Mixpanel.track('Successful updated profile');
 					if (img) {
 						const formData = new FormData();
-						console.log(img);
 						formData.append('img', img);
 						formData.append('id', id);
 						const config = {
@@ -182,12 +177,10 @@ export function updateProfile({ img, id, ...data }) {
 						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
 								Mixpanel.track('Successful profile image upload');
-								console.log(message);
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
 							})
 							.catch(err => {
 								Mixpanel.track('Unsuccessful profile image upload', { $error: err.message });
-								console.error(err);
 								reject(err);
 							});
 					}
@@ -208,7 +201,6 @@ export function updateProfile({ img, id, ...data }) {
 export function sendPasswordResetEmail(email) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(email);
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
 				.then(res => {
 					Mixpanel.track('Successful request to reset password');
@@ -246,7 +238,6 @@ export function resetPassword({ password }, token) {
 export function updateDeliveryStrategies(email, strategies) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.table(email, strategies);
 			return apiCall('POST', '/server/main/update-delivery-strategies', strategies, { params: { email } })
 				.then(res => {
 					Mixpanel.track('Delivery strategies updated successfully');

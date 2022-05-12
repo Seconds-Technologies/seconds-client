@@ -62,7 +62,6 @@ function App() {
 	} = useSelector(state => state['currentUser']);
 
 	useEffect(() => {
-		console.log(MAGICBELL_API_KEY)
 		isAuthenticated &&
 			dispatch(syncUser(email))
 				.then(() => console.log('USER SYNCED'))

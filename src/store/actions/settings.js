@@ -41,7 +41,6 @@ export function updateBusinessWorkflow(email, data) {
 export function updateDeliveryTimes(email, deliveryHours) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.log(email);
 			return apiCall('POST', '/server/settings/update-delivery-hours', deliveryHours, { params: { email } })
 				.then(res => {
 					Mixpanel.track('Delivery hours updated successfully');

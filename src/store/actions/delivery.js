@@ -76,7 +76,6 @@ export const unsubscribe = () => dispatch => {
 export function assignDriver(deliveryParams, apiKey, driverId) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/assign`, deliveryParams, {
 				headers: { 'X-Seconds-Api-Key': apiKey },
 				params: { driverId }
@@ -125,7 +124,6 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 export function createMultiDropJob(deliveryParams, apiKey, providerId = undefined) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.table(deliveryParams);
 			return apiCall('POST', `/api/v1/jobs/multi-drop`, deliveryParams, {
 				headers: { 'X-Seconds-Api-Key': apiKey },
 				...(providerId && { params: { provider: providerId } })
@@ -149,7 +147,6 @@ export function createMultiDropJob(deliveryParams, apiKey, providerId = undefine
 export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			console.table({ type, providerId, orderNumber });
 			return apiCall(
 				'PATCH',
 				`/api/v1/jobs/dispatch`,
@@ -208,11 +205,8 @@ export function optimizeRoutes(email, params, orderNumbers) {
 				}
 			)
 				.then(({ message, job_id }) => {
-					console.log(message);
 					return apiCall('GET', '/server/main/optimise-route', null, { params: { email, job_id, num_orders: orderNumbers.length } })
 						.then(({ message, routes, unreachable }) => {
-							console.log(routes);
-							console.log(unreachable);
 							resolve({ routes, unreachable });
 						})
 						.catch(err => {
@@ -262,7 +256,6 @@ export function getAllQuotes(apiKey, data) {
 			setTokenHeader(localStorage.getItem('jwt_token'));
 			return apiCall('POST', `/api/v1/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
-					console.log(quotes);
 					Mixpanel.track('Successful fetch of delivery quotes');
 					dispatch(removeError());
 					resolve({ quotes, bestQuote });
