@@ -3,10 +3,12 @@ import { KanaContext } from './index';
 import { useSelector } from 'react-redux';
 import { KanaUserClient } from '@usekana/client-kana-js'
 
+const KANA_PUBLIC_KEY = process.env.REACT_APP_KANA_PUBLIC_KEY
+
 const KanaProvider = ({ children }) => {
 	const [kanaClient, setKanaClient] = useState(null);
 	const [features, setFeatures] = useState(null);
-	const [error, setError] = useState(null);
+	const [errors, setErrors] = useState(null);
 	const { kanaAccessToken } = useSelector(state => state['currentUser'].user);
 
 	useEffect(() => {
@@ -17,7 +19,8 @@ const KanaProvider = ({ children }) => {
 		(async () => {
 			if(kanaAccessToken){
 				const client = new KanaUserClient({
-					userToken: kanaAccessToken
+					apiKey: KANA_PUBLIC_KEY,
+					userId:
 				})
 				await client.resetCache()
 				setKanaClient(client)
@@ -31,13 +34,17 @@ const KanaProvider = ({ children }) => {
 						apiIntegration: apiIntegration.data.access
 					}));
 				} else {
-					setError(additionalDrivers.error)
+					setErrors(prevState => ({
+						additionalDrivers: additionalDrivers.error,
+						routeOptimization: routeOptimization.error,
+						apiIntegration: apiIntegration.error
+					}))
 				}
 			}
 		})()
 	}, [kanaAccessToken])
 
-	return <KanaContext.Provider value={{ kanaClient, features, error }}>{children}</KanaContext.Provider>;
+	return <KanaContext.Provider value={{ kanaClient, features, errors }}>{children}</KanaContext.Provider>;
 };
 
 export default KanaProvider;

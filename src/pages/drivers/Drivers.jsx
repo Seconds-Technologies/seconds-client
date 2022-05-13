@@ -29,7 +29,7 @@ const offIcon = <div className='switch-icon'>Off</div>;
 
 const Drivers = props => {
 	const amplify = useContext(AmplifyContext);
-	const { features } = useContext(KanaContext);
+	const { features, errors } = useContext(KanaContext);
 	const dispatch = useDispatch();
 	const { email } = useSelector(state => state['currentUser'].user);
 	const drivers = useSelector(state => state['driversStore']);

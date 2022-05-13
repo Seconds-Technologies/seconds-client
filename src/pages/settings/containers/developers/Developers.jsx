@@ -6,7 +6,7 @@ import { KanaContext } from '../../../../context';
 
 const Developers = props => {
 	const [show, setShowApiKey] = useState(false);
-	const { features, error } = useContext(KanaContext);
+	const { features, errors } = useContext(KanaContext);
 	const { apiKey } = useSelector(state => state['currentUser'].user)
 
 	const isDisabled = useMemo(() => {

@@ -55,7 +55,7 @@ const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
 	const dispatch = useDispatch();
-	const { features } = useContext(KanaContext);
+	const { features, errors } = useContext(KanaContext);
 	const { email, apiKey, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const error = useSelector(state => state['errors']);
