@@ -11,13 +11,13 @@ import Billing from './containers/billing/Billing';
 import TabPanel from '../../components/TabPanel';
 import BusinessSettings from './containers/business/BusinessSettings';
 import Developers from './containers/developers/Developers';
-import { TabContext } from '../../context';
 import AppBar from '@mui/material/AppBar';
 import Branding from './containers/branding/Branding';
 import DispatchRules from './containers/dispatchRules/DispatchRules';
 import RoutingRules from './containers/routingRules/RoutingRules';
 import Notifications from './containers/notifications/Notifications';
 import Couriers from './containers/couriers/Couriers';
+import { TabContext } from '../../context';
 
 const Settings = props => {
 	const { index, dispatch } = useContext(TabContext);
