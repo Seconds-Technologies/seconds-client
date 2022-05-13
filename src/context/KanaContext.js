@@ -42,7 +42,7 @@ const KanaProvider = ({ children }) => {
 				}
 			}
 		})()
-	}, [kanaAccessToken])
+	}, [email])
 
 	return <KanaContext.Provider value={{ kanaClient, features, errors }}>{children}</KanaContext.Provider>;
 };
