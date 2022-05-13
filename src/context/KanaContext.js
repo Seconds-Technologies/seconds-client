@@ -9,7 +9,7 @@ const KanaProvider = ({ children }) => {
 	const [kanaClient, setKanaClient] = useState(null);
 	const [features, setFeatures] = useState(null);
 	const [errors, setErrors] = useState(null);
-	const { kanaAccessToken } = useSelector(state => state['currentUser'].user);
+	const { email } = useSelector(state => state['currentUser'].user);
 
 	useEffect(() => {
 		console.log(features)
@@ -20,7 +20,7 @@ const KanaProvider = ({ children }) => {
 			if(kanaAccessToken){
 				const client = new KanaUserClient({
 					apiKey: KANA_PUBLIC_KEY,
-					userId:
+					userId: email
 				})
 				await client.resetCache()
 				setKanaClient(client)
