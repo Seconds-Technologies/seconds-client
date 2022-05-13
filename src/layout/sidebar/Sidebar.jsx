@@ -11,7 +11,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/logo.svg';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState } from 'react';
 import { logout } from '../../store/actions/auth';
 import { useNotifications } from '@magicbell/magicbell-react';
 import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
@@ -19,6 +19,7 @@ import Badge from '@mui/material/Badge';
 import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
 import { Hints } from 'intro.js-react';
+import { TabContext } from '../../context';
 
 export default function Sidebar({ hintsEnabled }) {
 	const [hints, setHints] = useState([
@@ -28,8 +29,9 @@ export default function Sidebar({ hintsEnabled }) {
 			hintPosition: 'middle-right'
 		}
 	]);
+	const { dispatch: switchTab } = useContext(TabContext)
 	const [isOpen, setAlerts] = useState(false);
-	const { user, isAuthenticated } = useSelector(state => state['currentUser']);
+	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
@@ -191,7 +193,10 @@ export default function Sidebar({ hintsEnabled }) {
 							</div>
 							<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 								<li>
-									<div role='button' className='dropdown-item' onClick={() => history.push(PATHS.SETTINGS)}>
+									<div role='button' className='dropdown-item' onClick={() => {
+										switchTab({type: "setIndex", index: 0})
+										history.push(PATHS.SETTINGS)
+									}}>
 										Profile
 									</div>
 								</li>
