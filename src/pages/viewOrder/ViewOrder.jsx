@@ -342,13 +342,13 @@ const ViewOrder = props => {
 					show={updateModal}
 					onHide={() => showUpdateModal(false)}
 					onSubmit={data => {
-						data.fullAddress = `${data.addressLine1} ${data.addressLine2} ${data.city} ${data.postcode}`
+						data.fullAddress = `${data.addressLine1} ${data.addressLine2} ${data.city} ${data.postcode}`;
 						dispatch(updateDelivery(apiKey, order.id, data))
 							.then(res => {
 								showUpdateModal(false);
-								showMessage('Job Updated Successfully!')
+								showMessage('Job Updated Successfully!');
 							})
-							.catch(err => showUpdateModal(false))
+							.catch(err => showUpdateModal(false));
 					}}
 				/>
 				<ConfirmProvider show={confirmDialog} provider={provider} toggleShow={showConfirmDialog} onConfirm={confirmProvider} />
@@ -419,7 +419,9 @@ const ViewOrder = props => {
 								<Panel
 									label='Delivery ETA'
 									value={
-										!delivery.dropoffEndTime || order.providerId === PROVIDERS.UNASSIGNED
+										order.status === STATUS.CANCELLED
+											? 'Cancelled'
+											: !delivery.dropoffEndTime || order.providerId === PROVIDERS.UNASSIGNED
 											? 'Estimating...'
 											: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
 											? `Delivered`
