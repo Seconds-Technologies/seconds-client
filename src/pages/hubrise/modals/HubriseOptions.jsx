@@ -35,7 +35,7 @@ const MenuProps = {
 };
 
 const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
-	const { options } = useSelector(state => state['hubriseStore'])
+	const { options } = useSelector(state => state['hubriseStore']);
 	const [serviceType, setServiceType] = useState('');
 	return (
 		<Modal show={show} onHide={onHide} centered={centered} size='lg'>
@@ -43,15 +43,22 @@ const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
 				<Modal.Title>Hubrise Workflow</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
-				<Formik
-					initialValues={options}
-					onSubmit={onSubmit}
-				>
+				<Formik initialValues={options} onSubmit={onSubmit}>
 					{({ values, errors, handleBlur, setFieldValue }) => (
 						<Form className='container w-100'>
 							<div>
-								<h1 className='workflow-header fs-5'>Enable Triggers</h1>
-								<p className='text-muted'>Set which order statuses / service types should trigger deliveries to be created on our platform</p>
+								<div className='d-flex align-items-center'>
+									<h1 className='me-2 workflow-header fs-5'>Enable Triggers</h1>
+									<Tooltip
+										title="Keeping this option disabled will allow any new order to be be created regardless of it's current status or service type ref"
+										placement='right-start'
+									>
+										<IconButton size='small'>
+											<BsInfoCircle />
+										</IconButton>
+									</Tooltip>
+								</div>
+								<p className='text-muted'>Set which order statuses / service types should create deliveries on our platform</p>
 								<div className='d-flex flex-grow-1 align-items-center'>
 									<Switch
 										onColor={'#9FEA86'}

@@ -98,7 +98,7 @@ const HubRise = props => {
 					<div className='d-flex text-center flex-column'>
 						<p className='lead'>
 							Account:&nbsp;
-							<span className='fw-bold text-muted'>{credentials.accountName}</span>
+							<span className='fw-bold text-muted'>{credentials.accountName} - {credentials.accountId}</span>
 						</p>
 						<p className='lead'>
 							Location:&nbsp;
@@ -107,7 +107,7 @@ const HubRise = props => {
 							</span>
 						</p>
 						<p className='lead'>
-							Catalogs:&nbsp;
+							Catalog:&nbsp;
 							<span className='fw-bold text-muted'>
 								{credentials.catalogName} - {credentials.catalogId}
 							</span>
