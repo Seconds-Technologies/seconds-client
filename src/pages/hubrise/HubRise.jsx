@@ -5,11 +5,12 @@ import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { connectHubrise, disconnectHubrise, pullCatalog, configureHubrise } from '../../store/actions/hubrise';
-import { addError } from '../../store/actions/errors';
+import { addError, removeError } from '../../store/actions/errors';
 import { PATHS } from '../../constants';
 import Confirm from './modals/Confirm';
 import SuccessToast from '../../modals/SuccessToast';
 import HubriseOptions from './modals/HubriseOptions';
+import { Mixpanel } from '../../config/mixpanel';
 
 const HubRise = props => {
 	const dispatch = useDispatch();
@@ -31,6 +32,8 @@ const HubRise = props => {
 		} else if (query.get('error')) {
 			dispatch(addError(query.get('error').replace(/_/g, ' ')));
 		}
+		Mixpanel.people.increment('page_views');
+		dispatch(removeError())
 	}, [props.location]);
 
 	const disconnect = useCallback(() => {
