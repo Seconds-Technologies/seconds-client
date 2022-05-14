@@ -33,7 +33,7 @@ const HubRise = props => {
 			dispatch(addError(query.get('error').replace(/_/g, ' ')));
 		}
 		Mixpanel.people.increment('page_views');
-		dispatch(removeError())
+		dispatch(removeError());
 	}, [props.location]);
 
 	const disconnect = useCallback(() => {
@@ -49,12 +49,7 @@ const HubRise = props => {
 		<div className='page-container container-fluid p-4 d-flex'>
 			<Confirm onConfirm={disconnect} show={confirm} toggleShow={setConfirm} />
 			<SuccessToast toggleShow={setSuccess} message={successMessage} />
-			<HubriseOptions
-				show={optionsModal}
-				onSubmit={handleSubmit}
-				onHide={() => setShowOptions(false)}
-				centered
-			/>
+			<HubriseOptions show={optionsModal} onSubmit={handleSubmit} onHide={() => setShowOptions(false)} centered />
 			<div className='m-auto'>
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
@@ -123,11 +118,13 @@ const HubRise = props => {
 									className='btn btn-outline-primary d-flex align-items-center'
 									onClick={() => {
 										setLoading(true);
-										dispatch(pullCatalog(email)).then(message => {
-											setLoading(false);
-											console.log(message);
-											setSuccess(message);
-										});
+										dispatch(pullCatalog(email))
+											.then(message => {
+												setLoading(false);
+												console.log(message);
+												setSuccess(message);
+											})
+											.catch(() => setLoading(false));
 									}}
 								>
 									<span className={isLoading ? 'me-2' : ''}>Pull catalog</span>
