@@ -282,10 +282,7 @@ export const HUBRISE_ORDER_STATUSES = {
 	AWAITING_SHIPMENT: 'awaiting_shipment',
 	AWAITING_COLLECTION: 'awaiting_collection',
 	IN_DELIVERY: 'in_delivery',
-	COMPLETED: 'completed',
-	REJECTED: 'rejected',
-	CANCELLED: 'cancelled',
-	DELIVERY_FAILED: 'delivery_failed'
+	COMPLETED: 'completed'
 }
 
 export const onIcon = <div className='switch-icon'>On</div>;
