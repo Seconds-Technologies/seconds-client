@@ -54,7 +54,7 @@ const HubRise = props => {
 				{!isIntegrated ? (
 					<h2 className='text-center'>Connect your HubRise Account</h2>
 				) : (
-					<h2 className='text-center'>Connected to Hubrise!</h2>
+					<h2 className='text-center'>Connected to HubRise!</h2>
 				)}
 				<div className='d-flex flex-column justify-content-between mx-auto text-center py-4'>
 					<img className='img-fluid d-block mx-auto mb-3' src={hubriseLogo} alt='' width={250} />
@@ -142,7 +142,7 @@ const HubRise = props => {
 						</div>
 						<div className='d-flex justify-content-evenly'>
 							<a href='https://manager.hubrise.com/dashboard' target='_blank' className='text-hubrise'>
-								Go to Hubrise
+								Go to HubRise
 							</a>
 							<span role='button' className='text-hubrise text-secondary text-decoration-underline' onClick={() => setConfirm(true)}>
 								Disconnect

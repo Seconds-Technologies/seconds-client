@@ -40,7 +40,7 @@ const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
 	return (
 		<Modal show={show} onHide={onHide} centered={centered} size='lg'>
 			<Modal.Header closeButton>
-				<Modal.Title>Hubrise Workflow</Modal.Title>
+				<Modal.Title>HubRise Workflow</Modal.Title>
 			</Modal.Header>
 			<Modal.Body className='d-flex justify-content-center align-items-center border-0'>
 				<Formik initialValues={options} onSubmit={onSubmit}>
