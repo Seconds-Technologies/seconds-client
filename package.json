@@ -45,6 +45,7 @@
     "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
     "clsx": "^1.1.1",
+    "cypress": "^9.6.1",
     "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.1",
     "intro.js": "^5.1.0",
@@ -94,7 +95,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "scss": "node-sass --watch src/scss -o css"
+    "scss": "node-sass --watch src/scss -o css",
+	"build:prod": "ng build --prod",
+    "ci:cy-run": "start-server-and-test ci:start-server 4200 cy:run",
+    "cy:run": "cypress run",
+    "ci": "run-s lint:ci build:prod ci:cy-run"
+
   },
   "eslintConfig": {
     "extends": [

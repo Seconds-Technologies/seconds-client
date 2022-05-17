@@ -129,10 +129,10 @@ export default function Signup(props) {
 								setFieldValue
 								/* and other goodies */
 							}) => (
-								<form onSubmit={handleSubmit}>
+								<form id="signup-form" onSubmit={handleSubmit}>
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
-											<label className='mb-2' htmlFor='firstname'>
+											<label className='mb-2' htmlFor='signup-firstname'>
 												<span className='text-muted signup-form-label text-uppercase'>
 													{errors['firstname'] && <span className='text-danger'>*</span>}First Name
 												</span>
@@ -141,7 +141,7 @@ export default function Signup(props) {
 												defaultValue={values.firstname}
 												autoComplete='given-name'
 												type='text'
-												id='firstname'
+												id='signup-firstname'
 												name='firstname'
 												className='form-control border-0 signup-aside py-2'
 												onBlur={handleBlur}
@@ -158,7 +158,7 @@ export default function Signup(props) {
 												defaultValue={values.lastname}
 												autoComplete='family-name'
 												type='text'
-												id='lastname'
+												id='signup-lastname'
 												name='lastname'
 												className='form-control border-0 signup-aside py-2'
 												onBlur={handleBlur}
@@ -176,7 +176,7 @@ export default function Signup(props) {
 											defaultValue={values.email}
 											autoComplete='email'
 											type='email'
-											id='email'
+											id='signup-email'
 											name='email'
 											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
@@ -193,7 +193,7 @@ export default function Signup(props) {
 											defaultValue={values.company}
 											autoComplete='organization'
 											type='text'
-											id='company'
+											id='signup-company'
 											name='company'
 											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
@@ -210,7 +210,7 @@ export default function Signup(props) {
 											defaultValue={values.phone}
 											autoComplete='tel'
 											type='tel'
-											id='phone'
+											id='signup-phone'
 											name='phone'
 											className='form-control border-0 signup-aside py-2'
 											onBlur={handleBlur}
@@ -224,6 +224,7 @@ export default function Signup(props) {
 											</span>
 										</label>
 										<PasswordField
+											id="signup-password"
 											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
@@ -252,7 +253,7 @@ export default function Signup(props) {
 										<ErrorField name='terms' />
 									</div>
 									<div>
-										<button type='submit' className='btn btn-dark btn-lg w-100 mt-4 rounded-0'>
+										<button id="signup-button" type='submit' className='btn btn-dark btn-lg w-100 mt-4 rounded-0'>
 											Sign Up
 										</button>
 									</div>

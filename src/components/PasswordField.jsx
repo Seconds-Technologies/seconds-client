@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 const eye = <FontAwesomeIcon icon={faEye} />;
 const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
 
-const PasswordField = ({ onBlur, onChange, name, classNames, min, max }) => {
+const PasswordField = ({ onBlur, onChange, id="", name, classNames, min, max }) => {
 	const [type, setType] = useState('password');
 
 	const handleClick = () => setType(type === 'text' ? 'password' : 'text');
@@ -14,7 +14,8 @@ const PasswordField = ({ onBlur, onChange, name, classNames, min, max }) => {
 	return (
 		<div className='pass-wrapper'>
 			<input
-				autoComplete='new-password”'
+				id={id}
+				autoComplete='new-password'
 				type={type}
 				name={name}
 				className={classNames}
@@ -31,6 +32,7 @@ const PasswordField = ({ onBlur, onChange, name, classNames, min, max }) => {
 };
 
 PasswordField.propTypes = {
+	id: PropTypes.string,
 	name: PropTypes.string.isRequired,
 	classNames: PropTypes.string,
 	onBlur: PropTypes.func.isRequired,
