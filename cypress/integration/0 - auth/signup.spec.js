@@ -1,10 +1,8 @@
 /// <reference types="cypress"/>
 
 const signupURL = `${Cypress.config().baseUrl}/signup`;
-const loginURL = `${Cypress.config().baseUrl}/login`;
-console.log(signupURL, loginURL);
 
-describe.only('Visit Auth Pages', () => {
+describe('Visit Auth Pages', () => {
 	it('Navigation links', () => {
 		cy.visit(signupURL).url().should('equal', signupURL);
 		cy.get('#login-link').click().url().should('include', '/login');
@@ -121,24 +119,6 @@ describe('Successful signup flow', () => {
 		cy.get('#signup-product-plans').within(function () {
 			cy.get('#connect').click();
 			cy.url().should('include', '/2');
-		});
-	});
-});
-
-describe('Failed Login', () => {
-	beforeEach(() => {
-		cy.visit(loginURL);
-		cy.fixture('users').as('users');
-	});
-
-	it('Invalid Email / Password', function () {
-		// access the users property
-		const user = this.users[0];
-		cy.location('href').should('include', '/login');
-		cy.get('#login-form').within(function () {
-			cy.get('#login-email').type(user.email);
-			cy.get('#login-password').type(user.password);
-			cy.root().submit().wait(3000).url().should('include', '/login');
 		});
 	});
 });

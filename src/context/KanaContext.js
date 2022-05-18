@@ -24,12 +24,6 @@ const KanaProvider = ({ children }) => {
 					apiKey: KANA_PUBLIC_KEY,
 					userId: email
 				})
-				console.log(client)
-				const client2 = new KanaUserClient({
-					apiKey: "pub_live_9ab99b923e5a1845413ddbfb00988b88",
-					userId: "ola@useseconds.com"
-				})
-				console.log(client2)
 				await client.resetCache()
 				setKanaClient(client)
 				const additionalDrivers = await client.canUseFeature('additional-drivers');
