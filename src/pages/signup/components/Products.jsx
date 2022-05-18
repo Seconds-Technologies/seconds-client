@@ -8,10 +8,11 @@ const pro = String(process.env.REACT_APP_STRIPE_PRO_KEY)
 
 const Products = props => {
 	return (
-		<div className="container d-flex flex-column flex-grow-1 py-4">
+		<div id="signup-product-plans" className="container d-flex flex-column flex-grow-1 py-4">
 			<div className='row gx-4 flex-grow-1 products-container'>
 				<div className='col-xs-12 col-md-4'>
 					<ProductTile
+						id={connect}
 						lookupKey={connect}
 						title='Connect'
 						description='Access any delivery fleet'
@@ -22,6 +23,7 @@ const Products = props => {
 				</div>
 				<div className='col-xs-12 col-md-4'>
 					<ProductTile
+						id={growth}
 						lookupKey={growth}
 						title='Growth'
 						description='Manage your own fleet'
@@ -32,6 +34,7 @@ const Products = props => {
 				</div>
 				<div className='col-xs-12 col-md-4'>
 					<ProductTile
+						id={pro}
 						lookupKey={pro}
 						title='Pro'
 						description='Scale your own fleet'

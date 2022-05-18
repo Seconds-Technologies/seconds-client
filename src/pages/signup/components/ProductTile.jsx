@@ -3,11 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { PATHS } from '../../../constants';
 import { ProductContext } from '../../../context';
 
-const ProductTile = ({ lookupKey, title, description, price, commission, caption }) => {
+const ProductTile = ({ id, lookupKey, title, description, price, commission, caption }) => {
 	const { dispatch } = useContext(ProductContext);
 	const history = useHistory()
 	return (
-		<div className='border px-3 py-5 d-flex flex-column justify-content-around align-items-center h-100 tile' role="button" onClick={() => {
+		<div id={id} className='border px-3 py-5 d-flex flex-column justify-content-around align-items-center h-100 tile' role="button" onClick={() => {
 			dispatch({type: 'setProductKey', key: lookupKey})
 			history.push(PATHS.SIGNUP_2)
 		}}>

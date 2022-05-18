@@ -2,7 +2,6 @@ import './Signup.css';
 import React, { useEffect, useState } from 'react';
 import logo from '../../assets/img/seconds-logo-black.svg';
 import { Field, Formik } from 'formik';
-import { Link } from 'react-router-dom';
 import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeError } from '../../store/actions/errors';
@@ -16,6 +15,8 @@ import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
 import { Mixpanel } from '../../config/mixpanel';
 import valuesIcon from '../../assets/img/signup-aside-icon.svg';
+import Link from '../../components/Link';
+import { PATHS } from '../../constants';
 
 export default function Signup(props) {
 	const [isLoading, setLoading] = useState(false);
@@ -129,7 +130,7 @@ export default function Signup(props) {
 								setFieldValue
 								/* and other goodies */
 							}) => (
-								<form id="signup-form" onSubmit={handleSubmit}>
+								<form id='signup-form' onSubmit={handleSubmit}>
 									<div className='row'>
 										<div className='col-md-6 col-lg-6 pb-xs-4'>
 											<label className='mb-2' htmlFor='signup-firstname'>
@@ -224,7 +225,7 @@ export default function Signup(props) {
 											</span>
 										</label>
 										<PasswordField
-											id="signup-password"
+											id='signup-password'
 											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
@@ -253,7 +254,7 @@ export default function Signup(props) {
 										<ErrorField name='terms' />
 									</div>
 									<div>
-										<button id="signup-button" type='submit' className='btn btn-dark btn-lg w-100 mt-4 rounded-0'>
+										<button id='signup-button' type='submit' className='btn btn-dark btn-lg w-100 mt-4 rounded-0'>
 											Sign Up
 										</button>
 									</div>
@@ -262,7 +263,7 @@ export default function Signup(props) {
 						</Formik>
 						<div className='pt-4'>
 							<span className='text-primary'>
-								Already have an account?&nbsp;<Link to='/login'>Login here!</Link>
+								Already have an account?&nbsp;<Link id="login-link" to={PATHS.LOGIN}>Login here!</Link>
 							</span>
 						</div>
 					</div>

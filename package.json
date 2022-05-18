@@ -98,7 +98,9 @@
     "scss": "node-sass --watch src/scss -o css",
 	"build:prod": "ng build --prod",
     "ci:cy-run": "start-server-and-test ci:start-server 4200 cy:run",
-    "cy:run": "cypress run",
+    "cy:run": "npx cypress run",
+    "cy:run-staging": "npx cypress run --record --spec \"cypress/integration/0 - auth/signup.spec.js\" --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
+    "cy:run-production": "cy:run -- --record --spec 'cypress/integration/0 - auth/signup.spec.js' --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
     "ci": "run-s lint:ci build:prod ci:cy-run"
 
   },

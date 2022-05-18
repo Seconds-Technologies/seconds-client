@@ -8,8 +8,8 @@ export const AUTH_TYPE = {
 export const PATHS = {
 	SIGNUP: '/signup',
 	LOGIN: '/login',
-	FORGOT: '/forgot',
-	RESET: '/reset',
+	FORGOT: '/forgot-password',
+	RESET: '/reset-password',
 	HOME: '/home',
 	ORDERS: '/orders',
 	DRIVERS: '/drivers',

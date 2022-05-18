@@ -1,0 +1,13 @@
+{
+  "id": "617941cdd5499500040a0606",
+  "firstname": "Test",
+  "lastname": "User",
+  "email": "test@production.com",
+  "phone": "07651234070",
+  "company": "Guzzl",
+  "password": "admin",
+  "addressLine1": "79 Blenheim Road",
+  "city": "London",
+  "postcode": "E17 6HT",
+  "country": "United Kingdom"
+}

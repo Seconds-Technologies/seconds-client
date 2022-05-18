@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Products from './components/Products';
-import { ProductContext } from '../../context/ProductContext';
 
 const Signup1 = props => {
 	return (

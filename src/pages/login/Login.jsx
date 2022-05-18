@@ -1,6 +1,5 @@
 import './Login.css';
 import logo from '../../assets/img/seconds-logo-black.svg';
-import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import { authUser } from '../../store/actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +9,7 @@ import PasswordField from '../../components/PasswordField';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Mixpanel } from '../../config/mixpanel';
 import { PATHS } from '../../constants';
+import Link from '../../components/Link';
 
 const Login = props => {
 	const errors = useSelector(state => state['errors']);
@@ -78,12 +78,13 @@ const Login = props => {
 								  isSubmitting
 								  /* and other goodies */
 							  }) => (
-								<form onSubmit={handleSubmit}>
+								<form id="login-form" onSubmit={handleSubmit}>
 									<div className='loginItem1'>
 										<label className='mb-2' htmlFor='email'>
 											Email
 										</label>
 										<input
+											id="login-email"
 											autoComplete='email'
 											type='email'
 											name='email'
@@ -97,6 +98,7 @@ const Login = props => {
 											Password
 										</label>
 										<PasswordField
+											id="login-password"
 											name='password'
 											onBlur={handleBlur}
 											onChange={handleChange}
@@ -117,7 +119,7 @@ const Login = props => {
 						</Formik>
 						<div className='pt-4'>
 							<span className='text-primary'>
-								<Link to='/forgot' className='text-decoration-none'>
+								<Link id="forgot-password-link" to={PATHS.FORGOT} classNames='text-decoration-none'>
 									Forgot Password?
 								</Link>
 							</span>
