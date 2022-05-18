@@ -4,7 +4,7 @@ const loginURL = `${Cypress.config().baseUrl}/login`;
 describe('Failed Login', () => {
 	beforeEach(() => {
 		cy.visit(loginURL);
-		cy.fixture('users').as('users');
+		cy.fixture('users/invalid.json').as('users');
 	});
 
 	it('Invalid Email / Password', function () {

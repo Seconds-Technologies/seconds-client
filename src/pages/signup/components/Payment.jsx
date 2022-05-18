@@ -75,19 +75,19 @@ const Payment = ({ setLoading, onSuccess }) => {
 	);
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form id="payment-form" onSubmit={handleSubmit}>
 			<div className='row'>
 				<div className='col-12 mb-3'>
 					<label htmlFor='' className='text-muted signup-form-label text-uppercase mb-2'>
 						Full Name
 					</label>
-					<input type='text' name='cardHolderName' className='form-control py-2' required />
+					<input id="card-holder-name" type='text' name='cardHolderName' className='form-control py-2' required />
 				</div>
 				<div className='col-12 mb-3'>
 					<label htmlFor='' className='text-muted signup-form-label text-uppercase mb-2'>
 						Email
 					</label>
-					<input type='email' autoComplete='email' name='email' className='form-control py-2' required />
+					<input id="card-holder-email" type='email' autoComplete='email' name='email' className='form-control py-2' required />
 				</div>
 				<div className='col-12 mb-3'>
 					<label htmlFor='cardNumber' className='text-muted signup-form-label text-uppercase mb-2'>

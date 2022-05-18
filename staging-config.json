@@ -1,5 +1,0 @@
-{
-  "projectId": "7peomk",
-  "extends": "./cypress.json",
-  "baseUrl": "https://dev.useseconds.com"
-}

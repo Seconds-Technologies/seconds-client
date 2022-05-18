@@ -20,8 +20,6 @@
 .signup_loader_wrapper {
     min-height: 100vh;
     width: 100vw;
-    padding-right: var(--bs-gutter-x, 0.75rem);
-    padding-left: var(--bs-gutter-x, 0.75rem);
     margin-right: auto;
     margin-left: auto;
     background-color: white;
@@ -102,8 +100,8 @@
     width: 100vw;
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 768px) {
     .payment-wrapper {
-        width: calc(100vw - 800px)
+        width: 550px
     }
 }

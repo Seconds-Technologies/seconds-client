@@ -46,6 +46,7 @@
     "classnames": "^2.3.1",
     "clsx": "^1.1.1",
     "cypress": "^9.6.1",
+    "cypress-plugin-stripe-elements": "^1.0.2",
     "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.1",
     "intro.js": "^5.1.0",
@@ -96,13 +97,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "scss": "node-sass --watch src/scss -o css",
-	"build:prod": "ng build --prod",
-    "ci:cy-run": "start-server-and-test ci:start-server 4200 cy:run",
-    "cy:run": "npx cypress run",
+    "build:prod": "ng build --prod",
+    "cy:run-all": "npx cypress run",
+    "cy:run-record": "npx cypress run --record",
     "cy:run-staging": "npx cypress run --record --spec \"cypress/integration/0 - auth/signup.spec.js\" --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
-    "cy:run-production": "cy:run -- --record --spec 'cypress/integration/0 - auth/signup.spec.js' --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
-    "ci": "run-s lint:ci build:prod ci:cy-run"
-
+    "cy:run-production": "cy:run -- --record --spec 'cypress/integration/0 - auth/signup.spec.js' --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7"
   },
   "eslintConfig": {
     "extends": [

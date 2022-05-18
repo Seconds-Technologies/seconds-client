@@ -40,13 +40,9 @@ const Signup2 = props => {
 
 	return (
 		<LoadingOverlay active={isLoading.show} spinner text={isLoading.text} classNamePrefix='signup_loader_'>
-			<div className='container-fluid mx-auto py-4 signupPage bg-light'>
-				{/*<div className='top-0 w-md p-5 position-absolute' role='button' onClick={() => props.history.goBack()}>
-				<img src={backArrow} alt='Go back button' width={40} height={40} />
-			</div>
-			<span className='text-center fs-4 text-primary'>3/3</span>*/}
+			<div className='container-fluid mx-auto py-4 signupPage bg-light d-flex flex-column'>
 				<SuccessToast toggleShow={setShowToast} message={toastMessage} delay={3000} position={'topRight'} />
-				<div className='d-flex flex-column flex-grow-1 align-items-center w-100 h-100'>
+				<div className='d-flex flex-column flex-grow-1 justify-content-center align-items-center w-100 h-100'>
 					<div className='payment-wrapper bg-white py-4 px-3 h-100'>
 						{hasFreeTrial && (
 							<div className='d-flex flex-column align-items-center'>

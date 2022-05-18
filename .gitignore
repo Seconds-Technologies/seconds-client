@@ -6,8 +6,12 @@
 .pnp.js
 **/.idea
 **/node_modules
+# cypress
 cypress/screenshots
 cypress/videos
+staging-config.json
+production-config.json
+cypress.env.json
 
 # testing
 /coverage
