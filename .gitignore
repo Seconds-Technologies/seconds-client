@@ -6,6 +6,8 @@
 .pnp.js
 **/.idea
 **/node_modules
+cypress/screenshots
+cypress/videos
 
 # testing
 /coverage
