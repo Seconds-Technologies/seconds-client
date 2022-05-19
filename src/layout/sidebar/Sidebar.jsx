@@ -7,7 +7,7 @@ import driversIcon from '../../assets/img/driver.svg';
 import analyticsIcon from '../../assets/img/analytics.svg';
 import defaultAvatar from '../../assets/img/profile-avatar.svg';
 import bellIcon from '../../assets/img/bell.svg';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from '../../constants';
 import logo from '../../assets/img/logo.svg';
@@ -20,6 +20,7 @@ import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
 import { Hints } from 'intro.js-react';
 import { TabContext } from '../../context';
+import Link from '../../components/Link';
 
 export default function Sidebar({ hintsEnabled }) {
 	const [hints, setHints] = useState([
@@ -29,7 +30,7 @@ export default function Sidebar({ hintsEnabled }) {
 			hintPosition: 'middle-right'
 		}
 	]);
-	const { dispatch: switchTab } = useContext(TabContext)
+	const { dispatch: switchTab } = useContext(TabContext);
 	const [isOpen, setAlerts] = useState(false);
 	const { user } = useSelector(state => state['currentUser']);
 	const dispatch = useDispatch();
@@ -67,12 +68,12 @@ export default function Sidebar({ hintsEnabled }) {
 			<div className='mb-1 d-flex flex-column w-100'>
 				<ul className='nav nav-pills flex-column align-items-center mb-auto me-0'>
 					<div className='d-flex justify-content-center mt-3'>
-						<Link to={PATHS.HOME} href='src/layout/sidebar/Sidebar'>
+						<Link id='sidebar-logo' to={PATHS.HOME} href='src/layout/sidebar/Sidebar'>
 							<img src={logo} alt='' width={27} height={27} />
 						</Link>
 					</div>
 					<Tooltip title='Dashboard' arrow placement='right-end'>
-						<Link to={PATHS.HOME} className='link text-black mt-3'>
+						<Link id="sidebar-dashboard" to={PATHS.HOME} className='link text-black mt-3'>
 							<li className={`sidebarListItem ${location['pathname'] === PATHS.HOME && 'currentLink'}`}>
 								<img
 									className={`sidebarIcon item-hover ${location['pathname'] === PATHS.HOME && 'currentIcon'}`}
@@ -85,7 +86,7 @@ export default function Sidebar({ hintsEnabled }) {
 						</Link>
 					</Tooltip>
 					<Tooltip title='Orders' arrow placement='right-end'>
-						<Link to={PATHS.ORDERS} className='link text-black'>
+						<Link id="sidebar-orders" to={PATHS.ORDERS} className='link text-black'>
 							<li id='orders-link' className={`sidebarListItem ${isOrder && 'currentLink'}`}>
 								<img
 									className={`sidebarIcon item-hover ${isOrder && 'currentIcon'}`}
@@ -98,7 +99,7 @@ export default function Sidebar({ hintsEnabled }) {
 						</Link>
 					</Tooltip>
 					<Tooltip title='Create' arrow placement='right-end'>
-						<Link to={PATHS.CREATE} className='link text-black'>
+						<Link id="sidebar-create" to={PATHS.CREATE} className='link text-black'>
 							<li className={`sidebarListItem ${location['pathname'] === PATHS.CREATE && 'currentLink'}`}>
 								<img
 									className={`sidebarIcon item-hover ${location['pathname'] === PATHS.CREATE && 'currentIcon'}`}
@@ -193,10 +194,14 @@ export default function Sidebar({ hintsEnabled }) {
 							</div>
 							<ul className='dropdown-menu' aria-labelledby='main-dropdown'>
 								<li>
-									<div role='button' className='dropdown-item' onClick={() => {
-										switchTab({type: "setIndex", index: 0})
-										history.push(PATHS.SETTINGS)
-									}}>
+									<div
+										role='button'
+										className='dropdown-item'
+										onClick={() => {
+											switchTab({ type: 'setIndex', index: 0 });
+											history.push(PATHS.SETTINGS);
+										}}
+									>
 										Profile
 									</div>
 								</li>

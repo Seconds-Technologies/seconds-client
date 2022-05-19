@@ -390,6 +390,7 @@ const Create = props => {
 				>
 					{({ values, handleBlur, handleChange, handleSubmit, errors, setFieldValue }) => (
 						<form
+							id="create-order-form"
 							onSubmit={e => {
 								const { name, value } = e.nativeEvent['submitter'];
 								if(name === SUBMISSION_TYPES.GET_QUOTE || value === SUBMISSION_TYPES.GET_QUOTE){
@@ -415,7 +416,7 @@ const Create = props => {
 													className='form-check-input'
 													type='radio'
 													name='deliveryType'
-													id='radio-1'
+													id='on-demand-delivery'
 													checked={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
 													onChange={e => {
 														setFieldValue('packageDeliveryType', DELIVERY_TYPES.ON_DEMAND);
@@ -433,7 +434,7 @@ const Create = props => {
 													className='form-check-input'
 													type='radio'
 													name='deliveryType'
-													id='radio-2'
+													id='scheduled-same-day'
 													checked={values.packageDeliveryType === DELIVERY_TYPES.SAME_DAY}
 													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.SAME_DAY)}
 													onBlur={handleBlur}
@@ -447,7 +448,7 @@ const Create = props => {
 													className='form-check-input'
 													type='radio'
 													name='deliveryType'
-													id='radio-2'
+													id='batch-unassigned'
 													checked={values.packageDeliveryType === DELIVERY_TYPES.MULTI_DROP}
 													onChange={e => setFieldValue('packageDeliveryType', DELIVERY_TYPES.MULTI_DROP)}
 													onBlur={handleBlur}
@@ -475,7 +476,7 @@ const Create = props => {
 												</div>
 												<div className='row'>
 													<div className='col-md-6 col-lg-6 pb-xs-4'>
-														<label className='mb-1' htmlFor='address-line-1'>
+														<label className='mb-1' htmlFor='pickup-address-line-1'>
 															<span>
 																{errors['pickupAddressLine1'] && <span className='text-danger'>*&nbsp;</span>}
 																Address line 1
@@ -485,16 +486,16 @@ const Create = props => {
 															defaultValue={values.pickupAddressLine1}
 															autoComplete='address-line1'
 															type='text'
-															id='address-line-1'
+															id='pickup-address-line-1'
 															name='pickupAddressLine1'
-															className='form-control  rounded-3 mb-2'
+															className='form-control rounded-3 mb-2'
 															onBlur={handleBlur}
 															onChange={handleChange}
 															disabled={isLocked}
 														/>
 													</div>
 													<div className='col-md-6 col-lg-6 pb-xs-4'>
-														<label className='mb-1' htmlFor='address-line-2'>
+														<label className='mb-1' htmlFor='pickup-address-line-2'>
 															<span>
 																{errors['pickupAddressLine2'] && <span className='text-danger'>*&nbsp;</span>}
 																Address line 2
@@ -504,7 +505,7 @@ const Create = props => {
 															defaultValue={values.pickupAddressLine2}
 															autoComplete='address-line2'
 															type='text'
-															id='pickupAddressLine2'
+															id='pickup-address-line-2'
 															name='pickupAddress.addressLine2'
 															className='form-control  rounded-3 mb-2'
 															onBlur={handleBlur}
@@ -515,7 +516,7 @@ const Create = props => {
 												</div>
 												<div className='row'>
 													<div className='col-md-6 col-lg-6 pb-xs-4'>
-														<label className='mb-1' htmlFor='city'>
+														<label className='mb-1' htmlFor='pickup-city'>
 															<span>
 																{errors['pickupCity'] && <span className='text-danger'>*&nbsp;</span>}
 																City
@@ -525,7 +526,7 @@ const Create = props => {
 															defaultValue={values.pickupCity}
 															autoComplete='address-level2'
 															type='text'
-															id='city'
+															id='pickup-city'
 															name='pickupCity'
 															className='form-control  rounded-3 mb-2'
 															onBlur={handleBlur}
@@ -534,7 +535,7 @@ const Create = props => {
 														/>
 													</div>
 													<div className='col-md-6 col-lg-6 pb-xs-4'>
-														<label className='mb-1' htmlFor='postcode'>
+														<label className='mb-1' htmlFor='pickup-postcode'>
 															<span>
 																{errors['pickupPostcode'] && <span className='text-danger'>*&nbsp;</span>}
 																Postcode
@@ -544,7 +545,7 @@ const Create = props => {
 															defaultValue={values.pickupPostcode}
 															autoComplete='postal-code'
 															type='text'
-															id='postcode'
+															id='pickup-postcode'
 															name='pickupPostcode'
 															className='form-control  rounded-3 mb-2'
 															onBlur={handleBlur}
@@ -604,13 +605,13 @@ const Create = props => {
 															id='items-count'
 															name='itemsCount'
 															type='number'
-															className='form-control  form-border rounded-3 my-2'
+															className='form-control form-border rounded-3 my-2'
 															placeholder='Number of Items'
 															aria-label='items-count'
 															onChange={handleChange}
 															onBlur={handleBlur}
 															min={0}
-															max={10}
+															max={20}
 														/>
 													</div>
 													<div className='col-6'>
@@ -775,6 +776,7 @@ const Create = props => {
 														</label>
 														<input
 															autoComplete='tel'
+															id="dropoff-phone-number"
 															name='drops[0].dropoffPhoneNumber'
 															type='text'
 															className='form-control form-border rounded-3 mb-2'
@@ -907,6 +909,7 @@ const Create = props => {
 																onBlur={handleBlur}
 																min={moment().format('YYYY-MM-DDTHH:mm')}
 																max={moment().add('30', 'days').format('YYYY-MM-DDTHH:mm')}
+																required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 															/>
 														)}
 													</div>
@@ -915,6 +918,7 @@ const Create = props => {
 													Dropoff Instructions
 												</label>
 												<textarea
+													id="dropoff-instructions"
 													name='drops[0].dropoffInstructions'
 													className='form-control form-border rounded-3 mb-3'
 													aria-label='dropoff-instructions'

@@ -119,7 +119,7 @@ const Login = props => {
 						</Formik>
 						<div className='pt-4'>
 							<span className='text-primary'>
-								<Link id="forgot-password-link" to={PATHS.FORGOT} classNames='text-decoration-none'>
+								<Link id="forgot-password-link" to={PATHS.FORGOT} className='text-decoration-none'>
 									Forgot Password?
 								</Link>
 							</span>

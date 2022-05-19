@@ -1,6 +1,7 @@
 /// <reference types="cypress"/>
 
 const signupURL = `${Cypress.config().baseUrl}/signup`;
+const landingPageURL = Cypress.env('LANDING_PAGE_URL')
 const cardNumber = Cypress.env('CARD_NUMBER');
 const cardExpiry = Cypress.env('CARD_EXPIRY');
 const cardCvc = Cypress.env('CARD_CVC');
@@ -96,8 +97,8 @@ describe('Failed User Signups', () => {
 	});
 });
 
-describe('Successful signup flow', () => {
-	beforeEach(() => {
+describe('Successful User Signup', () => {
+	before(() => {
 		cy.visit(signupURL);
 		cy.fixture('users/valid.json').as('validUsers')
 	});
@@ -137,7 +138,63 @@ describe('Successful signup flow', () => {
 			cy.get('#street-number').type(user.streetNumber);
 			cy.get('#city').type(user.city);
 			cy.get('#postcode').type(user.postcode);
-			cy.root().submit().wait(5000).get("#create-location-form").should('not.be.visible')
+			cy.root().submit().wait(5000).get("#create-location-form").should('not.exist')
 		})
 	});
 });
+
+describe('Successful Onboarding flow', () => {
+	before(() => {
+		cy.visit(landingPageURL);
+		cy.fixture('users/valid.json').as('validUsers')
+	});
+
+	it('Getting-started form complete', function () {
+		// access the users property
+		// grab a random user from fixture
+		const user = this.validUsers[Math.floor(Math.random() * this.validUsers.length)];
+		// check correct URL
+		cy.url().should('include', landingPageURL);
+		cy.get('#getting-started-button').click().wait(500).get("#getting-started-form").should('be.visible')
+		cy.get('#getting-started-form').within(function () {
+			cy.get('#first-name').type(user.firstname);
+			cy.get('#last-name').type(user.lastname);
+			cy.get('#email-address').type(user.email);
+			cy.get('#phone-number').type(user.phone);
+			cy.get('#company').type(user.company);
+			cy.get('#business-type').select('Restaurant')
+			cy.get('#business-role').type("Owner")
+			cy.get("#average-deliveries-per-week").type('100')
+			cy.root().submit().wait(10000).url().should('include', signupURL)
+		});
+		cy.get('#signup-form').within(function () {
+			cy.get('#signup-password').type(user.password);
+			cy.get('[type="checkbox"]').check();
+			cy.root().submit().wait(10000).url().should('include', '/1');
+		});
+		cy.get('#signup-product-plans').within(function () {
+			cy.get('#growth').click();
+			cy.url().should('include', '/2');
+		});
+		cy.get('#payment-form').within(function() {
+			cy.get('#card-holder-name').type(`${user.firstname} ${user.lastname}`);
+			cy.get('#card-holder-email').type(user.email);
+			cy.fillElementsInput('cardNumber', cardNumber)
+			cy.fillElementsInput('cardExpiry', cardExpiry); // MMYY
+			cy.fillElementsInput('cardCvc', cardCvc);
+			cy.fillElementsInput('postalCode', "RM10 8EH");
+			cy.root().submit().wait(10000).url().should('include', '/home')
+		})
+		cy.get('#create-location-form').within(function() {
+			cy.get('#location-name').type("Seconds HQ");
+			cy.get('#business-name').type(user.company);
+			cy.get('#street-address').type(user.streetName);
+			cy.get('#street-number').type(user.streetNumber);
+			cy.get('#city').type(user.city);
+			cy.get('#postcode').type(user.postcode);
+			cy.root().submit().wait(5000).get("#create-location-form").should('not.exist')
+		})
+	});
+});
+
+
