@@ -118,7 +118,7 @@ describe('Successful signup flow', () => {
 			cy.root().submit().wait(10000).url().should('include', '/1');
 		});
 		cy.get('#signup-product-plans').within(function () {
-			cy.get('#connect').click();
+			cy.get('#growth').click();
 			cy.url().should('include', '/2');
 		});
 		cy.get('#payment-form').within(function() {
@@ -135,7 +135,7 @@ describe('Successful signup flow', () => {
 			cy.get('#business-name').type(user.company);
 			cy.get('#street-address').type(user.streetName);
 			cy.get('#street-number').type(user.streetNumber);
-			cy.get('#city').type(user.password);
+			cy.get('#city').type(user.city);
 			cy.get('#postcode').type(user.postcode);
 			cy.root().submit().wait(5000).get("#create-location-form").should('not.be.visible')
 		})

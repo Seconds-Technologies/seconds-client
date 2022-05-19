@@ -56,7 +56,7 @@ export const createLocationSchema = Yup.object().shape({
 	streetNumber: Yup.string().required('*Required'),
 	streetAddress: Yup.string().required('*Required'),
 	city: Yup.string().required('* Required'),
-	postcode: Yup.string().required('* Required'),
+	postcode: Yup.string().required('* Required').matches(/^([A-Za-z][A-Ha-hJ-Yj-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$/, 'Incorrect format'),
 	country: Yup.string().required('* Required'),
 })
 

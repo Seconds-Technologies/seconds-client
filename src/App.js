@@ -120,7 +120,7 @@ function App() {
 										<Router>
 											<div className='app-container'>
 												{isAuthenticated && <Sidebar hintsEnabled={hintsEnabled} />}
-												{isAuthenticated && !fullAddress && !lastLogin && (
+												{isAuthenticated && !fullAddress && (
 													<CreateLocation open={true} onClose={() => console.log('closing modal...')} />
 												)}
 												<Steps

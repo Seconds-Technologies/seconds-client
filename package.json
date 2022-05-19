@@ -100,9 +100,9 @@
     "build:prod": "ng build --prod",
     "cy:open": "npx cypress open",
     "cy:run": "npx cypress run",
-    "cy:run-record": "npx cypress run -- --record",
-    "cy:run-staging": "npx cypress run -- --record --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
-    "cy:run-production": "cy:run -- --record --spec 'cypress/integration/0 - auth/signup.spec.js' --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7"
+    "cy:run-record": "npx cypress run --record",
+    "cy:run-staging": "npx cypress run --record --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
+    "cy:run-production": "cy:run --record --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7 --spec \"cypress/integration/0 - auth/signup.spec.js\""
   },
   "eslintConfig": {
     "extends": [
