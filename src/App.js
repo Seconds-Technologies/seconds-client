@@ -2,7 +2,7 @@ import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Steps } from 'intro.js-react';
 // routes
 import routes from './routes/routes';
@@ -134,9 +134,9 @@ function App() {
 														dispatch(
 															updateProfile({
 																id,
-																lastLogin: moment().format()
+																lastLogin: dayjs().format()
 															})
-														).then(() => dispatch(updateCurrentUser({ lastLogin: moment().format() })));
+														).then(() => dispatch(updateCurrentUser({ lastLogin: dayjs().format() })));
 													}}
 													options={{
 														hideNext: true,

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 
@@ -44,7 +44,7 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 									<Formik
 										enableReinitialize
 										initialValues={{
-											dropoffStartTime: dropoffStartTime ? dropoffStartTime : moment().format('YYYY-MM-DDTHH:mm'),
+											dropoffStartTime: dropoffStartTime ? dropoffStartTime : dayjs().format('YYYY-MM-DDTHH:mm'),
 											dropoffEndTime
 										}}
 										onSubmit={(values => {
@@ -62,7 +62,7 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 													</div>
 													<div className='col-8'>
 														<input
-															defaultValue={moment(dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
+															defaultValue={dayjs(dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
 															id='dropoff-start-time'
 															name='dropoffStartTime'
 															type='datetime-local'
@@ -70,8 +70,8 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 															className='form-control form-control-sm rounded-3'
 															onChange={handleChange}
 															onBlur={handleBlur}
-															min={moment(windowStartTime).format('YYYY-MM-DDTHH:mm')}
-															max={moment(windowEndTime).format('YYYY-MM-DDTHH:mm')}
+															min={dayjs(windowStartTime).format('YYYY-MM-DDTHH:mm')}
+															max={dayjs(windowEndTime).format('YYYY-MM-DDTHH:mm')}
 															required
 														/>
 													</div>
@@ -82,7 +82,7 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 													</div>
 													<div className='col-8'>
 														<input
-															defaultValue={moment(dropoffEndTime).format('YYYY-MM-DDTHH:mm')}
+															defaultValue={dayjs(dropoffEndTime).format('YYYY-MM-DDTHH:mm')}
 															id='dropoff-end-time'
 															name='dropoffEndTime'
 															type='datetime-local'
@@ -90,8 +90,8 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 															className='form-control form-control-sm rounded-3'
 															onChange={handleChange}
 															onBlur={handleBlur}
-															min={moment(values.dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
-															max={moment(windowEndTime).format('YYYY-MM-DDTHH:mm')}
+															min={dayjs(values.dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
+															max={dayjs(windowEndTime).format('YYYY-MM-DDTHH:mm')}
 															required
 														/>
 													</div>

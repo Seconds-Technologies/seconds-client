@@ -7,7 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
 import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES, offIcon, onIcon, VEHICLE_TYPES } from '../../../../constants';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Slider from '@mui/material/Slider';
 import SuccessToast from '../../../../modals/SuccessToast';
 import { useDispatch, useSelector } from 'react-redux';

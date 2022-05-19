@@ -16,7 +16,7 @@ import {
 } from '../../store/actions/delivery';
 import { removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
-import moment from 'moment';
+import dayjs from 'dayjs';
 // images
 import stuart from '../../assets/img/stuart.svg';
 import gophr from '../../assets/img/gophr.svg';
@@ -69,14 +69,14 @@ export default function Orders(props) {
 		show: false,
 		routes: [],
 		unreachable: [],
-		startTime: moment(deliveryHours[moment().day()].open),
-		endTime: moment(deliveryHours[moment().day()].close)
+		startTime: dayjs(deliveryHours[dayjs().day()].open),
+		endTime: dayjs(deliveryHours[dayjs().day()].close)
 	});
 	const [reviewModal, showReviewModal] = useState({
 		show: false,
 		orders: [],
-		startTime: moment(deliveryHours[moment().day()].open),
-		endTime: moment(deliveryHours[moment().day()].close)
+		startTime: dayjs(deliveryHours[dayjs().day()].open),
+		endTime: dayjs(deliveryHours[dayjs().day()].close)
 	});
 	const [optLoading, setOptLoading] = useState(false);
 	const [jobLoader, setJobLoader] = useState({ loading: false, text: '' });
@@ -98,7 +98,7 @@ export default function Orders(props) {
 		{ field: 'id', headerName: 'Order No.', width: 150 },
 		{
 			field: 'createdAt',
-			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
+			sortComparator: (v1, v2) => dayjs(v2).diff(dayjs(v1)),
 			hide: true
 		},
 		{
@@ -275,7 +275,7 @@ export default function Orders(props) {
 					let customerName = `${firstName} ${lastName}`;
 					phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 					let provider = providerId;
-					const pickupTime = moment(pickupStartTime).isValid() ? moment(pickupStartTime).format('HH:mm a') : 'Estimating...';
+					const pickupTime = dayjs(pickupStartTime).isValid() ? dayjs(pickupStartTime).format('HH:mm a') : 'Estimating...';
 					return {
 						id: orderNumber,
 						pickupTime,
@@ -358,9 +358,9 @@ export default function Orders(props) {
 					const deliveries = order['jobSpecification'].deliveries;
 					isValid = deliveries.every(delivery => {
 						return (
-							moment(delivery.dropoffStartTime).isSameOrAfter(moment(start)) &&
-							moment(delivery.dropoffEndTime).isSameOrBefore(end) &&
-							moment(delivery.dropoffStartTime).isBefore(moment(delivery.dropoffEndTime))
+							dayjs(delivery.dropoffStartTime).isSameOrAfter(dayjs(start)) &&
+							dayjs(delivery.dropoffEndTime).isSameOrBefore(end) &&
+							dayjs(delivery.dropoffStartTime).isBefore(dayjs(delivery.dropoffEndTime))
 						);
 					});
 					!isValid && badOrders.push(order);
@@ -382,7 +382,7 @@ export default function Orders(props) {
 				setOptLoading(false);
 				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
-				showReviewModal({ show: true, orders: badOrders, startTime: moment(startTime), endTime: moment(endTime) });
+				showReviewModal({ show: true, orders: badOrders, startTime: dayjs(startTime), endTime: dayjs(endTime) });
 			} else {
 				dispatch(optimizeRoutes(email, values, selectionModel))
 					.then(({ routes, unreachable }) => {
@@ -496,8 +496,8 @@ export default function Orders(props) {
 					orders={selectionModel}
 					availableVehicles={vehicles}
 					onSubmit={optimize}
-					defaultStartTime={moment(deliveryHours[moment().day()].open).format('YYYY-MM-DDTHH:mm')}
-					defaultEndTime={moment(deliveryHours[moment().day()].close).format('YYYY-MM-DDTHH:mm')}
+					defaultStartTime={dayjs(deliveryHours[dayjs().day()].open).format('YYYY-MM-DDTHH:mm')}
+					defaultEndTime={dayjs(deliveryHours[dayjs().day()].close).format('YYYY-MM-DDTHH:mm')}
 				/>
 				<DeleteModal
 					data={allJobs

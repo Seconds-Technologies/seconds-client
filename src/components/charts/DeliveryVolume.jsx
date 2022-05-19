@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { PERIOD_TYPE, PROVIDER_TYPES, PROVIDERS } from '../../constants';
 import { analyticsFilterCurrent, analyticsFilterPrevious } from '../../helpers';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import MuiTooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
@@ -39,7 +39,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).day() === day).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).day() === day).length;
 						} else {
 							// filter only jobs completed by third party couriers
 							return prevCompleted
@@ -48,7 +48,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).day() === day).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).day() === day).length;
 						}
 					});
 					totalVolume.reverse();
@@ -63,7 +63,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).date() === date).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).date() === date).length;
 						} else {
 							// filter only jobs completed by third party couriers
 							return prevCompleted
@@ -72,7 +72,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).date() === date).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).date() === date).length;
 						}
 					});
 					totalVolume.reverse();
@@ -87,7 +87,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).month() === month).length;
 						} else {
 							// filter only completed jobs for the previous time frame
 							return prevCompleted
@@ -96,7 +96,7 @@ const DeliveryVolume = ({ interval, intervalLabel, genLabels }) => {
 										? selectedConfiguration.providerId === PROVIDERS.PRIVATE
 										: selectedConfiguration.providerId !== PROVIDERS.PRIVATE
 								)
-								.filter(({ jobSpecification }) => moment(jobSpecification.pickupStartTime).month() === month).length;
+								.filter(({ jobSpecification }) => dayjs(jobSpecification.pickupStartTime).month() === month).length;
 						}
 					});
 					totalVolume.reverse();

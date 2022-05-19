@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { updatePaymentMethod } from '../../../store/actions/stripe';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 
 const EditPaymentMethod = ({ onSuccess, paymentDetails, paymentMethod, cancel, updatePaymentDetails }) => {
@@ -100,13 +100,13 @@ const EditPaymentMethod = ({ onSuccess, paymentDetails, paymentMethod, cancel, u
 												}))
 											}
 										>
-											<option value={moment().format('YYYY')}>{moment().format('YYYY')}</option>
-											<option value={moment().add(1, 'years').format('YYYY')}>{moment().add(1, 'years').format('YYYY')}</option>
-											<option value={moment().add(2, 'years').format('YYYY')}>{moment().add(2, 'years').format('YYYY')}</option>
-											<option value={moment().add(3, 'years').format('YYYY')}>{moment().add(3, 'years').format('YYYY')}</option>
-											<option value={moment().add(4, 'years').format('YYYY')}>{moment().add(4, 'years').format('YYYY')}</option>
-											<option value={moment().add(5, 'years').format('YYYY')}>{moment().add(5, 'years').format('YYYY')}</option>
-											<option value={moment().add(6, 'years').format('YYYY')}>{moment().add(6, 'years').format('YYYY')}</option>
+											<option value={dayjs().format('YYYY')}>{dayjs().format('YYYY')}</option>
+											<option value={dayjs().add(1, 'years').format('YYYY')}>{dayjs().add(1, 'years').format('YYYY')}</option>
+											<option value={dayjs().add(2, 'years').format('YYYY')}>{dayjs().add(2, 'years').format('YYYY')}</option>
+											<option value={dayjs().add(3, 'years').format('YYYY')}>{dayjs().add(3, 'years').format('YYYY')}</option>
+											<option value={dayjs().add(4, 'years').format('YYYY')}>{dayjs().add(4, 'years').format('YYYY')}</option>
+											<option value={dayjs().add(5, 'years').format('YYYY')}>{dayjs().add(5, 'years').format('YYYY')}</option>
+											<option value={dayjs().add(6, 'years').format('YYYY')}>{dayjs().add(6, 'years').format('YYYY')}</option>
 										</select>
 									</div>
 								</div>

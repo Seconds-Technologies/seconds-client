@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { PERIOD_TYPE, PROVIDER_TYPES, PROVIDERS } from '../../constants';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import { analyticsFilterCurrent, analyticsFilterPrevious } from '../../helpers';
 import MuiTooltip from '@mui/material/Tooltip';
@@ -43,7 +43,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).day() === day
+									return dayjs(curr['jobSpecification'].pickupStartTime).day() === day
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);
@@ -57,7 +57,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).day() === day
+									return dayjs(curr['jobSpecification'].pickupStartTime).day() === day
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);
@@ -77,7 +77,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).date() === date
+									return dayjs(curr['jobSpecification'].pickupStartTime).date() === date
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);
@@ -90,7 +90,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).date() === date
+									return dayjs(curr['jobSpecification'].pickupStartTime).date() === date
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);
@@ -110,7 +110,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).month() === month
+									return dayjs(curr['jobSpecification'].pickupStartTime).month() === month
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);
@@ -123,7 +123,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
-									return moment(curr['jobSpecification'].pickupStartTime).month() === month
+									return dayjs(curr['jobSpecification'].pickupStartTime).month() === month
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
 								}, 0);

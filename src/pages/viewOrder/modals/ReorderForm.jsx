@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import { ReOrderSchema } from '../../../validation';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { jobRequestSchema } from '../../../schemas';
 import Select from 'react-select';
 import { DELIVERY_TYPES, SUBMISSION_TYPES, VEHICLE_TYPES } from '../../../constants';
@@ -25,9 +25,9 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 			dropoffLastName: dropoffLocation['lastName'],
 			dropoffInstructions: dropoffLocation.instructions,
 			packageDropoffEndTime:
-				moment().diff(dropoffEndTime, 'seconds') < PICKUP_LIMIT
-					? moment(dropoffEndTime).format('YYYY-MM-DDTHH:mm')
-					: moment().add(75, 'minutes').format('YYYY-MM-DDTHH:mm'),
+				dayjs().diff(dropoffEndTime, 'seconds') < PICKUP_LIMIT
+					? dayjs(dropoffEndTime).format('YYYY-MM-DDTHH:mm')
+					: dayjs().add(75, 'minutes').format('YYYY-MM-DDTHH:mm'),
 			packageDescription: description
 		}));
 	}, [prevJob]);
@@ -55,9 +55,9 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 						// if currentTime is at least 10 mins before the previous requested pickup time, use that as the default value
 						// if not set the default to be 15 mins after the current time
 						packagePickupStartTime:
-							moment().diff(prevJob.pickupStartTime, 'seconds') < PICKUP_LIMIT
-								? moment(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')
-								: moment().add(15, 'minutes').format('YYYY-MM-DDTHH:mm'),
+							dayjs().diff(prevJob.pickupStartTime, 'seconds') < PICKUP_LIMIT
+								? dayjs(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')
+								: dayjs().add(15, 'minutes').format('YYYY-MM-DDTHH:mm'),
 						drops,
 						itemsCount: 0
 					}}
@@ -196,15 +196,15 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 											{errors['packagePickupStartTime'] && <span className='text-danger position-absolute mt-1 ms-1'>*</span>}
 											<input
 												disabled={values.packageDeliveryType === DELIVERY_TYPES.ON_DEMAND}
-												defaultValue={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
+												defaultValue={dayjs(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
 												type='datetime-local'
 												name='packagePickupStartTime'
 												id='pickup_start_time'
 												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')}
-												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
+												min={dayjs(prevJob.pickupStartTime).format('YYYY-MM-DDTHH:mm')}
+												max={dayjs().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
 										</div>
@@ -365,9 +365,9 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												defaultValue={
 													// if currentTime is at least 10 mins before the previous requested pickup time, use that as the default value
 													// if not set the default to be 15 mins after the current time
-													moment().diff(values.drops[0].packageDropoffEndTime, 'seconds') < PICKUP_LIMIT
-														? moment(values.drops[0].packageDropoffEndTime).format('YYYY-MM-DDTHH:mm')
-														: moment(values.packagePickupStartTime).add(60, 'minutes').format('YYYY-MM-DDTHH:mm')
+													dayjs().diff(values.drops[0].packageDropoffEndTime, 'seconds') < PICKUP_LIMIT
+														? dayjs(values.drops[0].packageDropoffEndTime).format('YYYY-MM-DDTHH:mm')
+														: dayjs(values.packagePickupStartTime).add(60, 'minutes').format('YYYY-MM-DDTHH:mm')
 												}
 												type='datetime-local'
 												name='drops[0].packageDropoffEndTime'
@@ -375,8 +375,8 @@ const ReorderForm = ({ show, toggleShow, onSubmit, prevJob }) => {
 												className='form-control border-0 border-bottom my-2 modal-form'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
-												max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
+												min={dayjs(values.packagePickupStartTime).format('YYYY-MM-DDTHH:mm')}
+												max={dayjs().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 												required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 											/>
 										</div>

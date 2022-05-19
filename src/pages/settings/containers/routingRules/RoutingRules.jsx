@@ -6,7 +6,7 @@ import { BATCH_TYPES, offIcon, onIcon, VEHICLE_TYPES } from '../../../../constan
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Slider from '@mui/material/Slider';
 import SuccessToast from '../../../../modals/SuccessToast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -98,8 +98,8 @@ const RoutingRules = props => {
 											id='daily-batch-deadline'
 											defaultValue={values.autoBatch.daily.deadline}
 											type='time'
-											min={moment(deliveryHours[moment().day()].open).format('HH:mm')}
-											max={moment(deliveryHours[moment().day()].close).format('HH:mm')}
+											min={dayjs(deliveryHours[dayjs().day()].open).format('HH:mm')}
+											max={dayjs(deliveryHours[dayjs().day()].close).format('HH:mm')}
 											name='autoBatch.daily.deadline'
 											className='form-control rounded-3 mb-2'
 											aria-label='drivers-response-time'
@@ -122,7 +122,7 @@ const RoutingRules = props => {
 											defaultValue={values.autoBatch.daily.pickupTime}
 											type='time'
 											min={values.autoBatch.daily.deadline}
-											max={moment(deliveryHours[moment().day()].close).format('HH:mm')}
+											max={dayjs(deliveryHours[dayjs().day()].close).format('HH:mm')}
 											name='autoBatch.daily.pickupTime'
 											className='form-control rounded-3 mb-2'
 											aria-label='drivers-response-time'

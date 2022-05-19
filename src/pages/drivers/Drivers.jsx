@@ -4,7 +4,7 @@ import { AmplifyS3Image } from '@aws-amplify/ui-react/legacy';
 import { DataGrid } from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import Switch from 'react-switch';
 import { Mixpanel } from '../../config/mixpanel';
 // images
@@ -100,7 +100,7 @@ const Drivers = props => {
 		{ field: 'id', headerName: 'Driver Id', width: 150, hide: true },
 		{
 			field: 'createdAt',
-			sortComparator: (v1, v2) => moment(v2).diff(moment(v1)),
+			sortComparator: (v1, v2) => dayjs(v2).diff(dayjs(v1)),
 			hide: true
 		},
 		{

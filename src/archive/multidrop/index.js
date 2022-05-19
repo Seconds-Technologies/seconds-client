@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { createMultiDropJob, setBatch } from '../../store/actions/delivery';
 import CSVUpload from '../../modals/CSVUpload';
 import React from 'react';
@@ -32,8 +32,8 @@ const mutlidrop = () => {
 						customerReference,
 						pickupAddress,
 						dropoffAddress,
-						pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-						deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+						pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+						deliverUntil: dayjs(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 						deliveryFee,
 						courier: providerId.replace(/_/g, ' ')
 					};
@@ -70,7 +70,7 @@ const mutlidrop = () => {
 						data.forEach((item, index) => {
 							let key = keys[index];
 							if (key === 'packageDropoffEndTime') {
-								item = moment(item, 'DD/MM/YYYY HH:mm').format();
+								item = dayjs(item, 'DD/MM/YYYY HH:mm').format();
 							}
 							dropoff[key] = item;
 						});

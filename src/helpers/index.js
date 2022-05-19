@@ -1,5 +1,5 @@
 import { PLACE_TYPES } from '../constants';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { jobRequestSchema } from '../schemas';
 
 export function parseAddress(data, requiresGeoJSON = false) {
@@ -72,22 +72,22 @@ export function dateFilter(data, interval) {
 	switch (interval) {
 		case 'day':
 			return data.filter(({ createdAt }) => {
-				let duration = moment.duration(moment().diff(moment(createdAt))).as('day');
+				let duration = dayjs.duration(dayjs().diff(dayjs(createdAt))).as('day');
 				return duration < 1;
 			});
 		case 'week':
 			return data.filter(({ createdAt }) => {
-				let duration = moment.duration(moment().diff(moment(createdAt))).as('week');
+				let duration = dayjs.duration(dayjs().diff(dayjs(createdAt))).as('week');
 				return duration < 1;
 			});
 		case 'month':
 			return data.filter(({ createdAt }) => {
-				let duration = moment.duration(moment().diff(moment(createdAt))).as('month');
+				let duration = dayjs.duration(dayjs().diff(dayjs(createdAt))).as('month');
 				return duration < 1;
 			});
 		case 'year':
 			return data.filter(({ createdAt }) => {
-				let duration = moment.duration(moment().diff(moment(createdAt))).as('year');
+				let duration = dayjs.duration(dayjs().diff(dayjs(createdAt))).as('year');
 				return duration < 1;
 			});
 		default:
@@ -99,22 +99,22 @@ export function analyticsFilterPrevious(data, interval) {
 	switch (interval) {
 		case 'day':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('day');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('day');
 				return duration > 1 && duration < 2;
 			});
 		case 'week':
 			return data.filter(({  jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('week');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('week');
 				return duration > 1 && duration < 2;
 			});
 		case 'month':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('month');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('month');
 				return duration > 1 && duration < 2;
 			});
 		case 'year':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('year');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('year');
 				return duration > 1 && duration < 2;
 			});
 		default:
@@ -126,22 +126,22 @@ export function analyticsFilterCurrent(data, interval) {
 	switch (interval) {
 		case 'day':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('day');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('day');
 				return duration < 1;
 			});
 		case 'week':
 			return data.filter(({  jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('week');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('week');
 				return duration < 1;
 			});
 		case 'month':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('month');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('month');
 				return duration < 1;
 			});
 		case 'year':
 			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
-				let duration = moment.duration(moment().diff(moment(pickupStartTime))).as('year');
+				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('year');
 				return duration < 1;
 			});
 		default:

@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import { geocodeByAddress } from 'react-google-places-autocomplete';
 import Select, { components } from 'react-select';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { Mixpanel } from '../../config/mixpanel';
@@ -174,8 +174,8 @@ const Create = props => {
 							customerReference,
 							pickupAddress,
 							dropoffAddress,
-							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: dayjs(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 							deliveryFee,
 							courier: name.replace(/_/g, ' ')
 						};
@@ -219,8 +219,8 @@ const Create = props => {
 							customerReference,
 							pickupAddress,
 							dropoffAddress,
-							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: dayjs(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 							deliveryFee,
 							courier: providerId.replace(/_/g, ' ')
 						};
@@ -259,7 +259,7 @@ const Create = props => {
 						data.forEach((item, index) => {
 							let key = keys[index];
 							if (['packagePickupStartTime', 'packageDropoffStartTime', 'packageDropoffEndTime'].includes(key)) {
-								item = moment(item, 'DD/MM/YYYY HH:mm').format();
+								item = dayjs(item, 'DD/MM/YYYY HH:mm').format();
 							}
 							order[key] = item;
 						});
@@ -571,8 +571,8 @@ const Create = props => {
 																setPickupDatetime(e.target.value);
 															}}
 															onBlur={handleBlur}
-															min={moment().format('YYYY-MM-DDTHH:mm')}
-															max={moment().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
+															min={dayjs().format('YYYY-MM-DDTHH:mm')}
+															max={dayjs().add(7, 'days').format('YYYY-MM-DDTHH:mm')}
 															required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 														/>
 													</div>
@@ -890,10 +890,10 @@ const Create = props => {
 																aria-label='dropoff-datetime'
 																onChange={handleChange}
 																onBlur={handleBlur}
-																min={moment(values.packagePickupStartTime)
+																min={dayjs(values.packagePickupStartTime)
 																	.subtract(1, 'minute')
 																	.format('YYYY-MM-DDTHH:mm')}
-																max={moment(values.packagePickupStartTime).add(1, 'days').format('YYYY-MM-DDTHH:mm')}
+																max={dayjs(values.packagePickupStartTime).add(1, 'days').format('YYYY-MM-DDTHH:mm')}
 																required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 															/>
 														) : (
@@ -907,8 +907,8 @@ const Create = props => {
 																aria-label='dropoff-datetime'
 																onChange={handleChange}
 																onBlur={handleBlur}
-																min={moment().format('YYYY-MM-DDTHH:mm')}
-																max={moment().add('30', 'days').format('YYYY-MM-DDTHH:mm')}
+																min={dayjs().format('YYYY-MM-DDTHH:mm')}
+																max={dayjs().add('30', 'days').format('YYYY-MM-DDTHH:mm')}
 																required={values.packageDeliveryType !== DELIVERY_TYPES.ON_DEMAND}
 															/>
 														)}

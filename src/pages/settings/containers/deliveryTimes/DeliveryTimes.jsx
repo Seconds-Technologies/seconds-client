@@ -2,7 +2,7 @@ import './deliveryTimes.css';
 import React, { useState } from 'react';
 import Switch from 'react-switch';
 import { Formik } from 'formik';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useDispatch, useSelector } from 'react-redux';
 import { addError } from '../../../../store/actions/errors';
 import SuccessToast from '../../../../modals/SuccessToast';
@@ -67,7 +67,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[1].canDeliver}
-												defaultValue={moment(values[1].open).format('HH:mm')}
+												defaultValue={dayjs(values[1].open).format('HH:mm')}
 												name='1.open'
 												id='monday-open-time'
 												type='time'
@@ -87,7 +87,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[1].canDeliver}
-												defaultValue={moment(values[1].close).format('HH:mm')}
+												defaultValue={dayjs(values[1].close).format('HH:mm')}
 												name='1.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -121,7 +121,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[2].canDeliver}
-												defaultValue={moment(values[2].open).format('HH:mm')}
+												defaultValue={dayjs(values[2].open).format('HH:mm')}
 												name='2.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -140,7 +140,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[2].canDeliver}
-												defaultValue={moment(values[2].close).format('HH:mm')}
+												defaultValue={dayjs(values[2].close).format('HH:mm')}
 												name='2.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -174,7 +174,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[3].canDeliver}
-												defaultValue={moment(values[3].open).format('HH:mm')}
+												defaultValue={dayjs(values[3].open).format('HH:mm')}
 												name='3.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -193,7 +193,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[3].canDeliver}
-												defaultValue={moment(values[3].close).format('HH:mm')}
+												defaultValue={dayjs(values[3].close).format('HH:mm')}
 												name='3.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -227,7 +227,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[4].canDeliver}
-												defaultValue={moment(values[4].open).format('HH:mm')}
+												defaultValue={dayjs(values[4].open).format('HH:mm')}
 												name='4.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -246,7 +246,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[4].canDeliver}
-												defaultValue={moment(values[4].close).format('HH:mm')}
+												defaultValue={dayjs(values[4].close).format('HH:mm')}
 												name='4.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -280,7 +280,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[5].canDeliver}
-												defaultValue={moment(values[5].open).format('HH:mm')}
+												defaultValue={dayjs(values[5].open).format('HH:mm')}
 												name='5.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -299,7 +299,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[5].canDeliver}
-												defaultValue={moment(values[5].close).format('HH:mm')}
+												defaultValue={dayjs(values[5].close).format('HH:mm')}
 												name='5.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -333,7 +333,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[6].canDeliver}
-												defaultValue={moment(values[6].open).format('HH:mm')}
+												defaultValue={dayjs(values[6].open).format('HH:mm')}
 												name='6.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -352,7 +352,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[6].canDeliver}
-												defaultValue={moment(values[6].close).format('HH:mm')}
+												defaultValue={dayjs(values[6].close).format('HH:mm')}
 												name='6.close'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -386,7 +386,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[0].canDeliver}
-												defaultValue={moment(values[0].open).format('HH:mm')}
+												defaultValue={dayjs(values[0].open).format('HH:mm')}
 												name='0.open'
 												type='time'
 												className='form-control form-border rounded-3'
@@ -405,7 +405,7 @@ const DeliveryTimes = ({ show, onHide }) => {
 										<td>
 											<input
 												disabled={!values[0].canDeliver}
-												defaultValue={moment(values[0].close).format('HH:mm')}
+												defaultValue={dayjs(values[0].close).format('HH:mm')}
 												name='0.open'
 												id='pickup-datetime'
 												type='time'

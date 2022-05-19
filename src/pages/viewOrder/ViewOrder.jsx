@@ -1,7 +1,7 @@
 import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { assignDriver, createDeliveryJob, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
@@ -66,7 +66,7 @@ const ViewOrder = props => {
 					driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
 					createdAt
 				}) => {
-					createdAt = moment(createdAt).format('DD/MM/YYYY HH:mm:ss');
+					createdAt = dayjs(createdAt).format('DD/MM/YYYY HH:mm:ss');
 					return {
 						id: _id,
 						reference: jobReference,
@@ -255,8 +255,8 @@ const ViewOrder = props => {
 					customerReference,
 					pickupAddress,
 					dropoffAddress,
-					pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-					dropoffUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+					pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+					dropoffUntil: dayjs(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 					deliveryFee,
 					fleetProvider: providerId.replace(/_/g, ' ')
 				};
@@ -304,8 +304,8 @@ const ViewOrder = props => {
 							customerReference,
 							pickupAddress,
 							dropoffAddress,
-							pickupFrom: moment(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
-							deliverUntil: moment(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
+							pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
+							deliverUntil: dayjs(dropoffEndTime).format('DD-MM-YYYY HH:mm:ss'),
 							deliveryFee,
 							courier: name.replace(/_/g, ' ')
 						};
@@ -423,9 +423,9 @@ const ViewOrder = props => {
 											? 'Cancelled'
 											: !delivery.dropoffEndTime || order.providerId === PROVIDERS.UNASSIGNED
 											? 'Estimating...'
-											: moment(delivery.dropoffEndTime).diff(moment(), 'minutes') < 0
+											: dayjs(delivery.dropoffEndTime).diff(dayjs(), 'minutes') < 0
 											? `Delivered`
-											: `${moment().to(moment(delivery.dropoffEndTime))}`
+											: `${dayjs().to(dayjs(delivery.dropoffEndTime))}`
 									}
 									styles='me-1'
 								/>

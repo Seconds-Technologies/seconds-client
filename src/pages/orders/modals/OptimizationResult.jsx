@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
@@ -213,8 +213,8 @@ const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 												<div className='fw-bold'>{stop.id}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; -
-													&emsp; Deliver until: {moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
+													Deliver from: {dayjs(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; -
+													&emsp; Deliver until: {dayjs(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
 										</li>
@@ -263,8 +263,8 @@ const OptimizationResult = ({ show, onHide, routes, onAssign }) => {
 												<div className='fw-bold'>{orderNo}</div>
 												<span>{job.jobSpecification.deliveries[0].dropoffLocation.fullAddress}</span>
 												<span className='text-muted'>
-													Deliver from: {moment(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; - &emsp; Deliver until:
-													{moment(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
+													Deliver from: {dayjs(job.jobSpecification.deliveries[0].dropoffStartTime).calendar()}&emsp; - &emsp; Deliver until:
+													{dayjs(job.jobSpecification.deliveries[0].dropoffEndTime).calendar()}
 												</span>
 											</div>
 										</li>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Carousel from 'react-bootstrap/Carousel';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const BatchCarousel = ({ show, onHide, orders }) => {
 	const [index, setIndex] = useState(0);
@@ -39,11 +39,11 @@ const BatchCarousel = ({ show, onHide, orders }) => {
 									</li>
 									<li className='list-group-item'>
 										<h5 className='mb-1 text-capitalize'>Pickup From</h5>
-										<div className='text-capitalize'>{moment(order.packagePickupStartTime).format('DD-MM-YYYY HH:mm')}</div>
+										<div className='text-capitalize'>{dayjs(order.packagePickupStartTime).format('DD-MM-YYYY HH:mm')}</div>
 									</li>
 									<li className='list-group-item'>
 										<h5 className='mb-1 text-capitalize'>Dropoff Until</h5>
-										<div className='text-capitalize'>{moment(order.packageDropoffEndTime).format('DD-MM-YYYY HH:mm')}</div>
+										<div className='text-capitalize'>{dayjs(order.packageDropoffEndTime).format('DD-MM-YYYY HH:mm')}</div>
 									</li>
 									<li className='list-group-item'>
 										<h5 className='mb-1 text-capitalize'>Status</h5>

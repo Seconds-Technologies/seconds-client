@@ -1,5 +1,5 @@
 import Modal from 'react-bootstrap/Modal';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
@@ -60,7 +60,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 												className='form-control form-border rounded-3'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												// min={moment().set('hour', 0).set('minute', 0).format('YYYY-MM-DDTHH:mm')}
+												// min={dayjs().set('hour', 0).set('minute', 0).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>
@@ -75,8 +75,8 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 												aria-label='end-time'
 												onChange={handleChange}
 												onBlur={handleBlur}
-												min={moment(values.startTime).format('YYYY-MM-DDTHH:mm')}
-												// max={moment(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
+												min={dayjs(values.startTime).format('YYYY-MM-DDTHH:mm')}
+												// max={dayjs(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
 												required
 											/>
 										</div>

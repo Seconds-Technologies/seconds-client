@@ -5,7 +5,7 @@ import stuart from '../assets/img/stuart.svg';
 import gophr from '../assets/img/gophr.svg';
 import streetStream from '../assets/img/street-stream.svg';
 import ecofleet from '../assets/img/ecofleet.svg';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { PROVIDER_TYPES } from '../constants';
 
 const Quotes = ({quotes, show, onHide, selectCourier, showConfirmDialog}) => {
@@ -52,7 +52,7 @@ const Quotes = ({quotes, show, onHide, selectCourier, showConfirmDialog}) => {
 								<td className='col'>
 									{priceExVAT ? `£${priceExVAT.toFixed(2)}` : 'N/A'}
 								</td>
-								<td className='col'>{dropoffEta ? `${moment(dropoffEta).diff(moment(createdAt), 'minutes')} minutes` : 'N/A'}</td>
+								<td className='col'>{dropoffEta ? `${dayjs(dropoffEta).diff(dayjs(createdAt), 'minutes')} minutes` : 'N/A'}</td>
 								<td className='col text-capitalize'>{transport}</td>
 								<td className='col'>
 									<button

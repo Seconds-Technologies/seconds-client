@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import { dropsSchema } from '../validation';
 import { addDropoff } from '../store/actions/delivery';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
 
 const NewDropoffForm = ({ show, toggleShow, pickupDateTime }) => {
@@ -159,13 +159,13 @@ const NewDropoffForm = ({ show, toggleShow, pickupDateTime }) => {
 										onBlur={handleBlur}
 										min={
 											pickupDateTime
-												? moment(pickupDateTime).subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
-												: moment().subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
+												? dayjs(pickupDateTime).subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
+												: dayjs().subtract(1, 'minute').format('YYYY-MM-DDTHH:mm')
 										}
 										max={
 											pickupDateTime
-												? moment(pickupDateTime).add(1, 'days').format('YYYY-MM-DDTHH:mm')
-												: moment().add(1, 'day').format('YYYY-MM-DDTHH:mm')
+												? dayjs(pickupDateTime).add(1, 'days').format('YYYY-MM-DDTHH:mm')
+												: dayjs().add(1, 'day').format('YYYY-MM-DDTHH:mm')
 										}
 										required
 									/>

@@ -3,7 +3,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import mapboxgl from 'mapbox-gl';
 import awsconfig from './aws-exports';
 import './assets/fonts/Roboto/Roboto-Regular.ttf';
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -15,9 +14,19 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import './scss/style.scss';
 import 'bootstrap/dist/js/bootstrap.min';
-import moment from 'moment-timezone';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
 
-moment.tz.setDefault('Europe/London');
+import dayjs from 'dayjs';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(duration);
+dayjs.extend(calendar);
+
+dayjs.tz.setDefault('Europe/London');
 
 Amplify.configure({
 	Auth: {
