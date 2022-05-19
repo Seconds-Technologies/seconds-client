@@ -74,7 +74,7 @@ const Dashboard = props => {
 	}, [props.location]);
 
 	return (
-		<div className='page-container'>
+		<div id="dashboard-page" className='page-container'>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>

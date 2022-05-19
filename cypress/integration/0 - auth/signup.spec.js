@@ -7,9 +7,9 @@ const cardCvc = Cypress.env('CARD_CVC');
 
 describe('Visit Auth Pages', () => {
 	it('Navigation links', () => {
-		cy.visit(signupURL).url().should('equal', signupURL);
-		cy.get('#login-link').click().url().should('include', '/login');
-		cy.get('#forgot-password-link').click().url().should('include', '/forgot-password');
+		cy.visit(signupURL).url().wait(1000).should('equal', signupURL);
+		cy.get('#login-link').click().wait(1000).url().should('include', '/login');
+		cy.get('#forgot-password-link').click().wait(1000).url().should('include', '/forgot-password');
 	});
 });
 
@@ -129,6 +129,15 @@ describe('Successful signup flow', () => {
 			cy.fillElementsInput('cardCvc', cardCvc);
 			cy.fillElementsInput('postalCode', "RM10 8EH");
 			cy.root().submit().wait(10000).url().should('include', '/home')
+		})
+		cy.get('#create-location-form').within(function() {
+			cy.get('#location-name').type("Seconds HQ");
+			cy.get('#business-name').type(user.company);
+			cy.get('#street-address').type(user.streetName);
+			cy.get('#street-number').type(user.streetNumber);
+			cy.get('#city').type(user.password);
+			cy.get('#postcode').type(user.postcode);
+			cy.root().submit().wait(5000).get("#create-location-form").should('not.be.visible')
 		})
 	});
 });

@@ -101,7 +101,7 @@ const CreateLocation = ({ open, onClose }) => {
 					}}
 				>
 					{({ values, errors, handleChange, handleSubmit, handleBlur }) => (
-						<form action='' onSubmit={handleSubmit} className='container'>
+						<form id="create-location-form" action='' onSubmit={handleSubmit} className='container'>
 							<header className='d-flex flex-column py-2'>
 								<span className='fs-4 font-semibold'>Create a location</span>
 								<small className='text-muted font-medium'>This is the location drivers will pick up orders from.</small>
