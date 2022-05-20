@@ -132,6 +132,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^6.1.2",
+    "cypress-localstorage-commands": "^1.7.0",
     "prettier": "^2.3.1"
   }
 }

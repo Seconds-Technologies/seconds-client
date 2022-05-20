@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { removeError } from '../../store/actions/errors';
 import PasswordField from '../../components/PasswordField';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { Mixpanel } from '../../config/mixpanel';
+import { Mixpanel, Events, Types } from '../../config/mixpanel';
 import { PATHS } from '../../constants';
 import Link from '../../components/Link';
 
@@ -62,7 +62,10 @@ const Login = props => {
 										props.history.push(PATHS.HOME);
 									})
 									.catch(err => {
-										Mixpanel.track('Unsuccessful login');
+										Mixpanel.track(Events.LOGIN, {
+											$type: Types.FAILURE,
+											$error: err.message
+										});
 										setLoading(false);
 										console.log(err);
 									});

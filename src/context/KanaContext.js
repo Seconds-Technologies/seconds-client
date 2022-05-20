@@ -18,8 +18,6 @@ const KanaProvider = ({ children }) => {
 	useEffect(() => {
 		(async () => {
 			if(email){
-				console.log(email)
-				console.log(KANA_PUBLIC_KEY)
 				const client = new KanaUserClient({
 					apiKey: KANA_PUBLIC_KEY,
 					userId: email

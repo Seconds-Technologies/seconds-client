@@ -1,25 +1,7 @@
 import { apiCall } from '../../api';
 import { addError } from './errors';
-import { Mixpanel } from '../../config/mixpanel';
+import { Events, Mixpanel, Types } from '../../config/mixpanel';
 import { updateCurrentUser } from './auth';
-
-export function setupStripeCustomer(data) {
-	return dispatch => {
-		return new Promise((resolve, reject) => {
-			console.log(data);
-			return apiCall('POST', '/server/auth/stripe-customer', data)
-				.then(customer => {
-					dispatch(updateCurrentUser({ stripeCustomerId: customer.id }));
-					resolve(customer);
-				})
-				.catch(err => {
-					if (err) dispatch(addError(err.message));
-					else dispatch(addError('Api endpoint could not be accessed!'));
-					reject(err);
-				});
-		});
-	};
-}
 
 export function setupIntent(id) {
 	return dispatch => {
@@ -141,11 +123,18 @@ export function setupSubscription(email, stripeCustomerId, paymentMethodId, look
 				.then(subscription => {
 					console.table(subscription);
 					dispatch(updateCurrentUser({ subscriptionId: subscription['id'] }))
+					Mixpanel.track(Events.NEW_SUBSCRIPTION, {
+						$type: Types.SUCCESS
+					});
 					resolve(subscription);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
+					Mixpanel.track(Events.NEW_SUBSCRIPTION, {
+						$type: Types.FAILURE,
+						$error: err.message
+					});
 					reject(err);
 				});
 		});
@@ -158,11 +147,18 @@ export function cancelSubscription(email, reason){
 			apiCall('GET', '/server/subscription/cancel-subscription', null, { params: { email, reason }})
 				.then(({ subscriptionId, cancelDate }) => {
 					console.table({ subscriptionId, cancelDate});
+					Mixpanel.track(Events.CANCEL_SUBSCRIPTION, {
+						$type: Types.SUCCESS
+					})
 					resolve(cancelDate);
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
+					Mixpanel.track(Events.CANCEL_SUBSCRIPTION, {
+						$type: Types.FAILURE,
+						$error: err.message
+					})
 					reject(err);
 				});
 		});

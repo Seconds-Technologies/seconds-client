@@ -13,7 +13,7 @@ import {
 	TIMER_STOP,
 	UPDATE_DELIVERY_JOB
 } from '../actionTypes';
-import { Mixpanel } from '../../config/mixpanel';
+import { Events, Mixpanel, Types } from '../../config/mixpanel';
 
 export const setBatch = batch => ({
 	type: SET_BATCH,
@@ -81,13 +81,17 @@ export function assignDriver(deliveryParams, apiKey, driverId) {
 				params: { driverId }
 			})
 				.then(job => {
-					Mixpanel.track('Successful Job Assignment');
+					Mixpanel.track(Events.ASSIGN_DRIVER_JOB, {
+						$type: Types.SUCCESS
+					});
 					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
-					Mixpanel.track('Successful job assignment');
+					Mixpanel.track(Events.ASSIGN_DRIVER_JOB, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -106,13 +110,17 @@ export function createDeliveryJob(deliveryParams, apiKey, providerId = undefined
 				}
 			})
 				.then(job => {
-					Mixpanel.track('Successful Delivery job creation');
+					Mixpanel.track(Events.OUTSOURCE_COURIER_JOB, {
+						$type: Types.SUCCESS
+					});
 					dispatch(newDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful Delivery job creation');
+					Mixpanel.track(Events.OUTSOURCE_COURIER_JOB, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -154,13 +162,17 @@ export function manuallyDispatchJob(apiKey, type, providerId, orderNumber) {
 				{ headers: { 'X-Seconds-Api-Key': apiKey } }
 			)
 				.then(job => {
-					Mixpanel.track('Successful manual dispatch');
+					Mixpanel.track(Events.DISPATCH_UNASSIGNED_JOB, {
+						$type: Types.SUCCESS
+					});
 					dispatch(updateDeliveryJob(job));
 					dispatch(removeError());
 					resolve(job);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful Delivery job creation');
+					Mixpanel.track(Events.DISPATCH_UNASSIGNED_JOB, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -179,12 +191,16 @@ export function manuallyDispatchRoute(apiKey, driverId, route, timeWindow) {
 				{ headers: { 'X-Seconds-Api-Key': apiKey } }
 			)
 				.then(({ message }) => {
-					Mixpanel.track('Successful route optimization');
+					Mixpanel.track(Events.ROUTE_OPTIMIZATION, {
+						$type: Types.SUCCESS
+					});
 					dispatch(removeError());
 					resolve(message);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful Delivery job creation');
+					Mixpanel.track(Events.ROUTE_OPTIMIZATION, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -256,12 +272,16 @@ export function getAllQuotes(apiKey, data) {
 			setTokenHeader(localStorage.getItem('jwt_token'));
 			return apiCall('POST', `/api/v1/quotes`, { ...data }, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ quotes, bestQuote }) => {
-					Mixpanel.track('Successful fetch of delivery quotes');
+					Mixpanel.track(Events.FETCH_COURIER_QUOTES, {
+						$type: Types.SUCCESS
+					});
 					dispatch(removeError());
 					resolve({ quotes, bestQuote });
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful fetch of delivery quotes');
+					Mixpanel.track(Events.FETCH_COURIER_QUOTES, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -275,11 +295,15 @@ export function cancelDelivery(apiKey, jobId) {
 		return new Promise((resolve, reject) => {
 			return apiCall('DELETE', `/api/v1/jobs/${jobId}`, null, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ message }) => {
-					Mixpanel.track('Successful job cancellation');
+					Mixpanel.track(Events.CANCEL_SUBSCRIPTION, {
+						$type: Types.SUCCESS
+					});
 					resolve(message);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful job cancellation');
+					Mixpanel.track(Events.CANCEL_SUBSCRIPTION, {
+						$type: Types.FAILURE
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);
@@ -293,11 +317,11 @@ export function updateDelivery(apiKey, jobId, data) {
 		return new Promise((resolve, reject) => {
 			return apiCall('PATCH', `/api/v1/jobs/${jobId}`, data, { headers: { 'X-Seconds-Api-Key': apiKey } })
 				.then(({ message }) => {
-					Mixpanel.track('Successful job update');
+					Mixpanel.track(Events.UPDATE_JOB);
 					resolve(message);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful job update');
+					Mixpanel.track(Events.UPDATE_JOB);
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Api endpoint could not be accessed!'));
 					reject(err);

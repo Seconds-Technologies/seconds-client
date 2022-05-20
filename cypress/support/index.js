@@ -15,7 +15,22 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import "cypress-localstorage-commands";
 import 'cypress-plugin-stripe-elements';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import duration from 'dayjs/plugin/duration';
+import calendar from 'dayjs/plugin/calendar';
+
+import dayjs from 'dayjs';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(duration);
+dayjs.extend(calendar);
+dayjs.tz.setDefault('Europe/London');
+
+Cypress.dayjs = dayjs
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

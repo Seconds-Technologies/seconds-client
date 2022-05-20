@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Mixpanel } from '../../../config/mixpanel';
+import { Events, Mixpanel, Types } from '../../../config/mixpanel';
 import { addPaymentMethod, setupIntent, setupSubscription } from '../../../store/actions/stripe';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductContext } from '../../../context';
@@ -50,8 +50,9 @@ const Payment = ({ setLoading, onSuccess }) => {
 			if (result.error) {
 				console.log(result.error);
 				setError(result.error);
-				Mixpanel.track('Add payment method', {
-					$type: 'FAILURE'
+				Mixpanel.track(Events.ADD_PAYMENT_METHOD, {
+					$type: Types.FAILURE,
+					$reason: result.error
 				});
 				setLoading(prevState => ({
 					...prevState,
@@ -60,7 +61,7 @@ const Payment = ({ setLoading, onSuccess }) => {
 			} else {
 				console.log('success', result.setupIntent.payment_method);
 				Mixpanel.track('Add payment method', {
-					$type: 'SUCCESS'
+					$type: Types.SUCCESS
 				});
 				setLoading(prevState => ({
 					show: true,

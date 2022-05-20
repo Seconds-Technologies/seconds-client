@@ -13,7 +13,7 @@ import { SignUpSchema } from '../../validation';
 import ErrorField from '../../components/ErrorField';
 import PasswordField from '../../components/PasswordField';
 import LoadingOverlay from 'react-loading-overlay';
-import { Mixpanel } from '../../config/mixpanel';
+import { Events, Mixpanel, Types } from '../../config/mixpanel';
 import valuesIcon from '../../assets/img/signup-aside-icon.svg';
 import Link from '../../components/Link';
 import { PATHS } from '../../constants';
@@ -107,13 +107,22 @@ export default function Signup(props) {
 							}}
 							onSubmit={async (values, actions) => {
 								try {
+									Mixpanel.track_forms('#signup-form', 'Create Account', {
+										$type: Types.COMPLETE
+									});
 									setLoading(true);
 									console.log(values);
 									await dispatch(authUser('register', values));
 									setLoading(false);
 									props.history.push('/signup/1');
 								} catch (err) {
-									Mixpanel.track('Unsuccessful registration');
+									Mixpanel.track_forms('#signup-form', 'Create Account', {
+										$type: Types.INCOMPLETE
+									});
+									Mixpanel.track(Events.REGISTRATION, {
+										$type: Types.FAILURE,
+										$error: err.message
+									});
 									setLoading(false);
 									console.log(err);
 								}

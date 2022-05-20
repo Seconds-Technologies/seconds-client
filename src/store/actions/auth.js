@@ -10,7 +10,7 @@ import {
 } from '../actionTypes';
 import { addError, removeError } from './errors';
 import { setShopify } from './shopify';
-import { Mixpanel } from '../../config/mixpanel';
+import { Mixpanel, Events, Types } from '../../config/mixpanel';
 import { setWoo } from './woocommerce';
 import { setSquareSpace } from './squarespace';
 import { setHubrise } from './hubrise';
@@ -87,19 +87,22 @@ export function authUser(type, userData) {
 							})
 							.catch(err => reject(err));
 					dispatch(removeError());
+					Mixpanel.identify(user.id);
 					if (type === AUTH_TYPE.REGISTER) {
-						Mixpanel.identify(user.id);
-						Mixpanel.track('Successful Registration');
+						Mixpanel.track(Events.REGISTRATION, {
+							$type: "SUCCESS"
+						});
 						Mixpanel.people.set({
 							$first_name: user.firstname,
 							$last_name: user.lastname,
 							$email: user.email,
 							$company: user.company,
-							$subscribed: false
+							$subscribed: !!user.subscriptionId
 						});
 					} else {
-						Mixpanel.identify(user.id);
-						Mixpanel.track('Successful Login');
+						Mixpanel.track(Events.LOGIN, {
+							$type: 'SUCCESS'
+						});
 						Mixpanel.people.set({
 							$first_name: user.firstname,
 							$last_name: user.lastname,
@@ -164,7 +167,9 @@ export function updateProfile({ img, id, ...data }) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', '/server/main/update-profile', { img, id, data })
 				.then(({ message, ...data }) => {
-					Mixpanel.track('Successful updated profile');
+					Mixpanel.track(Events.UPDATE_PROFILE, {
+						$type: 'SUCCESS'
+					});
 					if (img) {
 						const formData = new FormData();
 						formData.append('img', img);
@@ -176,11 +181,13 @@ export function updateProfile({ img, id, ...data }) {
 						};
 						apiCall('POST', '/server/main/upload', formData, config)
 							.then(({ base64Image, message }) => {
-								Mixpanel.track('Successful profile image upload');
+								Mixpanel.track(Events.UPLOAD_PROFILE_IMAGE, {
+									$type: Types.SUCCESS
+								});
 								dispatch(updateCurrentUser({ profileImageData: base64Image }));
 							})
 							.catch(err => {
-								Mixpanel.track('Unsuccessful profile image upload', { $error: err.message });
+								Mixpanel.track(Events.UPLOAD_PROFILE_IMAGE, { type: Types.FAILURE, $error: err.message });
 								reject(err);
 							});
 					}
@@ -189,7 +196,7 @@ export function updateProfile({ img, id, ...data }) {
 					resolve(message);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful profile update', { $error: err.message });
+					Mixpanel.track(Events.UPDATE_PROFILE, { type: Types.FAILURE, $error: err.message });
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -203,11 +210,16 @@ export function sendPasswordResetEmail(email) {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', '/server/auth/send-reset-email', { email })
 				.then(res => {
-					Mixpanel.track('Successful request to reset password');
+					Mixpanel.track(Events.FORGOT_PASSWORD, {
+						$type: Types.SUCCESS
+					});
 					resolve(res);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful request to reset password', { $error: err.message });
+					Mixpanel.track(Events.FORGOT_PASSWORD, {
+						$type: Types.SUCCESS,
+						$error: err.message
+					});
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -222,11 +234,13 @@ export function resetPassword({ password }, token) {
 			const config = { params: { token } };
 			return apiCall('PATCH', '/server/auth/reset-password', { password }, config)
 				.then(res => {
-					Mixpanel.track('Successful password reset');
+					Mixpanel.track(Events.PASSWORD_RESET, {
+						$type: Types.SUCCESS
+					});
 					resolve(res);
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful password reset', { $error: err.message });
+					Mixpanel.track(Events.PASSWORD_RESET, { $type: Types.FAILURE, $error: err.message });
 					if (err) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
@@ -235,7 +249,7 @@ export function resetPassword({ password }, token) {
 	};
 }
 
-export function updateDeliveryStrategies(email, strategies) {
+/*export function updateDeliveryStrategies(email, strategies) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('POST', '/server/main/update-delivery-strategies', strategies, { params: { email } })
@@ -245,14 +259,14 @@ export function updateDeliveryStrategies(email, strategies) {
 					resolve('Delivery strategies have been saved to your account');
 				})
 				.catch(err => {
-					Mixpanel.track('Unsuccessful update of delivery strategies', { $error: err.message });
+					Mixpanel.track('Update Delivery Strategies', { $error: err.message });
 					if (err.message) dispatch(addError(err.message));
 					else dispatch(addError('Server is down!'));
 					reject(err);
 				});
 		});
 	};
-}
+}*/
 
 export function downloadDeliveryProof(email, filename){
 	return dispatch => {

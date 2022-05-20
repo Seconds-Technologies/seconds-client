@@ -930,6 +930,7 @@ const Create = props => {
 												</div>
 												<div className='d-flex justify-content-evenly'>
 													<Button
+														id="assign-driver"
 														type='submit'
 														name={SUBMISSION_TYPES.ASSIGN_DRIVER}
 														value={SUBMISSION_TYPES.ASSIGN_DRIVER}
@@ -942,6 +943,7 @@ const Create = props => {
 													</Button>
 													<div>
 														<Button
+															id="outsource-courier"
 															type='submit'
 															name={SUBMISSION_TYPES.GET_QUOTE}
 															value={SUBMISSION_TYPES.GET_QUOTE}

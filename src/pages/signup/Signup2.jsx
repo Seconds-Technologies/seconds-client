@@ -34,10 +34,6 @@ const Signup2 = props => {
 		props.history.push(PATHS.HOME);
 	};
 
-	useEffect(() => {
-		console.log('LOOKUP KEY:', lookupKey);
-	}, []);
-
 	return (
 		<LoadingOverlay active={isLoading.show} spinner text={isLoading.text} classNamePrefix='signup_loader_'>
 			<div className='container-fluid mx-auto py-4 signupPage bg-light d-flex flex-column'>
