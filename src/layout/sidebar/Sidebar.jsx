@@ -178,7 +178,7 @@ export default function Sidebar({ hintsEnabled }) {
 						</Link>
 					</Tooltip>
 					<Tooltip title='Profile' arrow placement='right-end'>
-						<div className='link dropdown'>
+						<div id="sidebar-dropdown" className='link dropdown'>
 							<div className='sidebarProfileItem' role='button' id='main-dropdown' data-bs-toggle='dropdown'>
 								{user.profileImageData ? (
 									<img
@@ -207,6 +207,7 @@ export default function Sidebar({ hintsEnabled }) {
 								</li>
 								<li>
 									<div
+										id="menu-item-logout"
 										role='button'
 										className='dropdown-item'
 										onClick={() => {

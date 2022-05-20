@@ -5,6 +5,7 @@
   "env": {
     "ENV": "dev",
     "LANDING_PAGE_URL": "http://localhost:3002",
+    "SERVER_URL": "http://localhost:8081",
     "CARD_NUMBER": "5555 5582 6555 4449",
     "CARD_EXPIRY": "1029",
     "CARD_CVC": "134"
