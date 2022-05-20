@@ -76,6 +76,7 @@ const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, 
 											<td className='col text-capitalize'>{VEHICLE_TYPES.find(({ value }) => value === vehicle).label}</td>
 											<td className='col'>
 												<button
+													id={id}
 													disabled={disabled}
 													className='d-flex justify-content-center align-items-center action-button'
 													onClick={() => {

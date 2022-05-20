@@ -1,6 +1,41 @@
 /// <reference types="cypress" />
-const loginURL = `${Cypress.config().baseUrl}/login`;
 const env = Cypress.env('ENV');
+const apiURL = Cypress.env('API_URL')
+const apiKey = Cypress.env('API_KEY')
+const loginURL = `${Cypress.config().baseUrl}/login`;
+const driverId = Cypress.env('DRIVER_ID');
+const THREE_SECONDS = 3000
+const ONE_SECOND = 1000
+
+describe.only('Analyse orders', function() {
+	before(() => {
+		cy.fixture(`users/${env}.json`).as('validUser');
+		cy.visit(loginURL);
+		cy.url().should('include', '/login');
+		cy.get('#login-form').within(function () {
+			cy.get('#login-email').type(this.validUser.email);
+			cy.get('#login-password').type(this.validUser.password);
+			cy.root().submit().wait(10000).url().should('include', '/home');
+		});
+		cy.get('#sidebar-orders').click();
+		cy.url().should('include', '/orders');
+	});
+
+	it('Fetch first order', function() {
+		cy.get('.orders-table').should('be.visible')
+		cy.get('[data-rowindex="0"]').invoke('attr', 'data-id').then($orderNumber => {
+			cy.log($orderNumber)
+			cy.request({
+				method: 'DELETE',
+				url: `${apiURL}/api/v1/jobs/${$orderNumber}`,
+				headers: {
+					'X-SECONDS-API-KEY': apiKey,
+				}
+			}).then(resp => cy.log(resp))
+		})
+		cy.saveLocalStorage();
+	})
+})
 
 describe('Assign Orders to Drivers', function () {
 	before(() => {
@@ -12,6 +47,8 @@ describe('Assign Orders to Drivers', function () {
 			cy.get('#login-password').type(this.validUser.password);
 			cy.root().submit().wait(10000).url().should('include', '/home');
 		});
+		cy.get('#sidebar-create').click();
+		cy.url().should('include', '/create');
 	});
 
 	beforeEach(() => {
@@ -20,12 +57,12 @@ describe('Assign Orders to Drivers', function () {
 	});
 
 	afterEach(() => {
+		cy.get('.orders-table').should('be.visible')
+		cy.get('[data-row-index="0"]').then($order => {
+			const orderNumber = $order.attr('data-id')
+			cy.log(orderNumber)
+		})
 		cy.saveLocalStorage();
-	});
-
-	it('Visit Create Page', function () {
-		cy.get('#sidebar-create').click();
-		cy.url().should('include', '/create');
 	});
 
 	it('On-Demand Delivery', function () {
@@ -41,11 +78,14 @@ describe('Assign Orders to Drivers', function () {
 			cy.get('#dropoff-city').type(this.customer.city);
 			cy.get('#dropoff-postcode').type(this.customer.postcode);
 			cy.get('#dropoff-instructions').type('Ring door bell');
-			cy.get('#assign-driver').click().wait(10000)
+			cy.get('#assign-driver').click().wait(THREE_SECONDS)
 		});
+		cy.get(`#${driverId}`).should('be.visible').click().wait(ONE_SECOND)
+		cy.get('#confirm-provider-button').should('be.visible').click().wait(THREE_SECONDS).end()
+		cy.get('#new-delivery-modal').should('be.visible').click()
 	});
 
-	it('Scheduled Delivery', function () {
+	it.skip('Scheduled Delivery', function () {
 		cy.reload()
 		const pickupTime = Cypress.dayjs().add(1, 'h').format('YYYY-MM-DDTHH:mm');
 		const dropoffTime = Cypress.dayjs().add(3, 'h').format('YYYY-MM-DDTHH:mm');
@@ -64,7 +104,10 @@ describe('Assign Orders to Drivers', function () {
 			cy.get('#dropoff-postcode').type(this.customer.postcode);
 			cy.get('#dropoff-datetime').type(dropoffTime);
 			cy.get('#dropoff-instructions').type('Ring door bell');
-			cy.get('#assign-driver').click().wait(10000)
+			cy.get('#assign-driver').click().wait(THREE_SECONDS)
 		});
+		cy.get(`#${driverId}`).should('be.visible').click().wait(ONE_SECOND)
+		cy.get('#confirm-provider-button').should('be.visible').click().wait(THREE_SECONDS).end()
+		cy.get('#new-delivery-modal').should('be.visible')
 	});
 });

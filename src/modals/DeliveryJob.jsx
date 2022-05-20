@@ -9,7 +9,7 @@ const DeliveryJob = ({ job, show, onHide }) => {
 				<Modal.Title>Your delivery Job!</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<div>
+				<div id="new-delivery-modal">
 					<ul className='list-group list-group-flush'>
 						{Object.entries(job).map(([key, value], index) => (
 							<li key={index} className='list-group-item'>

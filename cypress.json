@@ -3,11 +3,15 @@
   "baseUrl": "http://localhost:3000",
   "chromeWebSecurity": false,
   "env": {
+    "API_KEY": "BrsA4ID1Uu9AdFA7OtNJcjEL",
     "ENV": "dev",
     "LANDING_PAGE_URL": "http://localhost:3002",
+    "API_URL": "http://localhost:3001",
     "SERVER_URL": "http://localhost:8081",
     "CARD_NUMBER": "5555 5582 6555 4449",
     "CARD_EXPIRY": "1029",
-    "CARD_CVC": "134"
-  }
+    "CARD_CVC": "134",
+    "DRIVER_ID": "61fd730bd583bc59b8bf7186"
+  },
+  "experimentalStudio": true
 }

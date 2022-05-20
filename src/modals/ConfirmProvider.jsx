@@ -18,7 +18,7 @@ const ConfirmProvider = ({ show, toggleShow, onConfirm, provider }) => {
 				<Button variant='secondary' onClick={() => toggleShow(false)}>
 					Cancel
 				</Button>
-				<Button onClick={onConfirm}>Confirm</Button>
+				<Button id="confirm-provider-button" onClick={onConfirm}>Confirm</Button>
 			</Modal.Footer>
 		</Modal>
 	);
