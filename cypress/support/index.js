@@ -32,6 +32,35 @@ dayjs.tz.setDefault('Europe/London');
 
 Cypress.dayjs = dayjs
 
+Cypress.Commands.add('createOnDemandOrder', function(customer, vehicleCode) {
+	cy.get('#on-demand-delivery').check();
+	cy.get('#items-count').type('5');
+	cy.get('#vehicle-type').type(`${vehicleCode}{enter}`);
+	cy.get('#dropoff-first-name').type(customer.firstname);
+	cy.get('#dropoff-last-name').type(customer.lastname);
+	cy.get('#dropoff-email-address').type(customer.email);
+	cy.get('#dropoff-phone-number').type(customer.phone);
+	cy.get('#dropoff-address-line-1').type(customer.addressLine1);
+	cy.get('#dropoff-city').type(customer.city);
+	cy.get('#dropoff-postcode').type(customer.postcode);
+	cy.get('#dropoff-instructions').type('Ring door bell');
+})
+
+Cypress.Commands.add('createScheduledOrder', function(customer, pickupTime, dropoffTime, vehicleCode) {
+	cy.get('#scheduled-same-day').check();
+	cy.get('#pickup-datetime').type(pickupTime);
+	cy.get('#items-count').type('5');
+	cy.get('#vehicle-type').type(`${vehicleCode}{enter}`);
+	cy.get('#dropoff-first-name').type(customer.firstname);
+	cy.get('#dropoff-last-name').type(customer.lastname);
+	cy.get('#dropoff-email-address').type(customer.email);
+	cy.get('#dropoff-phone-number').type(customer.phone);
+	cy.get('#dropoff-address-line-1').type(customer.addressLine1);
+	cy.get('#dropoff-city').type(customer.city);
+	cy.get('#dropoff-postcode').type(customer.postcode);
+	cy.get('#dropoff-datetime').type(dropoffTime);
+	cy.get('#dropoff-instructions').type('Ring door bell');
+})
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 Cypress.on('uncaught:exception', (err, runnable, promise) => {

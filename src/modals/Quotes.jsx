@@ -63,7 +63,7 @@ const Quotes = ({quotes, show, onHide, selectCourier, showConfirmDialog}) => {
 											showConfirmDialog(true);
 										}}
 									>
-										<span className='text-decoration-none'>Select</span>
+										<span id={`select-quote-${index}`} className='text-decoration-none'>Select</span>
 									</button>
 								</td>
 							</tr>
