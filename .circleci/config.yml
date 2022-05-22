@@ -43,13 +43,11 @@ workflows:
           parallelism: 3
           post-steps:
             - slack/notify:
-                channel: circleci
                 branch_pattern: 'dev,testing'
                 mentions: '@Chisom'
                 template: basic_success_1
                 event: pass
             - slack/notify:
-                channel: circleci
                 branch_pattern: 'dev,testing'
                 mentions: '@Chisom'
                 template: basic_fail_1
@@ -73,13 +71,11 @@ workflows:
                 - master
           post-steps:
             - slack/notify:
-                channel: circleci
                 branch_pattern: master
                 mentions: '@Chisom'
                 template: basic_success_1
                 event: pass
             - slack/notify:
-                channel: circleci
                 branch_pattern: master
                 mentions: '@Chisom'
                 template: basic_fail_1

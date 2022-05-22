@@ -2,11 +2,14 @@
 import 'cypress-localstorage-commands';
 
 const signupURL = `${Cypress.config().baseUrl}/signup`;
+const signupURL1 = `${Cypress.config().baseUrl}/signup/1`;
 const landingPageURL = Cypress.env('LANDING_PAGE_URL');
 const serverURL = Cypress.env('SERVER_URL');
 const cardNumber = Cypress.env('CARD_NUMBER');
 const cardExpiry = Cypress.env('CARD_EXPIRY');
 const cardCvc = Cypress.env('CARD_CVC');
+
+const TEN_SECONDS = 10000
 
 function cleanup() {
 	cy.restoreLocalStorage();
@@ -117,9 +120,12 @@ describe('Failed User Signups', () => {
 	});
 });
 
-describe('Successful User Signup', () => {
-	beforeEach(function() {
+describe.only('Successful User Signup', () => {
+	before(() => {
 		cy.visit(signupURL);
+	})
+
+	beforeEach(function() {
 		cy.fixture('users/valid.json').then($users => {
 			const index = Math.floor(Math.random() * $users.length);
 			cy.log($users[index]).wrap($users[index]).as('user');
@@ -140,13 +146,23 @@ describe('Successful User Signup', () => {
 			cy.get('#signup-phone').type(this.user.phone);
 			cy.get('#signup-password').type(this.user.password);
 			cy.get('[type="checkbox"]').check();
-			cy.root().submit().wait(10000).url().should('include', '/1');
+			cy.root().submit().wait(TEN_SECONDS).url().should('include', '/1');
 			cy.saveLocalStorage();
 		});
+	})
+
+	it('Choose Payment Plan', function() {
+		cy.restoreLocalStorage();
+		cy.visit(signupURL1)
 		cy.get('#signup-product-plans').within(function() {
 			cy.get('#growth').click();
 			cy.url().should('include', '/2');
 		});
+		cy.saveLocalStorage()
+	})
+
+	it('Enter Payment Details', function() {
+		cy.restoreLocalStorage()
 		cy.get('#payment-form').within(function() {
 			cy.get('#card-holder-name').type(`${this.user.firstname} ${this.user.lastname}`);
 			cy.get('#card-holder-email').type(this.user.email);
@@ -154,8 +170,13 @@ describe('Successful User Signup', () => {
 			cy.fillElementsInput('cardExpiry', cardExpiry); // MMYY
 			cy.fillElementsInput('cardCvc', cardCvc);
 			cy.fillElementsInput('postalCode', 'RM10 8EH');
-			cy.root().submit().wait(10000).url().should('include', '/home');
+			cy.root().submit().wait(TEN_SECONDS).url().should('include', '/home');
 		});
+		cy.saveLocalStorage()
+	})
+
+	it('Create New Location', function(){
+		cy.restoreLocalStorage()
 		cy.get('#create-location-form').within(function() {
 			cy.get('#location-name').type('Seconds HQ');
 			cy.get('#business-name').type(this.user.company);
@@ -165,17 +186,21 @@ describe('Successful User Signup', () => {
 			cy.get('#postcode').type(this.user.postcode);
 			cy.root().submit().wait(5000).get('#create-location-form').should('not.exist');
 		});
+		cy.saveLocalStorage()
 	});
 });
 
 describe('Successful Onboarding flow', () => {
-	beforeEach(function() {
+	before(function() {
 		cy.visit(landingPageURL);
+	});
+
+	beforeEach(function () {
 		cy.fixture('users/valid.json').then($users => {
 			const index = Math.floor(Math.random() * $users.length);
 			cy.log($users[index]).wrap($users[index]).as('user');
 		});
-	});
+	})
 
 	after(cleanup);
 
@@ -194,7 +219,7 @@ describe('Successful Onboarding flow', () => {
 			cy.get('#business-type').select('Restaurant');
 			cy.get('#business-role').type('Owner');
 			cy.get('#average-deliveries-per-week').type('100');
-			cy.root().submit().wait(10000).url().should('include', signupURL);
+			cy.root().submit().wait(12000).url().should('equal', signupURL);
 			cy.saveLocalStorage();
 		});
 		cy.get('#signup-form').within(function() {
