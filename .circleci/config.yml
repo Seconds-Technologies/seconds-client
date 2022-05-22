@@ -8,3 +8,4 @@ workflows:
     jobs:
       - cypress/run:
           no-workspace: true
+          install-command: yarn install --frozen-lockfile
