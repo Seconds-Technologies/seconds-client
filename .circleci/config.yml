@@ -22,4 +22,4 @@ workflows:
           tags: 'staging'
           store_artifacts: true
           parallel: true
-          parallelism: 4
+          parallelism: 3
