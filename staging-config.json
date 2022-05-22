@@ -5,7 +5,7 @@
   "env": {
     "ENV": "staging",
     "LANDING_PAGE_URL": "https://seconds-landing-brt6ozrlz-seconds-technologies.vercel.app",
-    "API_KEY": "h5tUvrDlLvIBQ3A72Nh2SNA6",
+    "API_KEY": "Pt3UuALQapVODqbtQAWEUUvC",
     "API_URL": "https://seconds-api-dev.herokuapp.com",
     "SERVER_URL": "https://seconds-app-server-dev.herokuapp.com",
     "CARD_NUMBER": "4000 0582 6000 0005",

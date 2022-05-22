@@ -1,13 +1,13 @@
 {
-  "id": "6183ec84fdee6e0004c46d54",
-  "firstname": "Chisom",
-  "lastname": "Oguibe",
-  "email": "chisom.oguibe@googlemail.com",
-  "phone": "+447507210809",
+  "id": "6278e6a6f9a8914d04613a64",
+  "firstname": "Test",
+  "lastname": "User",
+  "email": "testuser@example.com",
+  "phone": "+447523958055",
   "company": "Spicy Mango Technology",
   "password": "admin",
-  "addressLine1": "250 Reede Road",
-  "city": "Dagenham",
-  "postcode": "RM10 8EH",
+  "addressLine1": "39 Effra Rd",
+  "city": "London",
+  "postcode": "SW2 1BZ",
   "country": "United Kingdom"
 }
