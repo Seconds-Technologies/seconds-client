@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  slack: circleci/slack@4.4.4
   cypress: cypress-io/cypress@1
 executors:
   with-chrome:
@@ -15,15 +16,13 @@ workflows:
       - cypress/install:
           yarn: true
           executor: with-chrome
-          build: yarn build
+          build: yarn install
           filters:
             branches:
               only:
                 - master
                 - dev
                 - testing
-          parallel: true
-          parallelism: 2
       - cypress/run:
           requires:
             - cypress/install
@@ -40,6 +39,19 @@ workflows:
           store_artifacts: true
           parallel: true
           parallelism: 3
+          post-steps:
+            - slack/notify:
+                channel: circleci
+                branch_pattern: 'dev,testing'
+                mentions: '@Chisom'
+                template: basic_success_1
+                event: pass
+            - slack/notify:
+                channel: circleci
+                branch_pattern: 'dev,testing'
+                mentions: '@Chisom'
+                template: basic_fail_1
+                event: fail
       - cypress/run:
           requires:
             - cypress/install
@@ -55,3 +67,16 @@ workflows:
             branches:
               only:
                 - master
+          post-steps:
+            - slack/notify:
+                channel: circleci
+                branch_pattern: master
+                mentions: '@Chisom'
+                template: basic_success_1
+                event: pass
+            - slack/notify:
+                channel: circleci
+                branch_pattern: master
+                mentions: '@Chisom'
+                template: basic_fail_1
+                event: fail
