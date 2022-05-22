@@ -13,7 +13,6 @@ workflows:
   build:
     jobs:
       - cypress/install:
-          no-workspace: true
           yarn: true
           executor: with-chrome
           build: yarn build
