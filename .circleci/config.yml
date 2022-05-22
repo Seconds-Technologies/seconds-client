@@ -12,6 +12,8 @@ executors:
 workflows:
   build:
     jobs:
+      - cypress/install:
+          build: yarn build
       - cypress/run:
           no-workspace: true
           yarn: true
@@ -19,3 +21,5 @@ workflows:
           config-file: staging-config.json
           tags: 'staging'
           store_artifacts: true
+          parallel: true
+          parallelism: 4
