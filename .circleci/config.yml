@@ -9,3 +9,4 @@ workflows:
       - cypress/run:
           no-workspace: true
           install-command: yarn install --frozen-lockfile
+          executor: cypress/base:16.14.2-slim
