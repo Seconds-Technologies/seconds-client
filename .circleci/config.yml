@@ -4,7 +4,7 @@ orbs:
   cypress: cypress-io/cypress@1
 executors:
   with-chrome:
-    resource_class: small
+    resource_class: medium
     docker:
       - image: "cypress/browsers:node16.13.0-chrome95-ff94"
 workflows:
@@ -12,5 +12,6 @@ workflows:
     jobs:
       - cypress/run:
           no-workspace: true
-          install-command: yarn install --frozen-lockfile
+          yarn: true
           executor: with-chrome
+          config-file: staging-config.json
