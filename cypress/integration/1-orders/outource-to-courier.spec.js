@@ -43,7 +43,7 @@ describe('Outsource Orders to Couriers', function () {
 		})
 	});
 
-	it.only('On-Demand Delivery', function () {
+	it('On-Demand Delivery', function () {
 		cy.get('#create-order-form').within(function () {
 			cy.createOnDemandOrder(this.customer, "MTB")
 			cy.get('#outsource-courier').click().wait(FIVE_SECONDS).end()
@@ -56,8 +56,8 @@ describe('Outsource Orders to Couriers', function () {
 	it('Scheduled Delivery', function () {
 		cy.restoreLocalStorage();
 		cy.visit(createPage)
-		const pickupTime = Cypress.dayjs().add(1, 'h').format('YYYY-MM-DDTHH:mm');
-		const dropoffTime = Cypress.dayjs().add(3, 'h').format('YYYY-MM-DDTHH:mm');
+		const pickupTime = Cypress.dayjs().add(1, 'd').set("h", 8).format('YYYY-MM-DDTHH:mm');
+		const dropoffTime = Cypress.dayjs().add(1, 'd').set('h', 16).format('YYYY-MM-DDTHH:mm');
 		cy.get('#create-order-form').within(function () {
 			cy.createScheduledOrder(this.customer, pickupTime, dropoffTime, "MTB")
 			cy.get('#outsource-courier').click().wait(FIVE_SECONDS).end()
