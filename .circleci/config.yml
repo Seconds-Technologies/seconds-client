@@ -7,6 +7,8 @@ executors:
     resource_class: medium
     docker:
       - image: "cypress/browsers:node16.13.0-chrome95-ff94"
+    environment:
+      API_KEY: h5tUvrDlLvIBQ3A72Nh2SNA6
 workflows:
   build:
     jobs:
@@ -15,3 +17,5 @@ workflows:
           yarn: true
           executor: with-chrome
           config-file: staging-config.json
+          tags: 'staging'
+          store_artifacts: true
