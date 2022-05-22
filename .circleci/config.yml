@@ -41,6 +41,7 @@ workflows:
           store_artifacts: true
           parallel: true
           parallelism: 3
+          spec: cypress/integration/0-auth/*
           post-steps:
             - slack/notify:
                 branch_pattern: 'dev,testing'
