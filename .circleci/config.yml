@@ -14,9 +14,20 @@ workflows:
     jobs:
       - cypress/install:
           build: yarn build
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - testing
       - cypress/run:
           requires:
             - cypress/install
+          filters:
+            branches:
+              only:
+                - testing
+                - dev
           no-workspace: true
           yarn: true
           executor: with-chrome
@@ -25,3 +36,18 @@ workflows:
           store_artifacts: true
           parallel: true
           parallelism: 3
+      - cypress/run:
+          requires:
+            - cypress/install
+          no-workspace: true
+          yarn: true
+          executor: with-chrome
+          config-file: production-config.json
+          tags: 'production'
+          store_artifacts: true
+          parallel: true
+          parallelism: 3
+          filters:
+            branches:
+              only:
+                - master
