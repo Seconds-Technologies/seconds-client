@@ -22,6 +22,8 @@ workflows:
                 - master
                 - dev
                 - testing
+          parallel: true
+          parallelism: 2
       - cypress/run:
           requires:
             - cypress/install
