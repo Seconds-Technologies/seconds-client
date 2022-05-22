@@ -26,6 +26,8 @@ workflows:
       - cypress/run:
           requires:
             - cypress/install
+          context:
+            - Slack
           filters:
             branches:
               only:
@@ -55,6 +57,8 @@ workflows:
       - cypress/run:
           requires:
             - cypress/install
+          context:
+            - Slack
           no-workspace: true
           yarn: true
           executor: with-chrome
