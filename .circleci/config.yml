@@ -45,7 +45,6 @@ workflows:
               only:
                 - testing
                 - dev
-          record: true
           no-workspace: true
           yarn: true
           executor: with-chrome
@@ -75,7 +74,6 @@ workflows:
               only:
                 - testing
                 - dev
-          record: true
           no-workspace: true
           yarn: true
           executor: with-chrome
