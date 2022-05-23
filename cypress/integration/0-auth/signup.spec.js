@@ -16,9 +16,7 @@ const validIndex = Math.floor(Math.random() * 500);
 function cleanup() {
 	cy.restoreLocalStorage();
 	const email = this.user.email;
-	cy.log(email)
 	cy.getLocalStorage('jwt_token').then(function(jwtToken) {
-		cy.log(jwtToken);
 		cy.request({
 			method: 'DELETE',
 			url: `${serverURL}/server/auth/delete`,
@@ -153,20 +151,13 @@ describe('Successful User Signup', () => {
 			cy.root().submit().wait(delay).url().should('include', '/1');
 			cy.saveLocalStorage();
 		});
-	})
 
-	it('Choose Payment Plan', function() {
-		cy.restoreLocalStorage();
 		cy.visit(signupURL1)
 		cy.get('#signup-product-plans').within(function() {
 			cy.get('#growth').click();
 			cy.url().should('include', '/2');
 		});
-		cy.saveLocalStorage()
-	})
 
-	it('Enter Payment Details', function() {
-		cy.restoreLocalStorage()
 		cy.get('#payment-form').within(function() {
 			cy.get('#card-holder-name').type(`${this.user.firstname} ${this.user.lastname}`);
 			cy.get('#card-holder-email').type(this.user.email);
@@ -176,11 +167,7 @@ describe('Successful User Signup', () => {
 			cy.fillElementsInput('postalCode', 'RM10 8EH');
 			cy.root().submit().wait(FIVE_SECONDS).url().should('include', '/home');
 		});
-		cy.saveLocalStorage()
-	})
 
-	it('Create New Location', function(){
-		cy.restoreLocalStorage()
 		cy.get('#create-location-form').within(function() {
 			cy.get('#location-name').type('Seconds HQ');
 			cy.get('#business-name').type(this.user.company);
@@ -190,6 +177,5 @@ describe('Successful User Signup', () => {
 			cy.get('#postcode').type(this.user.postcode);
 			cy.root().submit().wait(FIVE_SECONDS).get('#create-location-form').should('not.exist');
 		});
-		cy.saveLocalStorage()
-	});
+	})
 });

@@ -9,14 +9,27 @@ executors:
     resource_class: medium
     docker:
       - image: "cypress/browsers:node16.13.0-chrome95-ff94"
-    environment:
-      API_KEY: h5tUvrDlLvIBQ3A72Nh2SNA6
 workflows:
   heroku_deploy:
     jobs:
       - heroku/deploy-via-git:
+          requires:
+            - cypress/run
           context:
             - Staging
+          filters:
+            branches:
+              only:
+                - dev
+      - heroku/deploy-via-git:
+          requires:
+            - cypress/run
+          context:
+            - Production
+          filters:
+            branches:
+              only:
+                - master
   build:
     jobs:
       - cypress/install:
@@ -34,17 +47,18 @@ workflows:
             - cypress/install
           context:
             - Slack
+            - Staging
           filters:
             branches:
               only:
                 - testing
                 - dev
+          record: true
           no-workspace: true
           yarn: true
           executor: with-chrome
           config-file: staging-config.json
           tags: 'staging'
-          store_artifacts: true
           parallel: true
           parallelism: 3
           spec: cypress/integration/0-auth/*
@@ -64,6 +78,11 @@ workflows:
             - cypress/install
           context:
             - Slack
+            - Production
+          filters:
+            branches:
+              only:
+                - master
           no-workspace: true
           yarn: true
           executor: with-chrome
@@ -72,10 +91,6 @@ workflows:
           store_artifacts: true
           parallel: true
           parallelism: 3
-          filters:
-            branches:
-              only:
-                - master
           post-steps:
             - slack/notify:
                 branch_pattern: master
