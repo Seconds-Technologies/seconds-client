@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  heroku: circleci/heroku@1.2.6
   slack: circleci/slack@4.4.4
   cypress: cypress-io/cypress@1
 executors:
@@ -11,6 +12,11 @@ executors:
     environment:
       API_KEY: h5tUvrDlLvIBQ3A72Nh2SNA6
 workflows:
+  heroku_deploy:
+    jobs:
+      - heroku/deploy-via-git:
+          context:
+            - Staging
   build:
     jobs:
       - cypress/install:

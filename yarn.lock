@@ -8432,6 +8432,14 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
+cypress-data-session@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cypress-data-session/-/cypress-data-session-2.0.0.tgz#9196501490cbfccfd3e907cbaf0a59d94cb61a6d"
+  integrity sha512-OlfBSP/EBe5fHPnrM6TGe4NqXq77UZ9gY3rgjo45Crxm/qajZvCNrG05XYzlvdan1RBbimhvUmkAidt5vVd8eA==
+  dependencies:
+    debug "^4.3.2"
+    simple-sha256 "^1.1.0"
+
 cypress-localstorage-commands@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/cypress-localstorage-commands/-/cypress-localstorage-commands-1.7.0.tgz#39840973de0a861d50b82f9fa548331db5973f5f"
@@ -16958,6 +16966,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.5.tgz#9e3e8cc0c75a99472b44321033a7702e7738252f"
   integrity sha512-KWcOiKeQj6ZyXx7zq4YxSMgHRlod4czeBQZrPb8OKcohcqAXShm7E20kEMle9WBt26hFcAf0qLOcp5zmY7kOqQ==
+
+simple-sha256@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/simple-sha256/-/simple-sha256-1.1.0.tgz#e6d245a932e70ba45fc1699321e3cc3f82a1d605"
+  integrity sha512-jMdj+5MR1dRiFbrQ8idmkPv+HCoJEmJVBBwc0vQQz4Gtg3PEkjdpVxUM4BSwK898zhNP/ub3vcP9edw47EHuLQ==
 
 simple-swizzle@^0.2.2:
   version "0.2.2"
