@@ -92,15 +92,17 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "start-test 3000 cy:run",
     "eject": "react-scripts eject",
+    "dev": "start-test 3000 cy:open",
     "scss": "node-sass --watch src/scss -o css",
-    "build:prod": "ng build --prod",
     "cy:open": "npx cypress open",
     "cy:run": "npx cypress run",
     "cy:run-record": "npx cypress run --record",
-    "cy:run-staging": "npx cypress run --record --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
-    "cy:run-production": "cy:run --record --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7 --spec \"cypress/integration/0 - auth/signup.spec.js\""
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:record:chrome": "cypress run --record --browser chrome",
+    "cy:run:staging:all": "npx cypress run --record --config-file staging-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7",
+    "cy:run:production:all": "cy:run --record --config-file production-config.json --key 2b4eec4c-bbbd-44c3-931c-99aaac582ac7 --spec \"cypress/integration/0 - auth/signup.spec.js\""
   },
   "eslintConfig": {
     "extends": [
@@ -133,6 +135,7 @@
     "@faker-js/faker": "^6.1.2",
     "cypress-data-session": "^2.0.0",
     "cypress-localstorage-commands": "^1.7.0",
-    "prettier": "^2.3.1"
+    "prettier": "^2.3.1",
+    "start-server-and-test": "^1.14.0"
   }
 }

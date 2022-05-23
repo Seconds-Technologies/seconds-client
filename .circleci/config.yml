@@ -9,8 +9,19 @@ executors:
     resource_class: medium
     docker:
       - image: "cypress/browsers:node16.13.0-chrome95-ff94"
+jobs:
+  build_success:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - run: echo "sending slack notification"
+      - slack/notify:
+          branch_pattern: dev
+          mentions: '<@U02F5S5T0F3>'
+          template: basic_success_1
+          event: pass
 workflows:
-  build:
+  build_and_deploy:
     jobs:
       - cypress/install:
           yarn: true
@@ -23,7 +34,7 @@ workflows:
                 - dev
                 - testing
       - cypress/run:
-          name: cypress-staging
+          name: cypress-staging-auth
           requires:
             - cypress/install
           context:
@@ -43,15 +54,48 @@ workflows:
           parallel: true
           parallelism: 3
           spec: cypress/integration/0-auth/*
+          group: Auth Flow
           post-steps:
+            - store_test_results:
+                path: cypress/results/0-auth
             - slack/notify:
-                branch_pattern: 'dev,testing'
-                mentions: '@Chisom'
+                branch_pattern: 'dev'
+                mentions: '<@U02F5S5T0F3>'
                 template: basic_success_1
                 event: pass
             - slack/notify:
-                branch_pattern: 'dev,testing'
-                mentions: '@Chisom'
+                branch_pattern: 'dev'
+                mentions: '<@U02F5S5T0F3>'
+                template: basic_fail_1
+                event: fail
+      - cypress/run:
+          name: cypress-staging-orders
+          requires:
+            - cypress/install
+          context:
+            - Slack
+            - Staging
+          filters:
+            branches:
+              only:
+                - testing
+                - dev
+          record: true
+          no-workspace: true
+          yarn: true
+          executor: with-chrome
+          config-file: staging-config.json
+          tags: 'staging'
+          parallel: true
+          parallelism: 3
+          spec: cypress/integration/1-orders/*
+          group: Orders
+          post-steps:
+            - store_test_results:
+                path: cypress/results/1-orders
+            - slack/notify:
+                branch_pattern: 'dev'
+                mentions: '<@U02F5S5T0F3>'
                 template: basic_fail_1
                 event: fail
       - cypress/run:
@@ -76,17 +120,16 @@ workflows:
           post-steps:
             - slack/notify:
                 branch_pattern: master
-                mentions: '@Chisom'
-                template: basic_success_1
-                event: pass
-            - slack/notify:
-                branch_pattern: master
-                mentions: '@Chisom'
+                mentions: '<@U02F5S5T0F3>'
                 template: basic_fail_1
                 event: fail
+      - build_success:
+          requires:
+            - cypress-staging-auth
+            - cypress-staging-orders
       - heroku/deploy-via-git:
           requires:
-            - cypress-staging
+            - cypress-staging-orders
           context:
             - Staging
           filters:
