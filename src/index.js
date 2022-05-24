@@ -1,5 +1,7 @@
 import 'intro.js/introjs.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import './scss/style.scss';
+import 'bootstrap/dist/js/bootstrap.min';
 import mapboxgl from 'mapbox-gl';
 import awsconfig from './aws-exports';
 import './assets/fonts/Roboto/Roboto-Regular.ttf';
@@ -12,19 +14,18 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { persistor, store } from './store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import './scss/style.scss';
-import 'bootstrap/dist/js/bootstrap.min';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
-
+import objectSupport from 'dayjs/plugin/objectSupport';
 import dayjs from 'dayjs';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(calendar);
+dayjs.extend(objectSupport)
 
 dayjs.tz.setDefault('Europe/London');
 

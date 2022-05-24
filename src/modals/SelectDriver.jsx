@@ -100,6 +100,7 @@ const SelectDriver = ({ show, onHide, drivers, showConfirmDialog, selectDriver, 
 					</table>
 					{showCreateBtn && <div className='d-flex justify-content-end align-content-center'>
 						<button
+							id="create-unassigned"
 							role="button"
 							className='action-button'
 							onClick={() => {
