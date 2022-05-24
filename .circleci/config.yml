@@ -38,6 +38,7 @@ workflows:
           requires:
             - cypress/install
           context:
+            - Cypress
             - Slack
             - Staging
           filters:
@@ -67,6 +68,7 @@ workflows:
           requires:
             - cypress/install
           context:
+            - Cypress
             - Slack
             - Staging
           filters:
@@ -96,6 +98,7 @@ workflows:
           requires:
             - cypress/install
           context:
+            - Cypress
             - Slack
             - Production
           filters:

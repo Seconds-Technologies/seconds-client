@@ -1,5 +1,5 @@
 import './deliveryTimes.css';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Switch from 'react-switch';
 import { Formik } from 'formik';
 import dayjs from 'dayjs';
@@ -16,10 +16,6 @@ const DeliveryTimes = ({ show, onHide }) => {
 	const dispatch = useDispatch();
 	const { email, deliveryHours } = useSelector(state => state['currentUser'].user);
 	const [toastMessage, setToast] = useState('');
-
-	useEffect(() => {
-		console.log(deliveryHours)
-	}, [deliveryHours])
 
 	return (
 		<Modal show={show} onHide={onHide} className='delivery-times' centered size='xl'>
