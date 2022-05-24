@@ -62,6 +62,8 @@ Cypress.Commands.add('createScheduledOrder', function(customer, pickupTime, drop
 	cy.get('#dropoff-datetime').type(dropoffTime);
 	cy.get('#dropoff-instructions').type('Ring door bell');
 });
+
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
