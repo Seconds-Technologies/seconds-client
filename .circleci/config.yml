@@ -32,7 +32,6 @@ workflows:
               only:
                 - master
                 - dev
-                - testing
       - cypress/run:
           name: cypress/staging/auth
           requires:
@@ -44,7 +43,6 @@ workflows:
           filters:
             branches:
               only:
-                - testing
                 - dev
           no-workspace: true
           yarn: true
@@ -74,7 +72,6 @@ workflows:
           filters:
             branches:
               only:
-                - testing
                 - dev
           no-workspace: true
           yarn: true
