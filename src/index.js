@@ -19,6 +19,7 @@ import timezone from 'dayjs/plugin/timezone';
 import duration from 'dayjs/plugin/duration';
 import calendar from 'dayjs/plugin/calendar';
 import objectSupport from 'dayjs/plugin/objectSupport';
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import dayjs from 'dayjs';
 
 dayjs.extend(utc);
@@ -26,6 +27,7 @@ dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(calendar);
 dayjs.extend(objectSupport)
+dayjs.extend(customParseFormat)
 
 dayjs.tz.setDefault('Europe/London');
 
