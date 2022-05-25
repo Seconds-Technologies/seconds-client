@@ -17,8 +17,8 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 					}}
 					onSubmit={onSubmit}
 				>
-					{({ values, handleBlur, handleChange, setFieldValue }) => (
-						<div className='container-fluid'>
+					{({ values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
+						<form onSubmit={handleSubmit} className='container-fluid'>
 							<div className='d-flex justify-content-between mb-3'>
 								<h1 className='fs-4 font-header'>New Multi-Drop Order</h1>
 								<button type='button' className='btn-close shadow-none' aria-label='Close' onClick={onHide} />
@@ -54,7 +54,6 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 										onChange={handleChange}
 										onBlur={handleBlur}
 										min={dayjs(values.startTime).format('YYYY-MM-DDTHH:mm')}
-										// max={dayjs(values.startTime).set('hour', 23).set('minute', 59).format('YYYY-MM-DDTHH:mm')}
 										required
 									/>
 								</div>
@@ -67,7 +66,7 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 									const { dropoffLocation, dropoffStartTime, dropoffEndTime } = deliveries[0];
 									return (
 										<div key={index} className='list-group-item list-group-item-action' aria-current='true'>
-											<span className='fs-5'>{dropoffLocation.fullAddress}</span>
+											<span className='fs-5'><span className="font-bold">{index+1}.&nbsp;</span>{dropoffLocation.fullAddress}</span>
 											<Formik
 												enableReinitialize
 												initialValues={{
@@ -137,7 +136,7 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 									Get Quotes
 								</Button>
 							</div>
-						</div>
+						</form>
 					)}
 				</Formik>
 			</div>
