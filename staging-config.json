@@ -4,7 +4,7 @@
   "baseUrl": "https://dev.useseconds.com",
   "env": {
     "ENV": "staging",
-    "LANDING_PAGE_URL": "https://seconds-landing-brt6ozrlz-seconds-technologies.vercel.app",
+    "LANDING_PAGE_URL": "https://seconds-landing-ebl739n3k-seconds-technologies.vercel.app",
     "API_KEY": "Pt3UuALQapVODqbtQAWEUUvC",
     "API_URL": "https://seconds-api-dev.herokuapp.com",
     "SERVER_URL": "https://seconds-app-server-dev.herokuapp.com",

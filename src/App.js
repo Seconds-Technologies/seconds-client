@@ -1,17 +1,14 @@
 import './App.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
-import dayjs from 'dayjs';
-import { Steps } from 'intro.js-react';
 // routes
 import routes from './routes/routes';
-import { PATHS } from './constants';
 // layouts
 import Sidebar from './layout/sidebar/Sidebar';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthorizationToken, syncUser, updateCurrentUser, updateProfile } from './store/actions/auth';
+import { setAuthorizationToken, syncUser } from './store/actions/auth';
 import { ChatWidget } from '@papercups-io/chat-widget';
 import CreateLocation from './modals/CreateLocation';
 // material UI
@@ -30,35 +27,17 @@ if (localStorage.getItem('jwt_token')) {
 	setAuthorizationToken(localStorage.getItem('jwt_token'));
 }
 
+const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
+const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
+const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
 const MAGICBELL_API_KEY = process.env.REACT_APP_MAGIC_BELL_API_KEY
 
 function App() {
 	const location = useLocation();
 	const dispatch = useDispatch();
-	const [hintsEnabled, setHintsEnabled] = useState(false);
-	const [steps, setSteps] = useState([
-		{
-			intro: 'Welcome to the Seconds dashboard. Lets walk you through the basics'
-		},
-		{
-			element: '.featured-container',
-			intro: 'Here you can see your delivery overview with all the essential information'
-		},
-		{
-			element: '#time-filter',
-			intro: 'You can filter the stats based on time period here'
-		},
-		{
-			element: '.map-container',
-			intro: "Here we show an interactive map of your store's location. The map will populate with markers as new orders come in"
-		},
-		{
-			intro: "Click the 'Orders' icon in the sidebar to continue the tour"
-		}
-	]);
 	const {
 		isAuthenticated,
-		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress, lastLogin }
+		user: { id, firstname, lastname, email, subscriptionPlan, fullAddress }
 	} = useSelector(state => state['currentUser']);
 
 	useEffect(() => {
@@ -68,12 +47,6 @@ function App() {
 				.catch(err => console.error('USER SYNC FAILED!', err));
 	}, [isAuthenticated]);
 
-	const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
-	const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
-	const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
-
-	const stepsRef = useRef(null);
-
 	const theme = createTheme({
 		palette: {
 			neutral: {
@@ -82,20 +55,6 @@ function App() {
 			}
 		}
 	});
-
-	const stepsEnabled = useMemo(() => {
-		return Boolean(isAuthenticated && fullAddress && !lastLogin && location.pathname === PATHS.HOME);
-	}, [isAuthenticated, fullAddress, lastLogin, location]);
-
-	const onBeforeChange = useCallback(
-		nextStepIndex => {
-			if (nextStepIndex === 4) {
-				setHintsEnabled(true);
-				stepsRef.current.updateStepElement(nextStepIndex);
-			}
-		},
-		[stepsRef]
-	);
 
 	return (
 		<GeolocationContextProvider>
@@ -119,33 +78,8 @@ function App() {
 									<IntercomProvider appId={stuartAppId} shouldInitialize={process.env.NODE_ENV === 'production'}>
 										<Router>
 											<div className='app-container'>
-												{isAuthenticated && <Sidebar hintsEnabled={hintsEnabled} />}
-												<CreateLocation open={isAuthenticated && !fullAddress} onClose={() => console.log('closing modal...')} />
-												<Steps
-													ref={stepsRef}
-													enabled={stepsEnabled}
-													steps={steps}
-													initialStep={0}
-													onBeforeChange={onBeforeChange}
-													onExit={() => {
-														setHintsEnabled(false);
-														dispatch(
-															updateProfile({
-																id,
-																lastLogin: dayjs().format()
-															})
-														).then(() => dispatch(updateCurrentUser({ lastLogin: dayjs().format() })));
-													}}
-													options={{
-														hideNext: true,
-														exitOnOverlayClick: false,
-														showStepNumbers: true,
-														showBullets: false,
-														showProgress: true,
-														skipLabel: 'Skip',
-														doneLabel: 'Done',
-													}}
-												/>
+												{isAuthenticated && <Sidebar />}
+												<CreateLocation open={isAuthenticated && !fullAddress}  onClose={() => console.log("New Location Created")}/>
 												{routes}
 											</div>
 											{isAuthenticated && (

@@ -1,5 +1,5 @@
 import './Dashboard.css';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import FeaturedInfo from '../../components/featuredInfo/FeaturedInfo';
 import Map from '../../components/Map/Map';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,14 +7,32 @@ import { Mixpanel } from '../../config/mixpanel';
 import { STATUS } from '../../constants';
 import { removeError } from '../../store/actions/errors';
 import TimeFilter from '../../components/TimeFilter';
+import { Steps } from 'intro.js-react';
+import { toggleTourHints, updateDashboardTour } from '../../store/actions/onboarding';
 
 const Dashboard = props => {
+	const dispatch = useDispatch();
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
 	const {
-		company,
-		address,
-	} = useSelector(state => state['currentUser'].user);
-	const dispatch = useDispatch();
+		user: { company, address, fullAddress, lastLogin }
+	} = useSelector(state => state['currentUser']);
+	const { dashboard } = useSelector(state => state['onboardingStore']);
+
+	const stepsRef = useRef(null);
+
+	const stepsEnabled = useMemo(() => {
+		return Boolean(fullAddress && !lastLogin && dashboard.stepsEnabled);
+	}, [fullAddress, dashboard, lastLogin]);
+
+	const onBeforeChange = useCallback(
+		nextStepIndex => {
+			if (nextStepIndex === 4) {
+				dispatch(toggleTourHints({ hintsEnabled: true, hints: dashboard.hints }));
+				stepsRef.current.updateStepElement(nextStepIndex);
+			}
+		},
+		[stepsRef]
+	);
 
 	const activeCustomers = useSelector(state =>
 		state['deliveryJobs'].allJobs
@@ -55,16 +73,25 @@ const Dashboard = props => {
 		() =>
 			activeCustomers
 				.filter(({ dropoffLocation: { latitude, longitude } }) => latitude && longitude)
-				.map(({ orderNumber, id, driverName, driverId, provider, dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude } }) => ({
-					orderNumber,
-					customerName: `${firstName} ${lastName}`,
-					fullAddress,
-					driverId,
-					driverName,
-					provider,
-					deliveryId: id,
-					coords: [longitude, latitude]
-				})),
+				.map(
+					({
+						orderNumber,
+						id,
+						driverName,
+						driverId,
+						provider,
+						dropoffLocation: { firstName, lastName, fullAddress, latitude, longitude }
+					}) => ({
+						orderNumber,
+						customerName: `${firstName} ${lastName}`,
+						fullAddress,
+						driverId,
+						driverName,
+						provider,
+						deliveryId: id,
+						coords: [longitude, latitude]
+					})
+				),
 		[activeCustomers]
 	);
 
@@ -74,7 +101,33 @@ const Dashboard = props => {
 	}, [props.location]);
 
 	return (
-		<div id="dashboard-page" className='page-container'>
+		<div id='dashboard-page' className='page-container'>
+			<Steps
+				ref={stepsRef}
+				enabled={stepsEnabled}
+				steps={dashboard.steps}
+				initialStep={0}
+				onBeforeChange={onBeforeChange}
+				onExit={() => {
+					dispatch(updateDashboardTour({ stepsEnabled: false }));
+					/*dispatch(updateCurrentUser({ lastLogin: dayjs().format() }));
+					dispatch(
+						updateProfile({
+							id,
+							lastLogin: dayjs().format()
+						})
+					);*/
+				}}
+				options={{
+					exitOnEsc: true,
+					exitOnOverlayClick: false,
+					showStepNumbers: true,
+					showBullets: false,
+					showProgress: true,
+					skipLabel: 'Skip',
+					doneLabel: 'Done'
+				}}
+			/>
 			<div className='d-flex justify-content-between px-4 pt-3'>
 				<div className='d-flex flex-column justify-content-center'>
 					<span className='dashboard-header mb-3'>
@@ -83,7 +136,7 @@ const Dashboard = props => {
 				</div>
 				<TimeFilter current={active} onSelect={setActive} />
 			</div>
-			<FeaturedInfo id="dashboard" interval={active.id} />
+			<FeaturedInfo id='dashboard' interval={active.id} />
 			<Map
 				styles='mt-4'
 				busy={courierLocations.length || customerLocations.length}

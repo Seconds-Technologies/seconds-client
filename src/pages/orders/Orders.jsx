@@ -48,6 +48,7 @@ import { DELETE_TYPES } from '../drivers/constants';
 import DeleteModal from '../drivers/modals/DeleteModal';
 import { deleteJobs } from '../../store/actions/delivery';
 import { assemblePayload } from '../../helpers';
+import { toggleTourHints } from '../../store/actions/onboarding';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 
@@ -248,6 +249,7 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
+		dispatch(toggleTourHints({hintsEnabled: false, hints: []}))
 		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
