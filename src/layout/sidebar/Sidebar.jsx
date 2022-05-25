@@ -13,8 +13,7 @@ import { PATHS } from '../../constants';
 import logo from '../../assets/img/logo.svg';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { logout } from '../../store/actions/auth';
-import { useNotifications } from '@magicbell/magicbell-react';
-import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+import { FloatingNotificationInbox, useNotifications } from '@magicbell/magicbell-react';
 // material UI
 import Badge from '@mui/material/Badge';
 import styled from '@mui/material/styles/styled';
@@ -22,6 +21,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { Hints } from 'intro.js-react';
 import { TabContext } from '../../context';
 import Link from '../../components/Link';
+import { toggleTourHints } from '../../store/actions/onboarding';
 
 const Sidebar = () => {
 	const { dispatch: switchTab } = useContext(TabContext);
@@ -55,6 +55,7 @@ const Sidebar = () => {
 		<div ref={launcherRef} className='sidebar-container bg-light border border-1'>
 			<Hints
 				enabled={hintsEnabled}
+				onClick={() => dispatch(toggleTourHints({hintsEnabled: false, hints: []}))}
 				hints={hints}
 				options={{
 					hintAnimation: true

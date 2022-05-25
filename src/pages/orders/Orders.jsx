@@ -4,8 +4,9 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, PLATFORMS, PATHS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
+import { BACKGROUND, PATHS, PLATFORMS, PROVIDERS, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
 import {
+	deleteJobs,
 	getAllQuotes,
 	manuallyDispatchJob,
 	manuallyDispatchRoute,
@@ -46,9 +47,7 @@ import SuccessToast from '../../modals/SuccessToast';
 import CustomFooter from '../../components/CustomFooter';
 import { DELETE_TYPES } from '../drivers/constants';
 import DeleteModal from '../drivers/modals/DeleteModal';
-import { deleteJobs } from '../../store/actions/delivery';
 import { assemblePayload } from '../../helpers';
-import { toggleTourHints } from '../../store/actions/onboarding';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 
@@ -249,7 +248,6 @@ export default function Orders(props) {
 	];
 
 	useEffect(() => {
-		dispatch(toggleTourHints({hintsEnabled: false, hints: []}))
 		Mixpanel.people.increment('page_views');
 		apiKey && dispatch(subscribe(apiKey, email));
 		return () => apiKey && dispatch(unsubscribe());
