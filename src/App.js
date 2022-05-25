@@ -142,7 +142,8 @@ function App() {
 														showStepNumbers: true,
 														showBullets: false,
 														showProgress: true,
-														skipLabel: 'Skip'
+														skipLabel: 'Skip',
+														doneLabel: 'Done',
 													}}
 												/>
 												{routes}
