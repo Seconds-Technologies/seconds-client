@@ -85,6 +85,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 											<p>These are the allocated time slots that drivers can take breaks during their job</p>
 											<div className='w-100'>
 												<TextField
+													disabled
 													name='breakPeriod.label'
 													helperText="Enter a useful name for the break period e.g. 'lunch time'"
 													id='standard-basic'
@@ -97,6 +98,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 													<div className='d-flex flex-column flex-grow-1 me-2'>
 														<label htmlFor=''>Start</label>
 														<input
+															disabled
 															name='breakPeriod.start'
 															className='form-control form-control-sm rounded-3'
 															type='time'
@@ -108,6 +110,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 													<div className='d-flex flex-column flex-grow-1 ms-2'>
 														<label htmlFor=''>End</label>
 														<input
+															disabled
 															name='breakPeriod.end'
 															className='form-control form-control-sm rounded-3'
 															type='time'
@@ -123,6 +126,7 @@ const RouteOptimization = ({ show, onHide, orders, onSubmit, availableVehicles, 
 												<div>
 													<label htmlFor=''>Duration (mins)</label>
 													<input
+														disabled
 														name='breakPeriod.duration'
 														className='form-control form-control-sm rounded-3 w-50'
 														min={0}

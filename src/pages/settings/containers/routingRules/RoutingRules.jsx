@@ -63,6 +63,7 @@ const RoutingRules = props => {
 							<div>
 								<div className='form-check'>
 									<input
+										disabled={!values.autoBatch.enabled}
 										className='form-check-input'
 										type='radio'
 										name='defaultBatchMode'
@@ -76,6 +77,7 @@ const RoutingRules = props => {
 								</div>
 								<div className='form-check'>
 									<input
+										disabled={!values.autoBatch.enabled}
 										className='form-check-input'
 										type='radio'
 										name='defaultBatchMode'
@@ -95,6 +97,7 @@ const RoutingRules = props => {
 											Same day batch deadline
 										</label>
 										<input
+											disabled={!values.autoBatch.enabled}
 											id='daily-batch-deadline'
 											defaultValue={values.autoBatch.daily.deadline}
 											type='time'
@@ -118,6 +121,7 @@ const RoutingRules = props => {
 											Driver pickup time
 										</label>
 										<input
+											disabled={!values.autoBatch.enabled}
 											id='daily-pickup-time'
 											defaultValue={values.autoBatch.daily.pickupTime}
 											type='time'
@@ -151,6 +155,7 @@ const RoutingRules = props => {
 										<div className='d-flex' style={{ width: 500 }}>
 											<span className='px-4'>2&nbsp;hrs</span>
 											<Slider
+												disabled={!values.autoBatch.enabled}
 												name='autoBatch.incremental.batchInterval'
 												color='secondary'
 												aria-label='courier-price-threshold'
@@ -179,6 +184,7 @@ const RoutingRules = props => {
 										</div>
 										<div className='input-group' style={{ width: 200 }}>
 											<input
+												disabled={!values.autoBatch.enabled}
 												defaultValue={values.autoBatch.incremental.waitTime}
 												type='number'
 												min={0}
