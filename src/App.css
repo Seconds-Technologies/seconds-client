@@ -23,6 +23,11 @@
   border: pink solid 4px;
 }
 
+.font-header {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+}
+
 .font-normal {
   font-family: 'Inter-Regular', sans-serif;
 }

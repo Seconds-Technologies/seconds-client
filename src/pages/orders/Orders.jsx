@@ -50,6 +50,7 @@ import DeleteModal from '../drivers/modals/DeleteModal';
 import { assemblePayload } from '../../helpers';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
+import MultiDrop from './modals/MultiDrop';
 
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
@@ -62,6 +63,7 @@ export default function Orders(props) {
 	const drivers = useSelector(state => state['driversStore']);
 	const [provider, selectProvider] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
+	const [multiDropModal, showMultiDrop] = useState({ show: false, orders: [], startTime: null, endTime: null });
 	const [selectDriverModal, showDriversModal] = useState({ show: false, drivers });
 	const [params, setParams] = useState({});
 	const [assignModal, showAssignModal] = useState(false);
@@ -347,6 +349,20 @@ export default function Orders(props) {
 		}
 	}, [provider]);
 
+	const calculateTimeWindow = useCallback(orders => {
+		const firstOrder = orders.shift();
+		let earliestPickupTime = firstOrder['jobSpecification'].pickupStartTime;
+		let latestDropoffTime = firstOrder['jobSpecification'].deliveries[0].dropoffEndTime;
+		orders.map(({ jobSpecification: { pickupStartTime, deliveries } }) => {
+			let pickupTime = pickupStartTime;
+			let dropoffTime = deliveries[0].dropoffEndTime;
+			console.table({ pickupTime, dropoffTime });
+			earliestPickupTime = dayjs(pickupTime).isBefore(earliestPickupTime, 'm') ? pickupTime : earliestPickupTime;
+			latestDropoffTime = dayjs(dropoffTime).isAfter(latestDropoffTime, 'm') ? dropoffTime : latestDropoffTime;
+		});
+		return { startTime: dayjs(earliestPickupTime).format('YYYY-MM-DDTHH:mm'), endTime: dayjs(latestDropoffTime).format('YYYY-MM-DDTHH:mm') };
+	}, []);
+
 	const validateTimeWindows = useCallback(
 		(start, end) => {
 			let badOrders = [];
@@ -499,6 +515,19 @@ export default function Orders(props) {
 					defaultStartTime={dayjs(deliveryHours[dayjs().day()].open).format('YYYY-MM-DDTHH:mm')}
 					defaultEndTime={dayjs(deliveryHours[dayjs().day()].close).format('YYYY-MM-DDTHH:mm')}
 				/>
+				<MultiDrop
+					show={multiDropModal.show}
+					onHide={() => showMultiDrop(prevState => ({ ...prevState, show: false }))}
+					orders={multiDropModal.orders}
+					onSubmit={values => console.log(values)}
+					onUpdate={(values, jobId) => {
+						dispatch(updateDelivery(apiKey, jobId, values))
+							.then(message => setToast(message))
+							.catch(err => console.error(err));
+					}}
+					startTime={multiDropModal.startTime}
+					endTime={multiDropModal.endTime}
+				/>
 				<DeleteModal
 					data={allJobs
 						.filter(job => selectionModel.includes(job['jobSpecification'].orderNumber))
@@ -541,10 +570,7 @@ export default function Orders(props) {
 					checkboxSelection
 					autoPageSize
 					pagination
-					onSelectionModelChange={newSelectionModel => {
-						setSelectionModel(newSelectionModel);
-						console.log(newSelectionModel);
-					}}
+					onSelectionModelChange={newSelectionModel => setSelectionModel(newSelectionModel)}
 					selectionModel={selectionModel}
 					components={{
 						NoRowsOverlay: CustomNoRowsOverlay,
@@ -557,9 +583,21 @@ export default function Orders(props) {
 							subtitle: "To create an order, navigate to the 'Create' page"
 						},
 						toolbar: {
-							toggleShow: () => {
+							showMultiDrop: () => {
+								const orders = allJobs.filter(job => selectionModel.includes(job['jobSpecification'].orderNumber));
+								const { startTime, endTime } = calculateTimeWindow(orders);
+								console.table({ startTime, endTime });
+								showMultiDrop(prevState => ({
+									show: true,
+									orders,
+									startTime,
+									endTime
+								}));
+							},
+							showRouteOpt: () => {
 								showOptRoutes(true);
 							},
+							canMultiDrop: selectionModel.length >= 3,
 							canOptimize
 						},
 						footer: {
