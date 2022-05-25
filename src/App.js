@@ -120,9 +120,7 @@ function App() {
 										<Router>
 											<div className='app-container'>
 												{isAuthenticated && <Sidebar hintsEnabled={hintsEnabled} />}
-												{isAuthenticated && !fullAddress && (
-													<CreateLocation open={true} onClose={() => console.log('closing modal...')} />
-												)}
+												<CreateLocation open={isAuthenticated && !fullAddress} onClose={() => console.log('closing modal...')} />
 												<Steps
 													ref={stepsRef}
 													enabled={stepsEnabled}
