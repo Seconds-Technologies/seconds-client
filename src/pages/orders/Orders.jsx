@@ -301,6 +301,14 @@ export default function Orders(props) {
 		return uniqueVehicles.map(code => VEHICLE_TYPES.find(item => item.value === code));
 	}, [drivers]);
 
+	const canMultiDrop = useMemo(() => {
+		const allUnassigned = selectionModel.every(orderNo => {
+			let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
+			return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
+		});
+		return selectionModel.length >= 3 && allUnassigned
+	}, [selectionModel])
+
 	const canOptimize = useMemo(() => {
 		if (selectionModel.length) {
 			const validPlan = Boolean(features && features.routeOptimization);
@@ -598,7 +606,7 @@ export default function Orders(props) {
 							showRouteOpt: () => {
 								showOptRoutes(true);
 							},
-							canMultiDrop: selectionModel.length >= 3,
+							canMultiDrop,
 							canOptimize
 						},
 						footer: {
