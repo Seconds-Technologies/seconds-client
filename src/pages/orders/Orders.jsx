@@ -525,8 +525,8 @@ export default function Orders(props) {
 							.then(message => setToast(message))
 							.catch(err => console.error(err));
 					}}
-					startTime={multiDropModal.startTime}
-					endTime={multiDropModal.endTime}
+					windowStartTime={multiDropModal.startTime}
+					windowEndTime={multiDropModal.endTime}
 				/>
 				<DeleteModal
 					data={allJobs
@@ -585,7 +585,7 @@ export default function Orders(props) {
 						toolbar: {
 							showMultiDrop: () => {
 								const orders = allJobs.filter(job => selectionModel.includes(job['jobSpecification'].orderNumber));
-								const { startTime, endTime } = calculateTimeWindow(orders);
+								const { startTime, endTime } = calculateTimeWindow(Object.create(orders));
 								console.table({ startTime, endTime });
 								showMultiDrop(prevState => ({
 									show: true,
