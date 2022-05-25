@@ -518,8 +518,9 @@ export default function Orders(props) {
 				<MultiDrop
 					show={multiDropModal.show}
 					onHide={() => showMultiDrop(prevState => ({ ...prevState, show: false }))}
+					orderNumbers={selectionModel}
 					orders={multiDropModal.orders}
-					onSubmit={values => console.log(values)}
+					onSubmit={(values) => alert("Creating MultiDrop...")}
 					onUpdate={(values, jobId) => {
 						dispatch(updateDelivery(apiKey, jobId, values))
 							.then(message => setToast(message))
