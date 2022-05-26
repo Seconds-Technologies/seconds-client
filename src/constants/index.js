@@ -285,5 +285,10 @@ export const HUBRISE_ORDER_STATUSES = {
 	COMPLETED: 'completed'
 }
 
+export const REVIEW_TYPE = {
+	OPTIMIZE: "OPTIMIZE",
+	MULTI_DROP: "MULTI_DROP"
+}
+
 export const onIcon = <div className='switch-icon'>On</div>;
 export const offIcon = <div className='switch-icon'>Off</div>;

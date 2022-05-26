@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { jobRequestSchema } from '../schemas';
 
 export function parseAddress(data, requiresGeoJSON = false) {
-	console.log(data)
+	console.log(data);
 	let address = data[0].address_components;
 	let formattedAddress = {
 		street: '',
@@ -103,7 +103,7 @@ export function analyticsFilterPrevious(data, interval) {
 				return duration > 1 && duration < 2;
 			});
 		case 'week':
-			return data.filter(({  jobSpecification: { pickupStartTime } }) => {
+			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
 				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('week');
 				return duration > 1 && duration < 2;
 			});
@@ -130,7 +130,7 @@ export function analyticsFilterCurrent(data, interval) {
 				return duration < 1;
 			});
 		case 'week':
-			return data.filter(({  jobSpecification: { pickupStartTime } }) => {
+			return data.filter(({ jobSpecification: { pickupStartTime } }) => {
 				let duration = dayjs.duration(dayjs().diff(dayjs(pickupStartTime))).as('week');
 				return duration < 1;
 			});
@@ -150,9 +150,34 @@ export function analyticsFilterCurrent(data, interval) {
 }
 
 export function capitalize(str) {
-	let start = str[0].toUpperCase()
-	const lower = str.slice(1).toLowerCase()
+	let start = str[0].toUpperCase();
+	const lower = str.slice(1).toLowerCase();
 	return start.concat(lower);
+}
+
+export function assembleMultiDropPayload(jobs, vehicleType) {
+	let payload = assemblePayload({ jobSpecification: jobs.shift()['jobSpecification'], vehicleType });
+	jobs.forEach(({ jobSpecification }) => {
+		let drop = jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
+			dropoffFirstName: dropoffLocation.firstName,
+			dropoffLastName: dropoffLocation.lastName,
+			dropoffBusinessName: dropoffLocation.businessName,
+			dropoffAddress: dropoffLocation.fullAddress,
+			dropoffAddressLine1: dropoffLocation.streetAddress,
+			dropoffCity: dropoffLocation.city,
+			dropoffPostcode: dropoffLocation.postcode,
+			dropoffLatitude: dropoffLocation.latitude,
+			dropoffLongitude: dropoffLocation.longitude,
+			dropoffEmailAddress: dropoffLocation.email,
+			dropoffPhoneNumber: dropoffLocation.phoneNumber,
+			dropoffInstructions: dropoffLocation.instructions,
+			packageDropoffEndTime: dropoffEndTime,
+			packageDescription: description
+		}))[0];
+		payload.drops.push(drop);
+	});
+	console.log(payload);
+	return payload;
 }
 
 export function assemblePayload({ jobSpecification, vehicleType }) {
@@ -188,7 +213,7 @@ export function assemblePayload({ jobSpecification, vehicleType }) {
 			packageDropoffEndTime: dropoffEndTime,
 			packageDescription: description
 		})),
-		packageDeliveryType: jobSpecification.deliveryType,
+		packageDeliveryType: jobSpecification['deliveryType'],
 		vehicleType
 	};
 	console.log(payload);

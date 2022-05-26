@@ -4,6 +4,55 @@ import Modal from 'react-bootstrap/Modal';
 import { Formik } from 'formik';
 import dayjs from 'dayjs';
 import Button from 'react-bootstrap/Button';
+import Select, { components } from 'react-select';
+import { VEHICLE_TYPES } from '../../../constants';
+import bicycle from '../../../assets/img/bicycle.svg';
+import motorbike from '../../../assets/img/motorbike.svg';
+import cargobike from '../../../assets/img/cargobike.svg';
+import car from '../../../assets/img/car.svg';
+import van from '../../../assets/img/van.svg';
+
+const Deliveries = ({ index, dropoffLocation }) => (
+	<div key={index} className='list-group-item list-group-item-action' aria-current='true'>
+		<span className='fs-5'>
+			<span className='font-bold'>{index + 1}.&nbsp;</span>
+			{dropoffLocation.fullAddress}
+		</span>
+		<div className='align-items-center' />
+	</div>
+);
+
+const Option = props => {
+	return (
+		<components.Option {...props}>
+			<div className='d-flex align-items-center'>
+				<div className='me-3'>
+					<img
+						src={
+							props.value === 'BIC'
+								? bicycle
+								: props.value === 'MTB'
+									? motorbike
+									: props.value === 'CGB'
+										? cargobike
+										: props.value === 'CAR'
+											? car
+											: van
+						}
+						className='img-fluid'
+						alt=''
+						width={50}
+						height={50}
+					/>
+				</div>
+				<div className='right'>
+					<strong className='title'>{props.data.label}</strong>
+					<div>{props.data.description}</div>
+				</div>
+			</div>
+		</components.Option>
+	);
+};
 
 const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, windowEndTime, onSubmit, onUpdate }) => {
 	return (
@@ -12,12 +61,14 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 				<Formik
 					enableReinitialize
 					initialValues={{
-						startTime: windowStartTime,
-						endTime: windowEndTime,
+						windowStartTime,
+						windowEndTime,
+						vehicleType: '',
+						orderNumbers
 					}}
 					onSubmit={onSubmit}
 				>
-					{({ values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
+					{({ errors, values, handleBlur, handleChange, handleSubmit, setFieldValue }) => (
 						<form onSubmit={handleSubmit} className='container-fluid'>
 							<div className='d-flex justify-content-between mb-3'>
 								<h1 className='fs-4 font-header'>New Multi-Drop Order</h1>
@@ -30,9 +81,9 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 								<div className='col-6'>
 									<label htmlFor=''>Start from</label>
 									<input
-										defaultValue={values.startTime}
+										defaultValue={values.windowStartTime}
 										id='start-time'
-										name='startTime'
+										name='windowStartTime'
 										type='datetime-local'
 										aria-label='start-time'
 										className='form-control form-border rounded-3'
@@ -45,16 +96,32 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 								<div className='col-6'>
 									<label htmlFor=''>End at</label>
 									<input
-										defaultValue={values.endTime}
-										name='endTime'
+										defaultValue={values.windowEndTime}
+										name='windowEndTime'
 										id='end-time'
 										type='datetime-local'
 										className='form-control form-border rounded-3'
 										aria-label='end-time'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										min={dayjs(values.startTime).format('YYYY-MM-DDTHH:mm')}
+										min={dayjs(values.windowStartTime).format('YYYY-MM-DDTHH:mm')}
+										max={dayjs(values.windowStartTime).set('h', 21).set('m', 0).format('YYYY-MM-DDTHH:mm')}
 										required
+									/>
+								</div>
+							</div>
+							<div className="mb-3">
+								<h2 className='fs-5 font-header'>Choose Your Vehicle</h2>
+								<div className="w-50 my-2">
+									<Select
+										menuPlacement='top'
+										id='vehicle-type'
+										name='vehicleType'
+										className='my-2'
+										options={VEHICLE_TYPES}
+										components={{ Option }}
+										onChange={({ value }) => setFieldValue('vehicleType', value)}
+										aria-label='vehicle type selection'
 									/>
 								</div>
 							</div>
@@ -65,75 +132,20 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 								{orders.map(({ _id: jobId, jobSpecification: { orderNumber, pickupStartTime, deliveries } }, index) => {
 									const { dropoffLocation, dropoffStartTime, dropoffEndTime } = deliveries[0];
 									return (
-										<div key={index} className='list-group-item list-group-item-action' aria-current='true'>
-											<span className='fs-5'><span className="font-bold">{index+1}.&nbsp;</span>{dropoffLocation.fullAddress}</span>
-											<Formik
-												enableReinitialize
-												initialValues={{
-													dropoffStartTime: dropoffStartTime ? dropoffStartTime : dayjs().format('YYYY-MM-DDTHH:mm'),
-													dropoffEndTime
-												}}
-												onSubmit={values => onUpdate(values, jobId)}
-											>
-												{({ values, handleChange, handleBlur, handleSubmit }) => (
-													<form onSubmit={handleSubmit} className='align-items-center'>
-														<div className='row my-2'>
-															<div className='col-4'>
-																<label htmlFor='dropoff-start-time' className='w-100'>
-																	Deliver from
-																</label>
-															</div>
-															<div className='col-8'>
-																<input
-																	defaultValue={dayjs(dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
-																	id='dropoff-start-time'
-																	name='dropoffStartTime'
-																	type='datetime-local'
-																	aria-label='dropoff-start-time'
-																	className='form-control form-control-sm rounded-3'
-																	onChange={handleChange}
-																	onBlur={handleBlur}
-																	min={dayjs(windowStartTime).format('YYYY-MM-DDTHH:mm')}
-																	max={dayjs(windowEndTime).format('YYYY-MM-DDTHH:mm')}
-																	required
-																/>
-															</div>
-															<div className='col-4'>
-																<label htmlFor='dropoff-end-time' className='w-100'>
-																	Deliver to
-																</label>
-															</div>
-															<div className='col-8'>
-																<input
-																	defaultValue={dayjs(dropoffEndTime).format('YYYY-MM-DDTHH:mm')}
-																	id='dropoff-end-time'
-																	name='dropoffEndTime'
-																	type='datetime-local'
-																	aria-label='dropoff-end-time'
-																	className='form-control form-control-sm rounded-3'
-																	onChange={handleChange}
-																	onBlur={handleBlur}
-																	min={dayjs(values.dropoffStartTime).format('YYYY-MM-DDTHH:mm')}
-																	max={dayjs(windowEndTime).format('YYYY-MM-DDTHH:mm')}
-																	required
-																/>
-															</div>
-														</div>
-														<div>
-															<Button type='submit' variant='outline-primary' size='sm'>
-																Update
-															</Button>
-														</div>
-													</form>
-												)}
-											</Formik>
-										</div>
+										<Deliveries
+											onUpdate={onUpdate}
+											orderNumber={orderNumber}
+											dropoffLocation={dropoffLocation}
+											dropoffStartTime={dropoffStartTime}
+											dropoffEndTime={dropoffEndTime}
+											index={index}
+										/>
 									);
 								})}
 							</div>
-							<div className="d-flex justify-content-end">
+							<div className='d-flex justify-content-end'>
 								<Button type='submit' variant='primary' size='lg'>
-									Get Quotes
+									Create Multi Drop
 								</Button>
 							</div>
 						</form>
