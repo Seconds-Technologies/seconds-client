@@ -5,8 +5,9 @@ import { PATHS } from '../constants';
 import { useHistory } from 'react-router-dom';
 import { BsKanban } from 'react-icons/bs';
 import infinityIcon from '../assets/img/infinity.svg';
+import multiDropIcon from '../assets/img/multidrop.svg';
 
-const CustomToolbar = ({toggleShow, canOptimize}) => {
+const CustomToolbar = ({ canMultiDrop, showMultiDrop, showRouteOpt, canOptimize }) => {
 	const history = useHistory();
 	return (
 		<GridToolbarContainer>
@@ -18,10 +19,18 @@ const CustomToolbar = ({toggleShow, canOptimize}) => {
 			<Button
 				disabled={!canOptimize}
 				size='small'
-				onClick={toggleShow}
-				startIcon={<img src={infinityIcon} alt={''} width={25} height={25} className={canOptimize ? "img-blue" : "img-grey"}/>}
+				onClick={showRouteOpt}
+				startIcon={<img src={infinityIcon} alt={''} width={25} height={25} className={canOptimize ? 'img-blue' : 'img-grey'} />}
 			>
 				<span>Optimize</span>
+			</Button>
+			<Button
+				disabled={!canMultiDrop}
+				size='small'
+				onClick={showMultiDrop}
+				startIcon={<img src={multiDropIcon} alt={''} width={25} height={25} className={canMultiDrop ? 'img-blue' : 'img-grey'} />}
+			>
+				<span>Multi-Drop</span>
 			</Button>
 		</GridToolbarContainer>
 	);

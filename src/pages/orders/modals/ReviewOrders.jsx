@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import dayjs from 'dayjs';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
+import { REVIEW_TYPE } from '../../../constants';
 
 const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, windowStartTime, windowEndTime }) => {
 	const [validOrders, setValidOrders] = useState([])
@@ -117,7 +118,7 @@ const ReviewOrders = ({ show, onGoBack, onHide, orders, onConfirm, onUpdate, win
 				}}>
 					Go Back
 				</Button>
-				<Button disabled={isDisabled} variant='primary'onClick={onConfirm}>Confirm</Button>
+				<Button disabled={isDisabled} variant='primary' onClick={() => onConfirm(REVIEW_TYPE.OPTIMIZE)}>Confirm</Button>
 			</Modal.Footer>
 		</Modal>
 	);

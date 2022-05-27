@@ -13,26 +13,21 @@ import { PATHS } from '../../constants';
 import logo from '../../assets/img/logo.svg';
 import React, { useContext, useMemo, useRef, useState } from 'react';
 import { logout } from '../../store/actions/auth';
-import { useNotifications } from '@magicbell/magicbell-react';
-import { FloatingNotificationInbox } from '@magicbell/magicbell-react';
+import { FloatingNotificationInbox, useNotifications } from '@magicbell/magicbell-react';
+// material UI
 import Badge from '@mui/material/Badge';
 import styled from '@mui/material/styles/styled';
 import Tooltip from '@mui/material/Tooltip';
 import { Hints } from 'intro.js-react';
 import { TabContext } from '../../context';
 import Link from '../../components/Link';
+import { toggleTourHints } from '../../store/actions/onboarding';
 
-export default function Sidebar({ hintsEnabled }) {
-	const [hints, setHints] = useState([
-		{
-			element: '#orders-link',
-			hint: "Click here to go to the Order's page",
-			hintPosition: 'middle-right'
-		}
-	]);
+const Sidebar = () => {
 	const { dispatch: switchTab } = useContext(TabContext);
 	const [isOpen, setAlerts] = useState(false);
 	const { user } = useSelector(state => state['currentUser']);
+	const { hintsEnabled, hints } = useSelector(state => state['onboardingStore'])
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const location = useLocation();
@@ -53,13 +48,14 @@ export default function Sidebar({ hintsEnabled }) {
 	}, [location]);
 
 	const isOrder = useMemo(() => {
-		return [PATHS.ORDERS, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path));
+		return [PATHS.ORDERS, PATHS.TRACK, PATHS.VIEW_ORDER].some(path => location['pathname'].includes(path));
 	}, [location]);
 
 	return (
 		<div ref={launcherRef} className='sidebar-container bg-light border border-1'>
 			<Hints
 				enabled={hintsEnabled}
+				onClick={() => dispatch(toggleTourHints({hintsEnabled: false, hints: []}))}
 				hints={hints}
 				options={{
 					hintAnimation: true
@@ -226,3 +222,5 @@ export default function Sidebar({ hintsEnabled }) {
 		</div>
 	);
 }
+
+export default Sidebar;

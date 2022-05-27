@@ -7,7 +7,6 @@ const driverId = Cypress.env('DRIVER_ID');
 const DELAY = Number(Cypress.env('DELAY'));
 const THREE_SECONDS = 3000;
 
-
 describe('', function(){
 	beforeEach(() => {
 		cy.fixture(`users/${env}.json`).as('validUser');
@@ -18,7 +17,7 @@ describe('', function(){
 			cy.get('#login-password').type(this.validUser.password);
 			cy.root().submit().wait(THREE_SECONDS).url().should('include', '/home');
 		});
-		cy.get('#sidebar-orders').click();
+		cy.get('#sidebar-drivers').click();
 		cy.url().should('include', '/orders');
 	});
 

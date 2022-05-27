@@ -28,7 +28,7 @@ const DeliveryOverview = ({ interval }) => {
 				![STATUS.COMPLETED, STATUS.CANCELLED].includes(status) && providerId !== PROVIDERS.UNASSIGNED
 		).length;
 		const numCancelled = total.filter(({ status }) => status === STATUS.CANCELLED).length;
-		const numUnassigned = total.filter(({ selectedConfiguration: { providerId } }) => providerId !== PROVIDERS.UNASSIGNED).length;
+		const numUnassigned = total.filter(({ selectedConfiguration: { providerId } }) => providerId === PROVIDERS.UNASSIGNED).length;
 		return [numCompleted, numUncompleted, numCancelled, numUnassigned];
 	}, [interval, total, completed]);
 

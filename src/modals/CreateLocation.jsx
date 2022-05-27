@@ -147,6 +147,7 @@ const CreateLocation = ({ open, onClose }) => {
 											</span>
 										</label>
 										<input
+											autoComplete="address-line1"
 											id='street-address'
 											name='streetAddress'
 											type='text'
@@ -175,6 +176,7 @@ const CreateLocation = ({ open, onClose }) => {
 											<span className='text-muted'>{errors['city'] && <span className='text-danger'>* </span>}City</span>
 										</label>
 										<input
+											autoComplete="address-level2"
 											id='city'
 											name='city'
 											type='text'
@@ -190,6 +192,7 @@ const CreateLocation = ({ open, onClose }) => {
 											</span>
 										</label>
 										<input
+											autoComplete="postal-code"
 											id='postcode'
 											name='postcode'
 											type='text'
@@ -203,6 +206,7 @@ const CreateLocation = ({ open, onClose }) => {
 											Country
 										</label>
 										<input
+											autoComplete="country"
 											defaultValue={values.country}
 											id='country'
 											name='country'

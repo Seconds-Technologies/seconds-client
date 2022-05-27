@@ -51,18 +51,17 @@ describe('Onboarding flow', () => {
 		cy.url().should('include', landingPageURL);
 		cy.get('#getting-started-button').click().wait(500).get('#getting-started-form').should('be.visible');
 		cy.get('#getting-started-form').within(function() {
-			cy.get('#first-name').type(this.user.firstname);
-			cy.get('#last-name').type(this.user.lastname);
 			cy.get('#email-address').type(this.user.email);
-			cy.get('#phone-number').type(this.user.phone);
-			cy.get('#company').type(this.user.company);
 			cy.get('#business-type').select('Restaurant');
-			cy.get('#business-role').type('Owner');
 			cy.get('#average-deliveries-per-week').type('100');
 			cy.root().submit().wait(delay).url().should('contain', signupURL);
 			cy.saveLocalStorage();
 		});
 		cy.get('#signup-form').within(function() {
+			cy.get('#signup-firstname').type(this.user.firstname);
+			cy.get('#signup-lastname').type(this.user.lastname);
+			cy.get('#signup-company').type(this.user.company);
+			cy.get('#signup-phone').type(this.user.phone);
 			cy.get('#signup-password').type(this.user.password);
 			cy.get('[type="checkbox"]').check();
 			cy.root().submit().wait(delay).url().should('include', '/1');
