@@ -53,6 +53,7 @@ import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 import MultiDrop from './modals/MultiDrop';
 
+const isProduction = Boolean(process.env.REACT_APP_ENV_MODE === 'production');
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
@@ -307,7 +308,7 @@ export default function Orders(props) {
 			let job = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 			return job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 		});
-		return selectionModel.length >= 3 && allUnassigned;
+		return selectionModel.length >= 3 && allUnassigned && !isProduction;
 	}, [selectionModel]);
 
 	const canOptimize = useMemo(() => {
@@ -378,6 +379,7 @@ export default function Orders(props) {
 				let isValid = false;
 				let order = allJobs.find(({ jobSpecification: { orderNumber } }) => orderNumber === orderNo);
 				if (order) {
+					const pickupTime = order.jobSpecification.pickupStartTime
 					// check if the order's pickup / delivery time fit within the optimization time window
 					const deliveries = order['jobSpecification'].deliveries;
 					isValid = deliveries.every(delivery => {
@@ -427,7 +429,8 @@ export default function Orders(props) {
 		setJobLoader(prevState => ({ loading: true, text: 'Checking your dropoff times...' }));
 		const { windowStartTime, windowEndTime, vehicleType, orderNumbers } = values;
 		let { allValid, badOrders } = validateTimeWindows(windowStartTime, windowEndTime);
-		if (!allValid) {
+		console.table({allValid, badOrders})
+		/*if (!allValid) {
 			setParams(prevState => values);
 			setJobLoader(prevState => ({ ...prevState, loading: false }));
 			showReviewModal({ show: true, orders: badOrders, startTime: dayjs(windowStartTime), endTime: dayjs(windowEndTime), vehicleType });
@@ -446,7 +449,7 @@ export default function Orders(props) {
 				setJobLoader(prevState => ({ ...prevState, loading: false }));
 				console.error(err);
 			}
-		}
+		}*/
 	}, []);
 
 	const assignRoute = useCallback((driverId, route) => {
