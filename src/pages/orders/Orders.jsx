@@ -457,9 +457,7 @@ export default function Orders(props) {
 				try {
 					setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
 					const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
-					console.log(selectedJobs)
 					const deliveryParams = assembleMultiDropPayload(selectedJobs, vehicleType);
-					console.log(deliveryParams);
 					// create multi-drop job
 					const job = await dispatch(createMultiDropJob({ ...deliveryParams, windowStartTime, windowEndTime }, apiKey, 'stuart'));
 					// delete existing jobs

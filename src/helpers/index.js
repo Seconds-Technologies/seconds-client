@@ -156,7 +156,8 @@ export function capitalize(str) {
 }
 
 export function assembleMultiDropPayload(jobs, vehicleType) {
-	let firstJob = jobs.shift()
+	let firstJob = jobs.shift();
+	console.log(firstJob)
 	let payload = assemblePayload({ jobSpecification: firstJob['jobSpecification'], vehicleType });
 	jobs.forEach(({ jobSpecification }) => {
 		let drop = jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
@@ -226,5 +227,6 @@ export function findByOrderNumber(jobs, orderNo){
 }
 
 export function filterByOrderNumber(jobs, orderNumbers){
-	return jobs.filter(job => orderNumbers.includes(job['jobSpecification']['deliveries'][0].orderNumber))
+	console.log(orderNumbers)
+	return jobs.filter(job => job['jobSpecification']['deliveries'].some(({ orderNumber }) => orderNumbers.includes(orderNumber)))
 }

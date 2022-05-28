@@ -9,7 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import ReorderForm from './modals/ReorderForm';
 import DeliveryJob from '../../modals/DeliveryJob';
 import LoadingOverlay from 'react-loading-overlay';
-import { capitalize, parseAddress, validateAddress } from '../../helpers';
+import { capitalize, filterByOrderNumber, parseAddress, validateAddress } from '../../helpers';
 import { geocodeByAddress } from 'react-google-places-autocomplete';
 import Item from './components/Item';
 import Card from './components/Card';
@@ -27,6 +27,7 @@ import SuccessMessage from '../../modals/SuccessMessage';
 import UpdateJob from './modals/UpdateJob';
 
 const ViewOrder = props => {
+	const orderID = props.location['pathname'].split('/').reverse()[0];
 	const dispatch = useDispatch();
 	const { firstname, lastname, email, company, phone, apiKey } = useSelector(state => state['currentUser'].user);
 	const drivers = useSelector(state => state['driversStore']);
@@ -54,41 +55,40 @@ const ViewOrder = props => {
 	const { boot, shutdown } = useIntercom();
 
 	const order = useMemo(() => {
-		const orderID = props.location['pathname'].split('/').reverse()[0];
-		return allJobs
-			.filter(job => job['jobSpecification']['orderNumber'] === orderID)
-			.map(
-				({
-					_id,
+		return filterByOrderNumber(allJobs, [orderID]).map(
+			({
+				_id,
+				status,
+				jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
+				selectedConfiguration: { providerId, deliveryFee },
+				driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
+				createdAt
+			}) => {
+				createdAt = dayjs(createdAt).format('DD/MM/YYYY HH:mm:ss');
+				return {
+					id: _id,
+					reference: jobReference,
+					createdAt,
 					status,
-					jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
-					selectedConfiguration: { providerId, deliveryFee },
-					driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
-					createdAt
-				}) => {
-					createdAt = dayjs(createdAt).format('DD/MM/YYYY HH:mm:ss');
-					return {
-						id: _id,
-						reference: jobReference,
-						createdAt,
-						status,
-						providerId,
-						deliveryFee,
-						driverName,
-						driverPhone,
-						driverVehicle,
-						driverLocation: location,
-						pickupLocation,
-						pickupStartTime,
-						deliveries
-					};
-				}
-			)[0];
-	}, [allJobs]);
+					providerId,
+					deliveryFee,
+					driverName,
+					driverPhone,
+					driverVehicle,
+					driverLocation: location,
+					pickupLocation,
+					pickupStartTime,
+					deliveries
+				};
+			}
+		)[0];
+	}, [allJobs, orderID]);
 
 	const delivery = useMemo(() => {
-		return order.deliveries
-			? order.deliveries.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
+		if (order.deliveries) {
+			const delivery =  order.deliveries
+				.filter(({ orderNumber }) => orderNumber === orderID)
+				.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
 					dropoffEndTime: dropoffEndTime,
 					firstName: dropoffLocation.firstName,
 					lastName: dropoffLocation.lastName,
@@ -105,12 +105,15 @@ const ViewOrder = props => {
 					trackingURL,
 					description,
 					status
-			  }))[activeIndex]
-			: [];
-	}, [order, activeIndex]);
+				}))[0];
+			console.log(delivery)
+			return delivery
+		}
+		return [];
+	}, [order, orderID]);
 
 	const markers = useMemo(() => {
-		if (order && order.deliveries) {
+		if (order && delivery) {
 			let result = [];
 			let pickupCoords = [order.pickupLocation.longitude, order.pickupLocation.latitude];
 			result.push(pickupCoords);
@@ -119,13 +122,14 @@ const ViewOrder = props => {
 			/// check if courier coords have been sent
 			if (order.driverLocation && order.driverLocation.coordinates && order.driverLocation.coordinates.length === 2)
 				result.push(order.driverLocation.coordinates);
+			console.log(result)
 			return result;
 		}
 		return [
 			[0, 0],
 			[0, 0]
 		];
-	}, [order, activeIndex]);
+	}, [order, delivery]);
 
 	const stuartWidget = useCallback(() => {
 		console.log('booting intercom widget....');
