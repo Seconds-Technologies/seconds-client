@@ -401,7 +401,7 @@ export default function Orders(props) {
 			});
 			return { allValid: validStates.every(item => item), badOrders };
 		},
-		[selectionModel]
+		[selectionModel, allJobs]
 	);
 
 	const optimize = useCallback(
