@@ -463,7 +463,7 @@ export default function Orders(props) {
 					// create multi-drop job
 					const job = await dispatch(createMultiDropJob({ ...deliveryParams, windowStartTime, windowEndTime }, apiKey, 'stuart'));
 					// delete existing jobs
-					setJobLoader(prevState => ({ loading: false, text: 'Creating Multi Drop' }));
+					setJobLoader(prevState => ({ ...prevState, loading: false }));
 					setMessage(`Your multi-drop order was created and dispatched to Stuart!`)
 					await dispatch(deleteJobs(email, orderNumbers)).then(res => console.log(res));
 					console.log(job);
@@ -473,7 +473,7 @@ export default function Orders(props) {
 				}
 			}
 		},
-		[selectionModel]
+		[selectionModel, allJobs]
 	);
 
 	const assignRoute = useCallback((driverId, route) => {
@@ -545,7 +545,7 @@ export default function Orders(props) {
 				alert('Oops there was an error dispatch your job. Please try again.');
 			}
 		},
-		[selectionModel, reviewModal]
+		[allJobs, selectionModel, reviewModal]
 	);
 
 	return (
