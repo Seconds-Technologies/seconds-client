@@ -35,6 +35,7 @@ import DeliveryJob from '../../modals/DeliveryJob';
 import NewDropoffForm from '../../modals/NewDropoffForm';
 import SelectDriver from '../../modals/SelectDriver';
 import BatchCarousel from '../../components/BatchCarousel';
+import { sleep } from '../../utils';
 
 const Create = props => {
 	const csvUploadRef = useRef(null);
@@ -361,6 +362,7 @@ const Create = props => {
 										console.log(order);
 										order = await handleAddresses(order);
 										const job = await dispatch(assignDriver(order, apiKey, null));
+										await sleep(500)
 										console.log(job);
 									}
 									setLoading(false);

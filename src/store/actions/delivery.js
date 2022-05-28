@@ -316,7 +316,8 @@ export function updateDelivery(apiKey, jobId, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('PATCH', `/api/v1/jobs/${jobId}`, data, { headers: { 'X-Seconds-Api-Key': apiKey } })
-				.then(({ message }) => {
+				.then(({ message, job }) => {
+					dispatch(updateDeliveryJob(job))
 					Mixpanel.track(Events.UPDATE_JOB);
 					resolve(message);
 				})
