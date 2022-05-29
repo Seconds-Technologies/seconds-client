@@ -457,7 +457,7 @@ export default function Orders(props) {
 				try {
 					setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
 					const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
-					const deliveryParams = assembleMultiDropPayload(selectedJobs, vehicleType);
+					const deliveryParams = assembleMultiDropPayload(selectedJobs, vehicleType, windowStartTime);
 					// create multi-drop job
 					const job = await dispatch(createMultiDropJob({ ...deliveryParams, windowStartTime, windowEndTime }, apiKey, 'stuart'));
 					// delete existing jobs
@@ -514,8 +514,8 @@ export default function Orders(props) {
 					});
 			} else if (type === DISPATCH_TYPE.MULTI_DROP) {
 				setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
-				const selectedJobs = allJobs.filter(({ jobSpecification: { orderNumber } }) => selectionModel.includes(orderNumber));
-				const deliveryParams = assembleMultiDropPayload(selectedJobs, reviewModal.vehicleType);
+				const selectedJobs = filterByOrderNumber(allJobs, selectionModel);
+				const deliveryParams = assembleMultiDropPayload(selectedJobs, reviewModal.vehicleType, reviewModal.startTime);
 				console.log(deliveryParams);
 				// create multi-drop job
 				dispatch(

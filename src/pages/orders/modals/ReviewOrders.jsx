@@ -47,7 +47,6 @@ const ReviewOrders = ({ show, type, onGoBack, onHide, orders, onConfirm, onUpdat
 									<Formik
 										enableReinitialize
 										initialValues={{
-											...(type === DISPATCH_TYPE.MULTI_DROP && { pickupStartTime: dayjs(pickupStartTime).format("YYYY-MM-DDTHH:mm:ss") }),
 											dropoffStartTime: dropoffStartTime ? dropoffStartTime : dayjs().format('YYYY-MM-DDTHH:mm'),
 											dropoffEndTime: dayjs(dropoffEndTime).format('YYYY-MM-DDTHH:mm')
 										}}
@@ -59,28 +58,6 @@ const ReviewOrders = ({ show, type, onGoBack, onHide, orders, onConfirm, onUpdat
 										{({ values, handleChange, handleBlur, handleSubmit }) => (
 											<form onSubmit={handleSubmit} className='align-items-center'>
 												<div className='container my-2'>
-													<div className='row'>
-														<div className='col-4'>
-															<label htmlFor='pickup-start-time' className='w-100'>
-																Pickup At
-															</label>
-														</div>
-														<div className='col-8'>
-															<input
-																defaultValue={dayjs(pickupStartTime).format('YYYY-MM-DDTHH:mm')}
-																id='pickup-start-time'
-																name='pickupStartTime'
-																type='datetime-local'
-																aria-label='pickup-start-time'
-																className='form-control form-control-sm rounded-3'
-																onChange={handleChange}
-																onBlur={handleBlur}
-																min={dayjs(windowStartTime).format('YYYY-MM-DDTHH:mm')}
-																max={dayjs(windowEndTime).format('YYYY-MM-DDTHH:mm')}
-																required
-															/>
-														</div>
-													</div>
 													<div className='row'>
 														<div className='col-4'>
 															<label htmlFor='dropoff-start-time' className='w-100'>

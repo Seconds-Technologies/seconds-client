@@ -89,7 +89,7 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 										className='form-control form-border rounded-3'
 										onChange={handleChange}
 										onBlur={handleBlur}
-										min={dayjs().add(20, 'm').format('YYYY-MM-DDTHH:mm')}
+										min={dayjs().add(15, 'm').format('YYYY-MM-DDTHH:mm')}
 										required
 									/>
 								</div>

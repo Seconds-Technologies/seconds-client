@@ -155,10 +155,11 @@ export function capitalize(str) {
 	return start.concat(lower);
 }
 
-export function assembleMultiDropPayload(jobs, vehicleType) {
+export function assembleMultiDropPayload(jobs, vehicleType, windowStartTime) {
 	let firstJob = jobs.shift();
 	console.log(firstJob)
 	let payload = assemblePayload({ jobSpecification: firstJob['jobSpecification'], vehicleType });
+	payload.packagePickupStartTime = windowStartTime
 	jobs.forEach(({ jobSpecification }) => {
 		let drop = jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
 			dropoffFirstName: dropoffLocation.firstName,
