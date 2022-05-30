@@ -48,7 +48,13 @@ import SuccessToast from '../../modals/SuccessToast';
 import CustomFooter from '../../components/CustomFooter';
 import { DELETE_TYPES } from '../drivers/constants';
 import DeleteModal from '../drivers/modals/DeleteModal';
-import { assembleMultiDropPayload, assemblePayload, filterByOrderNumber, findByOrderNumber } from '../../helpers';
+import {
+	assembleMultiDropPayload,
+	assemblePayload,
+	convertToCurrentDayTime,
+	filterByOrderNumber,
+	findByOrderNumber
+} from '../../helpers';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 import MultiDrop from './modals/MultiDrop';
@@ -343,7 +349,11 @@ export default function Orders(props) {
 	const fetchQuotes = useCallback(async () => {
 		showAssignModal(false);
 		setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
-		const job = findByOrderNumber(allJobs, provider.orderNumber)
+		let job = findByOrderNumber(allJobs, provider.orderNumber)
+		job = await dispatch(updateDelivery(apiKey, job._id, {
+			pickupStartTime: convertToCurrentDayTime(job['jobSpecification'].pickupStartTime),
+			dropoffEndTime: convertToCurrentDayTime(job['jobSpecification'].deliveries[0].dropoffEndTime)
+		}))
 		const payload = assemblePayload(job);
 		setDeliveryParams(prevState => ({ ...payload }));
 		try {
@@ -564,7 +574,7 @@ export default function Orders(props) {
 					onConfirm={confirmReview}
 					onUpdate={(values, jobId) =>
 						dispatch(updateDelivery(apiKey, jobId, values))
-							.then(message => setToast(message))
+							.then(() => setToast("Job updated successfully"))
 							.catch(err => console.error(err))
 					}
 					windowStartTime={reviewModal.startTime}
@@ -625,7 +635,7 @@ export default function Orders(props) {
 					onSubmit={newMultiDrop}
 					onUpdate={(values, jobId) =>
 						dispatch(updateDelivery(apiKey, jobId, values))
-							.then(message => setToast(message))
+							.then(() => setToast("Job updated successfully"))
 							.catch(err => console.error(err))
 					}
 					windowStartTime={multiDropModal.startTime}

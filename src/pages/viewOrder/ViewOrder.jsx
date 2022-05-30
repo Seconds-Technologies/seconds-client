@@ -346,7 +346,7 @@ const ViewOrder = props => {
 					onSubmit={data => {
 						data.fullAddress = `${data.addressLine1} ${data.addressLine2} ${data.city} ${data.postcode}`;
 						dispatch(updateDelivery(apiKey, order.id, data))
-							.then(res => {
+							.then(() => {
 								showUpdateModal(false);
 								showMessage('Job Updated Successfully!');
 							})

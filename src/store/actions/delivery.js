@@ -319,7 +319,7 @@ export function updateDelivery(apiKey, jobId, data) {
 				.then(({ message, job }) => {
 					dispatch(updateDeliveryJob(job))
 					Mixpanel.track(Events.UPDATE_JOB);
-					resolve(message);
+					resolve(job);
 				})
 				.catch(err => {
 					Mixpanel.track(Events.UPDATE_JOB);
