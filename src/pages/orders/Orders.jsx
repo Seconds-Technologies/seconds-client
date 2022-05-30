@@ -441,11 +441,7 @@ export default function Orders(props) {
 			setJobLoader(prevState => ({ loading: true, text: 'Checking your dropoff times...' }));
 			const { windowStartTime, windowEndTime, vehicleType, orderNumbers } = values;
 			const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
-			for (let job of selectedJobs) {
-				let jobId = job['_id']
-				console.log(jobId)
-				await dispatch(updateDelivery(apiKey, jobId, {pickupStartTime: windowStartTime}))
-			}
+			for (let job of selectedJobs) await dispatch(updateDelivery(apiKey, job['_id'], { pickupStartTime: windowStartTime }));
 			let { allValid, badOrders } = validateTimeWindows(windowStartTime, windowEndTime, DISPATCH_TYPE.MULTI_DROP);
 			if (!allValid) {
 				setParams(prevState => values);
