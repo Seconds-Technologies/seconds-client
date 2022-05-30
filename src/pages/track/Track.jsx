@@ -1,5 +1,5 @@
 import './Track.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Counter from '../../components/counter/Counter';
 import { useDispatch, useSelector } from 'react-redux';
 import Tile from '../../components/tile/Tile';
@@ -16,9 +16,27 @@ const Track = props => {
 	const dispatch = useDispatch();
 	const { email, apiKey } = useSelector(state => state['currentUser'].user);
 	const [active, setActive] = useState({ id: 'day', name: 'Last 24 hrs' });
-	const filterByInterval = useCallback(dateFilter,[active.id])
+	const filterByInterval = useCallback(dateFilter, [active.id]);
+	const { allJobs } = useSelector(state => state['deliveryJobs']);
 
-	const orders = useSelector(state => {
+	const orders = useMemo(
+		() =>
+			filterByInterval(allJobs, active.id).flatMap(({ jobSpecification: { deliveries }, selectedConfiguration: { providerId } }) =>
+				deliveries.map(({ orderNumber, dropoffLocation: { fullAddress: address, firstName, lastName }, status }) => {
+					let customerName = `${firstName} ${lastName}`;
+					return {
+						id: orderNumber,
+						status,
+						customerName,
+						address,
+						providerId
+					};
+				})
+			),
+		[allJobs, active.id]
+	);
+
+	/*const orders = useSelector(state => {
 		const { allJobs } = state['deliveryJobs'];
 		return filterByInterval(allJobs, active.id).map(
 			({ status, jobSpecification: { orderNumber, deliveries }, selectedConfiguration: { providerId } }) => {
@@ -29,7 +47,7 @@ const Track = props => {
 				return { id: orderNumber, status, customerName, address, provider: providerId };
 			}
 		);
-	});
+	});*/
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -43,11 +61,11 @@ const Track = props => {
 
 	return (
 		<div className='page-container container-fluid px-5 pb-4'>
-			<div className="d-flex justify-content-end py-3 px-3">
-				<Button className="me-3" onClick={() => props.history.push(PATHS.ORDERS)} startIcon={<BsTable />}>
+			<div className='d-flex justify-content-end py-3 px-3'>
+				<Button className='me-3' onClick={() => props.history.push(PATHS.ORDERS)} startIcon={<BsTable />}>
 					<span>Table</span>
 				</Button>
-				<TimeFilter current={active} onSelect={setActive}/>
+				<TimeFilter current={active} onSelect={setActive} />
 			</div>
 			<div className='row'>
 				<div className='col-sm-4 col-md-3 border-end'>
@@ -67,7 +85,9 @@ const Track = props => {
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.DISPATCHING && <Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.DISPATCHING} />
+							status === STATUS.DISPATCHING && (
+								<Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.DISPATCHING} />
+							)
 					)}
 				</div>
 				<div className='col-sm-4 col-md-3 border-end border-start'>
@@ -77,7 +97,9 @@ const Track = props => {
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.EN_ROUTE && <Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.EN_ROUTE} />
+							status === STATUS.EN_ROUTE && (
+								<Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.EN_ROUTE} />
+							)
 					)}
 				</div>
 				<div className='col-sm-4 col-md-3 border-start'>
@@ -87,7 +109,9 @@ const Track = props => {
 					</div>
 					{orders.map(
 						({ id, customerName, address, status, provider }, index) =>
-							status === STATUS.COMPLETED && 	<Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.COMPLETED} />
+							status === STATUS.COMPLETED && (
+								<Tile key={index} id={id} address={address} name={customerName} colour={STATUS_COLOURS.COMPLETED} />
+							)
 					)}
 				</div>
 			</div>

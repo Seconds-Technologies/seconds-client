@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory} from 'react-router-dom';
+import { PATHS } from '../../constants';
 
 const Tile = ({ index, id, address, name, colour }) => {
 	const history = useHistory()
@@ -9,7 +10,7 @@ const Tile = ({ index, id, address, name, colour }) => {
 			key={index}
 			className='my-4'
 			role='button'
-			onClick={() => history.push(`/view-orders/${id}`)}
+			onClick={() => history.push(`${PATHS.VIEW_ORDER}/${id}`)}
 		>
 			<div style={{ height: 4, backgroundColor: colour }} />
 			<div className="tile-wrapper w-100 p-2">

@@ -58,7 +58,6 @@ const ViewOrder = props => {
 		return filterByOrderNumber(allJobs, [orderID]).map(
 			({
 				_id,
-				status,
 				jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
 				selectedConfiguration: { providerId, deliveryFee },
 				driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
@@ -69,7 +68,6 @@ const ViewOrder = props => {
 					id: _id,
 					reference: jobReference,
 					createdAt,
-					status,
 					providerId,
 					deliveryFee,
 					driverName,
@@ -88,7 +86,7 @@ const ViewOrder = props => {
 		if (order.deliveries) {
 			const delivery =  order.deliveries
 				.filter(({ orderNumber }) => orderNumber === orderID)
-				.map(({ orderReference, dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
+				.map(({ dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
 					dropoffEndTime: dropoffEndTime,
 					firstName: dropoffLocation.firstName,
 					lastName: dropoffLocation.lastName,
@@ -101,7 +99,6 @@ const ViewOrder = props => {
 					city: dropoffLocation.city,
 					postcode: dropoffLocation.postcode,
 					proofOfDelivery,
-					orderReference,
 					trackingURL,
 					description,
 					status
@@ -145,7 +142,7 @@ const ViewOrder = props => {
 
 	useEffect(() => {
 		apiKey && dispatch(subscribe(apiKey, email));
-		if (order && order.providerId === PROVIDERS.PRIVATE && order.status === STATUS.COMPLETED) {
+		if (order && order.providerId === PROVIDERS.PRIVATE && delivery.status === STATUS.COMPLETED) {
 			dispatch(downloadDeliveryProof(email, delivery.proofOfDelivery.signature.filename)).then(img => setSignature(img));
 			dispatch(downloadDeliveryProof(email, delivery.proofOfDelivery.photo.filename)).then(img => setPhoto(img));
 		}
@@ -243,16 +240,16 @@ const ViewOrder = props => {
 				const {
 					jobSpecification: {
 						deliveries,
-						orderNumber,
+						jobReference: customerReference,
 						pickupLocation: { fullAddress: pickupAddress },
 						pickupStartTime
 					},
 					selectedConfiguration: { deliveryFee, providerId }
 				} = await dispatch(createDeliveryJob(values, apiKey));
 				let {
+					orderNumber,
 					dropoffLocation: { fullAddress: dropoffAddress },
 					dropoffEndTime,
-					orderReference: customerReference
 				} = deliveries[0];
 				let newJob = {
 					orderNumber,
@@ -291,7 +288,7 @@ const ViewOrder = props => {
 					({
 						jobSpecification: {
 							deliveries,
-							orderNumber,
+							jobReference: customerReference,
 							pickupLocation: { fullAddress: pickupAddress },
 							pickupStartTime
 						},
@@ -299,9 +296,9 @@ const ViewOrder = props => {
 						driverInformation: { name }
 					}) => {
 						let {
+							orderNumber,
 							dropoffLocation: { fullAddress: dropoffAddress },
-							dropoffEndTime,
-							orderReference: customerReference
+							dropoffEndTime
 						} = deliveries[0];
 						let newJob = {
 							orderNumber,
@@ -332,9 +329,10 @@ const ViewOrder = props => {
 			<div ref={modalRef} className='container-fluid my-auto'>
 				<ReorderForm show={reorderForm} toggleShow={showReOrderForm} onSubmit={handleSubmit} prevJob={order} />
 				<DeliveryJob job={deliveryJob} show={jobModal} onHide={showJobModal} />
-				<ConfirmCancel show={confirmCancel} toggleShow={showCancelDialog} orderId={order.id} showMessage={showMessage} />
+				<ConfirmCancel show={confirmCancel} toggleShow={showCancelDialog} orderId={orderID} showMessage={showMessage} />
 				<SelectDriver
 					show={driversModal}
+					onHide={() => showDriversModal(false)}
 					onHide={() => showDriversModal(false)}
 					drivers={drivers}
 					selectDriver={selectProvider}
@@ -367,7 +365,7 @@ const ViewOrder = props => {
 								<Item label='Address' value={delivery.address} styles='my-2' />
 								<Item label='Email' value={delivery.email} styles='my-2' />
 								<Item label='Phone number' value={delivery.phoneNumber} styles='my-2' />
-								{![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status) &&
+								{![STATUS.COMPLETED, STATUS.CANCELLED].includes(delivery.status) &&
 									[PROVIDERS.PRIVATE, PROVIDERS.UNASSIGNED].includes(order.providerId) && (
 										<div className='position-absolute bottom-0 end-0 p-3'>
 											<button className='btn btn-outline-info' onClick={() => showUpdateModal(true)}>
@@ -388,7 +386,7 @@ const ViewOrder = props => {
 								<Item label='Driver name' value={order.driverName} styles='my-2' />
 								<Item label='Phone number' value={order.driverPhone} styles='my-2' />
 								<Item label='Transport' value={order.driverVehicle} styles='my-2' />
-								{order.status === STATUS.COMPLETED && order.providerId === PROVIDERS.PRIVATE && (
+								{delivery.status === STATUS.COMPLETED && order.providerId === PROVIDERS.PRIVATE && (
 									<div className='position-absolute bottom-0 end-0 p-3'>
 										<button className='btn btn-outline-success' onClick={() => showProofModal(true)}>
 											Proof of Delivery
@@ -408,12 +406,12 @@ const ViewOrder = props => {
 											Track
 										</a>
 									)}
-									{order.status && order.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
+									{delivery.status && delivery.status.toUpperCase() === STATUS.CANCELLED && order.deliveries.length < 2 ? (
 										<button className='btn btn-outline-info' onClick={() => showReOrderForm(true)}>
 											Re-order
 										</button>
-									) : order.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(order.status.toUpperCase()) ? (
-										<button className='btn btn-outline-secondary' onClick={() => showCancelDialog(true)}>
+									) : delivery.status && ![STATUS.COMPLETED, STATUS.CANCELLED].includes(delivery.status.toUpperCase()) ? (
+										<button className='btn btn-outline-danger' onClick={() => showCancelDialog(true)}>
 											Cancel Order
 										</button>
 									) : null}
@@ -423,7 +421,7 @@ const ViewOrder = props => {
 								<Panel
 									label='Delivery ETA'
 									value={
-										order.status === STATUS.CANCELLED
+										delivery.status === STATUS.CANCELLED
 											? 'Cancelled'
 											: !delivery.dropoffEndTime || order.providerId === PROVIDERS.UNASSIGNED
 											? 'Estimating...'
@@ -434,7 +432,7 @@ const ViewOrder = props => {
 									styles='me-1'
 								/>
 								<Panel label='Price' value={`£${order.deliveryFee.toFixed(2)}`} styles='mx-2' />
-								<Panel label='Status' value={capitalize(order.status)} styles='ms-1' />
+								<Panel label='Status' value={capitalize(delivery.status)} styles='ms-1' />
 							</div>
 						</Card>
 						<Map height={358} markers={markers} />
