@@ -59,7 +59,7 @@ import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 import MultiDrop from './modals/MultiDrop';
 
-const isProduction = Boolean(process.env.REACT_APP_ENV_MODE === 'production');
+// const isProduction = Boolean(process.env.REACT_APP_ENV_MODE === 'production');
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {
@@ -313,7 +313,7 @@ export default function Orders(props) {
 			let job = findByOrderNumber(allJobs, orderNo);
 			return job && job['selectedConfiguration'].providerId === PROVIDERS.UNASSIGNED;
 		});
-		return selectionModel.length >= 3 && allUnassigned && !isProduction;
+		return selectionModel.length >= 3 && allUnassigned;
 	}, [selectionModel]);
 
 	const canOptimize = useMemo(() => {

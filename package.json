@@ -44,8 +44,6 @@
     "chart.js": "^3.7.1",
     "classnames": "^2.3.1",
     "clsx": "^1.1.1",
-    "cypress": "^9.6.1",
-    "cypress-plugin-stripe-elements": "^1.0.2",
     "dayjs": "^1.11.2",
     "formik": "^2.2.9",
     "http-proxy-middleware": "^2.0.1",
@@ -134,8 +132,10 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^6.1.2",
+    "cypress": "^9.7.0",
     "cypress-data-session": "^2.0.0",
     "cypress-localstorage-commands": "^1.7.0",
+    "cypress-plugin-stripe-elements": "^1.0.2",
     "prettier": "^2.3.1",
     "start-server-and-test": "^1.14.0"
   }
