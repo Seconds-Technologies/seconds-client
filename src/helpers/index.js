@@ -228,6 +228,5 @@ export function findByOrderNumber(jobs, orderNo){
 }
 
 export function filterByOrderNumber(jobs, orderNumbers){
-	console.log(orderNumbers)
 	return jobs.filter(job => job['jobSpecification']['deliveries'].some(({ orderNumber }) => orderNumbers.includes(orderNumber)))
 }

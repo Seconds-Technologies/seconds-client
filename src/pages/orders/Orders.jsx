@@ -268,14 +268,13 @@ export default function Orders(props) {
 			allJobs.flatMap(
 				({
 					_id,
-					status,
 					platform,
 					jobSpecification: { deliveries, pickupStartTime },
 					selectedConfiguration: { providerId },
 					createdAt,
 					routeOptimization
 				}) =>
-					deliveries.map(({ orderNumber, dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName } }) => {
+					deliveries.map(({ orderNumber, dropoffLocation: { fullAddress: address, phoneNumber, firstName, lastName }, status }) => {
 						let customerName = `${firstName} ${lastName}`;
 						phoneNumber = phoneNumber === null || undefined ? 'N/A' : phoneNumber;
 						let provider = providerId;
@@ -441,6 +440,12 @@ export default function Orders(props) {
 			}));
 			setJobLoader(prevState => ({ loading: true, text: 'Checking your dropoff times...' }));
 			const { windowStartTime, windowEndTime, vehicleType, orderNumbers } = values;
+			const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
+			for (let job of selectedJobs) {
+				let jobId = job['_id']
+				console.log(jobId)
+				await dispatch(updateDelivery(apiKey, jobId, {pickupStartTime: windowStartTime}))
+			}
 			let { allValid, badOrders } = validateTimeWindows(windowStartTime, windowEndTime, DISPATCH_TYPE.MULTI_DROP);
 			if (!allValid) {
 				setParams(prevState => values);
@@ -456,7 +461,6 @@ export default function Orders(props) {
 			} else {
 				try {
 					setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
-					const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
 					const deliveryParams = assembleMultiDropPayload(selectedJobs, vehicleType, windowStartTime);
 					// create multi-drop job
 					const job = await dispatch(createMultiDropJob({ ...deliveryParams, windowStartTime, windowEndTime }, apiKey, 'stuart'));
@@ -517,7 +521,6 @@ export default function Orders(props) {
 				const selectedJobs = filterByOrderNumber(allJobs, selectionModel);
 				const deliveryParams = assembleMultiDropPayload(selectedJobs, reviewModal.vehicleType, reviewModal.startTime);
 				console.log(deliveryParams);
-				// create multi-drop job
 				dispatch(
 					createMultiDropJob(
 						{
