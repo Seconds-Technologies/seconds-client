@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import dayjs from 'dayjs';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
-import { DISPATCH_TYPE } from '../../../constants';
+import { MANUAL_DISPATCH_TYPES } from '../../../constants';
 
 const ReviewOrders = ({ show, type, onGoBack, onHide, orders, onConfirm, onUpdate, windowStartTime, windowEndTime }) => {
 	const [validOrders, setValidOrders] = useState([]);

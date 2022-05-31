@@ -143,9 +143,9 @@ const MultiDrop = ({ show, onHide, orders, orderNumbers, windowStartTime, window
 									);
 								})}
 							</div>
-							<div className='d-flex justify-content-end'>
-								<Button type='submit' variant='primary' size='lg'>
-									Create Multi Drop
+							<div className='d-flex justify-content-end align-items-center'>
+								<Button type='submit' variant='primary' size='lg' style={{width: 200}}>
+									<span className="fs-5">Get Quotes</span>
 								</Button>
 							</div>
 						</form>

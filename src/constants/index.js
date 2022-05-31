@@ -285,7 +285,7 @@ export const HUBRISE_ORDER_STATUSES = {
 	COMPLETED: 'completed'
 }
 
-export const DISPATCH_TYPE = {
+export const MANUAL_DISPATCH_TYPES = {
 	STANDARD: 'standard',
 	OPTIMIZE: "optimize", //
 	MULTI_DROP: "multi-drop"

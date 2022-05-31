@@ -305,7 +305,7 @@ const Create = props => {
 					validateOnChange={false}
 					validateOnBlur={false}
 					onSubmit={async (values, actions) => {
-						console.log(values.type);
+						console.log(values);
 						if (apiKey) {
 							if (values.type === SUBMISSION_TYPES.GET_QUOTE) {
 								setLoadingText('Getting Quote');
@@ -333,7 +333,10 @@ const Create = props => {
 										console.log(item)
 										console.log("***********************")
 										let {
+											vehicleType,
+											packageDeliveryType,
 											packagePickupStartTime,
+											pickupFirstName,
 											pickupLastName,
 											pickupEmailAddress,
 											pickupPhoneNumber,
@@ -346,8 +349,8 @@ const Create = props => {
 											...drop
 										} = item;
 										let order = {
-											...values,
 											packagePickupStartTime,
+											pickupFirstName,
 											pickupLastName,
 											pickupEmailAddress,
 											pickupPhoneNumber,
@@ -357,6 +360,8 @@ const Create = props => {
 											pickupAddressLine2,
 											pickupCity,
 											pickupPostcode,
+											packageDeliveryType,
+											vehicleType,
 											drops: [drop],
 										}
 										console.log(order);

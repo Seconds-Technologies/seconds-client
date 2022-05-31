@@ -4,7 +4,7 @@ import LoadingOverlay from 'react-loading-overlay';
 import { DataGrid } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { BACKGROUND, PATHS, PLATFORMS, PROVIDERS, DISPATCH_TYPE, STATUS, STATUS_COLOURS, VEHICLE_TYPES } from '../../constants';
+import { BACKGROUND, PATHS, PLATFORMS, PROVIDERS, MANUAL_DISPATCH_TYPES, STATUS, STATUS_COLOURS, VEHICLE_TYPES, DELIVERY_TYPES } from '../../constants';
 import {
 	createMultiDropJob,
 	deleteJobs,
@@ -33,7 +33,7 @@ import woocommerce from '../../assets/img/woocommerce-logo.svg';
 // components & modals
 import CustomToolbar from '../../components/CustomToolbar';
 import RouteOptimization from './modals/RouteOptimization';
-import ManualDispatch from './modals/ManualDispatch';
+import ConfirmDispatch from './modals/ConfirmDispatch';
 import Error from '../../modals/Error';
 import Loading from './modals/Loading';
 import ReviewOrders from './modals/ReviewOrders';
@@ -48,13 +48,7 @@ import SuccessToast from '../../modals/SuccessToast';
 import CustomFooter from '../../components/CustomFooter';
 import { DELETE_TYPES } from '../drivers/constants';
 import DeleteModal from '../drivers/modals/DeleteModal';
-import {
-	assembleMultiDropPayload,
-	assemblePayload,
-	convertToCurrentDayTime,
-	filterByOrderNumber,
-	findByOrderNumber
-} from '../../helpers';
+import { assembleMultiDropPayload, assemblePayload, convertToCurrentDayTime, filterByOrderNumber, findByOrderNumber } from '../../helpers';
 import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 import MultiDrop from './modals/MultiDrop';
@@ -69,6 +63,7 @@ export default function Orders(props) {
 	const { allJobs } = useSelector(state => state['deliveryJobs']);
 	const error = useSelector(state => state['errors']);
 	const drivers = useSelector(state => state['driversStore']);
+	const [dispatchType, setDispatchType] = useState(MANUAL_DISPATCH_TYPES.STANDARD);
 	const [provider, selectProvider] = useState(INIT_STATE);
 	const [optModal, showOptRoutes] = useState(false);
 	const [multiDropModal, showMultiDropModal] = useState({ show: false, orders: [], startTime: null, endTime: null });
@@ -84,7 +79,6 @@ export default function Orders(props) {
 	});
 	const [reviewModal, showReviewModal] = useState({
 		show: false,
-		type: DISPATCH_TYPE.OPTIMIZE,
 		orders: [],
 		startTime: dayjs(deliveryHours[dayjs().day()].open),
 		endTime: dayjs(deliveryHours[dayjs().day()].close),
@@ -227,6 +221,7 @@ export default function Orders(props) {
 						{params.row.provider === PROVIDERS.UNASSIGNED && (
 							<StyledButton
 								onClick={() => {
+									setDispatchType(MANUAL_DISPATCH_TYPES.STANDARD)
 									selectProvider(prevState => ({ ...prevState, orderNumber: params.row.id }));
 									showAssignModal(true);
 								}}
@@ -332,6 +327,19 @@ export default function Orders(props) {
 		return filterByOrderNumber(allJobs, selectionModel).every(({ selectedConfiguration: { providerId } }) => providerId === PROVIDERS.UNASSIGNED);
 	}, [selectionModel]);
 
+	const calculateTimeWindow = useCallback(orders => {
+		const firstOrder = orders.shift();
+		let earliestPickupTime = firstOrder['jobSpecification'].pickupStartTime;
+		let latestDropoffTime = firstOrder['jobSpecification'].deliveries[0].dropoffEndTime;
+		orders.map(({ jobSpecification: { pickupStartTime, deliveries } }) => {
+			let pickupTime = pickupStartTime;
+			let dropoffTime = deliveries[0].dropoffEndTime;
+			earliestPickupTime = dayjs(pickupTime).isBefore(earliestPickupTime, 'm') ? pickupTime : earliestPickupTime;
+			latestDropoffTime = dayjs(dropoffTime).isAfter(latestDropoffTime, 'm') ? dropoffTime : latestDropoffTime;
+		});
+		return { startTime: dayjs(earliestPickupTime).format('YYYY-MM-DDTHH:mm'), endTime: dayjs(latestDropoffTime).format('YYYY-MM-DDTHH:mm') };
+	}, []);
+
 	const dispatchJob = useCallback(() => {
 		showConfirmDialog(false);
 		setJobLoader(prevState => ({ ...prevState, loading: true, text: 'Creating Job' }));
@@ -346,14 +354,16 @@ export default function Orders(props) {
 			});
 	}, [provider]);
 
-	const fetchQuotes = useCallback(async () => {
+	const singleDropQuotes = useCallback(async () => {
 		showAssignModal(false);
 		setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
-		let job = findByOrderNumber(allJobs, provider.orderNumber)
-		job = await dispatch(updateDelivery(apiKey, job._id, {
-			pickupStartTime: convertToCurrentDayTime(job['jobSpecification'].pickupStartTime),
-			dropoffEndTime: convertToCurrentDayTime(job['jobSpecification'].deliveries[0].dropoffEndTime)
-		}))
+		let job = findByOrderNumber(allJobs, provider.orderNumber);
+		job = await dispatch(
+			updateDelivery(apiKey, job._id, {
+				pickupStartTime: convertToCurrentDayTime(job['jobSpecification'].pickupStartTime),
+				dropoffEndTime: convertToCurrentDayTime(job['jobSpecification'].deliveries[0].dropoffEndTime)
+			})
+		);
 		const payload = assemblePayload(job);
 		setDeliveryParams(prevState => ({ ...payload }));
 		try {
@@ -364,31 +374,18 @@ export default function Orders(props) {
 			setJobLoader(prevState => ({ ...prevState, loading: false }));
 			console.error(err);
 		}
-	}, [provider]);
-
-	const calculateTimeWindow = useCallback(orders => {
-		const firstOrder = orders.shift();
-		let earliestPickupTime = firstOrder['jobSpecification'].pickupStartTime;
-		let latestDropoffTime = firstOrder['jobSpecification'].deliveries[0].dropoffEndTime;
-		orders.map(({ jobSpecification: { pickupStartTime, deliveries } }) => {
-			let pickupTime = pickupStartTime;
-			let dropoffTime = deliveries[0].dropoffEndTime;
-			earliestPickupTime = dayjs(pickupTime).isBefore(earliestPickupTime, 'm') ? pickupTime : earliestPickupTime;
-			latestDropoffTime = dayjs(dropoffTime).isAfter(latestDropoffTime, 'm') ? dropoffTime : latestDropoffTime;
-		});
-		return { startTime: dayjs(earliestPickupTime).format('YYYY-MM-DDTHH:mm'), endTime: dayjs(latestDropoffTime).format('YYYY-MM-DDTHH:mm') };
-	}, []);
+	}, [provider, allJobs]);
 
 	const validateTimeWindows = useCallback(
 		(start, end, type) => {
 			let badOrders = [];
-			let pickupValid = type !== DISPATCH_TYPE.MULTI_DROP;
+			let pickupValid = type !== MANUAL_DISPATCH_TYPES.MULTI_DROP;
 			let dropoffValid = false;
 			let validStates = selectionModel.map(orderNo => {
 				let order = findByOrderNumber(allJobs, orderNo);
 				if (order) {
 					// check if order's pickup time(s) fit within the time window
-					if (type === DISPATCH_TYPE.MULTI_DROP) {
+					if (type === MANUAL_DISPATCH_TYPES.MULTI_DROP) {
 						const { pickupStartTime } = order.jobSpecification;
 						pickupValid = dayjs(pickupStartTime).isSameOrAfter(dayjs(start), 'm');
 					}
@@ -418,14 +415,14 @@ export default function Orders(props) {
 			showOptRoutes(false);
 			setOptLoading(true);
 			const { startTime, endTime } = values;
-			let { allValid, badOrders } = validateTimeWindows(startTime, endTime, DISPATCH_TYPE.OPTIMIZE);
+			let { allValid, badOrders } = validateTimeWindows(startTime, endTime, MANUAL_DISPATCH_TYPES.OPTIMIZE);
 			if (!allValid) {
 				setOptLoading(false);
 				setParams(values);
 				//dispatch(addError("Your selection contains orders that can't be delivered today. Delivery dates must be for today only"));
 				showReviewModal(prevState => ({
 					show: true,
-					type: DISPATCH_TYPE.OPTIMIZE,
+					type: MANUAL_DISPATCH_TYPES.OPTIMIZE,
 					orders: badOrders,
 					startTime: dayjs(startTime),
 					endTime: dayjs(endTime)
@@ -442,39 +439,40 @@ export default function Orders(props) {
 		[selectionModel]
 	);
 
-	const newMultiDrop = useCallback(
+	const multiDropQuotes = useCallback(
 		async values => {
 			showMultiDropModal(prevState => ({
 				...prevState,
 				show: false
 			}));
-			setJobLoader(prevState => ({ loading: true, text: 'Checking your dropoff times...' }));
 			const { windowStartTime, windowEndTime, vehicleType, orderNumbers } = values;
-			const selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
-			for (let job of selectedJobs) await dispatch(updateDelivery(apiKey, job['_id'], { pickupStartTime: windowStartTime }));
-			let { allValid, badOrders } = validateTimeWindows(windowStartTime, windowEndTime, DISPATCH_TYPE.MULTI_DROP);
+			setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
+			for (let orderNo of orderNumbers)
+				await dispatch(
+					updateDelivery(apiKey, orderNo, {
+						pickupStartTime: windowStartTime,
+						dropoffEndTime: windowEndTime
+					})
+				);
+			let { allValid, badOrders } = validateTimeWindows(windowStartTime, windowEndTime, MANUAL_DISPATCH_TYPES.MULTI_DROP);
 			if (!allValid) {
 				setParams(prevState => values);
 				setJobLoader(prevState => ({ ...prevState, loading: false }));
 				showReviewModal(prevState => ({
 					show: true,
-					type: DISPATCH_TYPE.MULTI_DROP,
 					orders: badOrders,
 					startTime: dayjs(windowStartTime),
 					endTime: dayjs(windowEndTime),
 					vehicleType
 				}));
 			} else {
+				let selectedJobs = filterByOrderNumber(allJobs, orderNumbers);
+				const payload = assembleMultiDropPayload(selectedJobs, vehicleType, windowStartTime);
+				setDeliveryParams(prevState => ({ ...payload }));
 				try {
-					setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
-					const deliveryParams = assembleMultiDropPayload(selectedJobs, vehicleType, windowStartTime);
-					// create multi-drop job
-					const job = await dispatch(createMultiDropJob({ ...deliveryParams, windowStartTime, windowEndTime }, apiKey, 'stuart'));
-					// delete existing jobs
+					const { quotes } = await dispatch(getAllQuotes(apiKey, payload));
 					setJobLoader(prevState => ({ ...prevState, loading: false }));
-					setMessage(`Your multi-drop order was created and dispatched to Stuart!`)
-					await dispatch(deleteJobs(email, orderNumbers)).then(res => console.log(res));
-					console.log(job);
+					setQuotes(prevState => ({ show: true, values: quotes }));
 				} catch (err) {
 					setJobLoader(prevState => ({ ...prevState, loading: false }));
 					console.error(err);
@@ -483,6 +481,22 @@ export default function Orders(props) {
 		},
 		[selectionModel, allJobs]
 	);
+
+	const newMultiDrop = useCallback(async () => {
+		try {
+			showConfirmDialog(false);
+			setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
+			// create multi-drop job
+			await dispatch(createMultiDropJob(deliveryParams, apiKey, provider.id));
+			// delete existing jobs
+			setJobLoader(prevState => ({ ...prevState, loading: false }));
+			setMessage(`Your multi-drop order was created and dispatched to Stuart!`);
+			dispatch(deleteJobs(email, selectionModel)).then(res => console.log(res));
+		} catch (err) {
+			setJobLoader(prevState => ({ ...prevState, loading: false }));
+			console.error(err);
+		}
+	}, [selectionModel, deliveryParams, provider]);
 
 	const assignRoute = useCallback((driverId, route) => {
 		setOptimizedRoutes(prevState => ({ ...prevState, show: false }));
@@ -504,7 +518,7 @@ export default function Orders(props) {
 	const confirmReview = useCallback(
 		type => {
 			showReviewModal(prevState => ({ ...prevState, show: false }));
-			if (type === DISPATCH_TYPE.OPTIMIZE) {
+			if (type === MANUAL_DISPATCH_TYPES.OPTIMIZE) {
 				setOptLoading(true);
 				dispatch(optimizeRoutes(email, params, selectionModel))
 					.then(({ routes, unreachable }) => {
@@ -522,32 +536,18 @@ export default function Orders(props) {
 						setOptLoading(false);
 						console.error(err.message);
 					});
-			} else if (type === DISPATCH_TYPE.MULTI_DROP) {
-				setJobLoader(prevState => ({ loading: true, text: 'Creating Multi Drop' }));
-				const selectedJobs = filterByOrderNumber(allJobs, selectionModel);
-				const deliveryParams = assembleMultiDropPayload(selectedJobs, reviewModal.vehicleType, reviewModal.startTime);
-				console.log(deliveryParams);
-				dispatch(
-					createMultiDropJob(
-						{
-							...deliveryParams,
-							windowStartTime: reviewModal.startTime,
-							windowEndTime: reviewModal.endTime
-						},
-						apiKey,
-						'stuart'
-					)
-				)
-					.then(job => {
-						dispatch(deleteJobs(email, selectionModel)).then(res => console.log(res));
-						setJobLoader(prevState => ({ ...prevState, loading: false }));
-						setMessage('Your multi drop has been created successfully!');
-						console.log(job);
-					})
-					.catch(err => {
-						setJobLoader(prevState => ({ ...prevState, loading: false }));
-						console.error(err);
-					});
+			} else if (type === MANUAL_DISPATCH_TYPES.MULTI_DROP) {
+				setJobLoader(prevState => ({ loading: true, text: 'Fetching Quotes' }));
+				let selectedJobs = filterByOrderNumber(allJobs, selectionModel);
+				const payload = assembleMultiDropPayload(selectedJobs, reviewModal.vehicleType, reviewModal.startTime);
+				setDeliveryParams(prevState => ({ ...payload }));
+				dispatch(getAllQuotes(apiKey, payload)).then(({ quotes }) => {
+					setJobLoader(prevState => ({ ...prevState, loading: false }));
+					setQuotes(prevState => ({ show: true, values: quotes }));
+				}).catch(err => {
+					setJobLoader(prevState => ({ ...prevState, loading: false }));
+					console.error(err);
+				})
 			} else {
 				alert('Oops there was an error dispatch your job. Please try again.');
 			}
@@ -563,18 +563,20 @@ export default function Orders(props) {
 				<SuccessToast position='topRight' toggleShow={setToast} message={toast} />
 				<Error ref={modalRef} show={!!error.message} onHide={() => dispatch(removeError())} message={error.message} />
 				<ReviewOrders
-					type={reviewModal.type}
+					type={dispatchType}
 					show={reviewModal.show}
 					onGoBack={type => {
 						showReviewModal(prevState => ({ ...prevState, show: false }));
-						type === DISPATCH_TYPE.OPTIMIZE ? showOptRoutes(true) : showMultiDropModal(prevState => ({ ...prevState, show: true }));
+						type === MANUAL_DISPATCH_TYPES.OPTIMIZE
+							? showOptRoutes(true)
+							: showMultiDropModal(prevState => ({ ...prevState, show: true }));
 					}}
 					onHide={() => showReviewModal(prevState => ({ ...prevState, show: false }))}
 					orders={reviewModal.orders}
 					onConfirm={confirmReview}
 					onUpdate={(values, jobId) =>
 						dispatch(updateDelivery(apiKey, jobId, values))
-							.then(() => setToast("Job updated successfully"))
+							.then(() => setToast('Job updated successfully'))
 							.catch(err => console.error(err))
 					}
 					windowStartTime={reviewModal.startTime}
@@ -587,7 +589,7 @@ export default function Orders(props) {
 						showAssignModal(false);
 						showDriversModal(prevState => ({ ...prevState, show: true }));
 					}}
-					outsourceToCourier={fetchQuotes}
+					outsourceToCourier={singleDropQuotes}
 				/>
 				<OptimizationResult
 					show={routesModal.show}
@@ -596,11 +598,11 @@ export default function Orders(props) {
 					unreachable={routesModal.unreachable}
 					onAssign={assignRoute}
 				/>
-				<ManualDispatch
+				<ConfirmDispatch
 					show={confirmModal}
 					onHide={() => selectProvider(prevState => INIT_STATE)}
 					driverName={provider.name}
-					onConfirm={dispatchJob}
+					onConfirm={() => (dispatchType === MANUAL_DISPATCH_TYPES.MULTI_DROP ? newMultiDrop() : dispatchJob())}
 				/>
 				<SelectDriver
 					show={selectDriverModal.show}
@@ -632,10 +634,10 @@ export default function Orders(props) {
 					onHide={() => showMultiDropModal(prevState => ({ ...prevState, show: false }))}
 					orderNumbers={selectionModel}
 					orders={multiDropModal.orders}
-					onSubmit={newMultiDrop}
+					onSubmit={multiDropQuotes}
 					onUpdate={(values, jobId) =>
 						dispatch(updateDelivery(apiKey, jobId, values))
-							.then(() => setToast("Job updated successfully"))
+							.then(() => setToast('Job updated successfully'))
 							.catch(err => console.error(err))
 					}
 					windowStartTime={multiDropModal.startTime}
@@ -695,6 +697,7 @@ export default function Orders(props) {
 						},
 						toolbar: {
 							showMultiDrop: () => {
+								setDispatchType(MANUAL_DISPATCH_TYPES.MULTI_DROP)
 								const orders = filterByOrderNumber(allJobs, selectionModel);
 								const { startTime, endTime } = calculateTimeWindow(Object.create(orders));
 								showMultiDropModal(prevState => ({
@@ -705,6 +708,7 @@ export default function Orders(props) {
 								}));
 							},
 							showRouteOpt: () => {
+								setDispatchType(MANUAL_DISPATCH_TYPES.OPTIMIZE)
 								showOptRoutes(true);
 							},
 							canMultiDrop,

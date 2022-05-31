@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const ManualDispatch = ({ show, onHide, driverName, onConfirm }) => {
+const ConfirmDispatch = ({ show, onHide, driverName, onConfirm }) => {
 	return (
 		<Modal show={show} onHide={onHide}>
 			<Modal.Header closeButton>
@@ -28,11 +28,11 @@ const ManualDispatch = ({ show, onHide, driverName, onConfirm }) => {
 	);
 };
 
-ManualDispatch.propTypes = {
+ConfirmDispatch.propTypes = {
 	show: PropTypes.bool.isRequired,
 	onHide: PropTypes.func.isRequired,
 	driverName: PropTypes.string.isRequired,
 	onConfirm: PropTypes.func.isRequired
 };
 
-export default ManualDispatch;
+export default ConfirmDispatch;

@@ -1,4 +1,4 @@
-import { PLACE_TYPES } from '../constants';
+import { DELIVERY_TYPES, PLACE_TYPES } from '../constants';
 import dayjs from 'dayjs';
 import { jobRequestSchema } from '../schemas';
 
@@ -160,6 +160,7 @@ export function assembleMultiDropPayload(jobs, vehicleType, windowStartTime) {
 	console.log(firstJob)
 	let payload = assemblePayload({ jobSpecification: firstJob['jobSpecification'], vehicleType });
 	payload.packagePickupStartTime = windowStartTime
+	payload.packageDeliveryType = DELIVERY_TYPES.MULTI_DROP
 	jobs.forEach(({ jobSpecification }) => {
 		let drop = jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
 			dropoffFirstName: dropoffLocation.firstName,
@@ -199,7 +200,7 @@ export function assemblePayload({ jobSpecification, vehicleType }) {
 		pickupPhoneNumber: jobSpecification.pickupLocation.phoneNumber,
 		pickupInstructions: jobSpecification.pickupLocation.instructions,
 		packagePickupStartTime: jobSpecification.pickupStartTime,
-		...(jobSpecification.pickupEndTime && { packagePickupEndTime: jobSpecification.pickupStartTime }),
+		...(jobSpecification.pickupEndTime && { packagePickupEndTime: jobSpecification.pickupEndTime }),
 		drops: jobSpecification.deliveries.map(({ description, dropoffLocation, dropoffEndTime }) => ({
 			dropoffFirstName: dropoffLocation.firstName,
 			dropoffLastName: dropoffLocation.lastName,
