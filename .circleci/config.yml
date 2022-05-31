@@ -53,6 +53,7 @@ workflows:
           parallelism: 3
           spec: cypress/integration/0-auth/*
           group: Auth Flow
+          store_artifacts: true
           post-steps:
             - store_test_results:
                 path: cypress/results/0-auth
@@ -82,6 +83,7 @@ workflows:
           parallelism: 3
           spec: cypress/integration/1-orders/*
           group: Orders
+          store_artifacts: true
           post-steps:
             - store_test_results:
                 path: cypress/results/1-orders

@@ -180,7 +180,6 @@ export function assembleMultiDropPayload(jobs, vehicleType, windowStartTime) {
 		}))[0];
 		payload.drops.push(drop);
 	});
-	console.log(payload);
 	return payload;
 }
 
@@ -232,15 +231,13 @@ export function filterByOrderNumber(jobs, orderNumbers){
 	return jobs.filter(job => job['jobSpecification']['deliveries'].some(({ orderNumber }) => orderNumbers.includes(orderNumber)))
 }
 
-export function convertToCurrentDayTime(datetime){
+export function convertToCurrentDayTime(datetime) {
 	if (dayjs(datetime).isValid()) {
-		const hour = dayjs(datetime).get("h");
-		const minute = dayjs(datetime).get("m");
+		const hour = dayjs(datetime).get('h');
+		const minute = dayjs(datetime).get('m');
 		let currDatetime = dayjs({ hour, minute });
-		if (currDatetime.isBefore(dayjs())) {
-			currDatetime = dayjs().add(15, "minutes")
-		}
-		return currDatetime
+		if (currDatetime.isBefore(dayjs())) currDatetime = dayjs().add(15, 'minutes');
+		return currDatetime;
 	}
-	return datetime
+	return datetime;
 }
