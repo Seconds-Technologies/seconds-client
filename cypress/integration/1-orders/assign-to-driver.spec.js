@@ -4,6 +4,7 @@ const apiURL = Cypress.env('API_URL');
 const serverURL = Cypress.env('SERVER_URL');
 const apiKey = Cypress.env('API_KEY');
 const adminKey = Cypress.env('ADMIN_ACCESS_KEY');
+const adminPassword = Cypress.env('ADMIN_PASSWORD')
 const loginURL = `${Cypress.config().baseUrl}/login`;
 const createPage = `${Cypress.config().baseUrl}/create`;
 const driverId = Cypress.env('DRIVER_ID');
@@ -45,17 +46,12 @@ describe.skip('Analyse orders', function () {
 
 describe('Assign Orders to Drivers', function () {
 	before(() => {
-		cy.fixture(`users/${env}.json`).as('validUser');
-		cy.visit(loginURL);
-		cy.url().should('include', '/login');
-		cy.get('#login-form').within(function () {
-			cy.get('#login-email').type(this.validUser.email);
-			cy.get('#login-password').type(this.validUser.password);
-			cy.root().submit().wait(DELAY).url().should('include', '/home');
-		});
-		cy.get('#sidebar-create').click();
-		cy.url().should('include', '/create');
-		cy.saveLocalStorage();
+		cy.fixture(`users/${env}.json`).then((validUser) => {
+			cy.login(loginURL, validUser.email, adminPassword, DELAY)
+			cy.get('#sidebar-create').click();
+			cy.url().should('include', '/create');
+			cy.saveLocalStorage();
+		})
 	});
 
 	beforeEach(() => {

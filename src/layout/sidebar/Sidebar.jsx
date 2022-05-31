@@ -108,7 +108,7 @@ const Sidebar = () => {
 						</Link>
 					</Tooltip>
 					<Tooltip title='Drivers' arrow placement='right-end'>
-						<Link to={PATHS.DRIVERS} className='link text-black'>
+						<Link id="sidebar-drivers" to={PATHS.DRIVERS} className='link text-black'>
 							<li className={`sidebarListItem ${location['pathname'] === PATHS.DRIVERS && 'currentLink'}`}>
 								<img
 									className={`sidebarIcon item-hover ${location['pathname'] === PATHS.DRIVERS && 'currentIcon'}`}

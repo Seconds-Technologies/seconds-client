@@ -110,13 +110,6 @@ const Dashboard = props => {
 				onBeforeChange={onBeforeChange}
 				onExit={() => {
 					dispatch(updateDashboardTour({ stepsEnabled: false }));
-					/*dispatch(updateCurrentUser({ lastLogin: dayjs().format() }));
-					dispatch(
-						updateProfile({
-							id,
-							lastLogin: dayjs().format()
-						})
-					);*/
 				}}
 				options={{
 					exitOnEsc: true,

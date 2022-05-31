@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 const env = Cypress.env('ENV');
 const apiKey = Cypress.env('API_KEY');
+const adminPassword = Cypress.env('ADMIN_PASSWORD');
 const loginURL = `${Cypress.config().baseUrl}/login`;
 const createPage = `${Cypress.config().baseUrl}/create`;
 const driverId = Cypress.env('DRIVER_ID');
@@ -8,18 +9,13 @@ const DELAY = Number(Cypress.env('DELAY'));
 const THREE_SECONDS = 3000;
 
 describe('Create Unassigned Orders', function(){
-	before(() => {
-		cy.fixture(`users/${env}.json`).as('validUser');
-		cy.visit(loginURL);
-		cy.url().should('include', '/login');
-		cy.get('#login-form').within(function () {
-			cy.get('#login-email').type(this.validUser.email);
-			cy.get('#login-password').type(this.validUser.password);
-			cy.root().submit().wait(DELAY).url().should('include', '/home');
-		});
-		cy.get('#sidebar-create').click();
-		cy.url().should('include', '/create');
-		cy.saveLocalStorage();
+	before(function() {
+		cy.fixture(`users/${env}.json`).then((validUser) => {
+			cy.login(loginURL, validUser.email, adminPassword, DELAY)
+			cy.get('#sidebar-create').click();
+			cy.url().should('include', '/create');
+			cy.saveLocalStorage();
+		})
 	});
 
 	beforeEach(() => {

@@ -88,6 +88,7 @@ describe('Onboarding flow', () => {
 			cy.get('#postcode').type(this.user.postcode);
 			cy.root().submit().wait(5000).get('#create-location-form').should('not.exist');
 		});
+		cy.get('.introjs-skipbutton').click()
 	});
 });
 

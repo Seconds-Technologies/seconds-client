@@ -1,6 +1,7 @@
 /// <reference types="cypress"/>
 const loginURL = `${Cypress.config().baseUrl}/login`;
 const env = Cypress.env('ENV');
+const adminPassword = Cypress.env('ADMIN_PASSWORD')
 
 describe('Failed Login', () => {
 	beforeEach(() => {
@@ -26,7 +27,7 @@ describe('Failed Login', () => {
 		cy.url().should('include', '/login');
 		cy.get('#login-form').within(function () {
 			cy.get('#login-email').type(user.email);
-			cy.get('#login-password').type(user.password);
+			cy.get('#login-password').type(adminPassword);
 			cy.root().submit().wait(10000).url().should('include', '/home');
 		});
 	});

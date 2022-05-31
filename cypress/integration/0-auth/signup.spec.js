@@ -177,5 +177,6 @@ describe('Successful User Signup', () => {
 			cy.get('#postcode').type(this.user.postcode);
 			cy.root().submit().wait(FIVE_SECONDS).get('#create-location-form').should('not.exist');
 		});
+		cy.get('.introjs-skipbutton').click()
 	})
 });
