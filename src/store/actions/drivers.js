@@ -73,9 +73,9 @@ export function deleteDrivers(email, data) {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			return apiCall('PATCH', `/server/main/delete-drivers`, data, { params: { email }})
-				.then(({ message, ...drivers }) => {
-					//dispatch(setDrivers(drivers))
-					resolve()
+				.then(({ message, drivers }) => {
+					dispatch(setDrivers(drivers))
+					resolve(message)
 				})
 				.catch(err => {
 					if (err) dispatch(addError(err.message));

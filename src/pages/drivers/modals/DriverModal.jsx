@@ -30,6 +30,7 @@ const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
 							<h2 className='text-center mb-3'>{type === 'update' ? 'Update Driver' : 'New Driver'}</h2>
 							<form
 								onSubmit={handleSubmit}
+								id="driver-details-form"
 								className='row my-4 d-flex flex-column justify-content-center align-items-center'
 								autoComplete='on'
 							>
@@ -110,27 +111,27 @@ const DriverModal = ({ type, show, toggleShow, onSubmit, details }) => {
 										Vehicle Type
 									</label>
 									<div className='col-sm-8 d-flex justify-content-around vehicle-radio'>
-										<label className='d-flex align-items-center'>
+										<label id="driver-bicycle" className='d-flex align-items-center'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[0].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[0].value)} onBlur={handleBlur} />
 											<img className='img-fluid' src={bicycle} alt={''} width={40} height={40} />
 										</label>
-										<label className='d-flex align-items-center'>
+										<label id="driver-cargobike" className='d-flex align-items-center'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[2].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[2].value)} onBlur={handleBlur} />
 											<img className='img-fluid' src={cargobike} alt='' width={50} height={50} />
 										</label>
-										<label className='d-flex align-items-center'>
+										<label id="driver-motorbike" className='d-flex align-items-center'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[1].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[1].value)} onBlur={handleBlur} />
 											<img className='img-fluid' src={motorbike} alt='' width={45} height={45} />
 										</label>
-										<label className='d-flex align-items-end'>
+										<label id="driver-car" className='d-flex align-items-end'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[3].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[3].value)} onBlur={handleBlur} />
 											<img className='img-fluid' src={car} alt='' width={60} height={60} />
 										</label>
-										<label className='d-flex align-items-center'>
+										<label id="driver-van" className='d-flex align-items-center'>
 											<input type='radio' name='test' value='small' checked={values.vehicle === VEHICLE_TYPES[4].value}
 											       onChange={e => setFieldValue('vehicle', VEHICLE_TYPES[4].value)} onBlur={handleBlur} />
 											<img className='img-fluid' src={van} alt='' width={60} height={60} />

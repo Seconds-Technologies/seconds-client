@@ -64,9 +64,9 @@ const Catalog = () => {
 	);
 
 	const columns = [
-		{ field: 'id', headerName: 'SKU Ref', width: 150 },
-		{ field: 'variantName', headerName: 'SKU Name', width: 150 },
-		{ field: 'productName', headerName: 'Product Name', width: 200 },
+		{ field: 'id', headerName: 'SKU Ref', width: 150, flex: 0.4 },
+		{ field: 'variantName', headerName: 'SKU Name', width: 150, flex: 0.3 },
+		{ field: 'productName', headerName: 'Product Name', width: 200, flex: 0.3 },
 		{ field: 'category', headerName: 'Category', width: 150 },
 		{ field: 'description', headerName: 'Description', width: 250 },
 		{

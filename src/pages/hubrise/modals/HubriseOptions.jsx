@@ -47,10 +47,10 @@ const HubriseOptions = ({ show, centered, onHide, onSubmit }) => {
 					{({ values, errors, handleBlur, setFieldValue }) => (
 						<Form className='container w-100'>
 							<div>
-								<div className='d-flex align-items-center'>
+								<div className='d-flex flex-row align-items-center'>
 									<h1 className='me-2 workflow-header fs-5'>Use Custom Triggers</h1>
 									<Tooltip
-										title="Keeping this option disabled will allow any new order to be be created regardless of it's current status or service type ref"
+										title="Keep this option disabled to allow all new orders to be created, regardless of it's current status or service type ref"
 										placement='right-start'
 									>
 										<IconButton size='small'>

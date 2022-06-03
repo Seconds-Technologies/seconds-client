@@ -24,7 +24,7 @@ export default (state = DEFAULT_STATE, action) => {
 		case ADD_DRIVER:
 			return [...state, action.driver]
 		case UPDATE_DRIVER:
-			return [...state, action.driver]
+			return [...state, ...action.driver]
 		default:
 			return state
 	}

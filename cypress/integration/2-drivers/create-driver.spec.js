@@ -9,7 +9,8 @@ const DELAY = Number(Cypress.env('DELAY'));
 
 describe('', function(){
 	beforeEach(() => {
-		cy.fixture(`users/${env}.json`).then((validUser) => {
+		cy.fixture(`drivers.json`).as('driver')
+		cy.fixture(`users/${env}.json`).then(validUser => {
 			cy.login(loginURL, validUser.email, adminPassword, DELAY)
 			cy.get('#sidebar-drivers').click();
 			cy.url().should('include', '/drivers');
@@ -17,10 +18,15 @@ describe('', function(){
 		})
 	});
 
+	afterEach(() => {
+		cy.get('[data-rowindex="0"] > [data-field="action"] > div > #delete-driver').click().wait(DELAY);
+		cy.get('.modal-content').should('be.visible').get('#confirm-delete').click()
+	});
+
 	it('Create Driver', function(){
 		cy.get('#new-driver-button').click().get('#driver-details-form').should('be.visible').end()
-		/*cy.get('#driver-details-form').within(() => {
-
-		})*/
+		cy.createNewDriver(this.driver, DELAY);
+		cy.get('.drivers-table').should('be.visible');
+		cy.get('[data-rowindex="0"] > [data-field="phone"]').then($cell => cy.wrap($cell.text()).should('eq', this.driver.phone))
 	})
 })

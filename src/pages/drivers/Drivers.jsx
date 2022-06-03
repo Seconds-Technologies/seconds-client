@@ -208,6 +208,7 @@ const Drivers = props => {
 							<span className='text-decoration-none'>Edit</span>
 						</button>
 						<IconButton
+							id="delete-driver"
 							className='ms-3'
 							color='error'
 							size='small'
@@ -244,6 +245,7 @@ const Drivers = props => {
 			<div className='d-flex mx-3 justify-content-between'>
 				<h3>Drivers</h3>
 				<button
+					id="new-driver-button"
 					disabled={disableDriver}
 					className='btn btn-primary btn-lg'
 					style={{ width: 150 }}
@@ -286,7 +288,7 @@ const Drivers = props => {
 					console.log(newSelectionModel);
 				}}
 				autoHeight={false}
-				className='mt-3 mx-3'
+				className='drivers-table mt-3 mx-3'
 				rows={driverRows}
 				disableSelectionOnClick
 				columns={columns}

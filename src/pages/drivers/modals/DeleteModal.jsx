@@ -15,10 +15,10 @@ const DeleteModal = ({ onHide, show, centered, onConfirm, title, description, da
 				{data.map((name, index) => <span key={index} className="fw-bold">{name}</span>)}
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant='secondary' onClick={onHide}>
+				<Button id="cancel-delete" variant='secondary' onClick={onHide}>
 					Cancel
 				</Button>
-				<Button	onClick={onConfirm}>
+				<Button	id="confirm-delete" onClick={onConfirm}>
 					Confirm
 				</Button>
 			</Modal.Footer>
