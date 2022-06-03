@@ -346,3 +346,19 @@ export function deleteJobs(email, orderNumbers) {
 		})
 	}
 }
+
+export function sendHubriseEtaUpdate(apiKey, orderNumber, confirmedTime){
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			return apiCall('PATCH', `/api/v1/hubrise/eta`, { orderNumber, confirmedTime }, { headers: { 'X-Seconds-Api-Key': apiKey }})
+				.then(({ message }) => {
+					resolve(message);
+				})
+				.catch(err => {
+					if (err) dispatch(addError(err.message));
+					else dispatch(addError('Api endpoint could not be accessed!'));
+					reject(err);
+				});
+		});
+	};
+}

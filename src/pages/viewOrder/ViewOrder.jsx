@@ -2,7 +2,7 @@ import './viewOrder.css';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { assignDriver, createDeliveryJob, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
+import { assignDriver, createDeliveryJob, sendHubriseEtaUpdate, subscribe, unsubscribe, updateDelivery } from '../../store/actions/delivery';
 import { addError, removeError } from '../../store/actions/errors';
 import { Mixpanel } from '../../config/mixpanel';
 import Modal from 'react-bootstrap/Modal';
@@ -58,7 +58,7 @@ const ViewOrder = props => {
 		return filterByOrderNumber(allJobs, [orderID]).map(
 			({
 				_id,
-				jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation },
+				jobSpecification: { deliveries, pickupStartTime, jobReference, pickupLocation, hubriseId },
 				selectedConfiguration: { providerId, deliveryFee },
 				driverInformation: { name: driverName, phone: driverPhone, transport: driverVehicle, location },
 				createdAt
@@ -66,6 +66,7 @@ const ViewOrder = props => {
 				createdAt = dayjs(createdAt).format('DD/MM/YYYY HH:mm:ss');
 				return {
 					id: _id,
+					hubriseId,
 					reference: jobReference,
 					createdAt,
 					providerId,
@@ -84,7 +85,7 @@ const ViewOrder = props => {
 
 	const delivery = useMemo(() => {
 		if (order.deliveries) {
-			const delivery =  order.deliveries
+			const delivery = order.deliveries
 				.filter(({ orderNumber }) => orderNumber === orderID)
 				.map(({ dropoffEndTime, dropoffLocation, trackingURL, description, status, proofOfDelivery }) => ({
 					dropoffEndTime: dropoffEndTime,
@@ -333,7 +334,6 @@ const ViewOrder = props => {
 				<SelectDriver
 					show={driversModal}
 					onHide={() => showDriversModal(false)}
-					onHide={() => showDriversModal(false)}
 					drivers={drivers}
 					selectDriver={selectProvider}
 					showConfirmDialog={showConfirmDialog}
@@ -401,6 +401,13 @@ const ViewOrder = props => {
 							<div className='d-flex justify-content-between my-2'>
 								<Item label='Job Reference' value={order.reference} />
 								<div>
+									{order.hubriseId && (
+										<button className='btn btn-outline-success me-3' onClick={() =>
+											dispatch(sendHubriseEtaUpdate(apiKey, orderID, dayjs().add(20, "m").format())).then(() => showMessage("Confirmed Time updated!"))}
+										>
+											HubRise ETA update
+										</button>
+									)}
 									{delivery.trackingURL && (
 										<a href={delivery.trackingURL} target='_blank' className='btn btn-outline-primary me-3'>
 											Track
