@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { useSelector } from 'react-redux';
 import Chip from '@mui/material/Chip';
-import { offIcon, onIcon } from '../constants';
+import { offIcon, onIcon } from '../constants/elements';
 
 const CourierPanel = ({
 	id,

@@ -28,7 +28,7 @@ const ProductDisplay = ({ isComponent, plan, price, description, customerId, loo
 				</div>
 				<div className='mt-3 text-muted'>{description}</div>
 			</div>
-			<form action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/subscription/create-checkout-session`} method='POST'>
+			<form action={`${String(process.env.VITE_SERVER_HOST)}/server/subscription/create-checkout-session`} method='POST'>
 				<input type='hidden' name='lookup_key' value={lookupKey} />
 				<input type='hidden' name='onboarding' value={isComponent} />
 				<input type='hidden' name='stripe_customer_id' value={customerId} />

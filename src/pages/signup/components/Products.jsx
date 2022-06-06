@@ -1,10 +1,9 @@
 import React from 'react';
 import ProductTile from './ProductTile';
-import { SUBSCRIPTION_PLANS } from '../../../constants';
 
-const connect = String(process.env.REACT_APP_STRIPE_CONNECT_KEY);
-const growth = String(process.env.REACT_APP_STRIPE_GROWTH_KEY)
-const pro = String(process.env.REACT_APP_STRIPE_PRO_KEY)
+const connect = String(process.env.VITE_STRIPE_CONNECT_KEY);
+const growth = String(process.env.VITE_STRIPE_GROWTH_KEY)
+const pro = String(process.env.VITE_STRIPE_PRO_KEY)
 
 const Products = props => {
 	return (

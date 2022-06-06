@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { INTEGRATIONS, offIcon, onIcon, PATHS } from '../../../../../constants';
+import { INTEGRATIONS, PATHS } from '../../../../../constants';
 import Switch from 'react-switch';
 import hubriseLogo from '../../../../../assets/img/hubrise-logo.png';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { offIcon, onIcon } from '../../../../../constants/elements';
 
 const HubrisePanel = ({ wrapper, toggle }) => {
 	const { isActive, isIntegrated } = useSelector(state => state['hubriseStore']);

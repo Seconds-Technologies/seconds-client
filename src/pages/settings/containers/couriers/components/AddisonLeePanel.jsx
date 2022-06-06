@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import Switch from 'react-switch';
-import { offIcon, onIcon, PATHS, PROVIDERS } from '../../../../../constants';
+import { PATHS, PROVIDERS } from '../../../../../constants';
 import addisonLeeLogo from '../../../../../assets/img/addison-lee-logo.png';
 import { useSelector } from 'react-redux';
+import { offIcon, onIcon } from '../../../../../constants/elements';
 
 const AddisonLeePanel = ({ wrapper, toggle }) => {
 	const { activeFleetProviders } = useSelector(state => state['settingsStore']);

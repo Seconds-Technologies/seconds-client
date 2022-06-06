@@ -29,8 +29,8 @@ if (localStorage.getItem('jwt_token')) {
 
 const token = '8d14f8d9-7027-4af7-8fb2-14ca0712e633';
 const inbox = '3793e40e-c090-4412-acd0-7e20a7dc9f8a';
-const stuartAppId = process.env.REACT_APP_STUART_APP_ID;
-const MAGICBELL_API_KEY = process.env.REACT_APP_MAGIC_BELL_API_KEY
+const stuartAppId = process.env.VITE_STUART_APP_ID;
+const MAGICBELL_API_KEY = process.env.VITE_MAGIC_BELL_API_KEY
 
 function App() {
 	const location = useLocation();

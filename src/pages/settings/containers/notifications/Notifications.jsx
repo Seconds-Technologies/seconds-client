@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { updateBusinessWorkflow } from '../../../../store/actions/settings';
 import { Form, Formik } from 'formik';
 import Switch from 'react-switch';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import { BsInfoCircle } from 'react-icons/bs';
-import { BATCH_TYPES, DELIVERY_STRATEGIES, DISPATCH_TYPES, offIcon, onIcon, VEHICLE_TYPES } from '../../../../constants';
-import dayjs from 'dayjs';
-import Slider from '@mui/material/Slider';
 import SuccessToast from '../../../../modals/SuccessToast';
 import { useDispatch, useSelector } from 'react-redux';
+import { offIcon, onIcon } from '../../../../constants/elements';
 
 const Notifications = props => {
 	const dispatch = useDispatch();

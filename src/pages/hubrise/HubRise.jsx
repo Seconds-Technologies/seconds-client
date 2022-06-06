@@ -83,7 +83,7 @@ const HubRise = props => {
 							onSubmit={values => console.log(values)}
 						>
 							{() => (
-								<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/hubrise/authorize`}>
+								<form className='w-50' method='POST' action={`${String(process.env.VITE_SERVER_HOST)}/server/hubrise/authorize`}>
 									<input type='hidden' name='email' value={email} />
 									<div className='text-center d-flex justify-content-around pt-3'>
 										<button type='submit' className='btn btn-primary btn-lg connectButton'>

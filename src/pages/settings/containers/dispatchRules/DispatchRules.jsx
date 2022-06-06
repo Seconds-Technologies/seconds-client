@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DELIVERY_STRATEGIES, DISPATCH_TYPES, offIcon, onIcon, VEHICLE_TYPES } from '../../../../constants';
+import { DELIVERY_STRATEGIES, DISPATCH_TYPES, VEHICLE_TYPES } from '../../../../constants';
 import Switch from 'react-switch';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +9,7 @@ import { Form, Formik } from 'formik';
 import { updateBusinessWorkflow } from '../../../../store/actions/settings';
 import SuccessToast from '../../../../modals/SuccessToast';
 import VehicleSettings from './components/VehicleSettings';
+import { offIcon, onIcon } from '../../../../constants/elements';
 
 const DispatchRules = props => {
 	const dispatch = useDispatch();
@@ -52,7 +53,7 @@ const DispatchRules = props => {
 					dispatch(updateBusinessWorkflow(email, values)).then(message => setMessage(message));
 				}}
 			>
-				{({ values, handleSubmit, handleChange, handleBlur, handleReset, setFieldValue }) => (
+				{({ values, handleChange, handleBlur, handleReset, setFieldValue }) => (
 					<Form className='container-fluid'>
 						<VehicleSettings
 							open={vehicleOption.show}

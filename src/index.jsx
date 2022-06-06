@@ -1,4 +1,4 @@
-import 'intro.js/introjs.css';
+// import 'intro.js/minified/introjs.min.css;
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './scss/style.scss';
 import 'bootstrap/dist/js/bootstrap.min';
@@ -77,4 +77,4 @@ ReactDOM.render(
 
 //@ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax
-mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+// mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;

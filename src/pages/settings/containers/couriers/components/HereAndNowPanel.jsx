@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import Switch from 'react-switch';
-import { offIcon, onIcon, PATHS, PROVIDERS } from '../../../../../constants';
+import { PATHS, PROVIDERS } from '../../../../../constants';
 import { useSelector } from 'react-redux';
 import hereNowLogo from '../../../../../assets/img/herenow.png';
+import { offIcon, onIcon } from '../../../../../constants/elements';
 
 const HereAndNowPanel = ({ wrapper, toggle, height, width }) => {
 	const { activeFleetProviders } = useSelector(state => state['settingsStore']);

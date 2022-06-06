@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { INTEGRATIONS, offIcon, onIcon, PATHS } from '../../../../../constants';
+import { INTEGRATIONS, PATHS } from '../../../../../constants';
 import Switch from 'react-switch';
 import woocommerceLogo from '../../../../../assets/img/woocommerce-logo.svg';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { offIcon, onIcon } from '../../../../../constants/elements';
 
 const WooCommercePanel = ({ wrapper, toggle }) => {
 	const { isActive, credentials } = useSelector(state => state['wooCommerceStore'])

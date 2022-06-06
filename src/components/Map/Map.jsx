@@ -3,7 +3,7 @@ import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import mbxClient from '@mapbox/mapbox-sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ReactMapboxGl, { GeoJSONLayer, Marker, Popup } from 'react-mapbox-gl';
+import ReactMapboxGl, { GeoJSONLayer, Marker, Popup } from '@mahdi-esbati/react-mapbox';
 import pickupMarker from '../../assets/img/pickup-icon.svg';
 import assignedDropoffMarker from '../../assets/img/dropoff-icon-green.svg';
 import unassignedDropoffMarker from '../../assets/img/dropoff-icon-red.svg';
@@ -16,14 +16,14 @@ const Map = ({ styles, height, location, markers, couriers, customers, busy }) =
 	const history = useHistory();
 	const baseClient = mbxClient({
 		accessToken:
-			process.env.REACT_APP_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
+			process.env.VITE_MAPBOX_TOKEN || 'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
 	});
 
 	const Mapbox = useMemo(
 		() =>
 			ReactMapboxGl({
 				accessToken:
-					process.env.REACT_APP_MAPBOX_TOKEN ||
+					process.env.VITE_MAPBOX_TOKEN ||
 					'pk.eyJ1IjoiY2hpcHpzdGFyIiwiYSI6ImNrZGxzMHp4ODExajUycG9odTd1ZTUzYm4ifQ.uVlvBQEsn0SDUDy1VcAHRA'
 			}),
 		[]

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { INTEGRATIONS, offIcon, onIcon, PATHS } from '../../../../../constants';
+import { INTEGRATIONS, PATHS } from '../../../../../constants';
 import Switch from 'react-switch';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import squarespaceLogo from '../../../../../assets/img/squarespace-logo.svg';
+import { offIcon, onIcon } from '../../../../../constants/elements';
 
 const SquarespacePanel = ({ wrapper, toggle }) => {
 	const { isActive, credentials } = useSelector(state => state['squarespaceStore'])

@@ -291,5 +291,3 @@ export const MANUAL_DISPATCH_TYPES = {
 	MULTI_DROP: "multi-drop"
 }
 
-export const onIcon = <div className='switch-icon'>On</div>;
-export const offIcon = <div className='switch-icon'>Off</div>;

@@ -21,10 +21,9 @@ const Profile = props => {
 	const errors = useSelector(state => state['errors']);
 	const { isIntegrated } = useSelector(state => state['shopifyStore']);
 	const [src, setSrc] = useState(null);
-	const [apiModal, showAPIModal] = useState(false);
 	const [successModal, showSuccessModal] = useState(false);
-	const handleClose = type => (type === 'api' ? showAPIModal(false) : showSuccessModal(false));
-	const handleOpen = type => (type === 'api' ? showAPIModal(true) : showSuccessModal(true));
+	const handleClose = () => showSuccessModal(false);
+	const handleOpen = () => showSuccessModal(true);
 
 	useEffect(() => {
 		Mixpanel.people.increment('page_views');
@@ -73,7 +72,7 @@ const Profile = props => {
 
 	return (
 		<div ref={modalRef} className='tab-container d-flex flex-column justify-content-center px-5 '>
-			<SuccessMessage ref={modalRef} show={successModal} onHide={() => handleClose('profile')} />
+			<SuccessMessage ref={modalRef} show={successModal} onHide={handleClose} />
 			<div>
 				<h1 className='fs-3 fw-bold'>Account Information</h1>
 			</div>
@@ -106,7 +105,7 @@ const Profile = props => {
 							})
 						);
 						console.log(message);
-						handleOpen('profile');
+						handleOpen();
 						Mixpanel.track('Successful profile update');
 					} catch (err) {
 						Mixpanel.track('Unsuccessful profile update');
@@ -285,7 +284,7 @@ const Profile = props => {
 											console.log(label, values);
 										}
 									}}
-									apiKey={process.env.REACT_APP_GOOGLE_PLACES_API_KEY}
+									apiKey={process.env.VITE_GOOGLE_PLACES_API_KEY}
 								/>
 							</div>
 						</div>

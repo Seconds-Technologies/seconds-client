@@ -6,7 +6,7 @@ import CardSetupForm from '../../../../paymentMethod/CardSetupForm';
 import { loadStripe } from '@stripe/stripe-js';
 import { SUBSCRIPTION_PLANS } from '../../../../../constants';
 
-const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
+const stripePromise = loadStripe(String(process.env.VITE_STRIPE_PUBLIC_KEY));
 
 const PaymentInformation = ({ show, onHide, newPlan, isLoading, onSubscribe }) => {
 	const [toastMessage, setShowToast] = useState('');

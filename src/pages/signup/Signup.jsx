@@ -256,7 +256,7 @@ export default function Signup(props) {
 												/>
 												<label htmlFor='terms'>
 													I agree to the&nbsp;
-													<a href={process.env.REACT_APP_TERMS_OF_SERVICE_URL} target='_blank'>
+													<a href={process.env.VITE_TERMS_OF_SERVICE_URL} target='_blank'>
 														terms of service
 													</a>
 												</label>

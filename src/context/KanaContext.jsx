@@ -3,7 +3,7 @@ import { KanaContext } from './index';
 import { useSelector } from 'react-redux';
 import { KanaUserClient } from '@usekana/client-kana-js'
 
-const KANA_PUBLIC_KEY = process.env.REACT_APP_KANA_PUBLIC_KEY
+const KANA_PUBLIC_KEY = process.env.VITE_KANA_PUBLIC_KEY
 
 const KanaProvider = ({ children }) => {
 	const [kanaClient, setKanaClient] = useState(null);

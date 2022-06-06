@@ -74,7 +74,7 @@ const Square = props => {
 							isSubmitting
 							/* and other goodies */
 						}) => (
-							<form className='w-50' method='POST' action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/square/authorize`}>
+							<form className='w-50' method='POST' action={`${String(process.env.VITE_SERVER_HOST)}/server/square/authorize`}>
 								<div className='mb-3'>
 									<input type='hidden' name='email' value={email} />
 									<label htmlFor='clientId' className='form-label'>

@@ -1,6 +1,6 @@
 import mixpanel from 'mixpanel-browser';
 
-mixpanel.init(process.env.REACT_APP_MIXPANEL_TOKEN, {
+mixpanel.init(process.env.VITE_MIXPANEL_TOKEN, {
 	debug: process.env.NODE_ENV !== 'production',
 	ignore_dnt: true
 });

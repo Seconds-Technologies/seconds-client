@@ -22,9 +22,6 @@ import { useSelector } from 'react-redux';
 import DeliveryOverview from '../../components/charts/DeliveryOverview';
 import { FLEET_PROVIDERS } from '../../constants';
 import { capitalize } from '../../helpers';
-import MuiTooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import { BsInfoCircle } from 'react-icons/bs';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, SubTitle, Tooltip, PointElement, LineElement, Legend, ArcElement);
 

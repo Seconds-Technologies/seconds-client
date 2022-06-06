@@ -21,20 +21,20 @@ export function apiCall(method, path, data = null, config = {}) {
 		return !data
 			? axios[method.toLowerCase()](path, config)
 					.then(res => {
-						// process.env.REACT_APP_ENV_MODE !== "production" && console.log(res.data);
+						// process.env.VITE_ENV_MODE !== "production" && console.log(res.data);
 						resolve(res.data);
 					})
 					.catch(err => {
-						process.env.REACT_APP_ENV_MODE !== "production" && console.error(err);
+						process.env.VITE_ENV_MODE !== "production" && console.error(err);
 						err.response.data.error ? reject(err.response.data.error) : reject(err.response.data);
 					})
 			: axios[method.toLowerCase()](path, data, config)
 					.then(res => {
-						// process.env.REACT_APP_ENV_MODE !== "production" && console.log(res.data);
+						// process.env.VITE_ENV_MODE !== "production" && console.log(res.data);
 						resolve(res.data);
 					})
 					.catch(err => {
-						process.env.REACT_APP_ENV_MODE !== "production" && console.error(err);
+						process.env.VITE_ENV_MODE !== "production" && console.error(err);
 						err.response.data.error ? reject(err.response.data.error) : reject(err.response.data);
 					});
 	});

@@ -63,7 +63,7 @@ const SquareSpace = props => {
 							}) => (
 								<form
 									method='POST'
-									action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/squarespace/authorize`}
+									action={`${String(process.env.VITE_SERVER_HOST)}/server/squarespace/authorize`}
 								>
 									<div className='mb-3'>
 										<input type='hidden' name='email' value={email} />

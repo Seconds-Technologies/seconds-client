@@ -53,7 +53,7 @@ import CustomNoRowsOverlay from '../../components/CustomNoRowsOverlay';
 import { KanaContext } from '../../context';
 import MultiDrop from './modals/MultiDrop';
 
-// const isProduction = Boolean(process.env.REACT_APP_ENV_MODE === 'production');
+// const isProduction = Boolean(process.env.VITE_ENV_MODE === 'production');
 const INIT_STATE = { type: '', id: '', name: '', orderNumber: '' };
 
 export default function Orders(props) {

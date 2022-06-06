@@ -9,8 +9,8 @@ import LoadingOverlay from 'react-loading-overlay';
 import SuccessToast from '../../modals/SuccessToast';
 import Payment from './components/Payment';
 
-const stripePromise = loadStripe(String(process.env.REACT_APP_STRIPE_PUBLIC_KEY));
-const validFreeTrialKeys = [process.env.REACT_APP_STRIPE_GROWTH_KEY, process.env.REACT_APP_STRIPE_PRO_KEY];
+const stripePromise = loadStripe(String(process.env.VITE_STRIPE_PUBLIC_KEY));
+const validFreeTrialKeys = [process.env.VITE_STRIPE_GROWTH_KEY, process.env.VITE_STRIPE_PRO_KEY];
 
 const Signup2 = props => {
 	const { key: lookupKey } = useContext(ProductContext);

@@ -5,7 +5,7 @@ import logger from 'redux-logger';
 
 export const store = configureStore({
 	reducer: rootReducer,
-	devTools: process.env.REACT_APP_ENV_MODE !== 'production',
+	devTools: process.env.VITE_ENV_MODE !== 'production',
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({
 			serializableCheck: {

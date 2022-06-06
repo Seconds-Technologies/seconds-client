@@ -65,7 +65,7 @@ const WooCommerce = props => {
 							}) => (
 								<form
 									method='POST'
-									action={`${String(process.env.REACT_APP_SERVER_HOST)}/server/woocommerce/authorize`}
+									action={`${String(process.env.VITE_SERVER_HOST)}/server/woocommerce/authorize`}
 								>
 									<div className='mb-3'>
 										<input type='hidden' name='email' value={email} />
