@@ -43,7 +43,6 @@ const ViewOrder = props => {
 	const [jobModal, showJobModal] = useState(false);
 	const [driversModal, showDriversModal] = useState(false);
 	const [updateModal, showUpdateModal] = useState(false);
-	const [activeIndex, setIndex] = useState(0);
 	const [deliveryJob, setJob] = useState({});
 	const [deliveryParams, setDeliveryParams] = useState({
 		...jobRequestSchema

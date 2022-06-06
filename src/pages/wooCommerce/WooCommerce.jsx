@@ -54,13 +54,8 @@ const WooCommerce = props => {
 							onSubmit={values => console.log(values)}
 						>
 							{({
-								values,
-								errors,
-								touched,
 								handleChange,
-								handleBlur,
-								handleSubmit,
-								isSubmitting
+								handleBlur
 								/* and other goodies */
 							}) => (
 								<form

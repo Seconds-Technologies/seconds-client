@@ -132,12 +132,9 @@ export default function Signup(props) {
 								{({
 									values,
 									errors,
-									touched,
 									handleChange,
 									handleBlur,
-									handleSubmit,
-									isSubmitting,
-									setFieldValue
+									handleSubmit
 									/* and other goodies */
 								}) => (
 									<form id='signup-form' onSubmit={handleSubmit}>
