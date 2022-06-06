@@ -52,6 +52,7 @@ export default ({ mode }) => {
 			]
 		},
 		build: {
+			outDir: "build",
 			chunkSizeWarningLimit: 5000
 		}
 	})
