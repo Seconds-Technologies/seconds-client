@@ -14,12 +14,12 @@ export default ({ mode }) => {
 				'/server': {
 					target: process.env.VITE_SERVER_HOST,
 					changeOrigin: true,
-					secure: process.env.VITE_ENV !== "local"
+					secure: process.env.VITE_ENV_MODE !== "local"
 				},
 				'/api': {
 					target: process.env.VITE_API_HOST,
 					changeOrigin: true,
-					secure: process.env.VITE_ENV !== "local"
+					secure: process.env.VITE_ENV_MODE !== "local"
 				}
 			}
 		},
