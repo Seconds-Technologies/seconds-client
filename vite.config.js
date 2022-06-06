@@ -50,6 +50,9 @@ export default ({ mode }) => {
 					replacement: './runtimeConfig.browser',
 				},
 			]
+		},
+		build: {
+			chunkSizeWarningLimit: 5000
 		}
 	})
 }
