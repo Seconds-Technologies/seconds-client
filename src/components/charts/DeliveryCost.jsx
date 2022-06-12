@@ -37,7 +37,6 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 			switch (interval) {
 				case 'week':
 					totalFees = values.map(day => {
-						console.log(day)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -72,7 +71,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 					return totalFees;
 				case 'month':
 					totalFees = values.map(date => {
-						console.log(date)
+						console.log("DATE:", date)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -83,6 +82,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
+									console.log(dayjs(curr['jobSpecification'].pickupStartTime).date())
 									return dayjs(curr['jobSpecification'].pickupStartTime).date() === date
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
@@ -96,6 +96,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 								)
 								.reduce((prev, curr) => {
 									// check if the order was completed on the selected day
+									console.log(dayjs(curr['jobSpecification'].pickupStartTime).date() === date)
 									return dayjs(curr['jobSpecification'].pickupStartTime).date() === date
 										? prev + curr['selectedConfiguration'].deliveryFee
 										: 0;
@@ -106,7 +107,6 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 					return totalFees;
 				case 'year':
 					totalFees = values.map(month => {
-						console.log(month)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -148,6 +148,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 	const { data, totalCost, percentageChange, percentageChangeString } = useMemo(() => {
 		let { values, labels } = genLabels(interval);
 		let currCourierCosts = calculateDeliveryFees(PROVIDER_TYPES.COURIER, values, PERIOD_TYPE.CURRENT);
+		console.log(currCourierCosts)
 		let currDriverCosts = calculateDeliveryFees(PROVIDER_TYPES.DRIVER, values, PERIOD_TYPE.CURRENT);
 		let prevCourierCosts = calculateDeliveryFees(PROVIDER_TYPES.COURIER, values, PERIOD_TYPE.PREVIOUS);
 		let prevDriverCosts = calculateDeliveryFees(PROVIDER_TYPES.DRIVER, values, PERIOD_TYPE.PREVIOUS);

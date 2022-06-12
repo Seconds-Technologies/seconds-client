@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import TimeFilter from '../../components/TimeFilter';
 import {
 	ArcElement,
@@ -13,7 +13,6 @@ import {
 	SubTitle,
 	Tooltip
 } from 'chart.js';
-import useWindowSize from '../../hooks/useWindowSize';
 import dayjs from 'dayjs';
 import DeliveryCost from '../../components/charts/DeliveryCost';
 import DeliveryVolume from '../../components/charts/DeliveryVolume';
@@ -22,9 +21,6 @@ import { useSelector } from 'react-redux';
 import DeliveryOverview from '../../components/charts/DeliveryOverview';
 import { FLEET_PROVIDERS } from '../../constants';
 import { capitalize } from '../../helpers';
-import MuiTooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import { BsInfoCircle } from 'react-icons/bs';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, SubTitle, Tooltip, PointElement, LineElement, Legend, ArcElement);
 
@@ -44,7 +40,6 @@ const options = [
 ];
 
 const Analytics = props => {
-	const dimensions = useWindowSize();
 	const drivers = useSelector(state => state['driversStore']);
 	const [active, setActive] = useState({ id: 'week', name: 'Last 7 days' });
 
@@ -80,10 +75,6 @@ const Analytics = props => {
 		let labels = drivers.map(driver => `${driver.firstname} ${driver.lastname}`).concat(providers);
 		return { driverIds, providerIds: FLEET_PROVIDERS, labels };
 	}, [drivers]);
-
-	const size = useMemo(() => {
-		return { height: (dimensions.height - 150) / 2, width: (dimensions.width - 60) / 2 };
-	}, [dimensions]);
 
 	return (
 		<div className='page-container px-2 py-4'>
