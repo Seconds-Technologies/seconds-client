@@ -33,6 +33,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 			switch (interval) {
 				case 'week':
 					totalFees = values.map(day => {
+						console.log(day)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -67,6 +68,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 					return totalFees;
 				case 'month':
 					totalFees = values.map(date => {
+						console.log(date)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -100,6 +102,7 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 					return totalFees;
 				case 'year':
 					totalFees = values.map(month => {
+						console.log(month)
 						if (period === PERIOD_TYPE.CURRENT) {
 							// filter only for jobs completed by internal drivers
 							return currCompleted
@@ -178,36 +181,6 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 		return { data, totalCost: currTotalCost.toFixed(2), percentageChange, percentageChangeString };
 		// return completed.reduce((prev, curr) => prev + curr['selectedConfiguration'].deliveryFee, 0);
 	}, [interval]);
-
-	/*
-	subtitle: {
-		padding: {
-			top: 0,
-			bottom: 15
-		},
-		align: 'start',
-		font: {
-			weight: 500,
-			size: 24
-		},
-		display: true,
-		text: `£${totalCost.toFixed(2)}`
-	},
-	title: {
-		padding: {
-			top: 5,
-			bottom: 6
-		},
-		color: '#212529',
-		font: {
-			weight: 500,
-			size: 17
-		},
-		align: 'start',
-		display: true,
-		text: 'Delivery Costs'
-	}
-	*/
 
 	return (
 		<div className='border rounded-3 p-3 position-relative'>
