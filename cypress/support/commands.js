@@ -74,3 +74,14 @@ Cypress.Commands.add('createNewDriver', function(driver, delay) {
 		cy.root().submit().wait(delay)
 	})
 })
+
+Cypress.Commands.add('updateDriver', function(driver, delay) {
+	cy.get('#driver-details-form').within(() => {
+		cy.get('#driver-first-name').type(driver.firstname)
+		cy.get('#driver-last-name').type(driver.lastname)
+		cy.get('#driver-phone').type(driver.phone)
+		cy.get('#driver-email').type(driver.email)
+		cy.get('#driver-motorbike').click()
+		cy.root().submit().wait(delay)
+	})
+})

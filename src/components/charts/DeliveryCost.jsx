@@ -20,9 +20,13 @@ const DeliveryCost = ({ genLabels, interval, intervalLabel }) => {
 
 	const { currCompleted, prevCompleted } = useSelector(state => {
 		const { completedJobs } = state['deliveryJobs'];
+		let currCompleted = filterCurrent(completedJobs, interval)
+		let prevCompleted = filterPrevious(completedJobs, interval)
+		console.log(currCompleted)
+		console.log(prevCompleted)
 		return {
-			currCompleted: filterCurrent(completedJobs, interval),
-			prevCompleted: filterPrevious(completedJobs, interval)
+			currCompleted,
+			prevCompleted
 		};
 	});
 

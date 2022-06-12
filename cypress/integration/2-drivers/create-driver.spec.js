@@ -29,4 +29,11 @@ describe('', function(){
 		cy.get('.drivers-table').should('be.visible');
 		cy.get('[data-rowindex="0"] > [data-field="phone"]').then($cell => cy.wrap($cell.text()).should('eq', this.driver.phone))
 	})
+
+	it('Update Driver', function(){
+		cy.get('#new-driver-button').click().get('#driver-details-form').should('be.visible').end()
+		cy.updateDriver(this.driver, DELAY);
+		cy.get('.drivers-table').should('be.visible');
+		cy.get('[data-rowindex="0"] > [data-field="phone"]').then($cell => cy.wrap($cell.text()).should('eq', this.driver.phone))
+	})
 })

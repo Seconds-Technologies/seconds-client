@@ -219,7 +219,6 @@ export function assemblePayload({ jobSpecification, vehicleType }) {
 		packageDeliveryType: jobSpecification['deliveryType'],
 		vehicleType
 	};
-	console.log(payload);
 	return payload;
 }
 
