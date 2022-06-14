@@ -79,17 +79,18 @@ const CreateLocation = ({ open, onClose }) => {
 							setLoading(true);
 							console.log(values);
 							values.fullAddress = `${values.streetNumber} ${values.streetAddress} ${values.city} ${values.postcode}`;
+							let inputStreet = `${values.streetNumber} ${values.streetAddress}` // store street address entered by the user during signup
 							let inputPostcode = values.postcode; // store postcode entered by the user during signup
 							let addressComponents = await geocodeByAddress(values.fullAddress);
 							values.address = getParsedAddress(addressComponents, true);
+							values.address.street = inputStreet
 							values.address.postcode = inputPostcode;
 							validateAddress(values.address);
 							console.table({ address: values.address, fullAddress: values.fullAddress })
-							const message = await dispatch(updateProfile(values))
+							await dispatch(updateProfile(values))
 							Mixpanel.track('Create Location', {
 								$type: 'SUCCESS'
 							});
-							console.log(message)
 							setLoading(false)
 						} catch (err) {
 							Mixpanel.track('Create Location', {

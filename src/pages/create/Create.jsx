@@ -118,8 +118,6 @@ const Create = props => {
 			values.pickupAddress = `${pickupAddressLine1} ${pickupAddressLine2} ${pickupCity} ${pickupPostcode}`;
 			let pickupAddressComponents = await geocodeByAddress(values.pickupAddress);
 			let pickupFormattedAddress = getParsedAddress(pickupAddressComponents);
-			values.pickupCity = pickupFormattedAddress.city;
-			values.pickupPostcode = pickupFormattedAddress.postcode;
 			values.latitude = pickupFormattedAddress.latitude;
 			values.longitude = pickupFormattedAddress.longitude;
 			for (const drop of drops) {

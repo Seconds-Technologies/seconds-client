@@ -61,7 +61,7 @@ const Dashboard = props => {
 	);
 
 	const { longitude, latitude } = useMemo(() => {
-		if (address && address.geolocation && address.geolocation.coordinates && address.geolocation.coordinates.length === 2) {
+		if (address?.geolocation?.coordinates && address.geolocation.coordinates.length === 2) {
 			return { longitude: address.geolocation.coordinates[0], latitude: address.geolocation.coordinates[1] };
 		}
 		return { longitude: Number(localStorage.getItem('longitude')), latitude: Number(localStorage.getItem('latitude')) };
