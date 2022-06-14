@@ -156,6 +156,7 @@ const Create = props => {
 						 jobSpecification: {
 							 deliveries,
 							 orderNumber,
+							 jobReference,
 							 pickupLocation: { fullAddress: pickupAddress },
 							 pickupStartTime
 						 },
@@ -165,11 +166,10 @@ const Create = props => {
 						let {
 							dropoffLocation: { fullAddress: dropoffAddress },
 							dropoffEndTime,
-							orderReference: customerReference
 						} = deliveries[0];
 						let newJob = {
 							orderNumber,
-							customerReference,
+							jobReference,
 							pickupAddress,
 							dropoffAddress,
 							pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
@@ -202,6 +202,7 @@ const Create = props => {
 						 jobSpecification: {
 							 deliveries,
 							 orderNumber,
+							 jobReference,
 							 pickupLocation: { fullAddress: pickupAddress },
 							 pickupStartTime
 						 },
@@ -209,12 +210,11 @@ const Create = props => {
 					 }) => {
 						let {
 							dropoffLocation: { fullAddress: dropoffAddress },
-							dropoffEndTime,
-							orderReference: customerReference
+							dropoffEndTime
 						} = deliveries[0];
 						let newJob = {
 							orderNumber,
-							customerReference,
+							jobReference,
 							pickupAddress,
 							dropoffAddress,
 							pickupFrom: dayjs(pickupStartTime).format('DD-MM-YYYY HH:mm:ss'),
