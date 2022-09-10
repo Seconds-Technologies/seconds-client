@@ -10,6 +10,9 @@ const cardExpiry = Cypress.env('CARD_EXPIRY');
 const cardCvc = Cypress.env('CARD_CVC');
 const delay = Cypress.env('DELAY');
 
+const TEN_SECONDS = 10000
+const FIVE_SECONDS = 5000
+
 function cleanup() {
 	cy.restoreLocalStorage();
 	const email = this.user.email;
@@ -77,7 +80,7 @@ describe('Onboarding flow', () => {
 			cy.fillElementsInput('cardExpiry', cardExpiry); // MMYY
 			cy.fillElementsInput('cardCvc', cardCvc);
 			cy.fillElementsInput('postalCode', 'RM10 8EH');
-			cy.root().submit().wait(10000).url().should('include', '/home');
+			cy.root().submit().wait(TEN_SECONDS).url().should('include', '/home');
 		});
 		cy.get('#create-location-form').within(function() {
 			cy.get('#location-name').type('Seconds HQ');
@@ -86,7 +89,7 @@ describe('Onboarding flow', () => {
 			cy.get('#street-number').type(this.user.streetNumber);
 			cy.get('#city').type(this.user.city);
 			cy.get('#postcode').type(this.user.postcode);
-			cy.root().submit().wait(5000).get('#create-location-form').should('not.exist');
+			cy.root().submit().wait(TEN_SECONDS).get('#create-location-form').should('not.exist');
 		});
 		cy.get('.introjs-skipbutton').click()
 	});

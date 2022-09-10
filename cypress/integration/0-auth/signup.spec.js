@@ -165,7 +165,7 @@ describe('Successful User Signup', () => {
 			cy.fillElementsInput('cardExpiry', cardExpiry); // MMYY
 			cy.fillElementsInput('cardCvc', cardCvc);
 			cy.fillElementsInput('postalCode', 'RM10 8EH');
-			cy.root().submit().wait(FIVE_SECONDS).url().should('include', '/home');
+			cy.root().submit().wait(TEN_SECONDS).url().should('include', '/home');
 		});
 
 		cy.get('#create-location-form').within(function() {
@@ -175,7 +175,7 @@ describe('Successful User Signup', () => {
 			cy.get('#street-number').type(this.user.streetNumber);
 			cy.get('#city').type(this.user.city);
 			cy.get('#postcode').type(this.user.postcode);
-			cy.root().submit().wait(FIVE_SECONDS).get('#create-location-form').should('not.exist');
+			cy.root().submit().wait(TEN_SECONDS).get('#create-location-form').should('not.exist');
 		});
 		cy.get('.introjs-skipbutton').click()
 	})

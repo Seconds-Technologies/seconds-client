@@ -42,7 +42,7 @@ describe('Outsource Orders to Couriers', function () {
 	it('On-Demand Delivery', function () {
 		cy.get('#create-order-form').within(function () {
 			cy.createOnDemandOrder(this.customer, "MTB")
-			cy.get('#outsource-courier').click().wait(FIVE_SECONDS).end()
+			cy.get('#outsource-courier').click().wait(TEN_SECONDS).end()
 		});
 		cy.get('#select-quote-0').click().get('#confirm-provider-button').should('be.visible').click().wait(TEN_SECONDS)
 		cy.get('#new-delivery-modal').should('be.visible').get('.btn-close').click()
@@ -56,7 +56,7 @@ describe('Outsource Orders to Couriers', function () {
 		const dropoffTime = Cypress.dayjs().add(1, 'd').set('h', 16).format('YYYY-MM-DDTHH:mm');
 		cy.get('#create-order-form').within(function () {
 			cy.createScheduledOrder(this.customer, pickupTime, dropoffTime, "MTB")
-			cy.get('#outsource-courier').click().wait(FIVE_SECONDS).end()
+			cy.get('#outsource-courier').click().wait(TEN_SECONDS).end()
 		});
 		cy.get('#select-quote-0').click().get('#confirm-provider-button').should('be.visible').click().wait(TEN_SECONDS)
 		cy.get('#new-delivery-modal').should('be.visible').get('.btn-close').click()
